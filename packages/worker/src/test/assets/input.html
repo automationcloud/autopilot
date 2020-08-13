@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+    <main>
+        <input type="text"/>
+        <div id="output">
+        </div>
+    </main>
+    <script>
+    const input = document.querySelector('input');
+    const output = document.querySelector('#output');
+    input.addEventListener('input', ev => {
+        const value = ev.target.value.trim();
+        output.innerText = value.toUpperCase();
+    });
+    input.addEventListener('input', () => name.innerText = input.value);
+    </script>
+</body>
+</html>

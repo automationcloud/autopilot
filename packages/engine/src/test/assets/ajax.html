@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <div>
+            <input type="text" placeholder="search"/>
+            <button type="button">
+                Submit
+            </button>
+            <div id="result">
+            </div>
+        </div>
+    </main>
+    <script>
+        const result = document.querySelector('#result');
+        const input = document.querySelector('input');
+        const button = document.querySelector('button');
+        let timer = 0;
+        let pendingFetches = 0;
+        // 1. page is (re-)initialized after some request completes
+        // (so if you start typing too soon, tough luck for you)
+        fetch('/echo?delay=1000', { method: 'post' })
+            .then(() => {
+                input.value = '';
+                button.setAttribute('disabled', 'disabled');
+                input.addEventListener('input', onInput);
+                button.addEventListener('click', onSubmit);
+            });
+
+        // 2. when you type, we'll fire more requests with throttling
+        function onInput(ev) {
+            button.setAttribute('disabled', 'disabled');
+            clearTimeout(timer);
+
+            timer = setTimeout(() => {
+                pendingFetches += 1;
+                fetch('/echo?delay=100', { method: 'post' })
+                    .then(() => {
+                        pendingFetches -= 1;
+                        if (pendingFetches == 0) {
+                            button.removeAttribute('disabled');
+                        }
+                    });
+            }, 300);
+        }
+
+        // 3. submit is only allowed when no fetches are pending
+        function onSubmit() {
+            if (pendingFetches > 0) {
+                return;
+            }
+            result.innerText = 'Submitted succesfully!';
+        }
+    </script>
+</body>
+</html>

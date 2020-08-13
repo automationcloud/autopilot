@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="../commons.css"/>
+</head>
+<body>
+    <main>
+        <h1>Your name is: <span class="name"></span></h1>
+        <input type="text"
+               class="first-name"/>
+        <input type="text"
+               class="second-name"/>
+    </main>
+    <script>
+    const name = document.querySelector('.name');
+    const firstName = document.querySelector('.first-name');
+    const secondName = document.querySelector('.second-name');
+    [].forEach.call(document.querySelectorAll('input'), input => {
+        input.addEventListener('input', update);
+    });
+
+    function update() {
+        name.innerText = [firstName.value, secondName.value].join(' ');
+    }
+    </script>
+</body>
+</html>

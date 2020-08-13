@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <canvas width="320" height="160">
+        </canvas>
+
+        <pre><code></code></pre>
+    </main>
+    <script>
+        const canvas = document.querySelector('canvas');
+        const code = document.querySelector('code');
+        const ctx = canvas.getContext('2d');
+        let buffers = [];
+        let buffer = [];
+        canvas.addEventListener('mousedown', onMouseDown);
+
+        function getCoords(ev) {
+            const box = canvas.getBoundingClientRect();
+            const x = Math.round(ev.clientX - box.left);
+            const y = Math.round(ev.clientY - box.top);
+            return [x, y];
+        }
+
+        function onMouseDown(ev) {
+            const point = getCoords(ev);
+            buffer = [];
+            buffers.push(buffer);
+            buffer.push(point.join(','));
+            ctx.beginPath();
+            ctx.moveTo(point[0], point[1]);
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        }
+
+        function onMouseMove(ev) {
+            const point = getCoords(ev);
+            buffer.push(point.join(','));
+            ctx.lineTo(point[0], point[1]);
+            ctx.stroke();
+        }
+
+        function onMouseUp(ev) {
+            const point = getCoords(ev);
+            buffer.push(point.join(','));
+            ctx.lineTo(point[0], point[1]);
+            ctx.stroke();
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            renderBuffers();
+        }
+
+        function renderBuffers() {
+            const lines = [`${canvas.width},${canvas.height}`]
+                .concat(buffers.map(b => b.join(' ')));
+            code.innerText = lines.join('\n');
+        }
+    </script>
+    <style>
+        canvas {
+            position: relative;
+            border: 1px solid #ccc;
+        }
+
+        pre {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #ccc;
+            background: #f5f5f5;
+            overflow: auto;
+        }
+    </style>
+</body>
+</html>

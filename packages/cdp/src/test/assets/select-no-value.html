@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+    href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <h1>Your language is: <span class="lang">English</span></h1>
+        <select>
+            <option label="English"></option>
+            <option label="Français"></option>
+            <option label="Português"></option>
+            <option label="Español"></option>
+        </select>
+    </main>
+    <script>
+    const lang = document.querySelector('.lang');
+    const select = document.querySelector('select');
+    select.addEventListener('input', () => {
+        const opt = [].find.call(select.children, opt => opt.selected);
+        lang.innerText = opt.label;
+    });
+    </script>
+</body>
+</html>

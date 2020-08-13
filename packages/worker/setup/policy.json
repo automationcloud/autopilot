@@ -1,0 +1,7 @@
+{
+    "AlwaysOpenPdfExternally": true,
+    "DownloadDirectory": "${user_home}/crdownloads",
+    "DownloadRestrictions": 0,
+    "PromptForDownloadLocation": false,
+    "SafeBrowsingEnabled": false
+}

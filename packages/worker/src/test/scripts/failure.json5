@@ -1,0 +1,30 @@
+{
+    name: 'Error: ElementNotFoundError',
+    contexts: [
+        {
+            type: 'main',
+            actions: [
+                {
+                    type: 'Page.navigate',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getConstant',
+                                value: 'http://localhost:3007/input.html'
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'Page.input',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: 'input.non.existent' },
+                            { type: 'Value.getConstant', value: 'hello' }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

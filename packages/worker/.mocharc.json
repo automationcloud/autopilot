@@ -1,0 +1,11 @@
+{
+    "reporter": "spec",
+    "spec": "./out/**/*.test.js",
+    "slow": 1000,
+    "timeout": 5000,
+    "exit": true,
+    "require": [
+        "reflect-metadata",
+        "out/test/dotenv"
+    ]
+}

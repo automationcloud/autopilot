@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<body>
+    <div>
+        <label>
+            CVV
+            <input name="card_verify"/>
+        </label>
+    </div>
+    <script>
+    var input = document.querySelector('[name="card_verify"]');
+    input.addEventListener('change', function() {
+        top.postMessage({
+            card_verify: input.value
+        }, '*');
+    });
+    // to keep your life interesting
+    if (location.search !== '?ok') {
+        setTimeout(function() {
+            location.search = '?ok';
+        }, 1000);
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+.meta {
+    display: flex;
+    flex-flow: column;
+    background: var(--color-mono--200);
+    border-radius: var(--border-radius);
+}
+
+.meta__label {
+    text-transform: uppercase;
+    font-size: 9px;
+    padding: var(--gap--small);
+    background: var(--color-mono--700);
+    color: var(--color-mono--200);
+    border-radius: var(--border-radius) var(--border-radius) 0 0 ;
+}
+
+.meta__info {
+    padding: var(--gap--small);
+}

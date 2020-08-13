@@ -1,0 +1,43 @@
+td, th {
+    font-weight: 400;
+    text-align: initial;
+}
+
+.table {
+    width: 100%;
+}
+
+.table__head {
+    color: var(--color-cool--500);
+    font-size: var(--font-size--small);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.table__row {
+    position: relative;
+}
+
+.table__row:focus {
+    z-index: 2;
+    outline: 0;
+    box-shadow:
+        inset 0 0 0 1px var(--border-color--focus),
+        0 0 0 3px var(--border-shadow--focus);
+}
+
+.table__cell {
+    padding: var(--gap--small);
+}
+
+.table__row:nth-child(2n + 1) {
+    background: rgba(0,0,0,.05);
+}
+
+.table__row:hover {
+    background: rgba(0,0,0,.075);
+}
+
+.table__helper-icon {
+    color: rgba(0,0,0,.4);
+}

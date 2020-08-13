@@ -1,0 +1,40 @@
+name: ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: automationcloud/chrome:83
+      env:
+        CHROME_PATH: /opt/latest/chrome
+        CHROME_PORT: "9123"
+        CHROME_HEADLESS: "true"
+        REDIS_HOST: redis
+        MONGO_URL: mongodb://mongodb:27017/
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Setup npm private token
+        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
+      - run: npm run bootstrap
+      - run: npm run compile
+      - run: npm run lint
+      - run: npm test

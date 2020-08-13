@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+    <h1>Please wait...</h1>
+    <script>
+    Promise.resolve()
+        .then(() => fetch('/?delay=5000'))
+        .then(() => {
+            location.href = 'done.html';
+        });
+    </script>
+</body>
+</html>

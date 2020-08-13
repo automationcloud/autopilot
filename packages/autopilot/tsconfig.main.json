@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "rootDir": "./src/main",
+        "outDir": "./out/main",
+        // This is required b/c some of the Electron's dependencies (fs-extra)
+        // doesn't use correct Node.js types
+        // https://github.com/microsoft/TypeScript/issues/30511
+        "skipLibCheck": true
+    },
+    "include": ["src/main"],
+}

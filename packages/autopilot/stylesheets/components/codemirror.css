@@ -1,0 +1,71 @@
+.CodeMirror {
+    flex: 1;
+    height: auto;
+    width: auto;
+
+    font: 12px/1.35 Menlo, monospace;
+    background: #282c34;
+    color: #bbbbbb;
+    -webkit-font-smoothing: auto;
+  }
+
+  .CodeMirror-gutters {
+    background: rgba(0,0,0,.05);
+    border: 0;
+  }
+
+  .CodeMirror-linenumber {
+      color: #777;
+  }
+
+  .CodeMirror-vscrollbar,
+  .CodeMirror-hscrollbar,
+  .CodeMirror-scrollbar-filler {
+      background: transparent;
+      overflow: visible;
+  }
+
+  .CodeMirror-hscrollbar {
+    height: 5px;
+    background: rgba(255,255,255,.25);
+    z-index: 1;
+  }
+
+  .cm-s-ub .cm-comment { color: #888 }
+  .cm-s-ub
+  .cm-s-ub .cm-node,
+  .cm-s-ub .cm-tag { color: #e06c75 }
+
+  .cm-keyword { color: #c678dd }
+  .cm-number { color: #d19a66 }
+  .cm-atom { color: #bbbbbb }
+  .cm-string { color: #98c379 }
+  .cm-variable { color: #e5c07b }
+  .cm-property { color: #e06c75 }
+  .cm-operator { color: #56b6c2 }
+
+  .CodeMirror-selected { background: rgba(255,255,255,.06) }
+  .CodeMirror-focused .CodeMirror-selected { background: rgba(255,255,255,.12) }
+
+  .cm-s-ub .cm-qualifier { color: hsl(270, 50%, 50%) }
+  .cm-s-ub .cm-def, .cm-s-ub .cm-variable-2 { color: hsl(0, 60%, 65%) }
+
+  .CodeMirror-matchingbracket {
+      color: hsl(210, 10%, 80%) !important;
+      box-shadow: 0 1px 0 hsl(210, 60%, 60%);
+  }
+
+  .CodeMirror-cursor {
+    border-left: 2px solid #a9b7c6;
+  }
+
+  .CodeMirror-dialog {
+    padding: .25em ;
+    background: #222;
+    border: 0;
+    opacity: .9;
+  }
+
+  .CodeMirror-dialog input {
+    font: inherit;
+  }

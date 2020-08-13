@@ -1,0 +1,36 @@
+{
+    "name": "@automationcloud/autopilot-tools",
+    "description": "Internal tools",
+    "private": true,
+    "version": "31.12.0",
+    "main": "out/main/index.js",
+    "scripts": {
+        "build": "run-p build:*",
+        "build:docs": "node out/bin/docs"
+    },
+    "files": [
+        "out/main/**/*",
+        "out/bin/**/*"
+    ],
+    "author": "ubio",
+    "license": "ISC",
+    "dependencies": {
+        "@automationcloud/engine": "^31.12.0",
+        "@types/diff": "^4.0.2",
+        "@types/inquirer": "^6.5.0",
+        "@types/marked": "^0.7.3",
+        "@types/semver": "^7.2.0",
+        "chalk": "^4.1.0",
+        "diff": "^4.0.2",
+        "dotenv": "^8.2.0",
+        "fast-json-stable-stringify": "^2.1.0",
+        "inquirer": "^7.1.0",
+        "json-stable-stringify": "^1.0.1",
+        "marked": "^0.8.0",
+        "semver": "^7.3.2"
+    },
+    "devDependencies": {
+        "inversify": "^5.0.1",
+        "moment": "^2.27.0"
+    }
+}

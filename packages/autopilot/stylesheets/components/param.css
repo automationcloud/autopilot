@@ -1,0 +1,49 @@
+.param {
+    flex-basis: 100%;
+}
+
+.param select {
+    max-width: 100%;
+}
+
+.param--inset {
+    margin: var(--gap);
+}
+
+.param--boolean {
+    flex-basis: 180px;
+}
+
+.param--pipeline {
+    flex: 1;
+    margin: var(--gap) 0;
+    padding: 0 var(--gap);
+}
+
+.param--pipeline .param--pipeline {
+    background: #fff;
+    padding-top: var(--gap);
+    padding-right: 0;
+    margin-bottom: 0;
+}
+
+.param__title {
+    font-weight: bold;
+    padding-bottom: var(--gap--small);
+}
+
+.param__field {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: baseline;
+}
+
+.param__label {
+    flex: 0 1 100px;
+    margin-right: var(--gap--small);
+}
+
+.param__controls {
+    flex: 1;
+    min-width: 0;
+}

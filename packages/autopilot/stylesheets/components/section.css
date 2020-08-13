@@ -1,0 +1,33 @@
+.section {
+
+}
+
+.section--main {
+    flex: 1;
+}
+
+.section__title {
+    margin: var(--gap--large) 0;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.section__subtitle {
+    margin: var(--gap) 0;
+
+    font-size: var(--font-size--small);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    color: var(--color-cool--500);
+}
+
+.section__subtitle--alt {
+    border-top: 1px solid var(--color-cool--500);
+}
+
+.section__title + .section__subtitle {
+    margin-top: 0;
+}

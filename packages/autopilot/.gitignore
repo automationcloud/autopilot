@@ -1,0 +1,7 @@
+main-out/
+dist/
+static/index.css
+static/ui.js
+static/build
+*.hot-update.js
+*.hot-update.json

@@ -1,0 +1,107 @@
+{
+    name: 'Checkpoint',
+    contexts: [
+        {
+            type: 'main',
+            actions: [
+                {
+                    type: 'Page.navigate',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getConstant',
+                                value: 'http://localhost:3007/cookies.html?cookies=foo:bar'
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'Page.navigate',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getConstant',
+                                value: 'http://localhost:3007/cookies.html'
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'echoFoo',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getInput',
+                                inputKey: 'foo'
+                            }
+                        ]
+                    }
+                },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'mainContextCalled',
+                    pipeline: {
+                        pipes: [
+                            { type: 'Value.getJson', value: 'true' },
+                        ]
+                    }
+                },
+            ]
+        },
+        {
+            type: 'checkpoint',
+            actions: [
+                {
+                    type: 'Flow.output',
+                    outputKey: 'checkpointContextCalled',
+                    pipeline: {
+                        pipes: [
+                            { type: 'Value.getJson', value: 'true' },
+                        ]
+                    }
+                },
+            ]
+        },
+        {
+            type: 'context',
+            flowType: 'success',
+            matchers: [
+                {
+                    type: 'matcher',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '#cookies' },
+                            { type: 'List.exists' }
+                        ]
+                    }
+                }
+            ],
+            actions: [
+                { type: 'Flow.checkpoint' },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'cookies',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '#cookies' },
+                            { type: 'DOM.getText' }
+                        ]
+                    }
+                },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'echoBar',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getInput',
+                                inputKey: 'bar'
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

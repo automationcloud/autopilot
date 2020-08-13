@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES2019",
+        "lib": ["ES2019", "DOM", "DOM.Iterable"],
+        "moduleResolution": "node",
+        "strict": true,
+        "composite": true,
+        "esModuleInterop": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "resolveJsonModule": true,
+    }
+}

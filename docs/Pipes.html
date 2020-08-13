@@ -1,0 +1,1265 @@
+
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700&amp;display=swap"/>
+    <link rel="stylesheet"
+        href="./index.css"/>
+    <link rel="shortcut icon"
+        href="./favicon.ico"/>
+    <title>Autopilot Documentation · ubio</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="./logo.png"/>
+            <a href="./Actions">Actions</a>
+            <a href="./Pipes">Pipes</a>
+        </div>
+        <div class="body">
+            <h1 id="pipes">Pipes</h1>
+<ul>
+<li>Assert<ul>
+<li><a href="#Assert.exists">Assert.exists</a></li>
+<li><a href="#Assert.one">Assert.one</a></li>
+</ul>
+</li>
+<li>Boolean<ul>
+<li><a href="#Boolean.and">Boolean.and</a></li>
+<li><a href="#Boolean.not">Boolean.not</a></li>
+<li><a href="#Boolean.or">Boolean.or</a></li>
+</ul>
+</li>
+<li>Browser<ul>
+<li><a href="#Browser.getBlob">Browser.getBlob</a></li>
+<li><a href="#Browser.getCookies">Browser.getCookies</a></li>
+<li><a href="#Browser.getFrameInfo">Browser.getFrameInfo</a></li>
+<li><a href="#Browser.selectNetworkResources">Browser.selectNetworkResources</a></li>
+<li><a href="#Browser.selectTargets">Browser.selectTargets</a></li>
+</ul>
+</li>
+<li>Custom<ul>
+<li><a href="#Custom.label">Custom.label</a></li>
+</ul>
+</li>
+<li>DOM<ul>
+<li><a href="#DOM.batchExtract">DOM.batchExtract</a></li>
+<li><a href="#DOM.closest">DOM.closest</a></li>
+<li><a href="#DOM.document">DOM.document</a></li>
+<li><a href="#DOM.getAttribute">DOM.getAttribute</a></li>
+<li><a href="#DOM.getChildText">DOM.getChildText</a></li>
+<li><a href="#DOM.getComputedStyle">DOM.getComputedStyle</a></li>
+<li><a href="#DOM.getDocumentProperty">DOM.getDocumentProperty</a></li>
+<li><a href="#DOM.getHref">DOM.getHref</a></li>
+<li><a href="#DOM.getInnerHtml">DOM.getInnerHtml</a></li>
+<li><a href="#DOM.getInnerText">DOM.getInnerText</a></li>
+<li><a href="#DOM.getText">DOM.getText</a></li>
+<li><a href="#DOM.getTextContent">DOM.getTextContent</a></li>
+<li><a href="#DOM.getValue">DOM.getValue</a></li>
+<li><a href="#DOM.hasClass">DOM.hasClass</a></li>
+<li><a href="#DOM.iframe">DOM.iframe</a></li>
+<li><a href="#DOM.innermost">DOM.innermost</a></li>
+<li><a href="#DOM.isDisabled">DOM.isDisabled</a></li>
+<li><a href="#DOM.isSelected">DOM.isSelected</a></li>
+<li><a href="#DOM.isVisible">DOM.isVisible</a></li>
+<li><a href="#DOM.matches">DOM.matches</a></li>
+<li><a href="#DOM.nextSibling">DOM.nextSibling</a></li>
+<li><a href="#DOM.outermost">DOM.outermost</a></li>
+<li><a href="#DOM.parent">DOM.parent</a></li>
+<li><a href="#DOM.previousSibling">DOM.previousSibling</a></li>
+<li><a href="#DOM.queryAll">DOM.queryAll</a></li>
+<li><a href="#DOM.queryOne">DOM.queryOne</a></li>
+<li><a href="#DOM.queryXPathAll">DOM.queryXPathAll</a></li>
+<li><a href="#DOM.queryXPathOne">DOM.queryXPathOne</a></li>
+</ul>
+</li>
+<li>Data<ul>
+<li><a href="#Data.formatUrl">Data.formatUrl</a></li>
+<li><a href="#Data.restoreLocal">Data.restoreLocal</a></li>
+<li><a href="#Data.saveLocal">Data.saveLocal</a></li>
+</ul>
+</li>
+<li>Date<ul>
+<li><a href="#Date.format">Date.format</a></li>
+</ul>
+</li>
+<li>Definition<ul>
+<li><a href="#Definition.use">Definition.use</a></li>
+</ul>
+</li>
+<li>Eval<ul>
+<li><a href="#Eval.expression">Eval.expression</a></li>
+<li><a href="#Eval.ifElse">Eval.ifElse</a></li>
+<li><a href="#Eval.javascript">Eval.javascript</a></li>
+</ul>
+</li>
+<li>List<ul>
+<li><a href="#List.append">List.append</a></li>
+<li><a href="#List.countBy">List.countBy</a></li>
+<li><a href="#List.every">List.every</a></li>
+<li><a href="#List.exists">List.exists</a></li>
+<li><a href="#List.filter">List.filter</a></li>
+<li><a href="#List.filterOne">List.filterOne</a></li>
+<li><a href="#List.fromArray">List.fromArray</a></li>
+<li><a href="#List.length">List.length</a></li>
+<li><a href="#List.limit">List.limit</a></li>
+<li><a href="#List.prepend">List.prepend</a></li>
+<li><a href="#List.repeat">List.repeat</a></li>
+<li><a href="#List.reverse">List.reverse</a></li>
+<li><a href="#List.skip">List.skip</a></li>
+<li><a href="#List.skipWhile">List.skipWhile</a></li>
+<li><a href="#List.some">List.some</a></li>
+<li><a href="#List.sortBy">List.sortBy</a></li>
+<li><a href="#List.takeWhile">List.takeWhile</a></li>
+<li><a href="#List.toArray">List.toArray</a></li>
+</ul>
+</li>
+<li>Number<ul>
+<li><a href="#Number.compare">Number.compare</a></li>
+<li><a href="#Number.mapRange">Number.mapRange</a></li>
+<li><a href="#Number.sum">Number.sum</a></li>
+</ul>
+</li>
+<li>Object<ul>
+<li><a href="#Object.assign">Object.assign</a></li>
+<li><a href="#Object.compose">Object.compose</a></li>
+<li><a href="#Object.deletePath">Object.deletePath</a></li>
+<li><a href="#Object.entries">Object.entries</a></li>
+<li><a href="#Object.fromEntries">Object.fromEntries</a></li>
+<li><a href="#Object.getPath">Object.getPath</a></li>
+<li><a href="#Object.hasPath">Object.hasPath</a></li>
+<li><a href="#Object.pick">Object.pick</a></li>
+<li><a href="#Object.setPath">Object.setPath</a></li>
+<li><a href="#Object.wrap">Object.wrap</a></li>
+</ul>
+</li>
+<li>String<ul>
+<li><a href="#String.extractRegexp">String.extractRegexp</a></li>
+<li><a href="#String.formatTemplate">String.formatTemplate</a></li>
+<li><a href="#String.join">String.join</a></li>
+<li><a href="#String.mapRegexp">String.mapRegexp</a></li>
+<li><a href="#String.matchesRegexp">String.matchesRegexp</a></li>
+<li><a href="#String.parseBoolean">String.parseBoolean</a></li>
+<li><a href="#String.parseColor">String.parseColor</a></li>
+<li><a href="#String.parseJson">String.parseJson</a></li>
+<li><a href="#String.parseNumber">String.parseNumber</a></li>
+<li><a href="#String.parseUrl">String.parseUrl</a></li>
+<li><a href="#String.removeDiacritics">String.removeDiacritics</a></li>
+<li><a href="#String.replaceRegexp">String.replaceRegexp</a></li>
+<li><a href="#String.sanitizeHtml">String.sanitizeHtml</a></li>
+</ul>
+</li>
+<li>Value<ul>
+<li><a href="#Value.contains">Value.contains</a></li>
+<li><a href="#Value.containsText">Value.containsText</a></li>
+<li><a href="#Value.equals">Value.equals</a></li>
+<li><a href="#Value.equalsText">Value.equalsText</a></li>
+<li><a href="#Value.getConstant">Value.getConstant</a></li>
+<li><a href="#Value.getConstantArray">Value.getConstantArray</a></li>
+<li><a href="#Value.getDynamicInput">Value.getDynamicInput</a></li>
+<li><a href="#Value.getGlobal">Value.getGlobal</a></li>
+<li><a href="#Value.getInput">Value.getInput</a></li>
+<li><a href="#Value.getJson">Value.getJson</a></li>
+<li><a href="#Value.isEmpty">Value.isEmpty</a></li>
+<li><a href="#Value.peekInput">Value.peekInput</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="assert">Assert</h1>
+<h2 id="Assert.exists">Assert.exists</h2>
+
+
+<p>Throws an error with specified error code if input set does not contain any elements.
+Otherwise, passes the input set along unmodified.</p>
+<h3 id="use-for">Use For</h3>
+<ul>
+<li>throwing specialized errors in pipelines with multiple filters to narrow down the filtering problems</li>
+</ul>
+<h2 id="Assert.one">Assert.one</h2>
+
+
+<p>Asserts that input set contains exactly one element, otherwise throws a specified error.</p>
+<h1 id="boolean">Boolean</h1>
+<h2 id="Boolean.and">Boolean.and</h2>
+
+
+<p>Evaluates two operands by passing each element of input set through two different pipelines,
+then returns <code>true</code> if both operands are <code>true</code>, and <code>false</code> otherwise.</p>
+<p>Inner pipelines should return a single element for each element in input set.
+An error is thrown if the result is not a boolean.</p>
+<h3 id="use-for-1">Use For</h3>
+<ul>
+<li>combining multiple booleans using logical AND (conjunction)</li>
+</ul>
+<h2 id="Boolean.not">Boolean.not</h2>
+
+
+<p>Returns a logical inverse of input boolean value. An error is thrown if input value is not a boolean.</p>
+<h3 id="use-for-2">Use For</h3>
+<ul>
+<li>inverting the results of other boolean-producing pipes</li>
+</ul>
+<h2 id="Boolean.or">Boolean.or</h2>
+
+
+<p>Evaluates two operands by passing each element of input set through two different pipelines,
+then returns <code>false</code> if both operands are <code>false</code>, and <code>true</code> otherwise.</p>
+<p>Inner pipelines should return a single element for each element in input set.
+An error is thrown if the result is not a boolean.</p>
+<h3 id="use-for-3">Use For</h3>
+<ul>
+<li>combining multiple booleans using logical OR (conjunction)</li>
+</ul>
+<h1 id="browser">Browser</h1>
+<h2 id="Browser.getBlob">Browser.getBlob</h2>
+
+
+<p>Returns blob content in a specified encoding.</p>
+<p>Input value must be a Blob object, returned by Send Network Request action with &quot;blob&quot; response type.</p>
+<p>Caution: decoding large blobs may result in decreased application and engine performance.</p>
+<h3 id="use-for-4">Use For</h3>
+<ul>
+<li>sending base64 encoded blobs as part of Send Network Request action</li>
+</ul>
+<h2 id="Browser.getCookies">Browser.getCookies</h2>
+
+
+<p>Obtains browser cookies and returns them as element values.</p>
+<h2 id="Browser.getFrameInfo">Browser.getFrameInfo</h2>
+
+
+<p>Returns information about current frame and its loading state.</p>
+<h3 id="use-for-5">Use For</h3>
+<ul>
+<li>implementing assertions on frame loading, readiness or failure to load</li>
+</ul>
+<h2 id="Browser.selectNetworkResources">Browser.selectNetworkResources</h2>
+
+
+<p>Returns information about network requests and responses that match specified filters.</p>
+<h3 id="use-for-6">Use For</h3>
+<ul>
+<li>extracting data from ongoing network requests</li>
+</ul>
+<h2 id="Browser.selectTargets">Browser.selectTargets</h2>
+
+
+<p>Returns information about all currently open browser targets (tabs, popups, windows, iframes),
+matching specified criteria.</p>
+<h1 id="custom">Custom</h1>
+<h2 id="Custom.label">Custom.label</h2>
+
+
+<p>This pipe is a simple group with a customized label.
+The input set is passed to the inner pipeline and the output set of the inner pipeline
+becomes the output set of this pipe.</p>
+<h3 id="use-for-7">Use For</h3>
+<ul>
+<li>structuring complex pipelines</li>
+</ul>
+<h1 id="dom">DOM</h1>
+<h2 id="DOM.batchExtract">DOM.batchExtract</h2>
+
+
+<p>Extracts multiple DOM properties from element or its descendants designated by selector at once.</p>
+<p>This pipe replaces a series of Set Path &gt; Query One &gt; Extract pipelines,
+and is significantly more efficient.</p>
+<h2 id="DOM.closest">DOM.closest</h2>
+
+
+<p>Returns the closest ancestor of an element matching specified selector.
+Throws an error if no such element is found.</p>
+<h2 id="DOM.document">DOM.document</h2>
+
+
+<p>Replace the DOM node of each input element with top #document node.</p>
+<h3 id="use-for-8">Use For</h3>
+<ul>
+<li>accessing elements outside of current DOM scope (e.g. inside <code>each</code> loop)</li>
+</ul>
+<h2 id="DOM.getAttribute">DOM.getAttribute</h2>
+
+
+<p>Returns the value of specified DOM attribute.
+An error is thrown if attribute does not exist on one of the input elements.</p>
+<h3 id="use-for-9">Use For</h3>
+<ul>
+<li>extracting information from DOM attributes</li>
+</ul>
+<h2 id="DOM.getChildText">DOM.getChildText</h2>
+
+
+<p>Returns text content of direct text node children of an element, ignoring nested elements.</p>
+<h3 id="use-for-10">Use For</h3>
+<ul>
+<li>accessing text content of immediate children when semantic markup does not allow
+for more precise targeting</li>
+</ul>
+<h2 id="DOM.getComputedStyle">DOM.getComputedStyle</h2>
+
+
+<p>Returns the value of specified style, computed by browser.
+Throws an error if the style is not recognized by browser and therefore cannot be computed.</p>
+<h3 id="use-for-11">Use For</h3>
+<ul>
+<li>addressing edge cases where filtering or value extraction is only possible by looking at CSS styles
+(e.g. color, borders, etc.)</li>
+</ul>
+<h2 id="DOM.getDocumentProperty">DOM.getDocumentProperty</h2>
+
+
+<p>Retrieves specified property from the element&#39;s owner document.</p>
+<h3 id="use-for-12">Use For</h3>
+<ul>
+<li>accessing current url</li>
+<li>accessing referrer to compose network requests</li>
+<li>accessing current page title</li>
+<li>accessing other document properties for advanced scripting</li>
+</ul>
+<h2 id="DOM.getHref">DOM.getHref</h2>
+
+
+<p>Returns a fully resolved URL as specified by href attribute of <code>&lt;a&gt;</code> DOM elements (links).
+An error is thrown if input element is not a link.</p>
+<h3 id="use-for-13">Use For</h3>
+<ul>
+<li>extracting absolute href value from links</li>
+</ul>
+<h2 id="DOM.getInnerHtml">DOM.getInnerHtml</h2>
+
+
+<p>Returns <code>innerHTML</code> property of an element.</p>
+<h3 id="use-for-14">Use For</h3>
+<ul>
+<li>extracting HTML content</li>
+</ul>
+<h3 id="see-also">See Also</h3>
+<ul>
+<li>String.sanitizeHtml in case the extracted HTML is to be presented to user in some way
+(e.g. via output)</li>
+</ul>
+<h2 id="DOM.getInnerText">DOM.getInnerText</h2>
+
+
+<p>Returns <code>innerText</code> DOM property of elements.</p>
+<h3 id="use-for-15">Use For</h3>
+<ul>
+<li>reading <code>innerText</code> specifically
+(i.e. when fallback logic of Extract Text produces incorrect or unwanted results)</li>
+</ul>
+<h2 id="DOM.getText">DOM.getText</h2>
+
+
+<p>Returns text extracted from DOM element by reading its
+innerText, textContent or value (whichever first is defined)
+and normalizing the whitespace.</p>
+<h3 id="use-for-16">Use For</h3>
+<ul>
+<li>general purpose text extraction from the page</li>
+</ul>
+<h3 id="see-also-1">See Also</h3>
+<ul>
+<li>DOM.getValue, DOM.getInnerText, DOM.getTextContent:
+for more specialized extractors that don&#39;t fallback over multiple text sources</li>
+</ul>
+<h2 id="DOM.getTextContent">DOM.getTextContent</h2>
+
+
+<p>Returns <code>textContent</code> DOM property of elements.</p>
+<h3 id="use-for-17">Use For</h3>
+<ul>
+<li>reading <code>textContent</code> specifically
+(i.e. when fallback logic of Extract Text produces incorrect or unwanted results)</li>
+</ul>
+<h2 id="DOM.getValue">DOM.getValue</h2>
+
+
+<p>Returns <code>value</code> DOM property of elements.</p>
+<h3 id="use-for-18">Use For</h3>
+<ul>
+<li>reading <code>value</code> specifically
+(i.e. when fallback logic of Text produces incorrect or unwanted results)</li>
+</ul>
+<h2 id="DOM.hasClass">DOM.hasClass</h2>
+
+
+<p>Returns <code>true</code> if element contains specified class name, false otherwise.</p>
+<h3 id="use-for-19">Use For</h3>
+<ul>
+<li>filtering</li>
+<li>reading boolean state from class names</li>
+</ul>
+<h2 id="DOM.iframe">DOM.iframe</h2>
+
+
+<p>Returns DOM contentDocument node of the IFRAME element.
+An error is thrown if applied to non-frame elements.</p>
+<h3 id="use-for-20">Use For</h3>
+<ul>
+<li>accessing the contents of iframes</li>
+</ul>
+<h2 id="DOM.innermost">DOM.innermost</h2>
+
+
+<p>Discards elements that enclose other elements from the same set.
+This leaves only the &quot;innermost&quot; elements in the output set.</p>
+<h3 id="use-for-21">Use For</h3>
+<ul>
+<li>squashing element sets that are loosely defined,
+in particular if website does not have semantic DOM structure to work with</li>
+</ul>
+<h3 id="see-also-2">See Also</h3>
+<ul>
+<li>DOM.outermost: for the inverse functionality</li>
+</ul>
+<h2 id="DOM.isDisabled">DOM.isDisabled</h2>
+
+
+<p>For each element returns the value of its <code>disabled</code> DOM property.</p>
+<h3 id="use-for-22">Use For</h3>
+<ul>
+<li>asserting that buttons or other form controls are interactable</li>
+</ul>
+<h2 id="DOM.isSelected">DOM.isSelected</h2>
+
+
+<p>For each element returns the value of its <code>selected</code> or <code>checked</code> DOM property.</p>
+<h3 id="use-for-23">Use For</h3>
+<ul>
+<li>extracting boolean values of checkboxes, radio buttons and <code>option</code> elements</li>
+</ul>
+<h2 id="DOM.isVisible">DOM.isVisible</h2>
+
+
+<p>Returns true if Element is visible, that is:</p>
+<ul>
+<li>its content box has both width and height greater than zero</li>
+<li>its CSS styles don&#39;t include visibility: hidden</li>
+</ul>
+<h3 id="use-for-24">Use For</h3>
+<ul>
+<li>filtering invisible elements for further manipulations</li>
+<li>asserting element visibility in expectations</li>
+</ul>
+<h2 id="DOM.matches">DOM.matches</h2>
+
+
+<p>Returns <code>true</code> if element matches specifed selector.</p>
+<h2 id="DOM.nextSibling">DOM.nextSibling</h2>
+
+
+<p>Returns n-th next DOM sibling of an element.
+An error is thrown if no next sibling exists.</p>
+<h2 id="DOM.outermost">DOM.outermost</h2>
+
+
+<p>Discards elements that are enclosed by other elements from the same set.
+This leaves only the &quot;outermost&quot; elements in the output set.</p>
+<h3 id="use-for-25">Use For</h3>
+<ul>
+<li>squashing element sets that are loosely defined,
+in particular if website does not have semantic DOM structure to work with</li>
+</ul>
+<h3 id="see-also-3">See Also</h3>
+<ul>
+<li>DOM.innermost: for the inverse functionality</li>
+</ul>
+<h2 id="DOM.parent">DOM.parent</h2>
+
+
+<p>For each input element returns its DOM parent.
+An error is thrown if parent not found (i.e. applied to #document).</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li>optional: if checked,</li>
+</ul>
+<h3 id="use-for-26">Use For</h3>
+<ul>
+<li>traversing DOM hierarchy to locate the desired element</li>
+</ul>
+<h2 id="DOM.previousSibling">DOM.previousSibling</h2>
+
+
+<p>Returns n-th previous DOM sibling of an element.
+An error is thrown if no previous sibling exists.</p>
+<h2 id="DOM.queryAll">DOM.queryAll</h2>
+
+
+<p>Returns all Element nodes found by specified selector.</p>
+<h3 id="use-for-27">Use For</h3>
+<ul>
+<li>returning a group of elements (e.g. prices) for further manipulation (e.g. text parsing)</li>
+</ul>
+<h3 id="see-also-4">See Also</h3>
+<ul>
+<li>DOM.queryOne: for the equivalent pipe which returns a single node</li>
+</ul>
+<h2 id="DOM.queryOne">DOM.queryOne</h2>
+
+
+<p>Returns Element node found by specified selector.
+An error is thrown if multiple elements are found within each element.</p>
+<h3 id="use-for-28">Use For</h3>
+<ul>
+<li>selecting a unique Element on the page</li>
+<li>for each element in a set, selecting a unique sub-element</li>
+</ul>
+<h3 id="see-also-5">See Also</h3>
+<ul>
+<li>DOM.queryAll: for the equivalent pipe which allows multiple elements to be found by selector</li>
+</ul>
+<h2 id="DOM.queryXPathAll">DOM.queryXPathAll</h2>
+
+
+<p>Returns all Element nodes found by specified Xpath expression.</p>
+<h3 id="use-for-29">Use For</h3>
+<ul>
+<li>returning a group of elements (e.g. prices) for further manipulation (e.g. text parsing)</li>
+</ul>
+<h3 id="see-also-6">See Also</h3>
+<ul>
+<li>DOM.queryXPathOne: for the equivalent pipe which returns a single node</li>
+</ul>
+<h2 id="DOM.queryXPathOne">DOM.queryXPathOne</h2>
+
+
+<p>Returns Element node found by specified Xpath expression.
+An error is thrown if multiple elements are found within each element.</p>
+<h3 id="use-for-30">Use For</h3>
+<ul>
+<li>selecting a unique Element on the page</li>
+<li>for each element in a set, selecting a unique sub-element</li>
+</ul>
+<h3 id="see-also-7">See Also</h3>
+<ul>
+<li>DOM.queryXpathAll: for the equivalent pipe which allows multiple elements to be found by Xpath expression</li>
+</ul>
+<h1 id="data">Data</h1>
+<h2 id="Data.formatUrl">Data.formatUrl</h2>
+
+
+<p>Takes input object with URL components and returns a URL string.</p>
+<p>URL components may include following keys:</p>
+<ul>
+<li>protocol (e.g. <code>http:</code>, <code>https:</code>)</li>
+<li>host (e.g. <code>example.com</code>, <code>example.com:3123</code>)</li>
+<li>hostname (e.g. <code>example.com</code>)</li>
+<li>pathname (e.g. <code>/path/to/resource</code>)</li>
+<li>query: an object with query parameters (e.g. <code>{ hello: &#39;world&#39; }</code>)</li>
+<li>hash (e.g. <code>#link</code>)</li>
+</ul>
+<p>Query parameters are automatically URI-encoded.</p>
+<p>An error is thrown if input value is not an object, or if there&#39;s not enough information to construct a URL.</p>
+<h3 id="use-for-31">Use For</h3>
+<ul>
+<li>composing URLs for network requests and other applications</li>
+</ul>
+<h2 id="Data.restoreLocal">Data.restoreLocal</h2>
+
+
+<p>Restores a set saved with Local Save pipe.
+Input set is discared.</p>
+<h3 id="use-for-32">Use For</h3>
+<ul>
+<li>Do not. This pipe allows creating very non-intuitive data flows, which are hard to reason about.</li>
+</ul>
+<h2 id="Data.saveLocal">Data.saveLocal</h2>
+
+
+<p>Saves input set, so that it could be later restored with Local Restore.</p>
+<h3 id="use-for-33">Use For</h3>
+<ul>
+<li>Do not. This pipe allows creating very non-intuitive data flows, which are nearly impossible to reason about.</li>
+<li>Consider using more conventional tools for solving the problem, or create a custom pipe if none work.</li>
+</ul>
+<h1 id="date">Date</h1>
+<h2 id="Date.format">Date.format</h2>
+
+
+<p>Parses the date from input string using specified input format,
+then returns this date formatted using specified output format.</p>
+<p>An error is thrown if input data is not a string.</p>
+<p>See <a href="https://momentjs.com/docs/#/parsing/string-format/">moment.js docs</a>
+for more information about pattern strings and formatting.</p>
+<h3 id="use-for-34">Use For</h3>
+<ul>
+<li>general purpose date parsing and formatting</li>
+<li>filtering on dates (e.g. format Job Input date to match format on the web page)</li>
+</ul>
+<h1 id="definition">Definition</h1>
+<h2 id="Definition.use">Definition.use</h2>
+
+
+<p>Passes each element in input set to the specified definition, returning its output.</p>
+<p>This pipe is a primary means of working with definitions.
+It allows extracting common functionality of different pipelines as a named definition,
+so that the same pipes could be reused across multiple actions.</p>
+<h3 id="use-for-35">Use For</h3>
+<ul>
+<li>extracting common functionality (e.g. inbound and outbound flight selection
+would share common parts for extracting flight information, prices, etc.)</li>
+</ul>
+<h1 id="eval">Eval</h1>
+<h2 id="Eval.expression">Eval.expression</h2>
+
+
+<p>Evaluates expression according to following rules:</p>
+<ul>
+<li>if value starts with <code>/</code>, then it is interpreted as a JSON pointer into an input object,
+thus behaving in a similar manner to Get Path</li>
+<li>if value starts with <code>=</code>, then the rest is interpreted as a JavaScript expression,
+which has access to top-level keys of input object</li>
+<li>all other values are interpreted as string constants</li>
+</ul>
+<p>The <code>=</code> mode is also useful for making constants, for example:</p>
+<ul>
+<li><code>= true</code> for booleans,</li>
+<li><code>= 42</code> for numbers,</li>
+<li><code>= &quot;/some/path&quot;</code> for string constants which start with <code>/</code></li>
+</ul>
+<h3 id="use-for-36">Use For</h3>
+<ul>
+<li>flexible evaluation of expressions based on input values (arithmetic, boolean, string composition, etc)</li>
+<li>lightweight alternative to JavaScript</li>
+</ul>
+<h2 id="Eval.ifElse">Eval.ifElse</h2>
+
+
+<p>For each element evaluates the condition pipeline.
+If condition is     rue`, evaluates the positive branch pipeline, otherwise evaluates the negative branch.</p>
+<p>Condition pipeline should return a single element for each element in input set.
+An error is thrown if condition value is not a boolean.</p>
+<h3 id="use-for-37">Use For</h3>
+<ul>
+<li>applying different pipelines to elements based on a condition</li>
+<li>advanced scripting</li>
+</ul>
+<h2 id="Eval.javascript">Eval.javascript</h2>
+
+
+<p>Executes an arbitrary JavaScript code and returns its results.</p>
+<h3 id="use-for-38">Use For</h3>
+<ul>
+<li>advanced scripting</li>
+</ul>
+<h1 id="list">List</h1>
+<h2 id="List.append">List.append</h2>
+
+
+<p>Concatenates the input set with the output set of inner pipeline.
+The input set comes before the inner pipeline&#39;s results.</p>
+<p>The inner pipeline is executed only once (as opposed to other pipelines
+which are executed per each element in input set), with #document element as its input set.
+A typical usage is to have a Use Definition pipe inside of it,
+so that multiple definitions can be concatenated together.</p>
+<h3 id="use-for-39">Use For</h3>
+<ul>
+<li>concatenating elements from multiple definitions or other sources</li>
+</ul>
+<h3 id="see-also-8">See Also</h3>
+<ul>
+<li>List.prepend: for similar functionality with different order of elements</li>
+</ul>
+<h2 id="List.countBy">List.countBy</h2>
+
+
+<p>Returns a single element whose value is an object computed as follows:</p>
+<ul>
+<li>each input element is passed through inner pipeline to evaluate a string key</li>
+<li>input elements are then grouped by this key</li>
+<li>the output object consists of key-value pairs where value indicates a count of elements in each group</li>
+</ul>
+<p>This is similar to COUNT / GROUP BY from SQL and is primarily used in advanced scripting scenarios
+(e.g. calculate the number of passengers in each group).</p>
+<p>The DOM node of the result is set to top #document.</p>
+<h3 id="use-for-40">Use For</h3>
+<ul>
+<li>advanced scripting</li>
+</ul>
+<h2 id="List.every">List.every</h2>
+
+
+<p>Returns a single #document element with boolean value.</p>
+<p>The value is <code>true</code> if all of the results of inner pipeline is <code>true</code>.</p>
+<p>Throws an error if the inner pipeline returns non-boolean value.</p>
+<h2 id="List.exists">List.exists</h2>
+
+
+<p>Returns a single element whose value is <code>true</code> if the input set contains one or more elements,
+and <code>false</code> otherwise. The DOM node of the result is set to top #document.</p>
+<h3 id="use-for-41">Use For</h3>
+<ul>
+<li>checking if collection has elements (e.g. as part of filters or matchers)</li>
+</ul>
+<h2 id="List.filter">List.filter</h2>
+
+
+<p>For each input element evaluates the boolean value of inner pipeline.
+The element is then discarded if the value is <code>false</code>, or kept if the value is <code>true</code>.</p>
+<p>Inner pipeline must return a single element for each element in the input set.
+An error is thrown if the resulting value is not a boolean.</p>
+<h3 id="use-for-42">Use For</h3>
+<ul>
+<li>general purpose filtering for various use cases</li>
+</ul>
+<h2 id="List.filterOne">List.filterOne</h2>
+
+
+<p>Same as <code>List.filter</code>, but expects exactly one element.</p>
+<h2 id="List.fromArray">List.fromArray</h2>
+
+
+<p>Given an array as input value, creates an element for each value of this array.</p>
+<p>For example, if input set contains 2 elements with arrays <code>[1, 2, 3]</code> and <code>[4, 5]</code> respectively,
+then the output set will contain 5 elements with values <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code> respectively.</p>
+<p>An error is thrown if input value is not an array.</p>
+<h3 id="use-for-43">Use For</h3>
+<ul>
+<li>trasnforming arrays (e.g. from Job Input) into elements for subsequent manipulations with other pipes</li>
+</ul>
+<h3 id="see-also-9">See Also</h3>
+<ul>
+<li>List.toArray: for reverse functionality</li>
+</ul>
+<h2 id="List.length">List.length</h2>
+
+
+<p>Returns a single element whose value is a number of elements in the input set.</p>
+<h3 id="use-for-44">Use For</h3>
+<ul>
+<li>accessing the count of input elements (e.g. to output the number of available options on the website)</li>
+</ul>
+<h2 id="List.limit">List.limit</h2>
+
+
+<p>Returns specified number of first elements in input set and discards everything else.
+A typical usage scenario is to have limit <code>1</code> which ensures that the output set only contains a single element.</p>
+<h3 id="use-for-45">Use For</h3>
+<ul>
+<li>restricting elements to a single element
+(e.g. for <code>click</code> actions, especially when filtering yields more than one element and
+they are functionally equivalent)</li>
+<li>returning sampled data of fixed length</li>
+</ul>
+<h2 id="List.prepend">List.prepend</h2>
+
+
+<p>Concatenates the output set of inner pipeline with the input set.
+The input set comes after the inner pipeline&#39;s results.</p>
+<p>Note: the inner pipeline is executed only once (as opposed to other pipelines
+which are executed per each element in input set), with #document element as its input set.
+A typical usage is to have a Use Definition pipe inside of it,
+so that multiple definitions can be concatenated together.</p>
+<h3 id="use-for-46">Use For</h3>
+<ul>
+<li>concatenating elements from multiple definitions or other sources</li>
+</ul>
+<h3 id="see-also-10">See Also</h3>
+<ul>
+<li>Append: for similar functionality with different order of elements</li>
+</ul>
+<h2 id="List.repeat">List.repeat</h2>
+
+
+<p>Creates specified number of copies of each input element.</p>
+<h2 id="List.reverse">List.reverse</h2>
+
+
+<p>Returns the elements from the input set in a reversed order.</p>
+<h3 id="use-for-47">Use For</h3>
+<ul>
+<li>advanced scripting</li>
+</ul>
+<h2 id="List.skip">List.skip</h2>
+
+
+<p>Discards specified number of elements and returns everything else.</p>
+<h3 id="use-for-48">Use For</h3>
+<ul>
+<li>excluding placeholder elements from sets, specifically for <code>&lt;option&gt;</code>
+elements whose first element is typically a placeholder and does not represent an actual option</li>
+<li>excluding other kinds of elements like table headers or column headers</li>
+</ul>
+<h2 id="List.skipWhile">List.skipWhile</h2>
+
+
+<p>Starting in specified direction, discards input elements whilst inner pipeline produces <code>true</code>.</p>
+<p>Unlike Filter, which discards all non-matching elements, this pipe
+only discards a continuous sequence of elements either at the start or at the end.</p>
+<h3 id="see-also-11">See Also</h3>
+<ul>
+<li>Take While: for opposite effect.</li>
+</ul>
+<h2 id="List.some">List.some</h2>
+
+
+<p>Returns a single #document element with boolean value.</p>
+<p>The value is <code>true</code> if at least one result of inner pipeline is <code>true</code>.</p>
+<p>Throws an error if the inner pipeline returns non-boolean value.</p>
+<h2 id="List.sortBy">List.sortBy</h2>
+
+
+<p>For each element evaluates the key using inner pipeline,
+then sorts the elements according to this key, in ascending order.</p>
+<h3 id="use-for-49">Use For</h3>
+<ul>
+<li>advanced scripting</li>
+</ul>
+<h2 id="List.takeWhile">List.takeWhile</h2>
+
+
+<p>Starting in specified direction, takes input elements whilst inner pipeline produces <code>true</code>, and discards the rest.</p>
+<p>Unlike Filter, which discards all non-matching elements, this pipe
+only discards a continuous sequence of elements either at the start or at the end.</p>
+<h3 id="see-also-12">See Also</h3>
+<ul>
+<li>Skip While: for opposite effect.</li>
+</ul>
+<h2 id="List.toArray">List.toArray</h2>
+
+
+<p>Returns a single element whose value is an array containing all values of the input set.
+The DOM node of the result is set to top #document.</p>
+<h3 id="use-for-50">Use For</h3>
+<ul>
+<li>transforming elements into arrays (e.g. to use as part of Job Output)</li>
+</ul>
+<h3 id="see-also-13">See Also</h3>
+<ul>
+<li>Unfold Array: for reverse functionality</li>
+</ul>
+<h1 id="number">Number</h1>
+<h2 id="Number.compare">Number.compare</h2>
+
+
+<p>Evaluates two operands by passing each element of input set through two different pipelines,
+then returns the boolean result of numeric comparison of these two operands using specified operator.</p>
+<p>Inner pipelines should return a single element for each element in input set.
+An error is thrown if the result is not a number.</p>
+<h3 id="use-for-51">Use For</h3>
+<ul>
+<li>general purpose numerical comparison (e.g. for matching the number of registered luggage against Job Input)</li>
+</ul>
+<h2 id="Number.mapRange">Number.mapRange</h2>
+
+
+<p>Returns a string value corresponding to one of the configured numeric ranges where the input value belongs to.</p>
+<p>The configured ranges must cover the expected numeric domain and must not overlap to prevent ambiguity.</p>
+<p>The lower bounds of are always inclusive, whereas the upper bounds are always exclusive.
+Therefore, ranges <code>[0, 3)</code> and <code>[3, 5)</code> form a continuous range <code>[0, 5)</code> with no &quot;holes&quot; in it;
+and the input value <code>3</code> will belong to the second range.</p>
+<p>An error is thrown if input value is not a number, or if the number does not belong to any range.</p>
+<h3 id="use-for-52">Use For</h3>
+<ul>
+<li>mapping continuous ranges into discrete categories (e.g. passenger age groups)</li>
+</ul>
+<h2 id="Number.sum">Number.sum</h2>
+
+
+<p>Returns a single element whose value is a numeric sum of all input set values.</p>
+<h1 id="object">Object</h1>
+<h2 id="Object.assign">Object.assign</h2>
+
+
+<p>Evaluates an object with inner pipeline,
+then merges the resulting object with input object by assigning each key of the result to it.</p>
+<p>The inner pipeline must resolve to a single element with object value. An error is thrown if input value is not object/array.</p>
+<h3 id="use-for-53">Use For</h3>
+<ul>
+<li>merging multiple objects together (analogous to <code>Object.assign</code> in JavaScript)</li>
+<li>mixing data from definition into input object</li>
+<li>assigning defaults values with Overwrite: false</li>
+</ul>
+<h2 id="Object.compose">Object.compose</h2>
+
+
+<p>Creates an object according to specified mappings.</p>
+<p>Each mapping specifies a JSON pointer and an expression.
+Expressions are evaluated according to rules specified in Expression pipe and are assigned to
+corresponding JSON pointers.</p>
+<h3 id="use-for-54">Use For</h3>
+<ul>
+<li>shaping output objects with bulk move and assign operations</li>
+<li>building template objects for outputs and network requests, which can subsequently be modified or extended</li>
+</ul>
+<h2 id="Object.deletePath">Object.deletePath</h2>
+
+
+<p>Removes the value at specified path. An error is thrown if input value is not object/array.</p>
+<h3 id="use-for-55">Use For</h3>
+<ul>
+<li>removing unwanted or temporary data (e.g. for composing Job Output objects)</li>
+</ul>
+<h3 id="see-also-14">See Also</h3>
+<ul>
+<li>Compose: for shaping objects using bulk move operations</li>
+<li>Pick: for whitelisting object keys</li>
+</ul>
+<h2 id="Object.entries">Object.entries</h2>
+
+
+<p>Converts each object into <code>[key, value]</code> pairs for each property.</p>
+<p>Throws an error if element value is not an object.</p>
+<h2 id="Object.fromEntries">Object.fromEntries</h2>
+
+
+<p>Returns a single object with properties correspinding to each value of the input set.
+JSON paths are used to control which properties of input set correspond to key/value of the object.
+The DOM node of the result is set to top #document.</p>
+<h2 id="Object.getPath">Object.getPath</h2>
+
+
+<p>Returns the value at specified path.
+An error is thrown if datum resolves to undefined.
+An error is thrown if input value is not object/array.</p>
+<h3 id="use-for-56">Use For</h3>
+<ul>
+<li>accessing nested data of objects and arrays (e.g. Job Inputs)</li>
+</ul>
+<h2 id="Object.hasPath">Object.hasPath</h2>
+
+
+<p>Returns <code>true</code> if input object contains anything at specified path.
+An error is thrown if input value is not an object or an array.</p>
+<h3 id="use-for-57">Use For</h3>
+<ul>
+<li>checking whether optional data is set (e.g. whether inbound flight object is specified)</li>
+</ul>
+<h2 id="Object.pick">Object.pick</h2>
+
+
+<p>Creates an object composed of picked input object keys.
+An error is thrown if input value is not object/array.</p>
+<p>This is effectively a keys whitelisting operation in a sense that it removes all keys not explicitly listed.</p>
+<h3 id="use-for-58">Use For</h3>
+<ul>
+<li>removing unwanted or temporary data (e.g. for composing Job Output objects)</li>
+<li>shaping output objects</li>
+</ul>
+<h3 id="see-also-15">See Also</h3>
+<ul>
+<li>Compose: for shaping objects using bulk move operations</li>
+<li>Delete Path: for removing individual keys</li>
+</ul>
+<h2 id="Object.setPath">Object.setPath</h2>
+
+
+<p>Evaluates the inner pipeline for each element and assigns the resulting value
+to the input object at specified path.
+The inner pipeline must resolve to a single element.
+An error is thrown if input value is not an object or an array.</p>
+<h3 id="see-also-16">See Also</h3>
+<ul>
+<li>Move Path: for moving values to different keys without modification</li>
+<li>Transform Path: for modifying the value at specified path without moving it</li>
+</ul>
+<h3 id="use-for-59">Use For</h3>
+<ul>
+<li>building an object using values from various sources</li>
+<li>modifying or extending existing objects</li>
+</ul>
+<h2 id="Object.wrap">Object.wrap</h2>
+
+
+<p>Returns a new object with input value placed at specified path.</p>
+<h3 id="use-for-60">Use For</h3>
+<ul>
+<li>creating objects out of other value types for further manipulation</li>
+<li>collecting data from multiple sources</li>
+</ul>
+<h1 id="string">String</h1>
+<h2 id="String.extractRegexp">String.extractRegexp</h2>
+
+
+<p>Matches input string against specified regular expressions and returns an array of strings,
+where first element is a whole match and subsequent elements are captured regex groups.</p>
+<p>An error is thrown if input value is not a string.
+On No Match parameter controls the behaviour when input string does not match the regular expression,
+by default an error is thrown.</p>
+<p>See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec">RegExp#exec</a>
+for more information about regular expressions matching and capturing groups.</p>
+<h3 id="use-for-61">Use For</h3>
+<ul>
+<li>extracting parts of string (e.g. to extract flight information from strings like <code>SFO-18 / 01 / 29</code>)</li>
+</ul>
+<h2 id="String.formatTemplate">String.formatTemplate</h2>
+
+
+<p>Returns a string formatted according to specified template.
+The template allows inserting values from input using syntax
+<code>{/path/to/value}</code> where <code>/path/to/value</code> is a JSON pointer into input object.</p>
+<p>An error is thrown if input value is not object/array.</p>
+<h3 id="use-for-62">Use For</h3>
+<ul>
+<li>quickly composing a string representation of objects (e.g. for matching or filtering)</li>
+</ul>
+<h2 id="String.join">String.join</h2>
+
+
+<p>Returns a single element with string value, produced by concatenating all values of input elements
+with specified separator.</p>
+<p>An error is thrown if input set contains object or array values, which are not supported.</p>
+<h2 id="String.mapRegexp">String.mapRegexp</h2>
+
+
+<p>Matches the input string value against specified patterns,
+then returns a string that corresponds to the matched pattern.
+The behaviour when no patterns match is controlled by On No Match parameter.</p>
+<p>An error is thrown if input value is not a string.</p>
+<h3 id="use-for-63">Use For</h3>
+<ul>
+<li>mapping enums from one domain to another (e.g. map <code>mr</code>, <code>ms</code>, <code>mrs</code> titles to website format and vice versa)</li>
+</ul>
+<h2 id="String.matchesRegexp">String.matchesRegexp</h2>
+
+
+<p>Returns <code>true</code> if input string matches specified regular expression, and <code>false</code> otherwise.
+An error is thrown iff input value is not a string.</p>
+<p>See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match">String#match</a>
+for more information about regular expressions matching.</p>
+<h3 id="parameters-1">Parameters</h3>
+<ul>
+<li>regexp: regular expression</li>
+<li>flags</li>
+</ul>
+<h3 id="use-for-64">Use For</h3>
+<ul>
+<li>general purpose string matching (e.g. as part of matchers or conditions)</li>
+</ul>
+<h3 id="see-also-17">See Also</h3>
+<ul>
+<li>Replace Regexp: for replacing string with regular expressions</li>
+<li>Extract Regexp: for retrieving capturing groups</li>
+</ul>
+<h2 id="String.parseBoolean">String.parseBoolean</h2>
+
+
+<p>Parses a boolean value from input string.</p>
+<p>An error is thrown if input value is not a string.</p>
+<h3 id="use-for-65">Use For</h3>
+<ul>
+<li>parsing booleans obtained from string representation (e.g. from web page attribute)</li>
+</ul>
+<h2 id="String.parseColor">String.parseColor</h2>
+
+
+<p>Parses color value from input string, returning detailed information about color,
+including its rgb, hsv, hsl values.</p>
+<h2 id="String.parseJson">String.parseJson</h2>
+
+
+<p>Parses JSON from input value string.</p>
+<p>An error is thrown if input value is not a valid JSON string.</p>
+<h3 id="use-for-66">Use For</h3>
+<ul>
+<li>advanced scripting (e.g. parse raw network response, or parse JSON from webpage)</li>
+</ul>
+<h2 id="String.parseNumber">String.parseNumber</h2>
+
+
+<p>Parses a number value from input string.</p>
+<p>An error is thrown if input value is not a string.</p>
+<h3 id="use-for-67">Use For</h3>
+<ul>
+<li>parsing numbers obtained from string representation (e.g. from web page attribute)
+for subsequent use with other numeric pipes</li>
+</ul>
+<h2 id="String.parseUrl">String.parseUrl</h2>
+
+
+<p>Parses input string using embedded URL parser, and returns the result.</p>
+<p>The result is an object containing following properties:</p>
+<ul>
+<li>protocol (e.g. <code>http:</code>, <code>https:</code>)</li>
+<li>host (e.g. <code>example.com</code>, <code>example.com:3123</code>)</li>
+<li>hostname (e.g. <code>example.com</code>)</li>
+<li>pathname (e.g. <code>/path/to/resource</code>)</li>
+<li>query: an object with query parameters (e.g. <code>{ hello: &#39;world&#39; }</code>)</li>
+<li>hash (e.g. <code>#link</code>)</li>
+</ul>
+<h2 id="String.removeDiacritics">String.removeDiacritics</h2>
+
+
+<p>Replaces accented characters with their ASCII equivalent,
+e.g. <code>å</code> becomes <code>a</code>, <code>œ</code> becomes <code>oe</code> and so on.</p>
+<h3 id="use-for-68">Use For</h3>
+<ul>
+<li>working with international text, especially in matching</li>
+</ul>
+<h2 id="String.replaceRegexp">String.replaceRegexp</h2>
+
+
+<p>Returns a new string with some (or all) matches of specified regular expression replaced with specified replacement.
+An error is thrown if input value is not a string.</p>
+<p>See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace">String#replace</a>
+for more information about regular expressions and replacement strings.</p>
+<h3 id="use-for-69">Use For</h3>
+<ul>
+<li>general purpose search-and-replace (e.g. trim unwanted characters from string)</li>
+</ul>
+<h3 id="see-also-18">See Also</h3>
+<ul>
+<li>Matches Regexp: for testing if string matches regular expression</li>
+<li>Extract Regexp: for retrieving capturing groups</li>
+</ul>
+<h2 id="String.sanitizeHtml">String.sanitizeHtml</h2>
+
+
+<p>Takes input string containing HTML markup and removes unsafe tags
+(e.g. <code>&lt;script&gt;</code>) and attributes (e.g. <code>onclick</code>).</p>
+<p>An error is thrown if input value is not a string.</p>
+<h3 id="use-for-70">Use For</h3>
+<ul>
+<li>pre-processing</li>
+</ul>
+<h1 id="value">Value</h1>
+<h2 id="Value.contains">Value.contains</h2>
+
+
+<p>Evaluates two operands by passing each element of input set through two different pipelines,
+then returns a boolean indicating whether operand A conceptually contains operand B.</p>
+<p>The result depends on the data type of operand A and is evaluated according to following rules:</p>
+<ul>
+<li>if operand A is an object, then the result is <code>true</code> only if operand B is also an object,
+and each value of object B is equal to the corresponding value of object A</li>
+<li>if operand B is an array, then the result is <code>true</code> only is operand B is also an array,
+and each item of array B exists in array A</li>
+<li>all other data types are coerced to strings, and <code>true</code> is returned if B is a substring of A</li>
+</ul>
+<p>Inner pipelines should return a single element for each element in input set.</p>
+<h3 id="use-for-71">Use For</h3>
+<ul>
+<li>general purpose containment tests which work across multiple data types, specifically:<ul>
+<li>is string a substring of another string</li>
+<li>is object a sub-object of another object</li>
+<li>is array a sub-array of another array</li>
+</ul>
+</li>
+</ul>
+<h3 id="see-also-19">See Also</h3>
+<ul>
+<li>Contains Text: for simpler alternative when second operand is a string constant</li>
+</ul>
+<h2 id="Value.containsText">Value.containsText</h2>
+
+
+<p>Returns <code>true</code> if input value contains specified string constant.
+Non-string values are coerced to strings and are tested according to rules specified in Contains.</p>
+<h3 id="parameters-2">Parameters</h3>
+<ul>
+<li>text: string constant to test the input value against</li>
+</ul>
+<h3 id="use-for-72">Use For</h3>
+<ul>
+<li>creating matchers where matching text partially is preferred</li>
+<li>general purpose string containment tests against string constant</li>
+</ul>
+<h2 id="Value.equals">Value.equals</h2>
+
+
+<p>Evaluates two operands by passing each element of input set through two different pipelines,
+then returns a boolean indicating whether the resulting values are conceptually equal.</p>
+<p>The equality is tested according to following rules:</p>
+<ul>
+<li>strings are compared ignoring case, diacritics and extraneous whitespace</li>
+<li>objects are compared key-by-key recursively (deep equality), keys are compared strictly</li>
+<li>arrays are compared element-wise</li>
+<li>all other data types are coerced to strings and compared according the above rules</li>
+</ul>
+<p>Inner pipelines should return a single element for each element in input set.</p>
+<h3 id="use-for-73">Use For</h3>
+<ul>
+<li>general purpose equality tests</li>
+<li>filtering by matching data from various sources
+(e.g. one of the operands may obtain Job Inputs to test input values against)</li>
+</ul>
+<h3 id="see-also-20">See Also</h3>
+<ul>
+<li>Euqals Text: for simpler alternative when one of the operands is a string constant</li>
+</ul>
+<h2 id="Value.equalsText">Value.equalsText</h2>
+
+
+<p>Returns <code>true</code> if input value equals to specified string constant.
+Non-string values are coerced to strings and are tested according to rules specified in Equals.</p>
+<p>This is simpler equivalent to Equals pipe, where one of the operands is constant.</p>
+<h3 id="use-for-74">Use For</h3>
+<ul>
+<li>creating matchers with text equality tests</li>
+<li>general purpose equality tests where one of the operands is constant</li>
+</ul>
+<h2 id="Value.getConstant">Value.getConstant</h2>
+
+
+<p>Returns specified constant value.</p>
+<h3 id="use-for-75">Use For</h3>
+<ul>
+<li>obtaining a constant value which never changes across script executions
+(e.g. for navigating to specific constant URL)</li>
+<li>quickly test actions that require a string input</li>
+</ul>
+<h2 id="Value.getConstantArray">Value.getConstantArray</h2>
+
+
+<p>Returns an array of specified constant values.</p>
+<h3 id="use-for-76">Use For</h3>
+<ul>
+<li>quickly creating arrays of primitive values (numbers, strings, etc)</li>
+</ul>
+<h2 id="Value.getDynamicInput">Value.getDynamicInput</h2>
+
+
+<p>Returns the value of specified Job Input.
+The input key is evaluated using nested pipeline.</p>
+<h2 id="Value.getGlobal">Value.getGlobal</h2>
+
+
+<p>Returns the value of specific Global variable (set by Set Global action).
+An error is thrown if Global variable is not set.</p>
+<h3 id="use-for-77">Use For</h3>
+<ul>
+<li>accessing global variables (advanced scripting)</li>
+</ul>
+<h2 id="Value.getInput">Value.getInput</h2>
+
+
+<p>Returns the value of specified Job Input.</p>
+<h3 id="use-for-78">Use For</h3>
+<ul>
+<li>accessing Job Inputs for further manipulation (e.g. filter by Job Input value)</li>
+</ul>
+<h2 id="Value.getJson">Value.getJson</h2>
+
+
+<p>Returns the specified JSON object.</p>
+<h3 id="use-for-79">Use For</h3>
+<ul>
+<li>testing (quickly providing pipelines with any data)</li>
+<li>building templates for Job Outputs and Network Requests,
+which can subsequently be modified or extended</li>
+</ul>
+<h2 id="Value.isEmpty">Value.isEmpty</h2>
+
+
+<p>Returns <code>true</code> if input value is either an empty string, an empty array or <code>null</code>.
+The string is considered empty if it contains nothing but whitespace.</p>
+<h3 id="use-for-80">Use For</h3>
+<ul>
+<li>checking for null values, especially if previous pipe is optional
+(that is, allowed to return <code>null</code> values instead of throwing errors, which is a common pipe convention)</li>
+<li>checking for empty strings</li>
+</ul>
+<h2 id="Value.peekInput">Value.peekInput</h2>
+
+
+<p>Gets the input without requesting it, i.e. doesn&#39;t set job.state = &#39;awaitingInput&#39; if the input not exists yet.</p>
+<h3 id="use-for-81">Use For</h3>
+<ul>
+<li>checking if the Job Input is supplied by the time of playback</li>
+</ul>
+
+        </div>
+    </div>
+</body>
+</html>

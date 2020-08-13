@@ -1,0 +1,35 @@
+{
+    "env": {
+        "node": true,
+        "browser": true
+    },
+    "rules": {
+        "no-use-before-define": 0,
+        "prefer-arrow-callback": 0,
+        "max-nested-callbacks": 0,
+        "no-eval": 2,
+        "init-declarations": [2, "always"],
+        "import/no-unresolved": [2, { "ignore": ["^~/"] }],
+        "no-console": [2, {
+            "allow": ["info", "warn", "error", "debug"]
+        }],
+        "no-alert": 0
+    },
+    "overrides": [
+        {
+            "files": ["*.vue"],
+            "plugins": ["vue"],
+            "extends": ["plugin:vue/essential"],
+            "rules": {
+                "import/no-default-export": 0,
+                "vue/require-v-for-key": 0
+            }
+        },
+        {
+            "files": ["*.js"],
+            "rules": {
+                "import/no-default-export": 0
+            }
+        }
+    ]
+}

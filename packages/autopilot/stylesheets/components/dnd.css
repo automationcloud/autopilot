@@ -1,0 +1,13 @@
+.dnd-pseudo {
+    position: fixed;
+    left: -999999999px;
+    padding: 2px var(--gap--small);
+    background: var(--color-blue--500);
+    color: var(--ui-color--white);
+    font-size: var(--font-size--small);
+    border-radius: var(--border-radius);
+}
+
+.dnd-target [data-dnd-path] * {
+    pointer-events: none;
+}

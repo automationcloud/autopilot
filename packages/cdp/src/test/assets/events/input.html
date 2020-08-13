@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+    href="../commons.css"/>
+</head>
+<body>
+    <main>
+        <input type="text" value="Change me"/>
+        <div id="events"></div>
+    </main>
+    <script>
+    const output = document.querySelector('#events');
+    const input = document.querySelector('input');
+    ['pointerdown', 'pointerup', 'click', 'mousedown', 'mouseup', 'focus', 'focusin', 'focusout', 'blur',
+    'keydown', 'keyup', 'keypress', 'input', 'change'].forEach(ev => {
+        input.addEventListener(ev, () => {
+            output.innerText = [output.innerText, ev].filter(Boolean).join(',');
+        });
+    });
+    </script>
+</body>
+</html>

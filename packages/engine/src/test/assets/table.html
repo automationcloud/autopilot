@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+    href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <h1>Your language is: <span class="lang">English</span></h1>
+        <table>
+            <tr>
+                <th><label>English</label></th>
+                <th><label>Français</label></th>
+                <th><label>Português</label></th>
+                <th><label>Español</label></th>
+            </tr>
+            <tr>
+                <td><button data-lang="English">Select</button></td>
+                <td><button data-lang="Français">Select</button></td>
+                <td><button data-lang="Português">Select</button></td>
+                <td><button data-lang="Español">Select</button></td>
+            </tr>
+        </table>
+    </main>
+    <script>
+    const lang = document.querySelector('.lang');
+    const buttons = document.querySelectorAll('button');
+    [].forEach.call(buttons, button => {
+        button.addEventListener('click', () => {
+            lang.innerText = button.getAttribute('data-lang');
+        });
+    });
+    </script>
+</body>
+</html>

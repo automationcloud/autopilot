@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <button type="button">
+            Click me
+        </button>
+    </main>
+    <script>
+    const button = document.querySelector('button');
+    button.addEventListener('click', () => {
+        const submitted = document.createElement('div');
+        submitted.setAttribute('class', 'submitted');
+        submitted.innerText = 'Submitted';
+        const parent = button.parentNode;
+        parent.removeChild(button);
+        parent.appendChild(submitted);
+    });
+    </script>
+</body>
+</html>

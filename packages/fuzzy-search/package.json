@@ -1,0 +1,22 @@
+{
+    "name": "@automationcloud/fuzzy-search",
+    "version": "31.12.0",
+    "description": "Fuzzy search",
+    "main": "out/main/index.js",
+    "types": "out/main/index.d.ts",
+    "author": "ubio",
+    "license": "MIT",
+    "scripts": {
+        "test": "mocha"
+    },
+    "files": [
+        "out/main/**/*"
+    ],
+    "devDependencies": {
+        "@types/mocha": "^7.0.2",
+        "mocha": "^8.0.1"
+    },
+    "dependencies": {
+        "fast-json-stable-stringify": "^2.1.0"
+    }
+}

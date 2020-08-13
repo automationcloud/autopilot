@@ -1,0 +1,12 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "references": [
+        { "path": "../engine" },
+        { "path": "../cdp" }
+    ],
+    "compilerOptions": {
+        "rootDir": "./src/app",
+        "outDir": "./out/app",
+    },
+    "include": ["src/app"],
+}

@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="./commons.css"/>
+</head>
+<body>
+    <main>
+        Expect button in 5 seconds
+    </main>
+    <script>
+        const main = document.querySelector('main');
+        setTimeout(() => {
+            const button = document.createElement('button');
+            button.innerText = 'Hello';
+            main.appendChild(button);
+        }, 5000);
+    </script>
+</body>
+</html>

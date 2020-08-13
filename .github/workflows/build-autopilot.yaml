@@ -1,0 +1,31 @@
+name: Build Autopilot
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    name: build
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract tag as env var
+        run: |
+          ref="${{ github.ref }}"
+          echo "::set-env name=TAG::${ref#refs/tags/}"
+
+      - name: Setup npm private token
+        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
+      - run: npm run init
+      - run: npm run ap:release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USE_HARD_LINKS: 'false'
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}

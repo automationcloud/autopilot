@@ -1,0 +1,84 @@
+:root {
+    --color-cyan: #27b9cc;
+    --color-pink: #ff5a5f;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: 14px/1.25 Libre Franklin, sans-serif;
+}
+
+img {
+    border: 0;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: var(--color-cyan);
+}
+
+h1, h2, h3, h4, ul, ol, p {
+    margin: 1em 0;
+}
+
+ul, ol {
+    padding: 0 2em;
+}
+
+li {
+    margin: .5em 0;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 300;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: 400;
+    color: #888;
+}
+
+code {
+    font-family: monospace;
+    color: var(--color-pink);
+}
+
+/* Layout */
+
+.container {
+    box-sizing: border-box;
+    padding: 0 1em;
+}
+
+@media (min-width: 640px) {
+    .container {
+        width: 640px;
+        margin: 0 auto;
+    }
+}
+
+.header {
+    padding: 16px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.logo {
+    height: 24px;
+    margin-right: 1em;
+}
+
+.header a {
+    padding: 1em;
+    color: var(--color-pink);
+}

@@ -1,0 +1,37 @@
+:root {
+    --gap: 10px;
+    --gap--small: 6px;
+
+    --font-size: 12px;
+    --font-size--small: 10px;
+
+    --tree-bar-size: 28px;
+    --tree-icon-size: 28px;
+
+    --dom-expand-toggler-size: 10px;
+    --dom-expand-icon-size: 7px;
+    --dom-expand-ruler-shift: calc((var(--dom-expand-icon-size) - 1px) / 2);
+    --dom-delim-color: var(--color-warm--500);
+    --dom-text-color: var(--color-cool--600);
+    --dom-tagname-color:  var(--color-yellow--600); /*rgb(136, 18, 128)*/
+    --dom-id-color: var(--color-red--700);
+    --dom-class-color: var(--color-blue--600);
+    --dom-attr-key-color: var(--color-yellow--700);
+    --dom-attr-val-color: var(--color-blue--500);
+
+    --pipe-dom-color: var(--color-yellow--500);
+    --pipe-value-color: var(--color-brand-blue--700);
+    --pipe-other-color: var(--color-warm--600);
+
+    --ui-color--secondary: var(--color-cool--500);
+    --ui-color--secondary--hover: var(--color-cool--600);
+    --ui-color--accent: var(--color-blue--500);
+    --ui-color--accent--hover: var(--color-blue--600);
+
+    --ui-selected-background-color: var(--color-blue--200);
+    --ui-selected-border-color: var(--color-blue--300);
+    --border-shadow--focus: var(--color-blue--400);
+    --border-color--focus: var(--color-blue--500);
+
+    --button-background--frameless: transparent;
+}

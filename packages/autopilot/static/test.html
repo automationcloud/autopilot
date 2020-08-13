@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>Autopilot Test</title>
+        <link href="../node_modules/mocha/mocha.css"
+            rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="mocha">
+        </div>
+        <script src="../node_modules/mocha/mocha.js">
+        </script>
+        <script>mocha.setup('bdd')</script>
+        <script>
+        require('./externals');
+        const scriptUrl = process.env.NODE_ENV === 'production' ?
+            './build/test.js' : 'http://localhost:9000/test.js';
+        const scriptTag = document.createElement('script');
+        scriptTag.setAttribute('src', scriptUrl);
+        document.documentElement.appendChild(scriptTag);
+        </script>
+        <script>
+            setTimeout(() => mocha.run(), 100);
+        </script>
+    </body>
+</html>

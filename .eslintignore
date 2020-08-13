@@ -1,0 +1,13 @@
+node_modules/
+out/
+dist/
+static/
+build/
+grammars/
+encrypted.*
+plaintext.*
+package-lock.json
+.tmp/
+# we temporarily exclude wasp because we intend to migrate it to TS at some point
+packages/wasp/
+packages/autopilot/archive

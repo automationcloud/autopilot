@@ -1,0 +1,66 @@
+{
+    name: 'Happy case',
+    contexts: [
+        {
+            type: 'main',
+            actions: [
+                {
+                    type: 'Page.navigate',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getConstant',
+                                value: 'http://localhost:3007/input.html'
+                            }
+                        ]
+                    }
+                },
+            ]
+        },
+        {
+            type: 'context',
+            flowType: 'success',
+            matchers: [
+                {
+                    type: 'matcher',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: 'input[type="text"]' },
+                            { type: 'List.exists' }
+                        ]
+                    }
+                }
+            ],
+            actions: [
+                {
+                    type: 'Page.input',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: 'input' },
+                            { type: 'Value.getInput', inputKey: 'account' },
+                            { type: 'Object.getPath', path: '/name' }
+                        ]
+                    }
+                },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'object',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '#output' },
+                            {
+                                type: 'Object.setPath',
+                                path: '/upperCasedName',
+                                pipeline: {
+                                    pipes: [
+                                        { type: 'DOM.getText' }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

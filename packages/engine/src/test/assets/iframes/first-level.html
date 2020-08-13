@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<body>
+    <div>
+        <label>
+            Card number
+            <input name="card_number"/>
+        </label>
+    </div>
+    <iframe width="0"
+            height="0"
+            src="garbage.html">
+    </iframe>
+    <iframe id="frame2"
+            src="second-level.html">
+    </iframe>
+    <iframe width="0"
+            height="0"
+            src="garbage.html">
+    </iframe>
+    <script>
+    var input = document.querySelector('[name="card_number"]');
+    input.addEventListener('change', function() {
+        top.postMessage({
+            card_number: input.value
+        }, '*');
+    });
+    </script>
+</body>
+</html>

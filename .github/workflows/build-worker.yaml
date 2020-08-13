@@ -1,0 +1,68 @@
+name: Build and push worker
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Extract tag as env var
+        run: |
+          ref="${{ github.ref }}"
+          echo "::set-env name=TAG::${ref#refs/tags/}"
+
+      - name: Build and push development image
+        uses: docker/build-push-action@v1
+        with:
+          username: _json_key
+          password: ${{ secrets.GCP_ACCESS_DEVELOPMENT }}
+          path: ./packages/worker/
+          dockerfile: ./packages/worker/Dockerfile
+          registry: gcr.io
+          repository: automation-cloud-development/worker
+          build_args: NPM_TOKEN=${{ secrets.NPM_TOKEN }},VERSION=${{ env.TAG }}
+          tag_with_ref: true
+
+      - name: Build and push production image
+        uses: docker/build-push-action@v1
+        with:
+          username: _json_key
+          password: ${{ secrets.GCP_ACCESS_PRODUCTION }}
+          path: ./packages/worker/
+          dockerfile: ./packages/worker/Dockerfile
+          registry: gcr.io
+          repository: automation-cloud-production/worker
+          build_args: NPM_TOKEN=${{ secrets.NPM_TOKEN }},VERSION=${{ env.TAG }}
+          tag_with_ref: true
+
+      - name: Notify k8s repo
+        uses: docker://automationcloud/repository-dispatch:latest
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          owner: ubio
+          repository: k8s
+          event: built-worker
+          payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "tag": "${{ env.TAG }}"}'
+
+      - name: Notify Slack on Success
+        if: ${{ success() }}
+        uses: docker://automationcloud/rsslack:latest
+        with:
+          channel: "#ci-cd"
+          message: ":punch: Worker ${{ env.TAG }} built."
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+
+      - name: Notify Slack on Failure
+        if: ${{ failure() }}
+        uses: docker://automationcloud/rsslack:latest
+        with:
+          channel: "#ci-cd"
+          message: ":face_palm: Worker ${{ env.TAG }} build failed."
+          slack_token: ${{ secrets.SLACK_TOKEN }}

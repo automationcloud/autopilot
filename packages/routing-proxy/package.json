@@ -1,0 +1,14 @@
+{
+    "name": "@automationcloud/routing-proxy",
+    "version": "31.12.0",
+    "main": "out/main",
+    "scripts": {},
+    "files": [
+        "out/main/**/*",
+        "certs/**/*"
+    ],
+    "author": "ubio",
+    "dependencies": {
+        "fast-json-stable-stringify": "^2.1.0"
+    }
+}

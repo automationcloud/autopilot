@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+    href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <h1>Your language is: <span class="lang">English</span></h1>
+        <button>English</button>
+        <button>Français</button>
+        <button>Português</button>
+        <button>Español</button>
+    </main>
+    <script>
+    const lang = document.querySelector('.lang');
+    const buttons = document.querySelectorAll('button');
+    [].forEach.call(buttons, button => {
+        button.addEventListener('click', () => {
+            lang.innerText = button.innerText;
+        });
+    });
+    </script>
+</body>
+</html>

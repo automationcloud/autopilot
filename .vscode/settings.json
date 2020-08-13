@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/out": true,
+        "**/dist": true,
+        "**/.tmp": true,
+        "**/static/build": true
+    }
+}

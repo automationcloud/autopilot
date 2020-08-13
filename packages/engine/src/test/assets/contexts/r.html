@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../commons.css"/>
+    </head>
+    <body>
+        <main class="r">
+            <h1>R</h1>
+            <a href="?page=1">1</a>
+            <a href="?page=2">2</a>
+            <a href="?page=3">3</a>
+            <a href="?page=4">4</a>
+            <a href="?page=5">5</a>
+        </main>
+        <script>
+            const h1 = document.querySelector('h1');
+            const params = new URLSearchParams(location.search.substring(1));
+            const page = params.get('page') || '1';
+            h1.innerText = h1.innerText + page;
+        </script>
+    </body>
+</html>

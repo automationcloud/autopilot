@@ -1,0 +1,17 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "references": [
+        { "path": "../cdp" },
+        { "path": "../routing-proxy" }
+    ],
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./out",
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "src/test/assets"
+    ]
+}

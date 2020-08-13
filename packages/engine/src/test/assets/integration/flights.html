@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="../commons.css"/>
+</head>
+<body>
+    <main>
+        <h2>Flights</h2>
+        <div id="flights">
+        </div>
+    </main>
+    <script>
+        const flights = document.querySelector('#flights');
+        const times = [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
+            .map(hr => [`${hr}:00`, `${hr + 1}:30`]);
+        const destinations = [
+            ['LHR', 'SFO'],
+            ['LHR', 'EDI'],
+            ['LHR', 'BCN'],
+            ['LHR', 'SXF'],
+            ['LHR', 'CDG'],
+            ['LHR', 'HEL'],
+            ['LHR', 'SVO'],
+            ['LGW', 'EDI'],
+            ['LGW', 'LUX'],
+        ];
+
+        for (const dest of destinations) {
+            const d = document.createElement('div');
+            d.setAttribute('class', 'route');
+            d.innerHTML = `<h3>${dest[0]} -> ${dest[1]}</h3>`;
+            flights.appendChild(d);
+            for (const t of times) {
+                const e = document.createElement('div');
+                e.setAttribute('class', 'flight');
+                e.innerHTML = `
+                   <span class="flight-from">${t[0]}</span>
+                   <span class="flight-to">${t[1]}</span>
+                   <span class="flight-price">£76.99</span>
+                `;
+                d.appendChild(e);
+            }
+        }
+    </script>
+</body>
+</html>

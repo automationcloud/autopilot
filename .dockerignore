@@ -1,0 +1,11 @@
+.git
+**/node_modules
+**/test
+**/.tmp
+**/out
+.env*
+Dockerfile*
+
+packages/autopilot/
+k8s/
+docs/

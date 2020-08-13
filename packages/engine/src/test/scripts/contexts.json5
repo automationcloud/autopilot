@@ -1,0 +1,81 @@
+{
+    name: 'contexts',
+    contexts: [
+        { type: 'main' },
+        {
+            id: 'a1',
+            name: 'A1',
+            limit: 1,
+            matchers: [
+                {
+                    type: 'Flow.expect',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.a1' },
+                            { type: 'DOM.isVisible' }
+                        ]
+                    }
+                }
+            ],
+            actions: [
+                { type: 'Flow.group' }
+            ]
+        },
+        {
+            id: 'a2',
+            name: 'A2',
+            limit: 1,
+            matchers: [
+                {
+                    type: 'Flow.expect',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.a2' },
+                            { type: 'DOM.isVisible' }
+                        ]
+                    }
+                }
+            ],
+            actions: [
+                { type: 'Flow.group' }
+            ]
+        },
+        {
+            id: 'r',
+            name: 'R',
+            limit: 5,
+            matchers: [
+                {
+                    type: 'Flow.expect',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.r' },
+                            { type: 'DOM.isVisible' }
+                        ]
+                    }
+                }
+            ],
+            actions: [
+                { type: 'Flow.group' }
+            ]
+        },
+        {
+            id: 'interstitial',
+            name: 'Interstitial',
+            errorCode: 'customErrorCode',
+            limit: 1,
+            matchers: [
+                {
+                    type: 'Flow.expect',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.interstitial' },
+                            { type: 'DOM.isVisible' }
+                        ]
+                    }
+                }
+            ],
+            actions: []
+        }
+    ]
+}

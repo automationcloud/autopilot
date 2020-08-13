@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<body id="top"
+      style="padding: 5em">
+    <div>
+        <label>
+            Name on card
+            <input name="card_name"/>
+        </label>
+    </div>
+    <iframe width="0"
+            height="0"
+            src="garbage.html">
+    </iframe>
+    <iframe id="frame1"
+            src="http://127.0.0.1:3007/iframes/first-level.html">
+    </iframe>
+    <iframe width="0"
+            height="0"
+            src="garbage.html">
+    </iframe>
+    <div class="card_details">
+        <div class="card_number"></div>
+        <div class="card_verify"></div>
+    </div>
+    <script>
+    window.addEventListener('message', function(ev) {
+        var number = document.querySelector('.card_number');
+        var verify = document.querySelector('.card_verify');
+        var data = ev.data || {};
+        if (data.card_number) {
+            number.innerText = data.card_number;
+        }
+        if (data.card_verify) {
+            verify.innerText = data.card_verify;
+        }
+    });
+    </script>
+</body>
+</html>

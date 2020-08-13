@@ -1,0 +1,33 @@
+.form-row {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: baseline;
+    margin: var(--gap) 0;
+    min-height: 1.5em;
+}
+
+.form-row__label {
+    flex: 0 1 120px;
+    min-width: 0;
+}
+
+.form-row__controls {
+    flex: 1 1 240px;
+    min-width: 0;
+}
+
+.form-block {
+    margin: var(--gap) 0;
+}
+
+.form-block__label {
+    margin-bottom: var(--gap--small);
+}
+
+.form-line {
+    margin-bottom: var(--gap);
+}
+
+.form-line--small {
+    margin-bottom: var(--gap--small);
+}

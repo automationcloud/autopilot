@@ -1,0 +1,91 @@
+{
+    name: '3dsecure',
+    contexts: [
+        {
+            type: 'main',
+            actions: [
+                {
+                    type: 'Page.navigate',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getConstant',
+                                value: 'http://localhost:3007/3dsecure/index.html'
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: '3dsecure',
+                    type: 'Payment.process3DSecure',
+                    timeout: 2000,
+                    children: [
+                        {
+                            type: 'Page.click',
+                            pipeline: {
+                                pipes: [
+                                    { type: 'DOM.queryAll', selector: 'button' },
+                                    {
+                                        type: 'List.filter',
+                                        pipeline: {
+                                            pipes: [
+                                                {
+                                                    type: 'DOM.getAttribute',
+                                                    attribute: 'id'
+                                                },
+                                                {
+                                                    type: 'Value.equals',
+                                                    pipelineA: {},
+                                                    pipelineB: {
+                                                        pipes: [
+                                                            {
+                                                                type: 'Value.getInput',
+                                                                inputKey: 'buttonId'
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                }
+            ]
+        },
+        {
+            type: 'context',
+            flowType: 'success',
+            resolve3dsecure: true,
+            matchers: [
+                {
+                    type: 'matcher',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.tds-success' },
+                            { type: 'List.exists' }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            type: 'context',
+            id: 'blacklisted-context',
+            flowType: 'normal',
+            matchers: [
+                {
+                    type: 'matcher',
+                    pipeline: {
+                        pipes: [
+                            { type: 'DOM.queryOne', selector: '.not-exist' },
+                            { type: 'List.exists' }
+                        ]
+                    }
+                }
+            ],
+        },
+    ]
+}

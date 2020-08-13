@@ -1,0 +1,43 @@
+{
+    "name": "@automationcloud/autopilot-monorepo",
+    "private": "false",
+    "scripts": {
+        "init": "npm i && lerna clean -y && lerna bootstrap && npm run clean && npm run compile",
+        "bootstrap": "npm i && lerna bootstrap --ci",
+        "clean": "rm -rf .tmp && lerna exec -- rm -rf *.tsbuildinfo out/ && lerna run clean",
+        "dev": "run-p watch:*",
+        "ap": "cd packages/autopilot && npm run dev",
+        "ap:release": "cd packages/autopilot && npm run dist",
+        "watch:ts": "tsc -b -w",
+        "compile": "run-s compile:ts compile:packages",
+        "compile:ts": "tsc -b",
+        "compile:packages": "lerna run compile",
+        "lint": "eslint ./packages --ext=.js,.ts --cache",
+        "prettier": "prettier --write '**/*.{ts,js,json}'",
+        "prettier-staged": "pretty-quick --staged --pattern '**/*.{ts,js,json}' --verbose",
+        "test": "lerna run test --stream --concurrency 1",
+        "build": "lerna run build",
+        "changelog": "node ./changelog.js",
+        "worker:build-image": "docker build -t ubio/worker:latest --build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg VERSION=${npm_package_version} packages/worker",
+        "release": "lerna version --no-push --force-publish -y && lerna publish from-git -y",
+        "preversion": "npm run clean && npm run compile && npm run build",
+        "version": "npm run changelog && git add ./CHANGELOG.md && git add .",
+        "postpublish": "git push origin $(git rev-parse --abbrev-ref HEAD) --tags"
+    },
+    "pre-commit": [
+        "lint"
+    ],
+    "devDependencies": {
+        "@types/node": "^13.9.1",
+        "@typescript-eslint/eslint-plugin": "^2.23.0",
+        "@typescript-eslint/parser": "^2.23.0",
+        "chalk": "^2.4.1",
+        "eslint": "^6.8.0",
+        "eslint-config-recommended": "^4.0.0",
+        "eslint-plugin-vue": "^6.2.2",
+        "lerna": "^3.22.1",
+        "npm-run-all": "^4.1.5",
+        "pre-commit": "^1.2.2",
+        "typescript": "^3.8.3"
+    }
+}

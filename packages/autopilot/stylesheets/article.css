@@ -1,0 +1,53 @@
+article {
+    line-height: 1.35em;
+}
+
+article h1, article h2, article h3 {
+    margin: var(--gap) 0;
+}
+
+article h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+article h4 {
+    margin: var(--gap) 0;
+    padding-top: var(--gap);
+
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    color: var(--color-cool--500);
+}
+
+article ul {
+    margin: var(--gap) 0;
+    list-style-type: disc;
+    padding-left: 1.5em;
+}
+
+article li {
+    display: list-item;
+    margin: var(--gap--small) 0;
+}
+
+article code {
+    padding: 0 2px;
+    background: var(--color-mono--200);
+    border-radius: var(--border-radius);
+}
+
+article kbd {
+    font-family: var(--font-family--mono);
+    font-size: var(--font-size--mono);
+    line-height: var(--font__line-height--mono);
+    word-wrap: break-word;
+    word-break: break-word;
+
+    padding: 0 2px;
+    background: var(--color-mono--200);
+    border-radius: var(--border-radius);
+}

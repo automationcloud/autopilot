@@ -1,0 +1,39 @@
+.flexrow {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: var(--gap--small);
+}
+
+.flexrow--heading {
+    color: var(--color-cool--500);
+    font-size: var(--font-size--small);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.flexrow:focus {
+    z-index: 2;
+    outline: 0;
+    box-shadow:
+        inset 0 0 0 1px var(--border-color--focus),
+        0 0 0 3px var(--border-shadow--focus);
+}
+
+.flexrow__sizer {
+    flex: 1;
+}
+
+.flexrow__helper-icon {
+    color: rgba(0,0,0,.4);
+}
+
+.flexrow:nth-child(2n + 1) {
+    background: rgba(0,0,0,.05);
+}
+
+.flexrow:hover {
+    background: rgba(0,0,0,.075);
+}

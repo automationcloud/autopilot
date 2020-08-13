@@ -1,0 +1,71 @@
+.button.button--inverse {
+    color: var(--ui-color--white);
+}
+
+.button.button--inverse:hover {
+    background-color: rgba(255,255,255,.1);
+}
+
+.button.button--secondary {
+    background: var(--color-cool--600);
+    color: var(--ui-color--white);
+    box-shadow: none;
+    border: 0;
+}
+
+.button.button--secondary:hover {
+    background: var(--color-cool--700);
+}
+
+.button.button--yellow {
+    background: var(--color-yellow--300);
+    border-color: var(--color-yellow--900);
+}
+
+.button.button--yellow:hover {
+    background: var(--color-yellow--400);
+}
+
+.input.input--inverse {
+    border: 0;
+    background-color: rgba(255,255,255,.1);
+    color: var(--ui-color--white);
+}
+
+.badge--small {
+    padding: 0 .5em;
+}
+
+.badge--round.badge--small {
+    /* because it's so ugly otherwise T_T */
+    height: 18px;
+    min-width: 18px;
+}
+
+.badge--inline {
+    height: 16px;
+}
+
+.badge--yellow {
+    background: var(--color-yellow--500);
+}
+
+.input {
+    box-shadow: none;
+}
+
+.input.input--inline {
+    width: auto;
+}
+
+option {
+    color: #000;
+}
+
+.subtle {
+    opacity: .5;
+}
+
+.frameless {
+    border-width: 0;
+}

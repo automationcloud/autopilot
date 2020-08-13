@@ -1,0 +1,14 @@
+{
+    "packages": [
+        "packages/*"
+    ],
+    "version": "31.12.0",
+    "command": {
+        "version": {
+            "tagVersionPrefix": ""
+        },
+        "publish": {
+            "tagVersionPrefix": ""
+        }
+    }
+}

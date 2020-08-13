@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>UBIO Autopilot</title>
+        <link rel="stylesheet" href="codemirror.css"/>
+        <link rel="stylesheet" href="codemirror-dialog.css"/>
+        <link rel="stylesheet" href="codemirror-show-hint.css"/>
+        <link rel="stylesheet" href="fa/css/all.min.css"/>
+    </head>
+    <body>
+        <div id="app">
+            <p id="app-loading">
+                Loading...
+            </p>
+        </div>
+        <script>
+        require('./externals');
+        // Support dev mode
+        const scriptUrl = process.env.NODE_ENV === 'development' ?
+            'http://localhost:9000/app.js' : './build/app.js';
+        const scriptTag = document.createElement('script');
+        scriptTag.setAttribute('src', scriptUrl);
+        scriptTag.onerror = function() {
+            console.error("App loading failed, reloading...");
+            setTimeout(() => location.reload(), 250);
+        };
+        document.documentElement.appendChild(scriptTag);
+        </script>
+    </body>
+    <style>
+        html, body { margin: 0}
+
+        #app {
+            font: 400 16px/1.5 Helvetica Neue, Helvetica, sans-serif;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+    </style>
+</html>

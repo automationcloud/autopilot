@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <h1>Your name is: <span class="name"></span></h1>
+        <input type="text"
+               class="name"/>
+        <ul>
+        </ul>
+    </main>
+    <script>
+    const input = document.querySelector('input');
+    const ul = document.querySelector('ul');
+    const name = document.querySelector('.name');
+    input.addEventListener('keydown', ev => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${ev.keyCode}</strong> <em>${ev.key}</em>`;
+        ul.appendChild(li);
+    });
+    input.addEventListener('input', () => name.innerText = input.value);
+    </script>
+</body>
+</html>

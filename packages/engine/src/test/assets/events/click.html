@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+    href="../commons.css"/>
+</head>
+<body>
+    <main>
+        <button type="button">
+            Click me
+        </button>
+        <input type="text" value="Click me too"/>
+        <a href="#">Click me</a>
+        <div id="events"></div>
+    </main>
+    <script>
+    const output = document.querySelector('#events');
+    const button = document.querySelector('button');
+    const input = document.querySelector('input');
+    const link = document.querySelector('a');
+    ['pointerdown', 'pointerup', 'click', 'mousedown', 'mouseup', 'focus', 'focusin', 'focusout'].forEach(ev => {
+        [button, input, link].forEach(el => {
+            el.addEventListener(ev, () => {
+                output.innerText = [output.innerText, ev].filter(Boolean).join(',');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

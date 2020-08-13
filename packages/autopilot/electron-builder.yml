@@ -1,0 +1,28 @@
+appId: io.ub.autopilot
+artifactName: autopilot-${version}-${os}-${arch}.${ext}
+productName: Autopilot
+mac:
+  target: default
+  category: public.app-category.developer-tools
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  hardenedRuntime: true
+dmg:
+  sign: false
+win:
+  target: nsis
+linux:
+  executableName: autopilot
+  target:
+    - target: AppImage
+    - target: deb
+asar: false
+protocols:
+  name: ubio
+  schemes:
+      - ubio
+  role: Editor
+publish:
+  - provider: github
+    # private: true
+afterSign: 'notarize.js'

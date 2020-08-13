@@ -1,0 +1,141 @@
+import { Context, Action, Pipe, model, Pipeline, Element, booleanConfig } from '@automationcloud/engine';
+import { App } from '../../app';
+import { helpers, clipboard } from '../../util';
+import { ScriptEditorCommandsController } from './commands';
+import { ScriptEditorMenusController } from './menus';
+import { ScriptViewport, InsertLocation } from '../script-viewport';
+import { MenuItemConstructorOptions } from 'electron';
+import { toCsv } from '../../util/csv';
+
+const UI_PIPE_VERBOSE_FEEDBACK = booleanConfig('UI_PIPE_VERBOSE_FEEDBACK', true);
+const UI_PIPE_INSERT_LINES = booleanConfig('UI_PIPE_INSERT_LINES', true);
+
+export type EditorType = 'default' | 'nothing' | 'multiple' | 'action' | 'context';
+
+export class ScriptEditorViewport extends ScriptViewport<Pipe> {
+    commands: ScriptEditorCommandsController;
+    menus: ScriptEditorMenusController;
+
+    showCreateRecipeModal: boolean = false;
+    showEditNotes: boolean = false;
+    showEditLabel: boolean = false;
+
+    constructor(app: App) {
+        super(app);
+        this.commands = new ScriptEditorCommandsController(this);
+        this.menus = new ScriptEditorMenusController(this);
+    }
+
+    get feedback() {
+        return this.app.ui.feedbacks;
+    }
+
+    getViewportId(): string {
+        return 'script-editor';
+    }
+
+    getViewportName(): string {
+        return 'Editor';
+    }
+
+    getViewportIcon(): string {
+        return 'fas fa-pencil-alt';
+    }
+
+    getCommandBuffer() {
+        return this.app.viewports.scriptFlow.getCommandBuffer();
+    }
+
+    *getEditMenu(): IterableIterator<MenuItemConstructorOptions> {
+        yield* this.menus.menuEdit();
+    }
+
+    canSelectList(list: model.EntityList<any, any>): boolean {
+        // Pipeline is only selectable within currently selected action
+        const action = this.getSelectedAction();
+        if (!action) {
+            return false;
+        }
+        return list instanceof Pipeline && list.$action.id === action.id;
+    }
+
+    getSelectedContext(): Context | null {
+        const item = this.app.viewports.scriptFlow.getLastSelectedItem();
+        return item instanceof Context ? item : null;
+    }
+
+    getSelectedAction(): Action | null {
+        const item = this.app.viewports.scriptFlow.getLastSelectedItem();
+        return item instanceof Action ? item : null;
+    }
+
+    getEditorType(): EditorType {
+        const list = this.app.viewports.scriptFlow.getSelectedList();
+        if (!list) {
+            return 'default';
+        }
+        const item = this.app.viewports.scriptFlow.getLastSelectedItem();
+        if (item instanceof Context) {
+            return 'context';
+        } else if (item instanceof Action) {
+            return 'action';
+        }
+        // When list pseudo is selected
+        return 'nothing';
+    }
+
+    getPipeInsertLocation(): InsertLocation | null {
+        const list = this.getSelectedList();
+        if (list instanceof Pipeline) {
+            return { list, index: this.getLastSelectionIndex() + 1 };
+        }
+        return null;
+    }
+
+    // Edit Proxies
+    // TODO consider caching them and invalidating on selection change
+    // but only if there's an evidence of performance issues
+
+    getScriptProxy(): any {
+        return helpers.createEditProxy(this.script, (k, v) => this.commands.editScript(k, v));
+    }
+
+    getMetadataProxy(): any {
+        return helpers.createEditProxy(this.app.project.metadata, (k, v) => this.commands.editMetadata(k, v));
+    }
+
+    createContextProxy(context: Context): any {
+        return helpers.createEditProxy(context, (k, v) => this.commands.editContext(context.$path, k, v));
+    }
+
+    createActionProxy(action: Action): any {
+        return helpers.createEditProxy(action, (k, v) => this.commands.editAction(action.$path, k, v));
+    }
+
+    createPipeProxy(pipe: Pipe): any {
+        return helpers.createEditProxy(pipe, (k, v) => this.commands.editPipe(pipe.$path, k, v));
+    }
+
+    // UI Options
+
+    isShowVerboseFeedback() {
+        return this.app.settings.get(UI_PIPE_VERBOSE_FEEDBACK);
+    }
+
+    isShowInsertLines() {
+        return this.app.settings.get(UI_PIPE_INSERT_LINES);
+    }
+
+    // Extras
+
+    copyPipeOutcomesAsJson(outcomes: Element[]) {
+        const values = outcomes.map(el => el.value);
+        clipboard.writeObject(values);
+    }
+
+    copyPipeOutcomesAsCsv(outcomes: Element[]) {
+        const values = outcomes.map(el => el.value);
+        const csv = toCsv(values);
+        clipboard.writeText(csv);
+    }
+}

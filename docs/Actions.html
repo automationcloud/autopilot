@@ -1,0 +1,546 @@
+
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700&amp;display=swap"/>
+    <link rel="stylesheet"
+        href="./index.css"/>
+    <link rel="shortcut icon"
+        href="./favicon.ico"/>
+    <title>Autopilot Documentation · ubio</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img class="logo" src="./logo.png"/>
+            <a href="./Actions">Actions</a>
+            <a href="./Pipes">Pipes</a>
+        </div>
+        <div class="body">
+            <h1 id="actions">Actions</h1>
+<ul>
+<li>Custom<ul>
+<li><a href="#definition">definition</a></li>
+<li><a href="#placeholder">placeholder</a></li>
+</ul>
+</li>
+<li>Eval<ul>
+<li><a href="#Eval.javascript">Eval.javascript</a></li>
+</ul>
+</li>
+<li>Flow<ul>
+<li><a href="#Flow.dynamicOutput">Flow.dynamicOutput</a></li>
+<li><a href="#Flow.each">Flow.each</a></li>
+<li><a href="#Flow.else">Flow.else</a></li>
+<li><a href="#Flow.elseIf">Flow.elseIf</a></li>
+<li><a href="#Flow.expect">Flow.expect</a></li>
+<li><a href="#Flow.fail">Flow.fail</a></li>
+<li><a href="#Flow.find">Flow.find</a></li>
+<li><a href="#Flow.group">Flow.group</a></li>
+<li><a href="#Flow.if">Flow.if</a></li>
+<li><a href="#Flow.leaveContext">Flow.leaveContext</a></li>
+<li><a href="#Flow.output">Flow.output</a></li>
+<li><a href="#Flow.sleep">Flow.sleep</a></li>
+<li><a href="#Flow.success">Flow.success</a></li>
+<li><a href="#Flow.while">Flow.while</a></li>
+</ul>
+</li>
+<li>Global<ul>
+<li><a href="#Global.appendGlobal">Global.appendGlobal</a></li>
+<li><a href="#Global.setGlobal">Global.setGlobal</a></li>
+</ul>
+</li>
+<li>Page<ul>
+<li><a href="#Page.click">Page.click</a></li>
+<li><a href="#Page.fetch">Page.fetch</a></li>
+<li><a href="#Page.hover">Page.hover</a></li>
+<li><a href="#Page.input">Page.input</a></li>
+<li><a href="#Page.inputFile">Page.inputFile</a></li>
+<li><a href="#Page.navigate">Page.navigate</a></li>
+<li><a href="#Page.screenshot">Page.screenshot</a></li>
+<li><a href="#Page.setCookies">Page.setCookies</a></li>
+<li><a href="#Page.setUserAgent">Page.setUserAgent</a></li>
+<li><a href="#Page.setValue">Page.setValue</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="custom">Custom</h1>
+<h2 id="definition">definition</h2>
+
+
+<p>Defines a pipeline which can subsequently be used in other actions via Use Definition pipe.</p>
+<h3 id="use-for">Use For</h3>
+<ul>
+<li>extracting common functionality (e.g. inbound and outbound flight selection would share common parts for extracting flight information, prices, etc.)</li>
+</ul>
+<h2 id="placeholder">placeholder</h2>
+
+
+<p>Use this action to get quick access to pipeline configuration and deciding what to do with its results later.</p>
+<p>After pipeline is congifured, use Change Type to convert the placeholder into one of the actions.</p>
+<p>Running the placeholder will result in an error.</p>
+<h1 id="eval">Eval</h1>
+<h2 id="Eval.javascript">Eval.javascript</h2>
+
+
+<p>Executes arbitrary JavaScript code.</p>
+<p>Following top-level variables are available:</p>
+<ul>
+<li><code>els</code> — output set of pipeline</li>
+<li><code>el</code> — first element of <code>els</code> (for convenience, when dealing with single-element pipes)</li>
+<li><code>ctx</code> — a context object</li>
+</ul>
+<h1 id="flow">Flow</h1>
+<h2 id="Flow.dynamicOutput">Flow.dynamicOutput</h2>
+
+
+<p>Sends a dynamic Job Output, with both <code>key</code> and <code>data</code> being evaluated at runtime
+rather than pre-defined at scripting time.</p>
+<p>The pipeline should return a single element with <code>key: string</code> and <code>data: any</code>.</p>
+<h2 id="Flow.each">Flow.each</h2>
+
+
+<p>Iterates over a set of elements, passing control to children and modifying their scope.</p>
+<p>The pipeline should resolve to a list of elements.
+On every run the internal index is incremented, and the element at current index becomes the scope of children.</p>
+<p>After last child is executed, the control is passed back to Each.
+Each exits when there are no more elements left to iterate over.</p>
+<p>Note: every time the children are executed the scope is re-evaluated;
+specifically, if scope element disappears (or some other pipeline failure occurs),
+then children won&#39;t be able to execute.</p>
+<h3 id="use-for-1">Use For</h3>
+<ul>
+<li>iterating over web page elements (e.g. passenger forms)</li>
+<li>executing actions per each item of the array</li>
+</ul>
+<h2 id="Flow.else">Flow.else</h2>
+
+
+<p>Passes control flow to the children only if neither one of the preceeding If or Else If actions were entered.</p>
+<p>This action must be placed next to either If or another Else If action.
+All adjacent If, Else If and Else actions form a single chain with a guarantee that at most one branch is entered.</p>
+<h3 id="use-for-2">Use For</h3>
+<ul>
+<li>general purpose branching and conditional execution</li>
+</ul>
+<h2 id="Flow.elseIf">Flow.elseIf</h2>
+
+
+<p>Same as If, but does not evaluate the pipeline if any preceeding If or Else If action was entered.</p>
+<p>This action must be placed next to either If or another Else If action.
+All adjacent If, Else If and Else actions form a single chain with a guarantee that at most one branch is entered.</p>
+<h3 id="use-for-3">Use For</h3>
+<ul>
+<li>general purpose branching and conditional execution</li>
+</ul>
+<h2 id="Flow.expect">Flow.expect</h2>
+
+
+<p>Fails with specified error code if condition holds <code>false</code> over specified time.</p>
+<p>The pipeline should produce a single element with boolean value.
+If the value is <code>false</code>, the pipeline is run again until either the condition becomes <code>true</code> or timeout occurs.</p>
+<p>Expect actions are used to catch expected anomalies in script execution (e.g. validation errors)
+so that a  specific error code is thrown instead of a generic one
+(e.g. <code>FlightNotFoundError</code> vs <code>ElementNotFoundError</code>).</p>
+<p>By default action will retry the pipeline multiple times on <code>false</code> outcomes,
+until it either becomes <code>true</code> or the timeout occurs.
+This behaviour, along with custom timeouts, can be useful for waiting arbitrarily long processes
+(e.g. loading screens, progress bars, interstitials, etc.)</p>
+<p>Note: context matchers are special kinds of expects, which do not accept error codes and custom timeouts.
+The treatment of pipeline results are otherwise identical to Expect actions.</p>
+<h3 id="parameters">Parameters</h3>
+<ul>
+<li>error code: a custom error code to throw if expectation fails</li>
+<li>custom timeout: a timeout in milliseconds</li>
+</ul>
+<h3 id="use-for-4">Use For</h3>
+<ul>
+<li>asserting on-page conditions</li>
+<li>increasing error specificity on expected failures</li>
+<li>waiting for arbitrarily long processes to finish</li>
+</ul>
+<h2 id="Flow.fail">Flow.fail</h2>
+
+
+<p>Finishes script execution with <code>fail</code> status, and specified error code.</p>
+<p>Additionally, allows extracting and sending message alongside the failure event.
+This message can be obtained by constructing a pipeline which returns a string value.</p>
+<h3 id="parameters-1">Parameters</h3>
+<ul>
+<li>error code: specifies execution error to throw</li>
+</ul>
+<h3 id="use-for-5">Use For</h3>
+<ul>
+<li>failing a script with specified error code</li>
+</ul>
+<h2 id="Flow.find">Flow.find</h2>
+
+
+<p>Passes control to the children, modifying their scope.</p>
+<p>The pipeline should return a single element, which becomes the scope of the children
+(this is also known as <em>scope inheritance</em>).</p>
+<p>Note: every time the children are executed the scope is re-evaluated;
+specifically, if scope element disappears (or some other pipeline failure occurs),
+then children won&#39;t be able to execute.</p>
+<h3 id="parameters-2">Parameters</h3>
+<ul>
+<li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed
+(the children will not be entered), otherwise an error is thrown if pipeline returns 0 elements</li>
+</ul>
+<h3 id="use-for-6">Use For</h3>
+<ul>
+<li>restrict children to a specific fragment of the page</li>
+<li>provide children with common input data and input DOM node</li>
+<li>with optional, conditionally skip a number of actions if pipeline yields 0 elements</li>
+</ul>
+<h2 id="Flow.group">Flow.group</h2>
+
+
+<p>Groups a set of actions.</p>
+<h3 id="use-for-7">Use For</h3>
+<ul>
+<li>structuring and organizing scripts</li>
+</ul>
+<h2 id="Flow.if">Flow.if</h2>
+
+
+<p>Conditionally passes control to children, based on the pipeline result.</p>
+<p>The pipeline which should return a single element with boolean value.
+If the value is <code>true</code>, then the control is passed to the children, otherwise child actions are bypassed.</p>
+<p>The scope of children is not modified by this pipeline (children will receive the scope from the parent of this action).</p>
+<h3 id="use-for-8">Use For</h3>
+<ul>
+<li>general purpose branching and conditional execution</li>
+</ul>
+<h2 id="Flow.leaveContext">Flow.leaveContext</h2>
+
+
+<p>Leaves current context. The subsequent execution step will be context matching.</p>
+<h3 id="use-for-9">Use For</h3>
+<ul>
+<li>advanced scripting, where fine grained flow control is required</li>
+</ul>
+<h2 id="Flow.output">Flow.output</h2>
+
+
+<p>Sends Job Output with specified Output Key.</p>
+<p>The pipeline should return a single element.
+Its value will be sent as output data.</p>
+<p>Note: multiple elements are not automatically serialized to arrays;
+use Fold Array to send arrays instead.</p>
+<h3 id="parameters-3">Parameters</h3>
+<ul>
+<li>output key</li>
+</ul>
+<h2 id="Flow.sleep">Flow.sleep</h2>
+
+
+<p>Waits for specified number of milliseconds.</p>
+<p>This is unreliable (but easy) method of waiting for arbitrarily long processes to finish.
+It is recommended to use Expect for scripting such cases, whenever it is possible to do so.</p>
+<h3 id="parameters-4">Parameters</h3>
+<ul>
+<li>delay: milliseconds to wait</li>
+</ul>
+<h2 id="Flow.success">Flow.success</h2>
+
+
+<p>Finishes script execution with Success status.</p>
+<p>Note: normally, success is reported via success contexts.
+Use this action only when imperative success handling is required.</p>
+<h3 id="use-for-10">Use For</h3>
+<ul>
+<li>advanced scripting, when exiting early is required</li>
+</ul>
+<h2 id="Flow.while">Flow.while</h2>
+
+
+<p>Loops over child actions while the condition holds <code>true</code>.</p>
+<p>The pipeline should resolve to a single element with boolean value.
+If the value is <code>true</code>, the control is passed to children, otherwise the children are skipped.
+After last child is executed, the control is passed back to While so that the condition could be checked again.</p>
+<p>The scope of children is not modified by this pipeline (children will receive the scope from the parent of this action).</p>
+<h3 id="parameters-5">Parameters</h3>
+<ul>
+<li>limit: maximum number of iterations allowed (to prevent endless loops)</li>
+</ul>
+<h3 id="use-for-11">Use For</h3>
+<ul>
+<li>creating general purpose loops which execute actions whilst the condition is met
+(e.g. click button until something happens)</li>
+</ul>
+<h1 id="global">Global</h1>
+<h2 id="Global.appendGlobal">Global.appendGlobal</h2>
+
+
+<p>Evaluates pipeline and appends resulting values to Global variable, which should contain an array.</p>
+<p>If no global with specified key exists yet, creates an empty array before appending to it.</p>
+<h2 id="Global.setGlobal">Global.setGlobal</h2>
+
+
+<p>Sets a global variable, which can be subsequently obtained using Get Global pipe.</p>
+<p>The pipeline should return a single element. Its value will be associated with specified key.</p>
+<h3 id="parameters-6">Parameters</h3>
+<ul>
+<li>key: a symbolic variable name for holding the stage value</li>
+</ul>
+<h3 id="use-for-12">Use For</h3>
+<ul>
+<li>storing the results of other actions so that they could be accessed later in scripts</li>
+</ul>
+<h1 id="page">Page</h1>
+<h2 id="Page.click">Page.click</h2>
+
+
+<p>Clicks the element on the page.</p>
+<p>The pipeline should return a single DOM element where the click will be performed.</p>
+<p>The value of the element is ignored. In practice, values are useful to find a particular element out of collection.
+For example, given a list of flights a pipeline can be contructed to find a particular flight row
+and click an element inside of it.</p>
+<p>The element where the click is performed should be visible (have non-zero visual area) and reachable by coordinates.
+If the element is hidden under some other overlaying elements, the overlays will be temporary removed before clicking,
+and then restored after clicking.</p>
+<p>Important: the effect of the click (e.g. a form submission) cannot be guaranteed,
+thus it is a good practice to place an <a href="#expect">Expect</a> next to Click to capture the observable effect on the webpage
+(e.g. a confirmation message).</p>
+<p>The exact algorithm is as follows:</p>
+<ul>
+<li>the scope element is resolved from parent (#document by default)</li>
+<li>the pipeline is executed with scope element as its input set, expecting a single element in the output set</li>
+<li>the element is scrolled into view</li>
+<li>the screenshot is taken (if executed debug screenshots are enabled for the job)</li>
+<li>if the element is <code>&lt;option&gt;</code>:<ul>
+<li>the <code>&lt;select&gt;</code> element is checked for visibility and reachability</li>
+<li>the mouse is positioned over <code>&lt;select&gt;</code>, producing necessary mouse events</li>
+<li>the value of the <code>&lt;select&gt;</code> is set to the index of the <code>&lt;option&gt;</code> element via client-side JavaScript</li>
+<li>the synthetic <code>input</code> and <code>change</code> events are fired on <code>&lt;select&gt;</code></li>
+</ul>
+</li>
+<li>if the element is not <code>&lt;option&gt;</code>:<ul>
+<li>the element is checked for visbility, visual dimensions and reachability</li>
+<li>overlays obscuring the element are temporarily removed</li>
+<li>the mouse is positioned over the element&#39;s center (based on element&#39;s bounds), producing necessary mouse events</li>
+<li>the emulated click is sent to the coordnates of the element&#39;s center</li>
+<li>if navigation has not yet started, the overlaying elements are restored</li>
+</ul>
+</li>
+</ul>
+<h3 id="parameters-7">Parameters</h3>
+<ul>
+<li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
+otherwise an error is thrown if pipeline returns 0 elements</li>
+<li>wait for stable box: after element is initially scrolled into view the action will wait
+for element&#39;s position to remain constant for a few frames;
+this is to prevent accidentally clicking at wrong location if the element is currently involved in an animation
+(e.g. smooth scrolling, carousels, etc.)</li>
+<li>alt: if checked, the emulated click will be sent with Alt key pressed</li>
+<li>ctrl: if checked, the emulated click will be sent with Ctrl key pressed</li>
+<li>shift: if checked, the emulated click will be sent with Shift key pressed</li>
+<li>Meta: if checked, the emulated click will be sent with Meta key pressed</li>
+</ul>
+<h3 id="use-for-13">Use For</h3>
+<ul>
+<li>clicking buttons</li>
+<li>selecting options</li>
+<li>submitting forms</li>
+</ul>
+<h2 id="Page.fetch">Page.fetch</h2>
+
+
+<p>Sends a new network request from currently open webpage.</p>
+<p>The request is configured using pipeline&#39;s output object (see below).
+The pipeline should return a single element with object value, which configures the request.</p>
+<p>The request follows Content Security Policy (CSP) of the current web page.
+This can be a limiting factor, for example when trying to send a request to a domain which is not whitelisted
+in <code>Access-Control-Allow-Origin</code> header (the same applies to other CORS and CSP headers).
+If you are experiencing problems due to CORS and/or CSP, it is recommended to use &quot;nodejs&quot; or &quot;nodejs+proxy&quot; mode.</p>
+<p>The request configuration object (the output value of pipeline) can consist of:</p>
+<ul>
+<li><code>method</code>: HTTP request method; <code>GET</code>, <code>POST</code>, <code>PUT</code> or <code>DELETE</code> are used most commonly</li>
+<li><code>protocol</code> (e.g. <code>http:</code>, <code>https:</code>)</li>
+<li><code>host</code> (e.g. <code>example.com</code>, <code>example.com: 3123</code>)</li>
+<li><code>hostname</code> (e.g. <code>example.com</code>)</li>
+<li><code>pathname</code> (e.g. <code>/path/to/resource</code>)</li>
+<li><code>query</code>: an object with query parameters (e.g. <code>{ hello: &#39;world&#39; }</code>)</li>
+<li><code>headers</code>: an object with headers (e.g. <code>{ &#39;content-type&#39;: &#39;text/plain&#39; }</code>)</li>
+<li><code>body</code>: an object which configures request body, depends on Request Body Format parameter:<ul>
+<li>none: the body is not included in request (the value is ignored)</li>
+<li>json: the object is sent as JSON; content type header is set to <code>application/json</code>
+if not overridden with <code>headers</code></li>
+<li>urlencoded: the object is encoded in a similar way to <code>query</code> above and is sent in request body;
+content type header is set to <code>application/x-www-form-urlencoded</code> if not overridden with <code>headers</code></li>
+<li>multipart: the content type header is set to <code>multipart/form-data</code> and the request body is encoded
+as multipart/form-data stream following the rules:<ul>
+<li>each object key is a separate field</li>
+<li>if the value is string, a text field is appended to form data</li>
+<li>if the value is Blob object, the file field is appended to form data (see <a href="#fetch-blob">Fetch Blob</a> for details)</li>
+</ul>
+</li>
+<li>text: the value is sent as a plain text</li>
+</ul>
+</li>
+</ul>
+<p>Note: it is handy to configure the request object using Compose pipe.</p>
+<h3 id="parameters-8">Parameters</h3>
+<ul>
+<li>mode: Fetch or XHR (Fetch is preferred, but XHR may be necessary if website replaces <code>window.fetch</code>
+with its own incompatible implementation)</li>
+<li>request body format: specifies how to treat <code>/ body</code> of request object (see above)</li>
+<li>response body format: specifies how to parse the response</li>
+</ul>
+<h3 id="use-for-14">Use For</h3>
+<ul>
+<li>advanced scripting, to send network requests manually</li>
+</ul>
+<h2 id="Page.hover">Page.hover</h2>
+
+
+<p>Same as Click, but does not send emulated Mouse Down and Mouse Up events.
+Instead, the element is checked for visibility, and the mouse is positioned over it.</p>
+<h3 id="parameters-9">Parameters</h3>
+<p>See Click.</p>
+<h3 id="use-for-15">Use For</h3>
+<ul>
+<li>hovering over elements without clicking them (e.g. to reveal old style dropdown menus which work on mouse hover)</li>
+</ul>
+<h2 id="Page.input">Page.input</h2>
+
+
+<p>Types text into DOM element.</p>
+<p>The pipeline should resolve to a single element.
+The value of the element must be a string — it will be sent to the DOM node as a series of keyboard events.</p>
+<p>In order to handle keyboard events properly the element must receive focus.
+There are multiple ways of setting the focus, the most reliable way which works in most cases is
+to simply click on the element. For simplicity, this action includes a Use Click parameter
+which does everything the Click does prior to sending the keyboard events.</p>
+<p>However, there are edge cases when performing a click is undesirable (e.g. click opens a popup).
+To address these cases there are few more parameters listed below which allow alternative focusing techniques.
+Those are to be used at one&#39;s own discretion, as they are tightly coupled to website&#39;s internal implementation
+details and are susceptible to even slightest changes.</p>
+<p>The exact algorithm is as follows:</p>
+<ul>
+<li>the scope element is resolved from parent (#document by default)</li>
+<li>the pipeline is executed with scope element as its input set,
+expecting a single element in the output set and a string or number value</li>
+<li>the element is scrolled into view</li>
+<li>if Use Click is enabled, a subset of Click algorithm is performed on the element</li>
+<li>if Clear input is enabled, the entire text is selected and Backspace keystroke is sent to the webpage,
+causing the input to become clear</li>
+<li>a series of keystrokes is sent to the element as emulated keyboard events</li>
+<li>if Press Enter is enabled, an Enter keystroke is sent to the webpage</li>
+<li>if Use Blur is enabled, a synthetic <code>blur</code> event is triggered on the element via client-side JavaScript</li>
+<li>the screenshot is taken (if executed debug screenshots are enabled for the job)</li>
+</ul>
+<h3 id="parameters-10">Parameters</h3>
+<ul>
+<li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
+otherwise an error is thrown if pipeline returns 0 elements</li>
+<li>wait for stable box: after element is initially scrolled into view the action will wait for element&#39;s position
+to remain constant for a few frames; this is to prevent accidentally clicking at wrong location
+if the element is currently involved in an animation (e.g. smooth scrolling, carousels, etc.)</li>
+<li>check visibility: if unchecked, visibility check is bypassed (deprecated, incompatible with Use Click)</li>
+<li>use click: if checked, Click is used to focus the element</li>
+<li>use ticks: if checked, an small artificial delay is inserted between keystrokes; otherwise all keystrokes
+are sent simultaneously</li>
+<li>clear input: if checked, the text of the element is selected and cleared prior to typing text</li>
+<li>press Enter: if checked, an Enter keystroke is sent to the webpage after typing text</li>
+<li>use blur: if checked, a synthetic <code>blur</code> event is triggered on the element after typing</li>
+</ul>
+<h3 id="use-for-16">Use For</h3>
+<ul>
+<li>typing text into text input fields</li>
+</ul>
+<h2 id="Page.inputFile">Page.inputFile</h2>
+
+
+<p>Sets file (blob data) to <code>&lt;input type = &quot;file&quot; /&gt;</code>.</p>
+<p>The pipeline should produce a single element with <code>&lt;input type = &quot;file&quot; /&gt;</code> and Blob object value.
+The action assigns the blob to this input, allowing for uploading files using <code>multipart/form-data</code> forms.</p>
+<p>The pipeline should return a Blob object which consists of:</p>
+<ul>
+<li><code>blobId</code> (string) a unique blob identifier</li>
+<li><code>filename</code> (string)</li>
+</ul>
+<p>The Blob object should first be downloaded using <a href="#fetch-blob">Fetch Blob</a>.</p>
+<h3 id="use-for-17">Use For</h3>
+<ul>
+<li>uploading files via HTML forms (<code>&lt;input type = &quot;file&quot;/&gt;</code>)</li>
+</ul>
+<h2 id="Page.navigate">Page.navigate</h2>
+
+
+<p>Navigates to the URL, evaluated by pipeline.</p>
+<p>The pipeline should produce a single element with string value, which is treated as URL to navigate to.</p>
+<h3 id="parameters-11">Parameters</h3>
+<ul>
+<li>reject netwrok errors: if checked, an error will be thrown if navigation results in network-level errors
+(i.e. domain name not resolved, connection failed, etc)</li>
+<li>reject http errors: if checked, an error will be thrown if navigation results in HTTP error
+(i.e. response status code is greater than or equal to 400)</li>
+<li>open new tab: if checked, opens new tab and performs navigation in it (the new tab also becomes active)</li>
+<li>close other tabs: if checked, closes all other tabs after navigating, useful in conjunction with &quot;Open new tab&quot;</li>
+</ul>
+<h3 id="use-for-18">Use For</h3>
+<ul>
+<li>performing initial navigation</li>
+<li>navigating to known URLs (e.g. checkout page)</li>
+</ul>
+<h2 id="Page.screenshot">Page.screenshot</h2>
+
+
+<p>Captures the screenshot and sends it to the Job.</p>
+<h3 id="parameters-12">Parameters</h3>
+<ul>
+<li>full page: emulate viewport to match content width and content height of current webpage,
+which generally results in full page screenshot
+(unless the page uses scrollable containers with fixed width or height)</li>
+<li>public: mark screenshots as public</li>
+<li>min width: minimum width for full page emulation</li>
+<li>max width: maximum width for full page emulation</li>
+<li>min height: minimum height for full page emulation</li>
+<li>max height: maximum height for full page emulation</li>
+</ul>
+<h3 id="use-for-19">Use For</h3>
+<ul>
+<li>taking debug screenshots</li>
+<li>sending public screenshots</li>
+</ul>
+<h2 id="Page.setCookies">Page.setCookies</h2>
+
+
+<p>Sets cookies by reading an array from specified Job Input.</p>
+<p>Cookie array should consist of objects with following keys:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>value</code></li>
+<li><code>url</code></li>
+<li><code>domain</code></li>
+<li><code>path</code></li>
+<li><code>secure</code></li>
+<li><code>httpOnly</code></li>
+<li><code>sameWebsite</code></li>
+<li><code>expires</code></li>
+</ul>
+<h3 id="use-for-20">Use For</h3>
+<ul>
+<li>scripting flows which require cookies to be set prior to navigation</li>
+</ul>
+<h2 id="Page.setUserAgent">Page.setUserAgent</h2>
+
+
+<p>Overrides User Agent and Platform visible to web pages.</p>
+<h2 id="Page.setValue">Page.setValue</h2>
+
+
+<p>Similar to Page.input, but modifies DOM value of output element directly,
+by assigning to <code>value</code> DOM property.</p>
+<h3 id="see-also">See Also</h3>
+<ul>
+<li>Page.input: for addition details</li>
+</ul>
+
+        </div>
+    </div>
+</body>
+</html>

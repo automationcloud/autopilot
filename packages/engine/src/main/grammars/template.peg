@@ -1,0 +1,32 @@
+TemplateString
+  = Token*
+
+Token
+  = ExprToken / TextToken
+
+ExprToken "expression"
+  = '{' path: JsonPointer ws* '}'
+  {
+    return { type: 'expr', path };
+  }
+
+TextToken "text"
+  = text: AnyText
+  {
+    return { type: 'text', value: text }
+  }
+
+AnyText "text"
+  = chars: (EscapeSeq / AnyChar)+
+  { return chars.join('') }
+
+AnyChar "character"
+  = char: [^{}\\]
+
+EscapeSeq "escape sequence"
+  = "\\" char:(.) { return char }
+
+JsonPointer "JSON Pointer"
+  = $ ( "/" [a-zA-Z0-9_$]* )*
+
+ws = [ \t\n\r]

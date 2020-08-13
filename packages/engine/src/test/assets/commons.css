@@ -1,0 +1,54 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 4em;
+}
+
+.submitted {
+    margin: 2em;
+    padding: 2em;
+    background: seagreen;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.panes {
+    display: flex;
+    min-height: 100vh;
+}
+
+.pane {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+    border: 1px solid #ccc;
+    padding: 1em;
+}
+
+.overlay {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,0,.15);
+
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    padding: 2em;
+    background: rgba(255,255,255,.8);
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+}
+
+.hidden {
+    visibility: hidden;
+}

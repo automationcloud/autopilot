@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="./commons.css"/>
+</head>
+<body>
+    <main>
+        <button>
+            Hit me
+        </button>
+    </main>
+    <script>
+        window.onbeforeunload = function(e) {
+            const dialogText = 'Hi!';
+            e.returnValue = dialogText;
+            return dialogText;
+        };
+
+        document.querySelector('button').addEventListener('click', () => location.href = '/');
+    </script>
+</body>
+</html>
