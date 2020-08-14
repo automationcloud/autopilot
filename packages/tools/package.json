@@ -2,7 +2,7 @@
     "name": "@automationcloud/autopilot-tools",
     "description": "Internal tools",
     "private": true,
-    "version": "32.0.3",
+    "version": "32.1.0",
     "main": "out/main/index.js",
     "scripts": {
         "build": "run-p build:*",
@@ -15,7 +15,7 @@
     "author": "ubio",
     "license": "ISC",
     "dependencies": {
-        "@automationcloud/engine": "^32.0.3",
+        "@automationcloud/engine": "^32.1.0",
         "@types/diff": "^4.0.2",
         "@types/inquirer": "^6.5.0",
         "@types/marked": "^0.7.3",

@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/worker",
-    "version": "32.0.3",
+    "version": "32.1.0",
     "description": "UBIO Automation Worker",
     "main": "out/main/index.js",
     "scripts": {
@@ -18,7 +18,7 @@
     "author": "ubio",
     "license": "ISC",
     "dependencies": {
-        "@automationcloud/engine": "^32.0.3",
+        "@automationcloud/engine": "^32.1.0",
         "@types/koa": "^2.0.52",
         "@types/lru-cache": "^5.1.0",
         "@types/node-fetch": "^2.5.3",
