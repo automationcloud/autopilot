@@ -8,5 +8,8 @@
         // https://github.com/microsoft/TypeScript/issues/30511
         "skipLibCheck": true
     },
+    "references": [
+        { "path": "../engine" }
+    ],
     "include": ["src/main"],
 }
