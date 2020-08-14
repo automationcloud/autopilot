@@ -249,6 +249,6 @@ router.post('/api/token', ctx => {
         'access_token': uuid.v4(),
         'expires_in': 60,
         'refresh_token': uuid.v4(),
-    }
+    };
     ctx.body = response;
 });

@@ -40,7 +40,7 @@ Overrides User Agent and Platform visible to web pages.
                     type: 'Value.getJson',
                     value: JSON.stringify({ userAgent, platform })
                 }
-            ])
+            ]);
         }
     }
 

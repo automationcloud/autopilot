@@ -148,7 +148,7 @@ export class Engine {
         if (this.container.isBound(serviceIdentifier)) {
             return this.container.get(serviceIdentifier);
         }
-        const resolver = this.get(ResolverService)
+        const resolver = this.get(ResolverService);
         for (const ext of resolver.getExtensions()) {
             if (ext.isInitialized()) {
                 if (ext.container.isBound(serviceIdentifier)) {

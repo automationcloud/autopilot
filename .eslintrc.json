@@ -48,6 +48,7 @@
         "no-warning-comments": 0,
         "operator-assignment": 0,
         "quotes": [2, "single", { "allowTemplateLiterals": true }],
+        "semi": 2,
         // Node specific
         "no-process-exit": 0,
         "no-sync": 0,

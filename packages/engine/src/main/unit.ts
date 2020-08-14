@@ -19,7 +19,7 @@ export abstract class Unit<P> extends model.Entity<P> {
     static get $metadata(): ModuleMetadata {
         const module = this as any;
         if (!module._meta) {
-            module._meta = parseModuleMetadata(module)
+            module._meta = parseModuleMetadata(module);
         }
         return module._meta;
     }

@@ -41,7 +41,7 @@ The pipeline should return a single element with \`key: string\` and \`data: any
             util.checkType(key, 'string', 'value.key');
             this.$output = data;
             this.$outputKey = this.$script.hashInputOutputKey(key);
-            await this.$script.sendOutput(key, data)
+            await this.$script.sendOutput(key, data);
         });
     }
 }

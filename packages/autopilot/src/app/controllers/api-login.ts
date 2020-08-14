@@ -203,7 +203,7 @@ export class ApiLoginController {
     }
 
     protected async fetchAccountInfo() {
-        const baseUrl = this.settings.get(AC_ACCOUNT_INFO_URL)
+        const baseUrl = this.settings.get(AC_ACCOUNT_INFO_URL);
         const request = new Request({
             baseUrl,
             auth: this.authAgent,
@@ -251,7 +251,7 @@ function decodeAccountInfoResponse(res: { [key: string]: any }): AccountInfo {
         username: res.preferred_username || '',
         organisationId: res.organisationId || null,
         userId: res.userId || null,
-    }
+    };
 }
 
 function assertPropertyType(obj: { [key: string]: any }, propertyName: string, type: string, optional: boolean = false) {

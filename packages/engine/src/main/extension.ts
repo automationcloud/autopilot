@@ -59,7 +59,7 @@ export class Extension {
         this._container.parent = engine.container;
         this.loadModulesSync();
         if (this.spec.entrypoint) {
-            const entrypointPath = path.join(this.dir, this.spec.entrypoint)
+            const entrypointPath = path.join(this.dir, this.spec.entrypoint);
             const { init } = require(entrypointPath);
             init(this._container, engine);
         }

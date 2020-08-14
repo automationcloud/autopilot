@@ -146,7 +146,7 @@ export class ExtensionDevController {
         }
         try {
             const relPath = path.relative(ext.dir, fullPath);
-            console.debug(`📝 Changed local file`, relPath)
+            console.debug(`📝 Changed local file`, relPath);
             if (relPath === 'package.json') {
                 ext.spec = await Extension.loadExtensionSpec(ext.dir);
             } else {

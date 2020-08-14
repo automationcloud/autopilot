@@ -83,7 +83,7 @@ export class WorkerState {
             jobId: this.jobId,
             executionId: this.executionId,
             serviceId: this.serviceId,
-        }
+        };
     }
 }
 

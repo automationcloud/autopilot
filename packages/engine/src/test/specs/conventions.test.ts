@@ -25,7 +25,7 @@ describe('Conventions', () => {
                 }
             }
             assert.equal(mismatches.length, 0,
-                'Mismatching action filenames:\n' + mismatches.join('\n'))
+                'Mismatching action filenames:\n' + mismatches.join('\n'));
         });
     });
 
@@ -46,7 +46,7 @@ describe('Conventions', () => {
                 }
             }
             assert.equal(mismatches.length, 0,
-                'Mismatching pipe filenames:\n' + mismatches.join('\n'))
+                'Mismatching pipe filenames:\n' + mismatches.join('\n'));
         });
     });
 

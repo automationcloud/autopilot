@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { injectable } from 'inversify'
+import { injectable } from 'inversify';
 import { ipcRenderer } from 'electron';
 
 @injectable()
