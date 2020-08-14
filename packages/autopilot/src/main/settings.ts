@@ -1,11 +1,11 @@
 import uuid from 'uuid';
 import os from 'os';
-import fs from 'fs';
+import { promises as fs, readFileSync } from 'fs';
 import path from 'path';
-import debounce from 'debounce';
+import debounce from 'debounce-promise';
 
-const settings = loadSettings();
 const settingsFile = path.resolve(os.homedir(), '.autopilot', 'settings.json');
+const settings = loadSettingsSync();
 const saveSettings = debounce(_saveSettings, 300);
 
 export interface Settings {
@@ -22,19 +22,22 @@ export interface Profile {
     y: number;
 }
 
-function loadSettings(): Settings {
+function loadSettingsSync(): Settings {
     try {
-        const text = fs.readFileSync(settingsFile, 'utf-8');
+        const text = readFileSync(settingsFile, 'utf-8');
         return JSON.parse(text);
     } catch (err) {
+        if (err.code !== 'ENOENT') {
+            console.warn(err);
+        }
         return createDefaultSettings();
     }
 }
 
-function _saveSettings() {
+async function _saveSettings() {
     const dir = path.dirname(settingsFile);
-    fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 2), 'utf-8');
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(settingsFile, JSON.stringify(settings, null, 2), 'utf-8');
 }
 
 function createDefaultSettings(): Settings {
