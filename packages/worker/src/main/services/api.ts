@@ -41,22 +41,8 @@ export class ApiService {
         return await this.api.get(`/private/scripts/${scriptId}/content`);
     }
 
-    async setExecutionProcessing(executionId: string, info: WorkerInfo): Promise<void> {
-        return await this.api.put(`/private/executions/${executionId}`, {
-            body: {
-                state: 'processing',
-                workerId: info.workerId,
-                workerEngineVersion: info.workerVersion,
-            },
-        });
-    }
-
     async setExecutionSuccess(executionId: string): Promise<void> {
-        return await this.api.put(`/private/executions/${executionId}`, {
-            body: {
-                state: 'success',
-            },
-        });
+        return await this.api.post(`/private/executions/${executionId}/finish`);
     }
 
     async failExecution(executionId: string, error: any): Promise<void> {

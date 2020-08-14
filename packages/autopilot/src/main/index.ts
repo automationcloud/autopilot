@@ -3,13 +3,16 @@ import { getProfile, getAllProfiles, createNewProfile } from './settings';
 import { windows, createWindow, createLastProfileWindow, activateWindow } from './windows';
 import { startServer } from './server';
 import { checkForUpdates } from './updater';
+import { createUbioSymlink } from '@automationcloud/engine';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 process.env.NODE_OPTIONS = '--http-parser=legacy';
 
-app.setAsDefaultProtocolClient('ubio');
-const primary = app.requestSingleInstanceLock();
+createUbioSymlink(`${__dirname}/../..`);
 
+app.setAsDefaultProtocolClient('ubio');
+
+const primary = app.requestSingleInstanceLock();
 if (!primary) {
     app.quit();
 }
