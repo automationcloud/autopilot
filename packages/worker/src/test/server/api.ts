@@ -126,12 +126,21 @@ router.get('/api/private/executions/:id/script', async ctx => {
     };
 });
 
+/*
 router.put('/api/private/executions/:id', ctx => {
     const { state, workerId, workerEngineVersion } = ctx.request.body as any;
     Object.assign(ctx.state.execution, {
         state,
         workerId,
         workerEngineVersion,
+    });
+    ctx.body = ctx.state.execution;
+});
+*/
+
+router.post('/api/private/executions/:id/finish', ctx => {
+    Object.assign(ctx.state.execution, {
+        state: 'success',
     });
     ctx.body = ctx.state.execution;
 });
