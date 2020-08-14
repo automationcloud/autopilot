@@ -11,6 +11,7 @@ const saveSettings = debounce(_saveSettings, 300);
 export interface Settings {
     lastProfileId: string;
     profiles: Profile[];
+    channel: 'stable' | 'beta';
 }
 
 export interface Profile {
@@ -42,9 +43,14 @@ async function _saveSettings() {
 
 function createDefaultSettings(): Settings {
     return {
+        channel: 'stable',
         lastProfileId: 'default',
         profiles: [newProfile('default', 'Default')],
     };
+}
+
+export function getSettings() {
+    return settings;
 }
 
 export function getAllProfiles(): Profile[] {
