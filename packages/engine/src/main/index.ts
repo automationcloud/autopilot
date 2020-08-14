@@ -26,3 +26,6 @@ import * as util from './util';
 import * as model from './model';
 const params = model.params;
 export { util, model, params };
+
+// TODO remove once we're fully on v32
+export * from './create-ubio-symlink';
