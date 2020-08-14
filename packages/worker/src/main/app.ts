@@ -29,7 +29,7 @@ import { WorkerReporterService } from './overrides/reporter';
 import { WorkerState } from './services/state';
 import { Container } from 'inversify';
 
-createUbioSymlink(`${__dirname}/../..`);
+createUbioSymlink(process.cwd());
 
 export class WorkerBaseApp extends Application {
     constructor() {
