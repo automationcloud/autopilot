@@ -29,7 +29,7 @@ export function fuzzySearch(
         // I'm sorry for this, really.
         return a.score === b.score ?
             (a.source > b.source ? 1 : -1) :
-            a.score > b.score ? -1 : 1
+            a.score > b.score ? -1 : 1;
         // (but hey, it just means "order by score desc, text asc")
     });
 }

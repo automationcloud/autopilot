@@ -130,7 +130,7 @@ Note: it is handy to configure the request object using Compose pipe.
             timeout: this.timeout,
             retries: this.retries,
             ...data
-        })
+        });
         const response = await this.$fetch.sendWithRetries(requestSpec);
         if (response!.status >= 400 && this.rejectHttpErrors) {
             throw new Exception({

@@ -47,7 +47,7 @@ export class RoxiController {
         proxy.clearRoutes();
         if (this.isEnabled() && this.apiLogin.authorised) {
             this.tags = await this.fetchTags();
-            this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTags());
+            this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTag());
             if (this.proxyConfig != null) {
                 proxy.addRoute(/.*/, {
                     host: this.getRoxiHost(),
@@ -74,9 +74,9 @@ export class RoxiController {
         }
     }
 
-    async fetchSampleProxy(tags: string[]): Promise<ProxyConfig | null> {
+    async fetchSampleProxy(tag: string): Promise<ProxyConfig | null> {
         try {
-            return await this.api.sample(tags);
+            return await this.api.sample([tag]);
         } catch (error) {
             return null;
         }
@@ -94,19 +94,12 @@ export class RoxiController {
         this.settings.set(ROXI_ENABLED, enabled);
     }
 
-    getSelectedTags() {
-        return this.settings.get(ROXI_TAGS).split(',');
+    getSelectedTag() {
+        return this.settings.get(ROXI_TAGS).split(',')[0];
     }
 
     toggleTag(tag: string) {
-        let tags = this.getSelectedTags();
-        if (!tags.includes(tag)) {
-            tags.push(tag);
-        } else {
-            tags = tags.filter(t => t !== tag);
-        }
-        tags = tags.filter(t => t !== '');
-        this.settings.set(ROXI_TAGS, tags.join(','));
+        this.settings.set(ROXI_TAGS, tag);
     }
 
     isUseCache() {
