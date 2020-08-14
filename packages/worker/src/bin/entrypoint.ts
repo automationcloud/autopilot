@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 import { WorkerProductionApp } from '../main';
-import { createUbioSymlink } from '@automationcloud/engine';
 
 process.env.ENGINE_ENV = 'worker';
-createUbioSymlink(`${__dirname}/../..`);
 
 const app = new WorkerProductionApp();
 
