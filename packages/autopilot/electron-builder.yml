@@ -24,5 +24,7 @@ protocols:
   role: Editor
 publish:
   - provider: github
+    vPrefixedTagName: false
+    releaseType: prerelease
     # private: true
 afterSign: 'notarize.js'
