@@ -86,7 +86,7 @@ export class ApiLoginController {
             await this.fetchAccountInfo();
             this.events.emit('acApiAuthorised', true);
         } catch (error) {
-            console.warn(error.detail);
+            console.warn('failed to authorise user when switching env', { error });
         }
         this._loggingIn = false;
     }

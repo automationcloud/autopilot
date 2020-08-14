@@ -13,20 +13,7 @@
         <workspaces class="topbar__workspaces"/>
 
         <div class="topbar__tools">
-            <div class="topbar__link"
-                :title="sampleSuccess ? 'Roxi settings' : 'Roxi settings: No proxy for the selected tags'"
-                v-if="roxiBarShown">
-                <div class="group group--merged">
-                    <button class="button button--small button--flat"
-                        :class="{ 'button--primary': roxiEnabled }"
-                        @click="popupRoxi">
-                        <i class="button__icon fas fa-exchange-alt"></i>
-                        <span v-if="sampleSuccess">{{ roxiTags.length > 1 ? roxiTags[0] + '...' : roxiTags[0] }}</span>
-                        <span v-if="!sampleSuccess">No proxy</span>
-                    </button>
-                </div>
-            </div>
-
+            <proxy-select class="topbar__link"/>
             <profile-icon class="topbar__link"/>
             <account-menu class="topbar__link"/>
             <div class="topbar__link"
@@ -45,12 +32,13 @@
 import { remote } from 'electron';
 import Workspaces from './workspaces.vue';
 import ProfileIcon from './profile-icon.vue';
+import ProxySelect from './proxy-select.vue';
 import AccountMenu from './account-menu.vue';
 import TitlebarControls from './titlebar-controls.vue';
 import { popupMenu } from '../util/menu';
 import os from 'os';
 import pkg from '../../../package.json';
-import { ApiLoginController, RoxiController, AppMenuController } from '~/controllers';
+import { AppMenuController } from '~/controllers';
 
 export default {
 
@@ -64,6 +52,7 @@ export default {
         Workspaces,
         TitlebarControls,
         ProfileIcon,
+        ProxySelect,
         AccountMenu,
     },
 
@@ -73,40 +62,12 @@ export default {
             return os.platform();
         },
 
-        roxi() {
-            return this.get(RoxiController);
-        },
-
         appMenu() {
             return this.get(AppMenuController);
         },
 
-        apiLogin() {
-            return this.get(ApiLoginController);
-        },
-
-        roxiEnabled() {
-            return this.roxi.isEnabled();
-        },
-
-        roxiCache() {
-            return this.roxi.isUseCache();
-        },
-
-        roxiTags() {
-            return this.roxi.getSelectedTags();
-        },
-
-        roxiBarShown() {
-            return this.roxi.isSecretConfigured() && this.apiLogin.authorised;
-        },
-
         env() {
             return this.app.settings.env;
-        },
-
-        sampleSuccess() {
-            return this.roxi.isSampleProxyFound();
         },
 
         clipboardLoader() {
@@ -124,31 +85,6 @@ export default {
     },
 
     methods: {
-
-        popupRoxi() {
-            const menuItems = [
-                {
-                    label: 'Enabled',
-                    type: 'checkbox',
-                    checked: this.roxiEnabled,
-                    click: () => {
-                        this.roxi.setEnabled(!this.roxiEnabled);
-                    }
-                },
-                { type: 'separator' }
-            ];
-            for (const tag of this.roxi.tags) {
-                menuItems.push({
-                    label: tag,
-                    type: 'checkbox',
-                    checked: this.roxiTags.includes(tag),
-                    click: () => {
-                        this.roxi.toggleTag(tag);
-                    }
-                });
-            }
-            popupMenu(menuItems);
-        },
 
         popupMisc() {
             const mem = process.memoryUsage();
