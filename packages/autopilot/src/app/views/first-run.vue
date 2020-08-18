@@ -62,7 +62,7 @@ import { showOpenDialog } from '../util/helpers';
 import os from 'os';
 import { remote } from 'electron';
 
-export const CHROMIUM_VERSION = '706915';
+export const CHROMIUM_VERSION = '768968';
 const CHROMIUM_URL = 'https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html';
 
 export default {
