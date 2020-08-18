@@ -11,10 +11,10 @@
             <button v-if="!authorised"
                 class="button button--small button--yellow frameless"
                 @click="signIn">
-                Sign in
+                Sign-in
             </button>
             <span v-else
-                class="badge badge--round"
+                class="badge badge--round badge--circle"
                 @click="popupMenu"
                 @contextmenu.stop.prevent="popupMenu">
                 {{ text }}
@@ -95,10 +95,10 @@ export default {
     height: 2em;
 }
 
-.badge--signed-in {
-    text-transform: capitalize;
+.badge--circle {
+    text-transform: uppercase;
     height: 2.2em;
+    width: 2.2em;
     letter-spacing: 0;
-    padding: 0 4px;
 }
 </style>
