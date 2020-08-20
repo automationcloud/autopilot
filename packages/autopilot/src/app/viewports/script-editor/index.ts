@@ -92,6 +92,10 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
         return null;
     }
 
+    showPipeHelpModal(type: string) {
+        this.app.ui.help.showPipeHelpModal(type);
+    }
+
     // Edit Proxies
     // TODO consider caching them and invalidating on selection change
     // but only if there's an evidence of performance issues

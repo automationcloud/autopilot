@@ -17,11 +17,6 @@ interface ScriptViewportItem {
     $owner: model.Entity<any>;
 }
 
-interface ScriptViewportHelpItem {
-    label: string;
-    help: string;
- }
-
 /**
  * Encapsulates common conventions shared by ScriptFlowViewport and ScriptEditorViewport:
  *
@@ -35,8 +30,6 @@ export abstract class ScriptViewport<T extends ScriptViewportItem> extends Selec
     get script() {
         return this.app.project.script;
     }
-
-    helpItem: ScriptViewportHelpItem | null = null;
 
     getDefaultState(): ScriptViewportState {
         return { path: '', indices: [] };

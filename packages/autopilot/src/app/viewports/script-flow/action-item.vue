@@ -431,6 +431,7 @@ export default {
 .help-icon {
     font-size: .9em;
     color: var(--border-color--focus);
+    margin-left: var(--gap--small);
 }
 
 .help-icon:hover {
