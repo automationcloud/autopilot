@@ -14,6 +14,7 @@ import Modal from './modal.vue';
 import Sb from './sb.vue';
 import SigninWarning from './signin-warning.vue';
 import ValidationError from './validation-error.vue';
+import Help from './help.vue';
 
 Vue.component('autocomplete', Autocomplete);
 Vue.component('codemirror', CodeMirror);
@@ -29,3 +30,4 @@ Vue.component('modal', Modal);
 Vue.component('sb', Sb);
 Vue.component('signin-warning', SigninWarning);
 Vue.component('validation-error', ValidationError);
+Vue.component('help', Help);

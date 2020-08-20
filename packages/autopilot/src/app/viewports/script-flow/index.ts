@@ -149,6 +149,9 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         yield* this.menus.menuView();
     }
 
+    showActionHelpModal(type: string) {
+        this.app.ui.help.showActionHelpModal(type);
+    }
     // UI Options
 
     isShowInsertLines() {

@@ -74,6 +74,13 @@
                     {{ duration }}
                 </div>
 
+                <div class="help-icon"
+                    v-if="isSelected">
+                    <span
+                        class="far fa-question-circle"
+                        @click.stop="onHelpClick">
+                    </span>
+                </div>
                 <div class="indicator"
                     :class="[
                         'indicator--' + (hasBreakpoint ? 'breakpoint' : status),
@@ -233,6 +240,10 @@ export default {
                 this.viewport.menus.showActionItemMenu();
             }, 1);
         },
+
+        onHelpClick() {
+            this.viewport.showActionHelpModal(this.action.type);
+        }
 
     }
 
@@ -415,6 +426,15 @@ export default {
 
 .indicator--bypassed::after {
     background: transparent;
+}
+
+.help-icon {
+    font-size: .9em;
+    color: var(--border-color--focus);
+}
+
+.help-icon:hover {
+    cursor: pointer;
 }
 
 @keyframes pop {

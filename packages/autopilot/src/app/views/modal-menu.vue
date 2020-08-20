@@ -12,7 +12,7 @@
 
             <div :class="{
                     'content': true,
-                    'content--wide': isHintVisible,
+                    'content--wide': isHelpVisible,
                 }">
                 <div class="search">
                     <div class="input stretch">
@@ -110,27 +110,9 @@
                         </div>
                     </div>
 
-                    <div class="help"
-                        v-if="helpItem">
-
-                        <div class="help-header group group--separated">
-                            <div class="help-header-label">
-                                <i class="help-header-icon far fa-question-circle">
-                                </i>
-                                {{ helpItem.label }}
-                            </div>
-                            <div class="help-header-close"
-                                @click="hideHelp">
-                                <i class="fas fa-times"></i>
-                            </div>
-                        </div>
-
-                        <article class="help-content"
-                            v-html="helpItem.help">
-                        </article>
-
-                    </div>
-
+                    <help
+                        :helpItem="helpItem"
+                        @close="hideHelp" />
                 </div>
 
             </div>
@@ -176,7 +158,7 @@ export default {
             return this.displayedItems[this.helpIndex] || null;
         },
 
-        isHintVisible() {
+        isHelpVisible() {
             return !!this.helpItem;
         },
 
@@ -496,42 +478,6 @@ export default {
 
 .item-label {
     line-height: 1.5;
-}
-
-.help {
-    flex: 1 1 auto;
-    display: flex;
-    flex-flow: column nowrap;
-    min-width: 350px;
-    max-width: 450px;
-    background: var(--color-cool--100);
-}
-
-.help-header {
-    flex: 0 0 auto;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    background: var(--color-blue--500);
-    color: #fff;
-}
-
-.help-content {
-    flex: 1;
-    padding: var(--gap);
-    overflow-y: auto;
-}
-
-.help-header-icon {
-    margin-right: var(--gap--small);
-}
-
-.help-header-label {
-    padding: var(--gap);
-}
-
-.help-header-close {
-    padding: var(--gap);
 }
 
 @media screen and (min-width: 670px) {
