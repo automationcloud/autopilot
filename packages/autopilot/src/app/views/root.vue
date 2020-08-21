@@ -9,7 +9,7 @@
                 @mousemove="onMouseMove"
                 @mouseup="onMouseUp">
             </div>
-            <modal-menu/>
+            <modals/>
             <topbar/>
             <disconnected/>
             <layout/>
@@ -24,7 +24,7 @@ import { dom } from '../util';
 import '../../../stylesheets/index.css';
 import Topbar from './topbar.vue';
 import Layout from './layout.vue';
-import ModalMenu from './modal-menu.vue';
+import Modals from './modals.vue';
 import Playback from './playback.vue';
 import Disconnected from './disconnected.vue';
 import Inspecting from './inspecting.vue';
@@ -38,7 +38,7 @@ export default {
     components: {
         Topbar,
         Layout,
-        ModalMenu,
+        Modals,
         Playback,
         Disconnected,
         Inspecting,

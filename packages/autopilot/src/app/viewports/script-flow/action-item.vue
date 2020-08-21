@@ -74,6 +74,13 @@
                     {{ duration }}
                 </div>
 
+                <div class="help-icon"
+                    v-if="helpIconShown">
+                    <span
+                        class="far fa-question-circle"
+                        @click.stop="onHelpClick">
+                    </span>
+                </div>
                 <div class="indicator"
                     :class="[
                         'indicator--' + (hasBreakpoint ? 'breakpoint' : status),
@@ -184,6 +191,10 @@ export default {
             return this.action.getLabel();
         },
 
+        helpIconShown() {
+            return this.isSelected && this.action.type !== 'matcher';
+        },
+
     },
 
     methods: {
@@ -233,6 +244,10 @@ export default {
                 this.viewport.menus.showActionItemMenu();
             }, 1);
         },
+
+        onHelpClick() {
+            this.viewport.showActionHelpModal(this.action.type);
+        }
 
     }
 
@@ -415,6 +430,16 @@ export default {
 
 .indicator--bypassed::after {
     background: transparent;
+}
+
+.help-icon {
+    font-size: .9em;
+    color: var(--border-color--focus);
+    margin-left: var(--gap--small);
+}
+
+.help-icon:hover {
+    cursor: pointer;
 }
 
 @keyframes pop {

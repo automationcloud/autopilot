@@ -56,6 +56,13 @@
             </div>
 
             <div class="bar-aside">
+                <div class="help-icon"
+                    v-if="isSelected">
+                    <span
+                        class="far fa-question-circle"
+                        @click.stop="onHelpClick">
+                    </span>
+                </div>
                 <sampler
                     :key="pipe.id"
                     :pipeline-controller="pipelineController"
@@ -333,6 +340,10 @@ export default {
             }, 1);
         },
 
+        onHelpClick() {
+            this.viewport.showPipeHelpModal(this.pipe.type);
+        },
+
         getParam(name) {
             const param = this.pipe.getParams().find(_ => _.name === name);
             return param ? this.pipe[name] : null;
@@ -495,6 +506,16 @@ input.enabled {
     padding: var(--gap);
     background: var(--color-mono--300);
     border-top: 1px solid var(--color-mono--400);
+}
+
+.help-icon {
+    font-size: .9em;
+    color: var(--border-color--focus);
+    margin-left: 2px;
+}
+
+.help-icon:hover {
+    cursor: pointer;
 }
 
 /* Arrow business */
