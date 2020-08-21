@@ -63,7 +63,7 @@
                         v-if="throttlingMode === '3g'">
                         3G
                     </span>
-                    <div class="playback__timer badge badge--small"
+                    <div class="playback__timer badge"
                         @dblclick="resetTimer">
                         <span class="playback__timer-mins">{{ timer.mins }}</span>
                         <span class="playback__timer-secs">{{ timer.secs }}</span>
@@ -158,10 +158,11 @@ export default {
 
 .playback__group {
     display: flex;
+    align-items: center;
 }
 
 .playback__buttons {
-    margin-left: var(--gap--small);
+    margin-left: var(--gap);
 }
 
 button.playback__btn {
@@ -171,6 +172,7 @@ button.playback__btn {
     padding: var(--gap);
     box-sizing: border-box;
     border-radius: 0;
+    height: 100%;
 
     border: 0;
     background: transparent;
@@ -206,9 +208,9 @@ button.playback__btn[disabled] {
     align-items: flex-start;
 
     font-family: var(--font-family--mono);
-    font-size: 9px;
+    font-size: 11px;
 
-    background: var(--color-mono--500);
+    background: var(--color-mono--700);
     color: #fff;
 }
 
@@ -217,6 +219,8 @@ button.playback__btn[disabled] {
 }
 
 .playback__timer-millis {
+    padding-left: 2px;
+    line-height: 12px;
     font-size: 6px;
 }
 
