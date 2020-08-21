@@ -14,7 +14,7 @@
            v-if="status === 'matching'"
            title="Matching context...">
         </i>
-        <i class="playback-status__icon fas fa-check"
+        <i class="playback-status__icon fas fa-check-circle"
            v-if="status === 'success'"
            title="Success">
         </i>
@@ -49,10 +49,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.5em;
+    width: 2.2em;
+    height: 2.2em;
     cursor: pointer;
 
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .playback-status__icon {
