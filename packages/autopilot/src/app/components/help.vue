@@ -22,7 +22,7 @@
 <script>
 export default {
     props: {
-        helpItem: { type: Object } // { label: string, help: string }
+        helpItem: { type: Object }
     }
 };
 </script>
