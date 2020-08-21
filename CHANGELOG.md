@@ -1,3 +1,7 @@
+## 32.2.0
+
+- feat(autopilot): inline help icon for actions and pipes
+
 ## 29.6.0
 
 - feat(autopilot): allow publishing extensions via Autopilot
