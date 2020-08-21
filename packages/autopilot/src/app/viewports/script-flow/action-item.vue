@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="help-icon"
-                    v-if="isSelected">
+                    v-if="helpIconShown">
                     <span
                         class="far fa-question-circle"
                         @click.stop="onHelpClick">
@@ -189,6 +189,10 @@ export default {
 
         label() {
             return this.action.getLabel();
+        },
+
+        helpIconShown() {
+            return this.isSelected && this.action.type !== 'matcher';
         },
 
     },

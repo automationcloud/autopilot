@@ -71,7 +71,8 @@ export default {
     z-index: 2;
 
     padding: var(--gap) var(--gap--large);
-    width: 480px;
+    margin: 0 var(--gap);
+    max-width: 480px;
     max-height: 80vh;
     overflow-y: auto;
 
