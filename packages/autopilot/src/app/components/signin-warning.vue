@@ -1,5 +1,5 @@
 <template>
-    <div class="signin-warning">
+    <div class="signin-warning automation-cloud">
 
         <template v-if="!loggingIn">
             <div class="box">
@@ -9,11 +9,11 @@
 
             <div style="margin-top: var(--gap);">
                 <button
-                    class="button button--yellow frameless"
+                    class="button button--yellow"
                     type="click"
-                    @click="$emit('signIn');">
+                    @click="$emit('signin');">
                     <i class="fas fa-chevron-right button__icon"></i>
-                    <span>Sign in</span>
+                    <span>Sign-in</span>
                 </button>
             </div>
         </template>
@@ -29,15 +29,20 @@ export default {
 
     methods: {
     },
-}
+};
+
 </script>
 
 <style scoped>
 .signin-warning {
     margin: var(--gap);
+    color: var(--color-cool--800);
+    font-size: 1.2em;
 }
 
 .box {
+    margin-bottom: var(--gap--large);
+    font-size: inherit;
     background-color: var(--color-yellow--300);
     vertical-align: middle;
     display: flex;

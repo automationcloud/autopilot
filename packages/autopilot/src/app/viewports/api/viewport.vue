@@ -12,7 +12,7 @@
             v-if="!apiLogin.authorised"
             :message="signinMessage"
             :loggingIn="apiLogin.loggingIn"
-            @signIn="signIn" />
+            @signin="signIn" />
         <!-- v-if="viewport.error.message === 'AuthorizationError'"-->
         <div v-else>
             <service-list v-if="!this.viewport.selectedService"/>
@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             signinMessage: 'to access Services and run automations on the Automation Cloud',
-        }
+        };
     },
 
     computed: {
