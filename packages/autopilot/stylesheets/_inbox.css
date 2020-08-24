@@ -58,6 +58,15 @@
     width: auto;
 }
 
+.input.input--disabled {
+    opacity: .5;
+}
+
+.input.input--disabled:hover {
+    cursor: not-allowed;
+    border-color: inherit;
+}
+
 option {
     color: #000;
 }

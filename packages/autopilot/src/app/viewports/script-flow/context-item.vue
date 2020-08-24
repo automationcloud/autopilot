@@ -374,6 +374,7 @@ export default {
 .summary {
     flex: 1;
     min-width: 0;
+    line-height: 1.2em;
 }
 
 .title {

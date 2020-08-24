@@ -101,6 +101,16 @@ export class ModalMenuController implements Controller {
         }
     }
 
+    isSearchable() {
+        if (this.search.trim()) {
+            return true;
+        }
+
+        const items = this.getDisplayedItems();
+        const searchableItems = items.filter(item => this.isItemSearchable(item));
+        return searchableItems.length > 1;
+    }
+
     performSearch(search: string) {
         this.search = search.trim().toLowerCase();
         const candidates = this.getSearchCandidates(this.items);
