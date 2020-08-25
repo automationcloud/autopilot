@@ -15,13 +15,15 @@
                     'content--wide': isHelpVisible,
                 }">
                 <div class="search">
-                    <div class="input stretch">
+                    <div class="input stretch"
+                        :class="{ 'input--disabled': !isSearchable }">
                         <i class="icon color--muted fas fa-search"></i>
                         <input
                             ref="search"
                             v-model.trim="search"
                             v-focus
                             placeholder="Search"
+                            :disabled="!isSearchable"
                             @input="onSearchInput"
                             @focus="onSearchFocus"
                             @keydown="onSearchKeyDown"/>
@@ -140,6 +142,10 @@ export default {
 
         isShown() {
             return this.modalMenu.shown;
+        },
+
+        isSearchable() {
+            return this.modalMenu.isSearchable();
         },
 
         displayedItems() {

@@ -6,7 +6,7 @@
             v-if="!apiLogin.authorised"
             message="to the Automation Cloud to browse and load Extensions."
             :loggingIn="apiLogin.loggingIn"
-            @signIn="apiLogin.startLogin()" />
+            @signin="apiLogin.startLogin()" />
 
         <template v-else>
             <installed-extensions/>
