@@ -4,7 +4,7 @@
         <template v-if="!loggingIn">
             <div class="box">
                 <i class="fas fa-exclamation-circle"></i>
-                <span>You need to be signed-in {{ message }}</span>
+                <span>You need to be signed-in {{ message }}.</span>
             </div>
 
             <div style="margin-top: var(--gap);">
@@ -12,7 +12,7 @@
                     class="button button--yellow"
                     type="click"
                     @click="$emit('signin');">
-                    <i class="fas fa-chevron-right button__icon"></i>
+                    <i class="fas fa-angle-right button__icon"></i>
                     <span>Sign-in</span>
                 </button>
             </div>
@@ -41,7 +41,7 @@ export default {
 }
 
 .box {
-    margin-bottom: var(--gap--large);
+    margin: var(--gap--large) 0;
     font-size: inherit;
     background-color: var(--color-yellow--300);
     vertical-align: middle;

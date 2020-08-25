@@ -96,6 +96,6 @@ option {
     color: var(--color-cool--800);
 }
 
-.automation-cloud .button.button--yellow {
-    background-color: var(--color-yellow--300);
+.automation-cloud .button__icon {
+    font-size: 1.2em;
 }
