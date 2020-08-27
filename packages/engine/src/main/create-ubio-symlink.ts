@@ -10,8 +10,8 @@ import path from 'path';
  */
 export function createUbioSymlink(packageRoot: string) {
     const nodeModulesDir = path.resolve(packageRoot, 'node_modules');
-    const symlink = path.join(nodeModulesDir, '@ubio/engine');
-    const target = path.join(nodeModulesDir, '@automationcloud/engine');
+    const symlink = path.join(nodeModulesDir, '@ubio', 'engine');
+    const target = path.join(nodeModulesDir, '@automationcloud', 'engine');
     const parentDir = path.dirname(symlink);
     try {
         fs.mkdirSync(parentDir, { recursive: true });
