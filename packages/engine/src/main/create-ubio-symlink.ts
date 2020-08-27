@@ -15,7 +15,7 @@ export function createUbioSymlink(packageRoot: string) {
     const parentDir = path.dirname(symlink);
     try {
         fs.mkdirSync(parentDir, { recursive: true });
-        fs.symlinkSync(path.relative(parentDir, target), symlink, 'dir');
+        fs.symlinkSync(path.relative(parentDir, target), symlink, 'junction');
     } catch (err) {
         if (err.code !== 'EEXIST') {
             console.warn(err);
