@@ -84,9 +84,14 @@ option {
     font-family: var(--font-family--automation-cloud);
 }
 
+/* Do not apply font to fa icons */
+.automation-cloud :not(::before) {
+    font-family: inherit;
+}
+
 .automation-cloud .button {
     font-family: inherit;
-    font-size: inherit;
+    font-size: 1em;
     font-weight: 400;
 
     margin-right: 1em;
@@ -98,4 +103,20 @@ option {
 
 .automation-cloud .button__icon {
     font-size: 1.2em;
+}
+
+.automation-cloud .box {
+    margin: var(--gap--large) 0;
+    font-size: inherit;
+    vertical-align: middle;
+}
+
+.automation-cloud .box--yellow {
+    background-color: var(--color-yellow--300);
+    color: var(--color-cool--800);
+}
+
+.automation-cloud .box i {
+    font-size: 1.4em;
+    margin-right: var(--gap);
 }
