@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/engine",
-    "version": "32.2.4",
+    "version": "32.2.5",
     "description": "UBIO Scripting Engine",
     "main": "out/main/index.js",
     "types": "out/main/index.d.ts",
@@ -15,9 +15,9 @@
         "out/main/**/*"
     ],
     "dependencies": {
-        "@automationcloud/cdp": "^32.2.4",
+        "@automationcloud/cdp": "^32.2.5",
         "@automationcloud/request": "^1.3.2",
-        "@automationcloud/routing-proxy": "^32.2.4",
+        "@automationcloud/routing-proxy": "^32.2.5",
         "@types/diacritics": "^1.3.1",
         "@types/escape-html": "^1.0.0",
         "@types/fast-levenshtein": "0.0.1",
