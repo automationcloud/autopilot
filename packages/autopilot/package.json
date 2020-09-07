@@ -3,7 +3,7 @@
     "private": true,
     "author": "UBIO Limited <hello@ub.io>",
     "main": "out/main/index.js",
-    "version": "32.2.5",
+    "version": "32.2.6",
     "productName": "Autopilot",
     "scripts": {
         "clean": "rm -rf ./dist ./out *.tsbuildinfo",
@@ -22,8 +22,8 @@
         "slack:public": "node slack.js"
     },
     "dependencies": {
-        "@automationcloud/engine": "^32.2.5",
-        "@automationcloud/fuzzy-search": "^32.2.5",
+        "@automationcloud/engine": "^32.2.6",
+        "@automationcloud/fuzzy-search": "^32.2.6",
         "@types/jsonpointer": "^4.0.0",
         "@types/node-fetch": "^2.5.7",
         "@ubio/css": "^2.1.7",
