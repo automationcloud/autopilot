@@ -8,7 +8,7 @@
             </div>
 
             <button
-                class="button button--yellow"
+                class="button button--primary"
                 type="click"
                 @click="$emit('signin');">
                 <span>Sign-in</span>

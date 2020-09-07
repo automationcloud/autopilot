@@ -1,6 +1,7 @@
 <template>
     <div class="ac-help automation-cloud">
-        <div>
+        <div class="ac-help-item">
+
             <article class="content">
                 <div class="content-header">
                     <h2>Get Help</h2>
@@ -38,47 +39,48 @@
                 </button>
             </article>
 
-            <hr>
+            <hr class="content">
+
             <article class="content">
                 <div class="content-header">
                     <h2>Monitor your Automations</h2>
                     <img src="resources/product-logos/dashboard.svg" class="content-image">
                 </div>
-                <p>Graduated from Robot School and still need help? Start in the Automation Cloud forum. Expert scripters and the Automation Cloud team monitor all issues and conversations there.</p>
+                <p>Dashboard is the nerve centre for managing, observing and monitoring the authomations you run in the Automation Cloud. Watch jobs while they execute and drill down into the low-level detail.</p>
                 <button
                     class="button button--primary"
                     type="click"
                     @click="onLinkClick('dashboard')">
-                    Dashboard
+                    {{ authorised ? 'Dashboard' : 'Sign-in to your Dashboard' }}
+                </button>
+                <button
+                    v-show="!authorised"
+                    class="button button--tertiary"
+                    type="click"
+                    @click="onLinkClick('signup')">
+                    Sign-up and get started
                 </button>
             </article>
         </div>
 
-        <template>
-            <div class="promo promo--blue">
-                <img src="resources/ubio-humanoid-blue.svg" alt="robot">
-                <article class="promo-content">
-                    <h2 class="promo-content-title">Learn how to script in Autopilot</h2>
-                    <p class="promo-content-p dark-blue">
-                        Get up to speed with Autopilot and create your first script.
-                        Robot School will tutor you. Beware: You may turn a little bit 'robot'.
-                    </p>
-                    <button class="button">
-                        <span>Robot School</span>
-                    </button>
-                </article>
-            </div>
-        </template>
+        <div class="ac-help-item tray-bg--light">
+            <promo-robot-school />
+        </div>
     </div>
 </template>
 
 <script>
+import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
 import { shell } from 'electron';
 import {
     ApiLoginController
 } from '~/controllers';
 
 export default {
+    components: {
+        PromoRobotSchool,
+    },
+
     data() {
         return {
             links: {
@@ -86,16 +88,15 @@ export default {
                 automationCloud: '#',
                 robotSchool: '#',
                 dashboard: '#',
+                singin: '#',
+                signup: '#'
             }
         };
     },
 
     computed: {
-
-        apiLogin() {
-            return this.get(ApiLoginController);
-        },
-
+        apiLogin() { return this.get(ApiLoginController); },
+        authorised() { return this.apiLogin.authorised; },
     },
 
     methods: {
@@ -113,9 +114,12 @@ export default {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
-    padding: var(--gap) var(--gap--large);
-    font-size: var(--font-size);
+    font-size: 14px;
     font-weight: 400;
+}
+
+.ac-help-item {
+    padding: var(--gap) var(--gap--large);
 }
 
 .content {
@@ -124,7 +128,7 @@ export default {
 }
 
 .content > * {
-    margin: var(--gap) 0;
+    margin-bottom: var(--gap--large);
 }
 
 .content-header {
@@ -137,56 +141,4 @@ export default {
     margin-left: var(--gap);
 }
 
-.promo {
-    display: flex;
-    align-items: flex-start;
-    box-shadow: 0 4px 4px rgba(0,0,0,.25);
-    border-radius: 4px;
-    margin: var(--gap) 0;
-}
-
-.promo img {
-    border-radius: inherit;
-}
-
-.promo-content {
-    align-self: center;
-    margin: var(--gap) var(--gap--large);
-    padding: var(--gap) 0;
-    font-size: var(--font-size);
-}
-
-.promo-content-title {
-    margin: var(--gap--small) 0;;
-    font-size: 1.8em;
-    line-height: 30px;
-}
-
-.promo-content-p {
-    font-size: 1.2em;
-    color: #fff;
-    max-width: 560px;
-    margin: var(--gap) 0;
-}
-
-.promo-content .button {
-    background: transparent;
-    border-width: 0px;
-    font-size: 1.5em;
-    font-weight: 400;
-    padding: 0px;
-}
-
-.promo-content .button::before {
-    margin-left: 0;
-}
-
-.promo--blue {
-    background: linear-gradient(152.25deg,#0873a1 27.31%,#31aade 94.18%);
-}
-
-.promo--blue .promo-content-title,
-.promo--blue .button {
-    color: var(--color-blue--400);
-}
 </style>
