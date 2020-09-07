@@ -1,71 +1,96 @@
 <template>
-    <div class="first-run">
+    <div class="first-run automation-cloud">
         <div class="topbar">
             <img src="resources/ubio-robot-white.svg"
                 class="topbar-logo" />
-            <span>UBIO Autopilot</span>
+            <span>Autopilot</span>
         </div>
 
         <div class="container">
-            <main class="main">
-                <div class="welcome">
-                    <img src="resources/ubio-cloud-red.svg"
-                        class="welcome-logo" />
-                    <div>
-                        <h4><strong>Welcome to UBIO Autopilot</strong></h4>
-                        <p>Set up your connection to the UBIO API and a connection to your Chromium browser to get started with UBIO Autopilot.</p>
-                    </div>
-                </div>
+            <section class="hero--grad section">
+                <img src="resources/product-logos/autopilot.svg" style="width: 150px; margin: var(--gap) 0;" />
+                <div class="section-content" style="color: white;">
+                    <h3 style="margin-bottom: var(--gap);">Welcome to Autopilot and the Automation Cloud</h3>
+                    <p>Autopilot allows you to script powerful, contextually aware workflows on any website or connect any API.</p>
 
-                <div class="section">
-                    <h6>CHROMIUM CONNECTION</h6>
                     <span class="chromium-link">
                         <img src="resources/chromium-icon.png" alt="chromium" class="chromium-image">
-                        <a :href="chromiumLink" target="_blank" @click.prevent="openInBrowser">Download and install the compatible build of Chromium.</a>
+                        Let's get connect Autopilot to Chromium so you can get scripting.
                     </span>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-content">
+                    <h6>1. Download and install Chromium.</h6>
+                    <button
+                        class="button button--secondary "
+                        @click.prevent="openChromiumLink">
+                        Download Chromium
+                    </button>
+                </div>
+
+                <div class="section-content">
+                    <h6>2. Connect Chromium to Autopilot</h6>
                     <div class="chromium-select">
-                        <b>Chromium: </b>
+                        <span>Chromium: </span>
                         <button type="click"
-                            class="button"
+                            class="button button--secondary"
                             @click="selectChromiumApp">
-                            <b>Find application</b>
+                            Find Chromium Application
                         </button>
                         <span class="check-icon"
                             :class="{
                                 'check-icon--valid': chromiumPath
                             }">
-                             <i class="far fa-check-circle"></i>
+                                <i class="far fa-check-circle"></i>
                         </span>
                         <span class="chromium-path"> {{ chromiumPath }} </span>
                     </div>
                 </div>
-            </main>
+            </section>
 
-            <footer class="footer">
-                <button
-                    class="button"
-                    :class="{
-                        'button--primary': valid
-                    }"
-                    :disabled="!valid"
-                    @click="saveAndReload">
-                    Continue to Autopilot
-                </button>
-            </footer>
+            <section class="section tray-bg--light-mid">
+                <div class="section-content" style="margin-bottom: var(--gap--large);">
+                    <h6>Run scripts locally or <u> Regiter for Automation Cloud account</u> at any time.</h6>
+                    <button
+                        class="button"
+                        :class="{
+                            'button--primary': valid,
+                            'button--disabled': !valid,
+                        }"
+                        :disabled="!valid"
+                        @click="saveAndReload">
+                        Continue to Autopilot
+                    </button>
+                </div>
+
+                <promo-robot-school style="align-self: end;"/>
+            </section>
         </div>
     </div>
 </template>
 
 <script>
+import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
 import { SettingsController } from '~/controllers';
 import { showOpenDialog } from '../util/helpers';
 import os from 'os';
-import { remote } from 'electron';
+import { shell } from 'electron';
 
-export const CHROMIUM_VERSION = '768968';
+export const CHROMIUM_VERSION = {
+    MAC: '768968',
+    WIN: '768966',
+    LINUX: '768968',
+};
+
 const CHROMIUM_URL = 'https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html';
 
 export default {
+    components: {
+        PromoRobotSchool
+    },
+
     data() {
         return {
             chromiumPath: '',
@@ -109,21 +134,21 @@ export default {
                 .catch(_ => this.chromiumPath = '');
         },
 
-        openInBrowser(e) {
-            remote.shell.openExternal(e.target.href);
+        openChromiumLink() {
+            shell.openExternal(this.chromiumLink);
         },
 
         getChromiumLinkPrefix() {
             if (os.platform() === 'darwin') {
-                return `Mac/${CHROMIUM_VERSION}`;
+                return `Mac/${CHROMIUM_VERSION.MAC}`;
             }
 
             if (os.platform() === 'win32') {
-                return `Win_x64/${CHROMIUM_VERSION}`;
+                return `Win_x64/${CHROMIUM_VERSION.WIN}`;
             }
 
             if (os.platform() === 'linux') {
-                return `Linux_x64/${CHROMIUM_VERSION}`;
+                return `Linux_x64/${CHROMIUM_VERSION.LINUX}`;
             }
 
             return '';
@@ -187,62 +212,31 @@ export default {
     height: inherit;
     display: flex;
     flex-direction: column;
-}
-
-.main {
-    padding: var(--gap) var(--gap--large);
-    flex: 1;
-    overflow-y: visible;
-}
-
-.welcome {
-    display: flex;
-    flex-flow: row nowrap;
-    margin: var(--gap--large) 0;
-    max-width: 450px;
-}
-
-.welcome h4 {
-    margin-bottom: var(--gap--large);
-}
-
-.welcome-logo {
-    width: 70px;
-    height: 70px;
-    margin-right: var(--gap--large);
+    justify-content: space-between;
 }
 
 .section {
-    border-top: 0.5px solid #A3B8C6;
-    padding: var(--gap) 0 var(--gap--large) 0;
+    padding: var(--gap) var(--gap--large);
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.section-content {
+    padding: var(--gap) var(--gap--large);
+    width: 100%;
     max-width: 450px;
+    align-self: center;
 }
 
 .section h6 {
-    color: #789FBC;
+    color: var(--color-blue--600);
     font-weight: 400;
-    letter-spacing: 1px;
-}
-
-.key {
-    margin: var(--gap) 0;
-    display: flex;
-}
-
-.key-input {
-    display: flex;
-    flex: auto;
-    flex-flow: column nowrap;
-}
-
-.key-input > span {
-    margin: 1em 0 0 0;
 }
 
 .check-icon {
     margin-left: var(--gap);
-    font-size: 2em;
-    color: var(--ui-color--muted);
+    font-size: 1.8em;
+    color: var(--color-mono--200);
 }
 
 .check-icon--valid {
@@ -252,13 +246,12 @@ export default {
 .chromium-link {
     display: flex;
     align-items: center;
-    margin-bottom: var(--gap);
+    margin-top: var(--gap);
 }
 
 .chromium-image {
-    margin: 0 var(--gap--small) 0 0;
-    width: 20px;
-    height: 20px;
+    margin-right: var(--gap);
+    width: 25px;
 }
 
 .chromium-select {

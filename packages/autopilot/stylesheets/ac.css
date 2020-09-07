@@ -33,9 +33,19 @@
     background: var(--color-yellow--300);
 }
 
+.automation-cloud .button.button--secondary {
+    background: var(--color-blue--600);
+    color: #fff;
+}
+
 .automation-cloud .button.button--tertiary {
     background: transparent;
     border-color: transparent;
+}
+
+.automation-cloud .button.button--disabled {
+    background: var(--color-mono--400);
+    color: var(--color-mono--600);
 }
 
 .automation-cloud .button__icon {
@@ -58,6 +68,18 @@
     margin-right: var(--gap);
 }
 
-.automation-cloud .tray-bg--light {
-    background: linear-gradient(to bottom, transparent 50%, var(--color-cool--200) 50%);
+.tray-bg--light {
+    background: var(--color-mono--100);
+}
+
+.tray-bg--transparent-light {
+    background: linear-gradient(to bottom, transparent 50%, var(--color-mono--100) 50%);
+}
+
+.tray-bg--light-mid {
+    background: linear-gradient(to bottom, var(--color-mono--100) 50%, var(--color-cool--400) 50%);
+}
+
+.hero--grad {
+    background: linear-gradient(329.78deg, var(--color-yellow--200) 12.31%, var(--color-blue--500) 63.83%);
 }
