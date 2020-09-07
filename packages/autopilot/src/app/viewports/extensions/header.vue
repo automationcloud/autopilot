@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <span class="title">Extensions</span>
+        <div class="title">Extensions</div>
         <button class="button button--inverse button--icon frameless"
             @click="refresh()">
             <i class="fas fa-spinner fa-spin" v-if="loading"></i>
@@ -43,9 +43,6 @@ export default {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-}
-
-.title {
     color: #fff;
 }
 </style>

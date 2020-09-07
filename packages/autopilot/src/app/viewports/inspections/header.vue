@@ -1,13 +1,12 @@
 <template>
-    <div class="inspections-header group group--gap--small stretch">
-
-        <div class="inspections-header__item group group--gap--small">
+    <div class="header">
+        <div class="group">
             <span class="badge badge--round badge--red badge--small">
                 {{ scriptReport.errors.length }}
             </span>
             <span>errors</span>
         </div>
-        <div class="inspections-header__item group group--gap--small">
+        <div class="group">
             <span class="badge badge--round badge--yellow badge--small">
                 {{ scriptReport.warnings.length }}
             </span>
@@ -40,8 +39,20 @@ export default {
 };
 </script>
 
-<style>
-.inspections-header__item {
-    color: var(--ui-color--white);
+<style scoped>
+.header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+}
+
+.group {
+    margin: 0 var(--gap--small);
+}
+
+.group .badge {
+    margin-right: var(--gap--small);
 }
 </style>

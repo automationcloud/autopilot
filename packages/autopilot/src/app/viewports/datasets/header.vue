@@ -1,5 +1,5 @@
 <template>
-    <div class="datasets-header group group--gap--small stretch">
+    <div class="header">
         <modal class="section"
             :shown="editing"
             @close="editing = false">
@@ -100,7 +100,12 @@ export default {
 };
 </script>
 
-<style>
-.datasets-header {
+<style scoped>
+.header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
-    <div class="api-header">
-        <div class="api-header__breadcrumbs">
-            <a class="api-header__link"
+    <div class="header">
+        <div class="breadcrumbs">
+            <a class="link"
                 @click="viewport.goToServices()">
                 Services
             </a>
-            <a class="api-header__link"
+            <a class="link"
                 @click="viewport.selectService(service)"
                 v-if="service">
                 {{ service.name }}
@@ -28,13 +28,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .api-header {
     display: flex;
     flex-flow: row nowrap;
+    color: var(--ui-color--white);
 }
 
-.api-header__breadcrumbs {
+.breadcrumbs {
     flex: 1;
     min-width: 0;
     align-self: center;
@@ -44,12 +45,12 @@ export default {
     text-overflow: ellipsis;
 }
 
-.api-header__link {
+.link {
     color: var(--ui-color--white);
     text-decoration: none;
 }
 
-.api-header__link::after {
+.link::after {
     content: '›';
     margin: var(--gap--small);
     opacity: .5

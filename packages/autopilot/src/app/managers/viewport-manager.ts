@@ -11,7 +11,6 @@ import {
     ScriptFlowViewport,
     SearchScriptsViewport,
     SettingsViewport,
-    SpeedViewport,
 } from '../viewports';
 import { Viewport } from '../viewport';
 import { LayoutDirection } from './layout-manager';
@@ -29,7 +28,7 @@ export class ViewportManager {
     scriptFlow: ScriptFlowViewport;
     searchScripts: SearchScriptsViewport;
     settings: SettingsViewport;
-    speed: SpeedViewport;
+    // speed: SpeedViewport;
 
     all: Array<Viewport<any>>;
 
@@ -46,7 +45,7 @@ export class ViewportManager {
         this.extensions = new ExtensionsViewport(app);
         this.inspections = new InspectionsViewport(app);
         this.playbackEvents = new PlaybackEventsViewport(app);
-        this.speed = new SpeedViewport(app);
+        // this.speed = new SpeedViewport(app);
         this.recipes = new RecipesViewport(app);
         this.searchScripts = new SearchScriptsViewport(app);
         this.settings = new SettingsViewport(app);

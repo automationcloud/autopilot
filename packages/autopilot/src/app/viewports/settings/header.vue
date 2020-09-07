@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="header">
+        <div class="title">Settings</div>
     </div>
 </template>
 
@@ -7,5 +8,12 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
+.header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+}
 </style>

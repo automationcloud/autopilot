@@ -1,7 +1,6 @@
 <template>
-    <div class="chrome-connection-header group group--gap--small stretch">
-        <div class="stretch">
-        </div>
+    <div class="header">
+        <div class="title">Browser</div>
         <button class="button button--inverse button--icon frameless"
             @click="refresh()"
             title="Refresh targets">
@@ -24,5 +23,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff;
+}
 </style>
