@@ -1,7 +1,7 @@
 import { App } from '../app';
 import { UserData } from '../userdata';
 import { helpers } from '../util';
-import { util } from '@automationcloud/engine';
+import { util, clamp } from '@automationcloud/engine';
 
 export interface Dataset {
     name: string;
@@ -20,7 +20,7 @@ export class DatasetManager {
     userData: UserData;
 
     datasets!: Dataset[];
-    currentIndex: number = 0;
+    _currentIndex: number = 0;
 
     constructor(app: App) {
         this.app = app;
@@ -30,13 +30,18 @@ export class DatasetManager {
     async init() {
         const { datasets = [], currentIndex = 0 } = await this.userData.loadData();
         this.datasets = datasets.filter(Boolean);
-        this.currentIndex = currentIndex;
+        this._currentIndex = currentIndex;
     }
 
     update() {
         this.userData.update({
             datasets: this.datasets,
+            currentIndex: this._currentIndex,
         });
+    }
+
+    get currentIndex() {
+        return clamp(this._currentIndex, 0, this.datasets.length - 1);
     }
 
     loadDatasets(datasets: Dataset[]) {
@@ -59,7 +64,7 @@ export class DatasetManager {
     }
 
     selectDataset(index: number = this.datasets.length - 1) {
-        this.currentIndex = Math.min(index, this.datasets.length - 1);
+        this._currentIndex = index;
         this.update();
     }
 

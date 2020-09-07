@@ -190,10 +190,7 @@ export class NetworkManager {
                 if (ireq.modifications.headers) {
                     ireq.modifications.headers = convertHeadersToObject(ireq.modifications.headers);
                 }
-                if (outcome) {
-                    if (outcome.method === 'pass') {
-                        continue;
-                    }
+                if (outcome && outcome.method !== 'pass') {
                     await this.page.send(outcome.method, outcome.params);
                     return;
                 }

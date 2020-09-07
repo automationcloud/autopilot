@@ -16,7 +16,7 @@
                 <div class="box box--green"
                     style="margin-top: var(--gap)"
                     v-if="domain && valid">
-                    Output is valid according to <strong>{{ domain.id }}.{{ defKey }}</strong>
+                    Output is valid according to <strong>{{ domain.id }}.{{ outputKey }}</strong>
                 </div>
 
                 <div class="box box--red"
