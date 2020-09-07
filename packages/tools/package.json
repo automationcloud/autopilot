@@ -3,6 +3,12 @@
     "description": "Internal tools",
     "private": true,
     "version": "32.2.6",
+    "author": "UBIO Limited <hello@ub.io>",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/automationcloud/autopilot"
+    },
     "main": "out/main/index.js",
     "scripts": {
         "build": "run-p build:*",
@@ -12,8 +18,6 @@
         "out/main/**/*",
         "out/bin/**/*"
     ],
-    "author": "ubio",
-    "license": "ISC",
     "dependencies": {
         "@automationcloud/engine": "^32.2.6",
         "@types/diff": "^4.0.2",

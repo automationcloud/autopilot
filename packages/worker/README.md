@@ -45,3 +45,7 @@ tmpfs           1.8G   16M  1.8G   1% /dev/shm
 ```
 
 If it's something around 100MB or less, then Chrome will start crashing for obscure reasons soon.
+
+## License
+
+See [LICENSE](LICENSE.md).

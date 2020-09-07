@@ -2,6 +2,12 @@
     "name": "@automationcloud/worker",
     "version": "32.2.6",
     "description": "UBIO Automation Worker",
+    "author": "UBIO Limited <hello@ub.io>",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/automationcloud/autopilot"
+    },
     "main": "out/main/index.js",
     "scripts": {
         "start": "node out/main/entrypoint",
@@ -15,8 +21,6 @@
     "bin": {
         "worker-entrypoint": "out/bin/entrypoint.js"
     },
-    "author": "ubio",
-    "license": "ISC",
     "dependencies": {
         "@automationcloud/engine": "^32.2.6",
         "@types/koa": "^2.0.52",

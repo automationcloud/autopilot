@@ -1,10 +1,15 @@
 {
     "name": "@automationcloud/autopilot",
     "private": true,
-    "author": "UBIO Limited <hello@ub.io>",
     "main": "out/main/index.js",
     "version": "32.2.6",
     "productName": "Autopilot",
+    "author": "UBIO Limited <hello@ub.io>",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/automationcloud/autopilot"
+    },
     "scripts": {
         "clean": "rm -rf ./dist ./out *.tsbuildinfo",
         "start": "electron out/main",
@@ -88,10 +93,5 @@
         "webpack": "^4.42.0",
         "webpack-cli": "^3.3.11",
         "webpack-dev-server": "^3.10.3"
-    },
-    "license": "ISC",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/automationcloud/autopilot"
     }
 }

@@ -4,8 +4,12 @@
     "description": "UBIO Scripting Engine",
     "main": "out/main/index.js",
     "types": "out/main/index.d.ts",
-    "author": "ubio",
-    "license": "MIT",
+    "author": "UBIO Limited <hello@ub.io>",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/automationcloud/autopilot"
+    },
     "scripts": {
         "compile": "pegjs src/main/grammars/*.peg && mkdir -p out/main/grammars && cp src/main/grammars/*.js out/main/grammars/",
         "test": "NODE_ENV=test mocha",

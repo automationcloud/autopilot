@@ -24,6 +24,12 @@ This repository is a monorepo managed by [Lerna](https://lerna.js.org).
 
 ### Initial setup
 
+Make sure you have Lerna installed globally:
+
+```
+npm i -g lerna
+```
+
 After checking out the project, run:
 
 ```
@@ -33,12 +39,6 @@ npm run compile
 
 This will install dependencies in sub-packages and link local dependencies together.
 The second command will perform initial compilation of sub-packages.
-
-It is also a good idea to install Lerna globally:
-
-```
-npm i -g lerna
-```
 
 ### Compiling TypeScript
 
@@ -74,7 +74,7 @@ Releasing in the context of Autopilot means:
 
 Run `npm run release` in project root to do all that. Outcome to assert:
 
-- all pacakges are published to npm
+- all packages are published to npm
 - GitHub tag created and pushed
 - GitHub builds and pushes worker image
 
@@ -107,17 +107,6 @@ Once the files are uploaded to GitHub releases:
 ### Building worker Docker image locally
 
 Docker requires `NPM_TOKEN` environment variable in order to build with private dependencies.
-
-Here's an example of setting this up:
-
-- Log in to npm
-- Go to Profile > Tokens
-- Create new token
-- Copy it
-- Open `~/.profile`
-- Add `NPM_TOKEN=<token from your clipboard>`
-- source `~/.profile`
-- `npm run worker:build-image` should now build successfully
 
 ## Contribution Guidelines
 
