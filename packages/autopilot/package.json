@@ -17,6 +17,7 @@
         "dist": "run-s clean build dist:all",
         "dist:win-dir": "npm run _eb -- -w --dir && cd dist && mv win-unpacked Autopilot && zip -9 -r Autopilot-${npm_package_version}.zip Autopilot/*",
         "dist:all": "npm run _eb -- -w -m -l -p always",
+        "dist:dev": "npm run _eb -- -m -p never",
         "_eb": "node ./patch-electron-builder && electron-builder",
         "slack:public": "node slack.js"
     },
