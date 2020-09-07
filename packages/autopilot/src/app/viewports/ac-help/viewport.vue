@@ -6,7 +6,11 @@
                 <div class="content-header">
                     <h2>Get Help</h2>
                 </div>
-                <p>Graduated from Robot School and still need help? Start in the Automation Cloud forum. Expert scripters and the Automation Cloud team monitor all issues and conversations there.</p>
+                <p class="content-text">
+                    Graduated from Robot School and still need help?
+                    Start in the Automation Cloud forum.
+                    Expert scripters and the Automation Cloud team monitor all issues and conversations there.
+                </p>
                 <button
                     class="button button--primary"
                     type="click"
@@ -15,7 +19,7 @@
                 </button>
 
                 <div class="box box--primary">
-                    <h2 style="margin-top: 0px; font-size: 1.8em;">Find out more about the Automation Cloud</h2>
+                    <h2 style="margin-top: 0px; font-size: 20px;">Find out more about the Automation Cloud</h2>
                     <span
                         style="display: inline-flex; align-items: center; cursor: pointer;"
                         @click="onLinkClick('comunity')">
@@ -30,11 +34,14 @@
                     <h2>Tutorials &amp; API Reference </h2>
                     <img src="resources/product-logos/robot-school.svg" class="content-image">
                 </div>
-                <p>Learn the fundamentals of scripting in Autopilot by following our guided tutorials. Access reference documentation about the Autopilot tool and the Automation Cloud API.</p>
+                <p class="content-text">
+                    Learn the fundamentals of scripting in Autopilot by following our guided tutorials.
+                    Access reference documentation about the Autopilot tool and the Automation Cloud API.
+                </p>
                 <button
                     class="button button--primary"
                     type="click"
-                    @click="onLinkClick('robot-school')">
+                    @click="onLinkClick('robotSchool')">
                     <span>Robot School</span>
                 </button>
             </article>
@@ -46,7 +53,12 @@
                     <h2>Monitor your Automations</h2>
                     <img src="resources/product-logos/dashboard.svg" class="content-image">
                 </div>
-                <p>Dashboard is the nerve centre for managing, observing and monitoring the authomations you run in the Automation Cloud. Watch jobs while they execute and drill down into the low-level detail.</p>
+
+                <p class="content-text">
+                    Dashboard is the nerve centre for managing, observing and monitoring the authomations you run in the Automation Cloud.
+                    Watch jobs while they execute and drill down into the low-level detail.
+                </p>
+
                 <button
                     class="button button--primary"
                     type="click"
@@ -86,7 +98,7 @@ export default {
             links: {
                 comunity: '#',
                 automationCloud: '#',
-                robotSchool: '#',
+                robotSchool: 'https://robotschool.dev',
                 dashboard: '#',
                 singin: '#',
                 signup: '#'
@@ -124,7 +136,6 @@ export default {
 
 .content {
     margin-bottom: var(--gap--large);
-    max-width: 650px;
 }
 
 .content > * {
@@ -139,6 +150,10 @@ export default {
 .content-image {
     width: 110px;
     margin-left: var(--gap);
+}
+
+.content-text {
+    max-width: 650px;
 }
 
 </style>
