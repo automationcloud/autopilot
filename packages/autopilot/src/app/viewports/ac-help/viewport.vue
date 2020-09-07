@@ -7,19 +7,18 @@
                 </div>
                 <p>Graduated from Robot School and still need help? Start in the Automation Cloud forum. Expert scripters and the Automation Cloud team monitor all issues and conversations there.</p>
                 <button
-                    class="button button--yellow"
+                    class="button button--primary"
                     type="click"
                     @click="onLinkClick('comunity')">
-                    <i class="fas fa-angle-right button__icon"></i>
                     <span>Community</span>
                 </button>
 
-                <div class="box box--yellow">
-                    <h2>Find out more about the Automation Cloud</h2>
+                <div class="box box--primary">
+                    <h2 style="margin-top: 0px; font-size: 1.8em;">Find out more about the Automation Cloud</h2>
                     <span
                         style="display: inline-flex; align-items: center; cursor: pointer;"
                         @click="onLinkClick('comunity')">
-                        <i class="fas fa-angle-right button__icon"></i>
+                        <i class="fas fa-angle-right"></i>
                         automationcloud.net
                     </span>
                 </div>
@@ -32,10 +31,9 @@
                 </div>
                 <p>Learn the fundamentals of scripting in Autopilot by following our guided tutorials. Access reference documentation about the Autopilot tool and the Automation Cloud API.</p>
                 <button
-                    class="button button--yellow"
+                    class="button button--primary"
                     type="click"
                     @click="onLinkClick('robot-school')">
-                    <i class="fas fa-angle-right button__icon"></i>
                     <span>Robot School</span>
                 </button>
             </article>
@@ -48,26 +46,24 @@
                 </div>
                 <p>Graduated from Robot School and still need help? Start in the Automation Cloud forum. Expert scripters and the Automation Cloud team monitor all issues and conversations there.</p>
                 <button
-                    class="button button--yellow"
+                    class="button button--primary"
                     type="click"
                     @click="onLinkClick('dashboard')">
-                    <i class="fas fa-angle-right button__icon"></i>
-                    <span>Dashboard</span>
+                    Dashboard
                 </button>
             </article>
         </div>
 
         <template>
-            <div class="card-item">
+            <div class="promo promo--blue">
                 <img src="resources/ubio-humanoid-blue.svg" alt="robot">
-                <article class="card-content">
-                    <h2 class="card-content-title">Learn how to script in Autopilot</h2>
-                    <p class="card-content-p dark-blue">
+                <article class="promo-content">
+                    <h2 class="promo-content-title">Learn how to script in Autopilot</h2>
+                    <p class="promo-content-p dark-blue">
                         Get up to speed with Autopilot and create your first script.
                         Robot School will tutor you. Beware: You may turn a little bit 'robot'.
                     </p>
                     <button class="button">
-                        <i class="fas fa-angle-right button__icon"></i>
                         <span>Robot School</span>
                     </button>
                 </article>
@@ -141,47 +137,56 @@ export default {
     margin-left: var(--gap);
 }
 
-.card-item {
+.promo {
     display: flex;
     align-items: flex-start;
-    background: linear-gradient(152.25deg,#0873a1 27.31%,#31aade 94.18%);
     box-shadow: 0 4px 4px rgba(0,0,0,.25);
     border-radius: 4px;
     margin: var(--gap) 0;
 }
 
-.card-item img {
+.promo img {
     border-radius: inherit;
 }
 
-.card-content {
+.promo-content {
     align-self: center;
     margin: var(--gap) var(--gap--large);
     padding: var(--gap) 0;
     font-size: var(--font-size);
 }
 
-
-.card-content-title {
+.promo-content-title {
     margin: var(--gap--small) 0;;
     font-size: 1.8em;
     line-height: 30px;
-    color: var(--color-blue--400);
 }
 
-.card-content-p {
+.promo-content-p {
     font-size: 1.2em;
     color: #fff;
     max-width: 560px;
     margin: var(--gap) 0;
 }
 
-.card-content .button {
-    color: var(--color-blue--400);
+.promo-content .button {
     background: transparent;
     border-width: 0px;
     font-size: 1.5em;
     font-weight: 400;
     padding: 0px;
+}
+
+.promo-content .button::before {
+    margin-left: 0;
+}
+
+.promo--blue {
+    background: linear-gradient(152.25deg,#0873a1 27.31%,#31aade 94.18%);
+}
+
+.promo--blue .promo-content-title,
+.promo--blue .button {
+    color: var(--color-blue--400);
 }
 </style>

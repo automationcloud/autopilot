@@ -93,16 +93,34 @@ option {
     font-family: inherit;
     font-size: 1em;
     font-weight: 400;
+    line-height: .8em;
 
     margin-right: 1em;
-    height: 2em;
+    padding: 0 1.1em;
+    height: 2.1em;
     border: 1px solid var(--color-mono--600);
     border-radius: 2px;
     color: var(--color-cool--800);
 }
 
+.automation-cloud .button::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
+    font-size: 1.1em;
+    padding-left: -.4em;
+    margin-right: .4em;
+}
+
+.automation-cloud .button.button--primary {
+    background: var(--color-yellow--300);
+}
+
+.automation-cloud .button.button--tertiary {
+    background: transparent;
+    border-color: transparent;
+}
+
 .automation-cloud .button__icon {
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 .automation-cloud .box {
@@ -111,7 +129,7 @@ option {
     vertical-align: middle;
 }
 
-.automation-cloud .box--yellow {
+.automation-cloud .box.box--primary {
     background-color: var(--color-yellow--300);
     color: var(--color-cool--800);
 }

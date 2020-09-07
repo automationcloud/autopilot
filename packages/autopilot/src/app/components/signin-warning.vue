@@ -2,7 +2,7 @@
     <div class="signin-warning automation-cloud">
 
         <template v-if="!loggingIn">
-            <div class="box box--yellow" style="display: flex; align-items: center;">
+            <div class="box box--primary" style="display: flex; align-items: center;">
                 <i class="fas fa-exclamation-circle"></i>
                 <span>You need to be signed-in {{ message }}.</span>
             </div>
@@ -11,7 +11,6 @@
                 class="button button--yellow"
                 type="click"
                 @click="$emit('signin');">
-                <i class="fas fa-angle-right button__icon"></i>
                 <span>Sign-in</span>
             </button>
         </template>
