@@ -1,0 +1,85 @@
+/* automation cloud styles, in the future, we can remove .automationcloud from all code */
+.automation-cloud {
+    font-family: var(--font-family--automation-cloud);
+}
+
+/* Do not apply font to fa icons */
+.automation-cloud :not(::before) {
+    font-family: inherit;
+}
+
+.automation-cloud .button {
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: .8em;
+
+    margin-right: 1em;
+    padding: 0 1.1em;
+    height: 2.1em;
+    border: 1px solid var(--color-mono--600);
+    border-radius: 2px;
+    color: var(--color-cool--800);
+}
+
+.automation-cloud .button::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
+    font-size: 1.1em;
+    margin-left: -.4em;
+    margin-right: .4em;
+}
+
+.automation-cloud .button.button--primary {
+    background: var(--color-yellow--300);
+}
+
+.automation-cloud .button.button--secondary {
+    background: var(--color-blue--600);
+    color: #fff;
+}
+
+.automation-cloud .button.button--tertiary {
+    background: transparent;
+    border-color: transparent;
+}
+
+.automation-cloud .button.button--disabled {
+    background: var(--color-mono--400);
+    color: var(--color-mono--600);
+}
+
+.automation-cloud .button__icon {
+    font-size: 1.1em;
+}
+
+.automation-cloud .box {
+    margin: var(--gap--large) 0;
+    font-size: inherit;
+    vertical-align: middle;
+}
+
+.automation-cloud .box.box--primary {
+    background-color: var(--color-yellow--300);
+    color: var(--color-cool--800);
+}
+
+.automation-cloud .box i {
+    font-size: 1.4em;
+    margin-right: var(--gap);
+}
+
+.tray-bg--light {
+    background: var(--color-mono--100);
+}
+
+.tray-bg--transparent-light {
+    background: linear-gradient(to bottom, transparent 50%, var(--color-mono--100) 50%);
+}
+
+.tray-bg--light-mid {
+    background: linear-gradient(to bottom, var(--color-mono--100) 50%, var(--color-cool--400) 50%);
+}
+
+.hero--grad {
+    background: linear-gradient(329.78deg, var(--color-yellow--200) 12.31%, var(--color-blue--500) 63.83%);
+}

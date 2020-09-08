@@ -78,24 +78,3 @@ option {
 .frameless {
     border-width: 0;
 }
-
-/* automation cloud styles */
-.automation-cloud {
-    font-family: var(--font-family--automation-cloud);
-}
-
-.automation-cloud .button {
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: 400;
-
-    margin-right: 1em;
-    height: 2em;
-    border: 1px solid var(--color-mono--600);
-    border-radius: 2px;
-    color: var(--color-cool--800);
-}
-
-.automation-cloud .button__icon {
-    font-size: 1.2em;
-}
