@@ -75,8 +75,8 @@
             </article>
         </div>
 
-        <div class="ac-help-item tray-bg--light">
-            <promo-robot-school />
+        <div class="ac-help-item tray-bg--transparent-light">
+            <promo-robot-school/>
         </div>
     </div>
 </template>

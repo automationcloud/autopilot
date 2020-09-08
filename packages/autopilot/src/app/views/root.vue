@@ -48,6 +48,7 @@ export default {
     data() {
         return {
             scrolling: false,
+            isFirstRun: this.app.config.get(IS_FIRST_RUN),
         };
     },
 
@@ -55,10 +56,6 @@ export default {
 
         initialized() {
             return this.app.initialized;
-        },
-
-        isFirstRun() {
-            return this.app.config.get(IS_FIRST_RUN);
         },
 
     },
