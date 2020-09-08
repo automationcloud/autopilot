@@ -50,7 +50,6 @@ export class ViewportManager {
         this.searchScripts = new SearchScriptsViewport(app);
         this.settings = new SettingsViewport(app);
         this.chromeConnection = new ChromeConnectionViewport(app);
-        this.acHelp = new AutomationCloudHelpViewport(app);
 
         this.all = Object.values(this).filter(_ => _ instanceof Viewport);
     }
