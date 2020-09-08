@@ -68,7 +68,6 @@ function createNewWindow(profile: Profile) {
         show: false,
         frame: false,
         title: `Autopilot (${profile.name})`,
-        icon: path.join(__dirname, '../../icon.png'),
         titleBarStyle: os.platform() === 'darwin' ? 'hiddenInset' : 'hidden',
     });
 
