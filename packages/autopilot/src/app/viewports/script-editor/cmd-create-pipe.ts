@@ -33,7 +33,7 @@ export class CreatePipeCommand extends ScriptEditorCommand {
         const pipe = location.list.insert(spec, location.index);
         this.newId = pipe.id;
         this.viewport.selectItem(pipe);
-        this.viewport.app.ui.expandable.expand(pipe.id);
+        this.viewport.app.expandable.expand(pipe.id);
         this.app.project.update();
     }
 

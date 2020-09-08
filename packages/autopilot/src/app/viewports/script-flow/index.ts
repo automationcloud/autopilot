@@ -139,7 +139,7 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     revealSelected() {
         let item = this.getLastSelectedItem();
         while (item) {
-            this.app.ui.expandable.expand(item.id);
+            this.app.expandable.expand(item.id);
             item = item instanceof Action ? item.$parent : null;
         }
         super.revealSelected();

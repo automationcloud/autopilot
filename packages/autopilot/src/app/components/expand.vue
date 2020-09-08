@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { ExpandableController } from '~/controllers';
+
 export default {
 
     props: {
@@ -18,8 +20,12 @@ export default {
 
     computed: {
 
+        ctl() {
+            return this.get(ExpandableController);
+        },
+
         expanded() {
-            return this.app.ui.expandable.isExpanded(this.id);
+            return this.ctl.isExpanded(this.id);
         }
 
     },
@@ -30,10 +36,18 @@ export default {
             if (this.stopPropagation) {
                 ev.stopPropagation();
             }
-            this.app.ui.expandable.toggleExpand(this.id);
+            this.ctl.toggleExpand(this.id);
         }
 
     }
 
 };
 </script>
+
+<style scoped>
+.expand {
+    display: inline-block;
+    width: 28px;
+    text-align: center;
+}
+</style>

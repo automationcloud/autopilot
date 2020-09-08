@@ -2,6 +2,7 @@ export * from './api-login';
 export * from './api';
 export * from './app-menu';
 export * from './emulation';
+export * from './expandable';
 export * from './extension-dev';
 export * from './extension-loader';
 export * from './extension-registry';

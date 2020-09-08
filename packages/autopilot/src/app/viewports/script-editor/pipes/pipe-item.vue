@@ -30,7 +30,6 @@
             <div class="bar-main">
 
                 <expand
-                    class="expand"
                     :stop-propagation="true"
                     :id="pipe.id"/>
 
@@ -135,7 +134,7 @@
 </template>
 
 <script>
-import { ScriptDiffController } from '~/controllers';
+import { ScriptDiffController, ExpandableController } from '~/controllers';
 import ms from 'ms';
 import Elem from './elem.vue';
 import Err from './err.vue';
@@ -175,12 +174,16 @@ export default {
             return this.app.viewports.scriptEditor;
         },
 
+        expandable() {
+            return this.get(ExpandableController);
+        },
+
         pipeProxy() {
             return this.viewport.createPipeProxy(this.pipe);
         },
 
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.pipe.id);
+            return this.expandable.isExpanded(this.pipe.id);
         },
 
         isSelected() {
@@ -303,15 +306,15 @@ export default {
     methods: {
 
         expand() {
-            this.app.ui.expandable.expand(this.pipe.id);
+            this.expandable.expand(this.pipe.id);
         },
 
         collapse() {
-            this.app.ui.expandable.collapse(this.pipe.id);
+            this.expandable.collapse(this.pipe.id);
         },
 
         toggleExpand() {
-            this.app.ui.expandable.toggleExpand(this.pipe.id);
+            this.expandable.toggleExpand(this.pipe.id);
         },
 
         onBarClick(ev) {
@@ -420,7 +423,6 @@ export default {
 
 .expand {
     width: 1.25em;
-    text-align: center;
 }
 
 /*

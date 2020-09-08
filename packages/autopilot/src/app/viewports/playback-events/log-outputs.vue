@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { ExpandableController } from '~/controllers';
+
 export default {
 
     computed: {
@@ -16,7 +18,7 @@ export default {
         },
 
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.expandKey);
+            return this.get(ExpandableController).isExpanded(this.expandKey);
         },
 
         allOutputKeys() {

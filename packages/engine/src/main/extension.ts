@@ -10,12 +10,17 @@ import { promisify } from 'util';
 import { Engine } from './engine';
 import { Container } from 'inversify';
 import { InspectionClass, Inspection } from './inspection';
+import Ajv from 'ajv';
+import { JsonSchema } from './schema';
+import * as util from './util';
 
 const globAsync = promisify(glob);
+const ajv = new Ajv();
 
 export interface ExtensionSpec {
     name: string;
     version: string;
+    title: string;
     description: string;
     modules: string[];
     entrypoint?: string;
@@ -23,6 +28,7 @@ export interface ExtensionSpec {
 
 export interface ExtensionManifest {
     name: string;
+    title: string;
     description: string;
     latestVersion: string;
     versions: string[];
@@ -148,38 +154,25 @@ export class Extension {
 
     static async loadExtensionSpec(dir: string): Promise<ExtensionSpec> {
         const pkg = await this.loadPackageJson(dir);
-        const { name, version, description = '' } = pkg;
-        const modules = pkg.extension?.modules ?? pkg.modules ?? [];
-        const entrypoint = pkg.extension?.entrypoint;
-        if (!(name && typeof name === 'string')) {
+        const valid = Extension.packageJsonValidator(pkg);
+        if (!valid) {
+            const messages = Extension.packageJsonValidator.errors?.map(_ => _.message ?? '').join('\n') || '';
             throw new Exception({
                 name: 'ExtensionLoadFailed',
-                message: `Malformed extension: "name" should be non-empty string`,
-                details: { name, version, description }
+                message: `Extension package.json invalid:\n\n${messages}`
             });
         }
-        if (!semver.valid(version)) {
-            throw new Exception({
-                name: 'ExtensionLoadFailed',
-                message: `Malformed extension: "version" should be a correct semver`,
-                details: { name, version, description }
-            });
-        }
-        if (!(typeof description === 'string')) {
-            throw new Exception({
-                name: 'ExtensionLoadFailed',
-                message: `Malformed extension: "description" should be string`,
-                details: { name, version, description }
-            });
-        }
-        if (!(Array.isArray(modules) && modules.every(_ => typeof _ === 'string'))) {
-            throw new Exception({
-                name: 'ExtensionLoadFailed',
-                message: `Malformed extension: "modules" must be an array of glob patterns`,
-                details: { name, version, description, modules }
-            });
-        }
-        return { name, version, description, modules, entrypoint };
+        const {
+            name,
+            version,
+            title = '',
+            description = '',
+            extension: {
+                modules = [],
+                entrypoint,
+            }
+        } = pkg;
+        return { name, version, title, description, modules, entrypoint };
     }
 
     static async loadPackageJson(dir: string): Promise<any> {
@@ -240,4 +233,28 @@ export class Extension {
         }
         return result;
     }
+
+    static packageJsonSchema: JsonSchema = {
+        type: 'object',
+        required: ['name', 'version'],
+        properties: {
+            name: { type: 'string', minLength: 1 },
+            version: { type: 'string', minLength: 1 },
+            title: { type: 'string' },
+            description: { type: 'string' },
+            extension: {
+                type: 'object',
+                required: [],
+                properties: {
+                    modules: {
+                        type: 'array',
+                        items: { type: 'string' },
+                    },
+                    entrypoint: { type: 'string', minLength: 1 }
+                }
+            }
+        }
+    };
+
+    static packageJsonValidator = ajv.compile(Extension.packageJsonSchema);
 }

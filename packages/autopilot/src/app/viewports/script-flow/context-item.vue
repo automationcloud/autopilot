@@ -135,7 +135,7 @@
 
 <script>
 import ActionList from './action-list.vue';
-import { ScriptDiffController } from '~/controllers';
+import { ScriptDiffController, ExpandableController } from '~/controllers';
 
 export default {
 
@@ -161,8 +161,12 @@ export default {
             return this.app.project.script;
         },
 
+        expandable() {
+            return this.get(ExpandableController);
+        },
+
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.context.id);
+            return this.expandable.isExpanded(this.context.id);
         },
 
         isSelected() {
@@ -236,15 +240,15 @@ export default {
         },
 
         expand() {
-            this.app.ui.expandable.expand(this.context.id);
+            this.expandable.expand(this.context.id);
         },
 
         collapse() {
-            this.app.ui.expandable.collapse(this.context.id);
+            this.expandable.collapse(this.context.id);
         },
 
         toggleExpand() {
-            this.app.ui.expandable.toggleExpand(this.context.id);
+            this.expandable.toggleExpand(this.context.id);
         },
 
         onBarClick(ev) {
@@ -356,7 +360,6 @@ export default {
 
 .expand {
     width: var(--tree-icon-size);
-    text-align: center;
 }
 
 .icon {
