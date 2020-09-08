@@ -12,7 +12,6 @@ import { Container } from 'inversify';
 import { InspectionClass, Inspection } from './inspection';
 import Ajv from 'ajv';
 import { JsonSchema } from './schema';
-import * as util from './util';
 
 const globAsync = promisify(glob);
 const ajv = new Ajv();
@@ -167,11 +166,9 @@ export class Extension {
             version,
             title = '',
             description = '',
-            extension: {
-                modules = [],
-                entrypoint,
-            }
         } = pkg;
+        const modules = pkg.extension?.modules ?? pkg.modules ?? [];
+        const entrypoint = pkg.extension?.entrypoint;
         return { name, version, title, description, modules, entrypoint };
     }
 
@@ -252,7 +249,12 @@ export class Extension {
                     },
                     entrypoint: { type: 'string', minLength: 1 }
                 }
-            }
+            },
+            // deprecated
+            modules: {
+                type: 'array',
+                items: { type: 'string' },
+            },
         }
     };
 

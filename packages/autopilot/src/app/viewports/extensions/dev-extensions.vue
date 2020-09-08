@@ -8,7 +8,7 @@
                 <expand :id="expandId"/>
             </div>
             <template v-if="expanded">
-                <button class="button button--primary button--small"
+                <button class="button button--primary"
                     @click="addExtension()">
                     <span>Add directory</span>
                 </button>
@@ -17,34 +17,35 @@
 
         <template v-if="expanded">
             <div v-for="ext in extensions"
-                class="extension-item">
+                class="ext-item">
                 <section>
-                    <div class="extension-name">
+                    <div class="ext-name">
                         {{ ext.spec.name }}:{{ ext.spec.version }}
                     </div>
-                    <div class="extension-dir">
+                    <div class="ext-dir">
                         {{ ext.dir }}
                     </div>
                 </section>
-                <div class="extension-controls">
-                    <button class="button button--primary button--small"
+                <div class="ext-controls">
+                    <span v-if="isExtensionPublished(ext)"
+                        class="ext-published">
+                        published
+                    </span>
+                    <button v-else
+                        class="button button--primary"
                         title="Publish extension"
-                        @click="publishExtension(ext)"
-                        :disabled="isExtensionPublished(ext)">
+                        @click="publishExtension(ext)">
                         <template v-if="processing === ext">
                             Publishing...
-                        </template>
-                        <template v-else-if="isExtensionPublished(ext)">
-                            {{ ext.spec.version }} published
                         </template>
                         <template v-else>
                             Publish {{ ext.spec.version }}
                         </template>
                     </button>
-                    <button class="button button--secondary button--small button--icon"
+                    <button class="button button--secondary button--icon"
                         title="Remove extension"
                         @click="removeExtension(ext)">
-                        <i class="fas fa-trash"></i>
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
             </div>
@@ -142,27 +143,33 @@ export default {
     align-items: center;
 }
 
-.extension-item {
+.ext-item {
     display: flex;
     align-items: center;
     padding: var(--gap--small) var(--gap);
     margin: 0 calc(-1 * var(--gap));
 }
 
-.extension-item:hover {
+.ext-item:hover {
     background: rgba(0,0,0,.05);
 }
 
-.extension-item section {
+.ext-item section {
     flex: 1;
 }
 
-.extension-dir {
+.ext-dir {
     font-size: var(--font-size--small);
     color: var(--color-cool--500);
 }
 
-.extension-controls {
+.ext-published {
+    font-weight: bold;
+    margin-right: var(--gap--small);
+    color: var(--color-cool--500);
+}
+
+.ext-controls {
     white-space: nowrap;
 }
 </style>

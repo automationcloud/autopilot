@@ -19,6 +19,7 @@ export class ExtensionRegistryController {
 
     installedExtensions: Extension[] = [];
     allManifests: ExtensionManifest[] = [];
+    searchQuery: string = '';
     loading: boolean = false;
     error: Error | null = null;
 
@@ -87,11 +88,15 @@ export class ExtensionRegistryController {
     }
 
     get installedManifests() {
-        return this.allManifests.filter(manifest => this._extMap.has(manifest.name));
+        return this.allManifests
+            .filter(manifest => this._extMap.has(manifest.name))
+            .filter(manifest => this.matchesSearchQuery(manifest));
     }
 
     get availableManifests() {
-        return this.allManifests.filter(manifest => !this._extMap.has(manifest.name));
+        return this.allManifests
+            .filter(manifest => !this._extMap.has(manifest.name))
+            .filter(manifest => this.matchesSearchQuery(manifest));
     }
 
     getInstalledVersion(manifest: ExtensionManifest): string | null {
@@ -114,6 +119,19 @@ export class ExtensionRegistryController {
             return false;
         }
         return manifest.versions.includes(version);
+    }
+
+    matchesSearchQuery(manifest: ExtensionManifest) {
+        const q = this.searchQuery.trim().toLowerCase();
+        if (!q) {
+            return true;
+        }
+        return [
+            manifest.name,
+            manifest.title || '',
+            manifest.description || '',
+            manifest.latestVersion || '',
+        ].some(_ => _.toLowerCase().includes(q));
     }
 
     async initInstalledExtensions() {

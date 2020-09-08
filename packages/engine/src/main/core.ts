@@ -10,6 +10,7 @@ const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
  */
 export const coreExtension = new Extension(__dirname, {
     name: '<core>',
+    title: '',
     description: 'UBIO Automation Core',
     version: pkg.version,
     modules: [

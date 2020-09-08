@@ -47,7 +47,7 @@ export default {
 <style scoped>
 .expand {
     display: inline-block;
-    width: 28px;
+    width: 1.5em;
     text-align: center;
 }
 </style>
