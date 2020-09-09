@@ -14,11 +14,13 @@ export class RegistryServiceMock extends RegistryService {
         {
             name: '@automationcloud/extension-test',
             latestVersion: '2.5.4',
+            title: '',
             description: 'Commonly used actions and pipes',
             versions: ['2.5.4', '2.5.3', '2.5.2', '2.5.1', '2.5.0', '2.4.0', '2.3.0', '2.2.0', '2.1.0', '2.0.0'],
         },
         {
             name: '@automationcloud/extension-captcha',
+            title: '',
             description: 'Captcha solvers',
             latestVersion: '1.0.0',
             versions: ['1.0.0'],
@@ -36,6 +38,7 @@ export class RegistryServiceMock extends RegistryService {
             return new Extension(this.getExtensionDir(name, version), {
                 name,
                 version,
+                title: '',
                 description: '',
                 modules: [],
             });

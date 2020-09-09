@@ -4,48 +4,62 @@
         <div class="title">
             <div style="flex: 1"
                 class="section__subtitle">
-                Local extensions
+                <span @click="toggleExpanded">Local extensions</span>
+                <expand :id="expandId"/>
             </div>
-            <button class="button button--primary button--small"
-                @click="addExtension()">
-                <span>Add directory</span>
-            </button>
+            <template v-if="expanded">
+                <button class="button button--primary"
+                    @click="addExtension()">
+                    <span>Add directory</span>
+                </button>
+            </template>
         </div>
 
-        <div v-for="ext in extensions"
-            class="extension-item">
-            <section>
-                <div class="extension-name">
-                    {{ ext.spec.name }}:{{ ext.spec.version }}
+        <template v-if="expanded">
+            <div v-for="ext in extensions"
+                class="ext-item">
+                <section>
+                    <div class="ext-name">
+                        {{ ext.spec.name }}:{{ ext.spec.version }}
+                    </div>
+                    <div class="ext-dir">
+                        {{ ext.dir }}
+                    </div>
+                </section>
+                <div class="ext-controls">
+                    <span v-if="isExtensionPublished(ext)"
+                        class="ext-published">
+                        published
+                    </span>
+                    <button v-else
+                        class="button button--primary"
+                        title="Publish extension"
+                        @click="publishExtension(ext)">
+                        <template v-if="processing === ext">
+                            Publishing...
+                        </template>
+                        <template v-else>
+                            Publish {{ ext.spec.version }}
+                        </template>
+                    </button>
+                    <button class="button button--secondary button--icon"
+                        title="Remove extension"
+                        @click="removeExtension(ext)">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="extension-dir">
-                    {{ ext.dir }}
-                </div>
-            </section>
-            <div class="extension-controls">
-                <button class="button button--primary button--small"
-                    title="Publish extension"
-                    @click="publishExtension(ext)"
-                    :disabled="isPublishDisabled(ext)">
-                    <template v-if="processing === ext">
-                        Publishing...
-                    </template>
-                    <template v-else>
-                        Publish {{ ext.spec.version }}
-                    </template>
-                </button>
-                <button class="button button--secondary button--small button--icon"
-                    title="Remove extension"
-                    @click="removeExtension(ext)">
-                    <i class="fas fa-trash"></i>
-                </button>
             </div>
-        </div>
+        </template>
+
     </div>
 </template>
 
 <script>
-import { ExtensionDevController, ExtensionRegistryController } from '~/controllers';
+import {
+    ExtensionDevController,
+    ExtensionRegistryController,
+    ExpandableController,
+} from '~/controllers';
 
 export default {
 
@@ -57,8 +71,16 @@ export default {
 
     computed: {
 
+        expandId() {
+            return 'dev-extensions';
+        },
+
         script() {
             return this.app.project.script;
+        },
+
+        expandable() {
+            return this.get(ExpandableController);
         },
 
         devExt() {
@@ -77,6 +99,10 @@ export default {
             return this.devExt.processing;
         },
 
+        expanded() {
+            return this.expandable.isExpanded(this.expandId);
+        },
+
     },
 
     methods: {
@@ -93,12 +119,12 @@ export default {
             await this.devExt.publishExtension(ext);
         },
 
-        isPublishDisabled(ext) {
-            return this.project || this.isExtensionPublished(ext);
-        },
-
         isExtensionPublished(ext) {
             return this.extRegistry.isVersionExist(ext.spec.name, ext.spec.version);
+        },
+
+        toggleExpanded() {
+            this.expandable.toggleExpand(this.expandId);
         },
 
     }
@@ -108,7 +134,7 @@ export default {
 
 <style scoped>
 .local-extensions {
-    padding: var(--gap);
+    padding: var(--gap--small) var(--gap);
     background: var(--color-cool--200);
 }
 
@@ -117,27 +143,33 @@ export default {
     align-items: center;
 }
 
-.extension-item {
+.ext-item {
     display: flex;
     align-items: center;
     padding: var(--gap--small) var(--gap);
     margin: 0 calc(-1 * var(--gap));
 }
 
-.extension-item:hover {
+.ext-item:hover {
     background: rgba(0,0,0,.05);
 }
 
-.extension-item section {
+.ext-item section {
     flex: 1;
 }
 
-.extension-dir {
+.ext-dir {
     font-size: var(--font-size--small);
     color: var(--color-cool--500);
 }
 
-.extension-controls {
+.ext-published {
+    font-weight: bold;
+    margin-right: var(--gap--small);
+    color: var(--color-cool--500);
+}
+
+.ext-controls {
     white-space: nowrap;
 }
 </style>

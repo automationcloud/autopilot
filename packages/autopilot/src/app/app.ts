@@ -108,6 +108,7 @@ export class App extends Engine {
     get api() { return this.get(ct.ApiController); }
     get config() { return this.get(Configuration); }
     get tools() { return this.get(ToolsController); }
+    get expandable() { return this.get(ct.ExpandableController); }
 
     async init() {
         // New controllers are initialized this way

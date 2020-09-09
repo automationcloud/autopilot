@@ -18,9 +18,13 @@ export class ExtensionRegistryController {
     userData: UserData;
 
     installedExtensions: Extension[] = [];
-    availableExtensions: ExtensionManifest[] = [];
+    allManifests: ExtensionManifest[] = [];
+    searchQuery: string = '';
     loading: boolean = false;
     error: Error | null = null;
+
+    protected _extMap: Map<string, Extension> = new Map();
+    protected _manifestMap: Map<string, ExtensionManifest> = new Map();
 
     constructor(
         @inject('App')
@@ -37,6 +41,9 @@ export class ExtensionRegistryController {
         this.userData = storage.createUserData('extensions');
         this.events.on('acApiAuthorised', () => this.refresh());
         this.events.on('extensionPublished', () => this.refresh());
+        this.events.on('extensionsUpdated', () => {
+            this._extMap = new Map(this.installedExtensions.map(_ => [_.spec.name, _]));
+        });
         const interval = this.getAutoRefreshInterval();
         if (interval > 0) {
             // TODO consider making those checks cancellable
@@ -51,9 +58,9 @@ export class ExtensionRegistryController {
     }
 
     async init() {
-        await this.initInstalledExtensions();
         // Refresh in background
-        this.refresh().catch(() => {});
+        this.refresh().catch(() => { });
+        await this.initInstalledExtensions();
     }
 
     update() {
@@ -70,7 +77,8 @@ export class ExtensionRegistryController {
         this.loading = true;
         try {
             this.error = null;
-            this.availableExtensions = await this.registry.listExtensions();
+            this.allManifests = await this.registry.listExtensions();
+            this._manifestMap = new Map(this.allManifests.map(_ => [_.name, _]));
             await this.checkAndInstallAutoUpdates();
         } catch (err) {
             this.error = err;
@@ -79,9 +87,25 @@ export class ExtensionRegistryController {
         }
     }
 
+    get installedManifests() {
+        return this.allManifests
+            .filter(manifest => this._extMap.has(manifest.name))
+            .filter(manifest => this.matchesSearchQuery(manifest));
+    }
+
+    get availableManifests() {
+        return this.allManifests
+            .filter(manifest => !this._extMap.has(manifest.name))
+            .filter(manifest => this.matchesSearchQuery(manifest));
+    }
+
     getInstalledVersion(manifest: ExtensionManifest): string | null {
-        const ext = this.installedExtensions.find(ext => ext.spec.name === manifest.name);
+        const ext = this._extMap.get(manifest.name);
         return ext ? ext.spec.version : null;
+    }
+
+    isInstalled(manifest: ExtensionManifest) {
+        return this.getInstalledVersion(manifest) != null;
     }
 
     isOutdated(manifest: ExtensionManifest) {
@@ -90,11 +114,24 @@ export class ExtensionRegistryController {
     }
 
     isVersionExist(name: string, version: string) {
-        const manifest = this.availableExtensions.find(m => m.name === name);
+        const manifest = this._manifestMap.get(name);
         if (!manifest) {
             return false;
         }
         return manifest.versions.includes(version);
+    }
+
+    matchesSearchQuery(manifest: ExtensionManifest) {
+        const q = this.searchQuery.trim().toLowerCase();
+        if (!q) {
+            return true;
+        }
+        return [
+            manifest.name,
+            manifest.title || '',
+            manifest.description || '',
+            manifest.latestVersion || '',
+        ].some(_ => _.toLowerCase().includes(q));
     }
 
     async initInstalledExtensions() {
@@ -194,7 +231,7 @@ export class ExtensionRegistryController {
         const updates: ExtensionVersion[] = [];
         for (const ext of this.installedExtensions) {
             const { name } = ext.spec;
-            const manifest = this.availableExtensions.find(m => m.name === name);
+            const manifest = this._manifestMap.get(name);
             if (!manifest) {
                 continue;
             }

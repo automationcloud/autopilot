@@ -5,8 +5,7 @@
             @contextmenu.stop.prevent="popupMenu"
             @dblclick="toggleRenaming()">
             <expand :id="groupId"
-                :stop-propagation="true"
-                class="pipe-group__expand"/>
+                :stop-propagation="true"/>
             <div class="pipe-group__name"
                 v-if="!renaming">
                 {{ group.name }}
@@ -42,6 +41,7 @@
 <script>
 import { menu } from '../../util';
 import PipeRecipe from './pipe-recipe.vue';
+import { ExpandableController } from '~/controllers';
 
 export default {
 
@@ -61,10 +61,13 @@ export default {
     },
 
     computed: {
+        expandable() {
+            return this.get(ExpandableController);
+        },
         viewport() { return this.app.viewports.recipes; },
         groupId() { return this.viewport.getPipeGroupId(this.group); },
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.groupId);
+            return this.expandable.isExpanded(this.groupId);
         }
     },
 
@@ -81,7 +84,7 @@ export default {
         },
 
         toggleExpand() {
-            this.app.ui.expandable.toggleExpand(this.groupId);
+            this.expandable.toggleExpand(this.groupId);
         },
 
         toggleRenaming() {
@@ -92,7 +95,7 @@ export default {
         renameGroup() {
             this.viewport.renamePipeGroup(this.group, this.newName);
             this.renaming = false;
-            this.app.ui.expandable.expand(this.groupId);
+            this.expandable.expand(this.groupId);
         },
 
         deleteGroup() {
@@ -126,9 +129,5 @@ export default {
     padding: 0;
     background: var(--color-mono--200);
     background: #fff;
-}
-
-.pipe-group__controls {
-    padding: var(--gap--small);
 }
 </style>

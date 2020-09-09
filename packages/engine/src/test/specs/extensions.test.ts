@@ -47,6 +47,7 @@ describe('Extension', () => {
         }
         const extension = new Extension('some-dir', {
             name: 'some-extension',
+            title: '',
             description: '',
             version: '1.0.0',
             modules: [],
@@ -75,6 +76,7 @@ describe('Extension', () => {
         }
         const extension = new Extension('some-dir', {
             name: 'some-extension',
+            title: '',
             description: '',
             version: '1.0.0',
             modules: [],

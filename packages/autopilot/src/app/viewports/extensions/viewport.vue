@@ -9,7 +9,7 @@
             @signin="apiLogin.startLogin()" />
 
         <template v-else>
-            <installed-extensions/>
+            <extensions/>
         </template>
     </div>
 </template>
@@ -21,13 +21,13 @@ import {
     ApiLoginController
 } from '~/controllers';
 import DevExtensions from './dev-extensions.vue';
-import InstalledExtensions from './installed-extensions.vue';
+import Extensions from './extensions.vue';
 
 export default {
 
     components: {
         DevExtensions,
-        InstalledExtensions,
+        Extensions,
     },
 
     computed: {

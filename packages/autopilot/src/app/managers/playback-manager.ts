@@ -229,7 +229,7 @@ export class PlaybackManager {
         await this.app.finishSession();
         await this.app.startSession();
         await this.app.project.init();
-        this.app.ui.expandable.collapseAll();
+        this.app.expandable.collapseAll();
         this.scriptFlow.clearSelection();
         this.resetTimer();
         this.clearLogs();

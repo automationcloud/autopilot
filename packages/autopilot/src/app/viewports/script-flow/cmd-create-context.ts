@@ -29,7 +29,7 @@ export class CreateContextCommand extends Command<ScriptFlowViewport> {
         const context = this.script.contexts.insert(spec, location.index);
         this.newId = context.id;
         this.viewport.selectItem(context);
-        this.app.ui.expandable.expand(context.id);
+        this.app.expandable.expand(context.id);
         this.app.project.update();
     }
 

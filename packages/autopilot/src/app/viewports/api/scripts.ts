@@ -54,7 +54,7 @@ export class ScriptsController {
             await this.app.tools.loadScriptService(script.id, script.serviceId);
             this.app.viewports.scriptFlow.activateViewport();
             this.app.viewports.scriptFlow.clearSelection();
-            this.app.ui.expandable.collapseAll();
+            this.app.expandable.collapseAll();
         } finally {
             this.loading = false;
         }

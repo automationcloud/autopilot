@@ -3,7 +3,7 @@
         @contextmenu.stop.prevent="popupMenu">
 
         <div class="dataset-input__header group group--gap--small">
-            <expand class="dataset-input__expand" :id="expandId"/>
+            <expand :id="expandId"/>
             <i class="color--yellow fa fa-exclamation-triangle"
                 v-if="!isValid">
             </i>
@@ -46,6 +46,7 @@
 <script>
 import throttle from 'promise-smart-throttle';
 import { helpers, menu, clipboard } from '../../util';
+import { ExpandableController } from '~/controllers';
 
 export default {
 
@@ -90,7 +91,7 @@ export default {
         },
 
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.expandId);
+            return this.get(ExpandableController).isExpanded(this.expandId);
         },
 
         inputKeys() {
@@ -201,9 +202,5 @@ export default {
     flex-flow: row nowrap;
     padding: var(--gap--small);
     border-bottom: 1px solid var(--color-mono--200);
-}
-
-.dataset-input__expand {
-    padding: var(--gap--small);
 }
 </style>

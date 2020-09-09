@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { ScriptDiffController } from '~/controllers';
+import { ScriptDiffController, ExpandableController } from '~/controllers';
 
 export default {
 
@@ -123,6 +123,10 @@ export default {
             return this.app.viewports.scriptFlow;
         },
 
+        expandable() {
+            return this.get(ExpandableController);
+        },
+
         diff() {
             return this.get(ScriptDiffController);
         },
@@ -132,7 +136,7 @@ export default {
         },
 
         isExpanded() {
-            return this.app.ui.expandable.isExpanded(this.action.id);
+            return this.expandable.isExpanded(this.action.id);
         },
 
         isSelected() {
@@ -208,15 +212,15 @@ export default {
         },
 
         expand() {
-            this.app.ui.expandable.expand(this.action.id);
+            this.expandable.expand(this.action.id);
         },
 
         collapse() {
-            this.app.ui.expandable.collapse(this.action.id);
+            this.expandable.collapse(this.action.id);
         },
 
         toggleExpand() {
-            this.app.ui.expandable.toggleExpand(this.action.id);
+            this.expandable.toggleExpand(this.action.id);
         },
 
         onBarClick(ev) {

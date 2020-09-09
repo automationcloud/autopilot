@@ -55,7 +55,7 @@ export abstract class EditEntityCommand<T extends EntityLike> extends ScriptEdit
         this.oldValue = entity[key];
         (entity as any)[key] = newValue;
         if (this.shouldExpand()) {
-            this.app.ui.expandable.expand(entity.id);
+            this.app.expandable.expand(entity.id);
         }
         this.app.project.update();
     }
@@ -68,7 +68,7 @@ export abstract class EditEntityCommand<T extends EntityLike> extends ScriptEdit
         const { key, oldValue } = this;
         (entity as any)[key] = oldValue;
         if (this.shouldExpand()) {
-            this.app.ui.expandable.expand(entity.id);
+            this.app.expandable.expand(entity.id);
         }
         this.app.project.update();
     }

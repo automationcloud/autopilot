@@ -1,17 +1,21 @@
-import { App } from '../app';
-import { Controller } from '../controller';
+import { controller } from '../controller';
 import { UserData } from '../userdata';
+import { injectable, inject } from 'inversify';
+import { StorageController } from './storage';
 
-export class ExpandableController implements Controller {
-    app: App;
+@injectable()
+@controller()
+export class ExpandableController {
     userData: UserData;
 
     expandedIds: string[] = [];
     expandedSet: Set<string> = new Set();
 
-    constructor(app: App) {
-        this.app = app;
-        this.userData = app.storage.createUserData('expandable', 500);
+    constructor(
+        @inject(StorageController)
+        protected storage: StorageController,
+    ) {
+        this.userData = storage.createUserData('expandable', 500);
     }
 
     async init() {

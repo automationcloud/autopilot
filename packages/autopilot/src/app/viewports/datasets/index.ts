@@ -60,7 +60,7 @@ export class DatasetsViewport extends StatelessViewport {
                 data: input.data || null,
             });
         }
-        this.app.ui.expandable.expand(this.getInputExpandId(input));
+        this.app.expandable.expand(this.getInputExpandId(input));
         this.save();
     }
 
