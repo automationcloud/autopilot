@@ -10,10 +10,11 @@
         <section style="flex: 1">
             <div class="ext-title" @click="toggleExpand()">
                 {{ title }}
-                <i class="help-circle fas fa-question-circle"></i>
+                <i class="help-circle fas fa-question-circle"
+                    v-if="description"></i>
             </div>
-            <div class="ext-description" v-if="isExpanded">
-                {{ manifest.description }}
+            <div class="ext-description" v-if="isExpanded && description">
+                {{ description }}
             </div>
             <div class="ext-name">
                 {{ manifest.name }}:{{ manifest.latestVersion }}
@@ -69,6 +70,10 @@ export default {
         isExpanded() {
             return this.expandable.isExpanded(this.manifest.id);
         },
+
+        description() {
+            return this.manifest.description.trim();
+        }
 
     },
 

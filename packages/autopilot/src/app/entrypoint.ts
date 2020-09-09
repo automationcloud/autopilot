@@ -20,8 +20,16 @@ const localNodeModules = path.join(getAppPath(), 'node_modules');
 
 Vue.mixin({
     beforeCreate() {
+        const vm = (this as any);
         // Allow components to use `this.app` in their data declarations
-        (this as any).app = app;
+        vm.app = app;
+    },
+    created() {
+        const vm = (this as any);
+        // Allow binding controllers to instances in declaratively
+        for (const [key, value] of Object.entries(vm.$options.bind ?? {})) {
+            vm[key] = app.get(value as any);
+        }
     },
     data() {
         return {

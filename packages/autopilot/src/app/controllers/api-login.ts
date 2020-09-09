@@ -26,7 +26,9 @@ const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 export class ApiLoginController {
     userData: UserData;
     account: AccountInfo | null = null;
-    protected _loggingIn: boolean = false;
+
+    initialized: boolean = false;
+    loggingIn: boolean = false;
     protected currentEnv: 'production' | 'staging' = 'production';
 
     constructor(
@@ -43,7 +45,6 @@ export class ApiLoginController {
     }
 
     get authAgent() { return this.api.authAgent; }
-    get loggingIn() { return this._loggingIn; }
     get authorised() { return this.authAgent.params.accessToken && this.account; }
 
     async init() {
@@ -78,7 +79,7 @@ export class ApiLoginController {
     async onSwitchEnv() {
         // cleanup previous auth state
         this.invalidateAuthAgent();
-        this._loggingIn = true;
+        this.loggingIn = true;
         this.account = null;
         this.events.emit('acApiAuthorised', false);
         try {
@@ -88,7 +89,7 @@ export class ApiLoginController {
         } catch (error) {
             console.warn('failed to authorise user when switching env', { error });
         }
-        this._loggingIn = false;
+        this.loggingIn = false;
     }
 
     async retrieveRefreshToken() {
@@ -120,13 +121,13 @@ export class ApiLoginController {
             return;
         }
         try {
-            this._loggingIn = true;
+            this.loggingIn = true;
             await this.login(timeout);
         } catch (error) {
             alert(error.message);
             console.error(error);
         } finally {
-            this._loggingIn = false;
+            this.loggingIn = false;
         }
     }
 
