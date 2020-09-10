@@ -39,7 +39,6 @@ export class ExtensionRegistryController {
         protected config: Configuration,
     ) {
         this.userData = storage.createUserData('extensions');
-        this.events.on('acApiAuthorised', () => this.refresh());
         this.events.on('extensionPublished', () => this.refresh());
         this.events.on('extensionsUpdated', () => {
             this._extMap = new Map(this.installedExtensions.map(_ => [_.spec.name, _]));

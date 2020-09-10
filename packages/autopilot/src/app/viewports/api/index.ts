@@ -34,11 +34,6 @@ export class ApiViewport extends Viewport<ApiViewportState> {
         await super.init();
         const state = this.getState();
         this.services.applyFilters(state.filters, false);
-        this.events.on('acApiAuthorised', authorised => {
-            if (this.error && authorised) {
-                this.dismissError();
-            }
-        });
     }
 
     getViewportId(): string {

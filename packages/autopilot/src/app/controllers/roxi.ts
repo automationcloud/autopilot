@@ -39,7 +39,6 @@ export class RoxiController {
 
         const onInit = debounce(this.init.bind(this), 500);
         this.events.on('settingsUpdated', onInit);
-        this.events.on('acApiAuthorised', onInit);
     }
 
     async init() {

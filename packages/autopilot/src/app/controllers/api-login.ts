@@ -27,7 +27,7 @@ const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 @controller({ priority: 2000 }) // ExtensionRegistry depends on it
 export class ApiLoginController {
     protected userData: UserData;
-    account: AccountInfo | null = null;
+    protected account: AccountInfo | null = null;
 
     initialized: boolean = false;
     loggingIn: boolean = false;
@@ -47,6 +47,17 @@ export class ApiLoginController {
 
     get authAgent() { return this.api.authAgent; }
     get authorised() { return this.authAgent.params.accessToken; }
+    get userInitial() {
+        if (!this.account) {
+            return 'U';
+        }
+
+        const { firstName, lastName, email } = this.account;
+        const i1 = firstName[0] || null;
+        const i2 = lastName[0] || null;
+
+        return i1 && i2 ? i1 + i2 : email.substring(0, 2);
+    }
 
     async init() {
         await this.silentLogin();
@@ -117,6 +128,8 @@ export class ApiLoginController {
         this.authAgent.setTokens(tokens);
         if (tokens.refreshToken) {
             this.saveRefreshToken(tokens.refreshToken);
+            await this.setAccountInfo();
+            console.info('signed in: ' + this.account?.email);
         }
     }
 
@@ -193,7 +206,6 @@ export class ApiLoginController {
         const accountUrl = this.settings.get(AC_ACCOUNT_INFO_URL);
         const res = await request.get(accountUrl);
         this.account = decodeAccountInfoResponse(res);
-        this.events.emit('acApiAuthorised', true); // revisit!!
     }
 
     protected async saveRefreshToken(refreshToken: string | null) {

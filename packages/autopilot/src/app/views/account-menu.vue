@@ -10,7 +10,7 @@
         <template v-else>
             <button v-if="!authorised"
                 class="button button--small button--yellow frameless"
-                @click="signIn">
+                @click="apiLogin.startLogin">
                 Sign in
             </button>
             <span v-else
@@ -38,23 +38,11 @@ export default {
 
         loggingIn() { return this.apiLogin.loggingIn; },
 
-        text() {
-            if (!this.apiLogin.account) {
-                return 'USER';
-            }
-            const { firstName, lastName, email } = this.apiLogin.account;
-            const i1 = firstName[0] || null;
-            const i2 = lastName[0] || null;
-            return i1 && i2 ? i1 + i2 : email.substring(0, 2);
-        },
+        text() { return this.apiLogin.userInitial; },
 
     },
 
     methods: {
-
-        signIn() {
-            this.apiLogin.startLogin();
-        },
 
         popupMenu() {
             const menuItems = [
