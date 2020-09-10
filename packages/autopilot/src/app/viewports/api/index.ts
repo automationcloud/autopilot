@@ -4,7 +4,6 @@ import { App } from '../../app';
 import { ServicesController, ServiceFilters } from './services';
 import { ScriptsController } from './scripts';
 import { ScriptDiffController } from '../../controllers/script-diff';
-import { ApiLoginController } from '../../controllers/api-login';
 import { EventBus } from '../../event-bus';
 
 export interface ApiViewportState {
@@ -30,7 +29,6 @@ export class ApiViewport extends Viewport<ApiViewportState> {
 
     get diff() { return this.app.get(ScriptDiffController); }
     get events() { return this.app.get(EventBus); }
-    get apiLogin() { return this.app.get(ApiLoginController); }
 
     async init() {
         await super.init();
