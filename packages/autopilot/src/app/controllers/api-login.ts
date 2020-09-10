@@ -183,7 +183,7 @@ export class ApiLoginController {
 
             function onTimeout() {
                 cleanup();
-                reject(new Error('Sign-in timeout, please try again'));
+                reject(new Error('Sign in timeout, please try again'));
             }
 
             function cleanup() {
