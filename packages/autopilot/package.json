@@ -40,6 +40,7 @@
         "debounce-promise": "^3.1.0",
         "dotenv": "^8.2.0",
         "electron-updater": "^4.3.4",
+        "extract-zip": "^2.0.1",
         "fast-json-stable-stringify": "^2.1.0",
         "glob": "^7.1.5",
         "inversify": "^5.0.1",

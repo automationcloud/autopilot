@@ -36,16 +36,34 @@
                     </h6>
                     <div class="section-controls">
                         <button
-                            class="button button--secondary button--cta"
-                            @click="installChromium">
+                            class="button button--cta"
+                            :class="{
+                                'button--secondary': canInstall,
+                                'button--disabled': !canInstall,
+                            }"
+                            @click="chromeDownload.downloadAndInstall()"
+                            :disabled="!canInstall">
                             Install Chromium
                         </button>
-                        <span class="check-icon"
-                            :class="{
-                                'check-icon--installed': installed,
-                            }">
-                            <i class="far fa-check-circle"></i>
-                        </span>
+                        <div class="progress">
+                            <template v-if="chromeDownload.status === 'idle'">
+                                <i class="progress-icon far fa-check-circle"
+                                    :class="{
+                                        'progress-icon--done': installed,
+                                    }">
+                                </i>
+                            </template>
+                            <template v-else>
+                                <i class="progress-icon fas fa-spinner fa-spin progress-icon--progress">
+                                </i>
+                                <span v-if="chromeDownload.status === 'downloading'">
+                                    Downloading... {{ chromeDownload.progress }}%
+                                </span>
+                                <span v-if="chromeDownload.status === 'extracting'">
+                                    Installing... Please hold on.
+                                </span>
+                            </template>
+                        </div>
                     </div>
 
                     <p>
@@ -83,14 +101,6 @@
 <script>
 import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
 
-export const CHROMIUM_VERSION = {
-    MAC: '768968',
-    WIN: '768966',
-    LINUX: '768968',
-};
-
-const CHROMIUM_URL = 'https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html';
-
 export default {
 
     components: {
@@ -104,6 +114,10 @@ export default {
 
     computed: {
 
+        canInstall() {
+            return !this.installed && this.chromeDownload.status === 'idle';
+        },
+
         installed() {
             return this.chromeDownload.isInstalled();
         },
@@ -113,6 +127,7 @@ export default {
     methods: {
 
         resume() {
+            this.chromeDownload.updateChromeSettings();
             this.settings.setEntries([['IS_FIRST_RUN', 'false']]);
         },
     }
@@ -188,13 +203,25 @@ export default {
     margin: var(--gap--large) 0;
 }
 
-.check-icon {
+.progress {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
     margin-left: var(--gap);
+    color: var(--ui-color--blue);
+}
+
+.progress-icon {
+    margin: 0 var(--gap--small);
     font-size: 1.8em;
     color: var(--color-mono--200);
 }
 
-.check-icon--installed {
+.progress-icon--progress {
+    color: var(--ui-color--blue);
+}
+
+.progress-icon--done {
     color: var(--ui-color--green);
 }
 
