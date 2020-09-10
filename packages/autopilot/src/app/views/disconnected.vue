@@ -14,15 +14,20 @@
 <script>
 export default {
 
+    inject: [
+        'browser',
+        'chromeManager',
+    ],
+
     computed: {
         attached() {
-            return this.app.browser.isAttached();
+            return this.browser.isAttached();
         },
     },
 
     methods: {
         restartChrome() {
-            this.app.chromeManager.init();
+            this.chromeManager.init();
         },
     }
 

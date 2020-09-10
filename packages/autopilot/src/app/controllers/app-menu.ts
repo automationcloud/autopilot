@@ -59,9 +59,7 @@ export class AppMenuController {
         this.updateAutoHideMenu();
     }
 
-    async init() {
-        this.renderMenu();
-    }
+    async init() {}
 
     refreshProfiles() {
         const settings = remote.require('./settings');

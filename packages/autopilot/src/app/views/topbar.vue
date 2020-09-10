@@ -116,7 +116,7 @@ export default {
                                 },
                                 {
                                     type: 'viewport',
-                                    viewportId: 'chrome-connection'
+                                    viewportId: 'browser'
                                 },
                             ]
                         });

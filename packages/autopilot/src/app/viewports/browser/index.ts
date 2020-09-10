@@ -1,12 +1,12 @@
 import { StatelessViewport } from '../../viewport';
 
-export class ChromeConnectionViewport extends StatelessViewport {
+export class BrowserViewport extends StatelessViewport {
     getViewportId(): string {
-        return 'chrome-connection';
+        return 'browser';
     }
 
     getViewportName(): string {
-        return 'Chrome Connection';
+        return 'Browser';
     }
 
     getViewportIcon(): string {

@@ -2,7 +2,7 @@
     <div class="header">
         <div class="title">Browser</div>
         <button class="button button--inverse button--icon frameless"
-            @click="refresh()"
+            @click="chromeManager.refreshTargets()"
             title="Refresh targets">
             <i class="fas fa-sync-alt"></i>
         </button>
@@ -12,13 +12,9 @@
 <script>
 export default {
 
-    methods: {
-
-        refresh() {
-            this.app.chromeManager.refreshTargets();
-        }
-
-    },
+    inject: [
+        'chromeManager'
+    ],
 
 };
 </script>

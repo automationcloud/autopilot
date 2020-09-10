@@ -41,7 +41,7 @@
                                 'button--secondary': canInstall,
                                 'button--disabled': !canInstall,
                             }"
-                            @click="chromeDownload.downloadAndInstall()"
+                            @click="install()"
                             :disabled="!canInstall">
                             Install Chromium
                         </button>
@@ -84,7 +84,7 @@
                                 'button--disabled': !installed,
                             }"
                             :disabled="!installed"
-                            @click="resume">
+                            @click="continueToAutopilot()">
                             Continue to Autopilot
                         </button>
                     </div>
@@ -110,6 +110,7 @@ export default {
     inject: [
         'settings',
         'chromeDownload',
+        'firstRun',
     ],
 
     computed: {
@@ -126,9 +127,23 @@ export default {
 
     methods: {
 
-        resume() {
-            this.chromeDownload.updateChromeSettings();
-            this.settings.setEntries([['IS_FIRST_RUN', 'false']]);
+        async install() {
+            try {
+                await this.chromeDownload.downloadAndInstall();
+            } catch (err) {
+                console.error(err);
+                alert('Installation failed. Please report this problem to Automation Cloud support.');
+            }
+        },
+
+        async continueToAutopilot() {
+            try {
+                await this.chromeDownload.updateChromeSettings();
+                this.firstRun.setFirstRun(false);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to set up Chrome. Please report this problem to Automation Cloud support.');
+            }
         },
     }
 };

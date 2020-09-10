@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { Exception } from '@automationcloud/engine';
-import { SettingsController } from './settings';
 import os from 'os';
 import path from 'path';
 import { promises as fs, createWriteStream } from 'fs';
@@ -10,6 +9,7 @@ import rimRaf from 'rimraf';
 import http from 'http';
 import https from 'https';
 import extractZip from 'extract-zip';
+import { ChromeManagerController } from './chrome-manager';
 
 const rimRafAsync = promisify(rimRaf);
 
@@ -39,12 +39,11 @@ export class ChromeDownloadController {
     installed: boolean = false;
     platform: ChromeSupportedPlatform = os.platform() as ChromeSupportedPlatform;
     status: DownloadStatus = 'idle';
-    error: Error | null = null;
     progress: number = 0;
 
     constructor(
-        @inject(SettingsController)
-        protected settings: SettingsController,
+        @inject(ChromeManagerController)
+        protected chromeManager: ChromeManagerController,
     ) {}
 
     async init() {
@@ -81,20 +80,17 @@ export class ChromeDownloadController {
             return;
         }
         try {
-            this.error = null;
             const zipFile = await this.downloadChromeArchive();
             await this.installFromZip(zipFile);
             await this.checkInstalled();
-        } catch (err) {
-            this.error = err;
-            console.error(err);
         } finally {
             this.status = 'idle';
         }
     }
 
-    updateChromePath() {
-        // TODO
+    async updateChromeSettings() {
+        await this.chromeManager.updateChromePath(this.getExecutablePath());
+        await this.chromeManager.restartChrome();
     }
 
     protected async downloadChromeArchive(): Promise<string> {

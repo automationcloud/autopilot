@@ -1,5 +1,5 @@
 export * from './api';
-export * from './chrome-connection';
+export * from './browser';
 export * from './datasets';
 export * from './extensions';
 export * from './inspections';
