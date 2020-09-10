@@ -8,21 +8,16 @@
 </template>
 
 <script>
-import {
-    ExtensionDevController,
-    ExtensionRegistryController,
-    ApiLoginController
-} from '~/controllers';
 import DevExtensions from './dev-extensions.vue';
 import Extensions from './extensions.vue';
 
 export default {
 
-    bind: {
-        apiLogin: ApiLoginController,
-        extDev: ExtensionDevController,
-        extReg: ExtensionRegistryController,
-    },
+    inject: [
+        'apiLogin',
+        'extDev',
+        'extReg',
+    ],
 
     components: {
         DevExtensions,

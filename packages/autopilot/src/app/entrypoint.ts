@@ -4,6 +4,7 @@ import RootView from './views/root.vue';
 import * as util from './util';
 import path from 'path';
 import { getAppPath } from './globals';
+import { createControllerProvider } from './provider';
 
 import './components';
 import './directives';
@@ -24,13 +25,7 @@ Vue.mixin({
         // Allow components to use `this.app` in their data declarations
         vm.app = app;
     },
-    created() {
-        const vm = (this as any);
-        // Allow binding controllers to instances in declaratively
-        for (const [key, value] of Object.entries(vm.$options.bind ?? {})) {
-            vm[key] = app.get(value as any);
-        }
-    },
+    provide: createControllerProvider(app),
     data() {
         return {
             app,

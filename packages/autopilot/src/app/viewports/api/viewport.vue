@@ -19,16 +19,15 @@
 </template>
 
 <script>
-import { ApiLoginController } from '~/controllers';
 import ServiceList from './service-list.vue';
 import ServiceView from './service-view.vue';
 import LoadedInfo from './loaded-info.vue';
 
 export default {
 
-    bind: {
-        apiLogin: ApiLoginController,
-    },
+    inject: [
+        'apiLogin'
+    ],
 
     components: {
         ServiceList,

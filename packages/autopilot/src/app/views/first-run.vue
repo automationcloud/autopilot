@@ -186,7 +186,6 @@ export default {
 }
 
 .topbar {
-    --link-vertical-gap: 10px;
     flex: 0 0 auto;
     display: flex;
     flex-flow: row nowrap;

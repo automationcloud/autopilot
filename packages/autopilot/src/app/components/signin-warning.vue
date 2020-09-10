@@ -17,13 +17,11 @@
 </template>
 
 <script>
-import { ApiLoginController } from '~/controllers';
-
 export default {
 
-    bind: {
-        apiLogin: ApiLoginController,
-    },
+    inject: [
+        'apiLogin'
+    ],
 
     props: {
         message: { type: String, default: '' },
