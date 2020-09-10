@@ -1,29 +1,23 @@
 <template>
     <div class="extensions">
         <dev-extensions v-if="isDevEnabled"/>
-
-        <signin-warning
-            v-if="!apiLogin.authorised"
-            message="to the Automation Cloud to browse and load Extensions."
-            :loggingIn="apiLogin.loggingIn"
-            @signin="apiLogin.startLogin()" />
-
-        <template v-else>
-            <extensions/>
-        </template>
+        <signin-warning class="ext-warning"
+            message="to the Automation Cloud to browse and load Extensions"/>
+        <extensions v-if="apiLogin.authorised"/>
     </div>
 </template>
 
 <script>
-import {
-    ExtensionDevController,
-    ExtensionRegistryController,
-    ApiLoginController
-} from '~/controllers';
 import DevExtensions from './dev-extensions.vue';
 import Extensions from './extensions.vue';
 
 export default {
+
+    inject: [
+        'apiLogin',
+        'extDev',
+        'extReg',
+    ],
 
     components: {
         DevExtensions,
@@ -31,34 +25,19 @@ export default {
     },
 
     computed: {
-
         script() {
             return this.app.project.script;
         },
-
         isDevEnabled() {
-            return this.get(ExtensionDevController).isDevEnabled();
+            return this.extDev.isDevEnabled();
         },
-
-        apiLogin() {
-            return this.get(ApiLoginController);
-        },
-
-        extRegistry() {
-            return this.get(ExtensionRegistryController);
-        },
-
     },
-
-    methods: {
-
-    }
 
 };
 </script>
 
-<style>
-.extensions {
-
+<style scoped>
+.ext-warning {
+    margin: 0 var(--gap);
 }
 </style>

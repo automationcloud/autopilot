@@ -8,18 +8,13 @@
         </div>
 
         <loaded-info/>
-        <signin-warning
-            v-if="!apiLogin.authorised"
-            :message="signinMessage"
-            :loggingIn="apiLogin.loggingIn"
-            @signin="signIn" />
-        <!-- v-if="viewport.error.message === 'AuthorizationError'"-->
-        <div v-else>
+        <signin-warning message="to access Services and run automations on the Automation Cloud"/>
+        <template v-if="apiLogin.authorised">
             <service-list v-if="!this.viewport.selectedService"/>
             <template v-else>
                 <service-view v-if="!this.viewport.selectedJob"/>
             </template>
-        </div>
+        </template>
     </div>
 </template>
 
@@ -30,34 +25,19 @@ import LoadedInfo from './loaded-info.vue';
 
 export default {
 
+    inject: [
+        'apiLogin'
+    ],
+
     components: {
         ServiceList,
         ServiceView,
         LoadedInfo,
     },
 
-    data() {
-        return {
-            signinMessage: 'to access Services and run automations on the Automation Cloud',
-        };
-    },
-
     computed: {
         viewport() { return this.app.viewports.api; },
-        apiLogin() { return this.viewport.apiLogin; },
     },
-
-    methods: {
-        signIn() {
-            this.viewport.apiLogin.startLogin();
-        },
-    }
 
 };
 </script>
-
-<style>
-.api {
-
-}
-</style>

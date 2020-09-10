@@ -4,6 +4,7 @@ import RootView from './views/root.vue';
 import * as util from './util';
 import path from 'path';
 import { getAppPath } from './globals';
+import { createControllerProvider } from './provider';
 
 import './components';
 import './directives';
@@ -20,9 +21,11 @@ const localNodeModules = path.join(getAppPath(), 'node_modules');
 
 Vue.mixin({
     beforeCreate() {
+        const vm = (this as any);
         // Allow components to use `this.app` in their data declarations
-        (this as any).app = app;
+        vm.app = app;
     },
+    provide: createControllerProvider(app),
     data() {
         return {
             app,

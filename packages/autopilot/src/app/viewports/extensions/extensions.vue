@@ -15,8 +15,8 @@
                 v-if="extReg.installedManifests.length">
                 <div class="section__subtitle"
                     @click="expandable.toggleExpand('ext-installed')">
-                    <expand id="ext-installed"/>
                     Installed ({{ extReg.installedManifests.length }})
+                    <expand id="ext-installed"/>
                 </div>
                 <template v-if="expandable.isExpanded('ext-installed')">
                     <ext-item
@@ -75,7 +75,7 @@ export default {
 
 <style scoped>
 .section {
-    padding: 0 var(--gap);
+    margin: var(--gap);
 }
 
 .ext-search {

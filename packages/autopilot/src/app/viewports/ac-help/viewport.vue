@@ -63,7 +63,7 @@
                     class="button button--primary"
                     type="click"
                     @click="onLinkClick('dashboard')">
-                    {{ authorised ? 'Dashboard' : 'Sign-in to your Dashboard' }}
+                    {{ authorised ? 'Dashboard' : 'Sign in to your Dashboard' }}
                 </button>
                 <button
                     v-show="!authorised"

@@ -2,7 +2,7 @@
     <div class="account-menu">
         <template v-if="loggingIn">
             <button
-                class="button button--yellow"
+                class="button button--small button--yellow frameless"
                 disabled>
                 Signing in...
             </button>
@@ -11,7 +11,7 @@
             <button v-if="!authorised"
                 class="button button--small button--yellow frameless"
                 @click="signIn">
-                Sign-in
+                Sign in
             </button>
             <span v-else
                 class="badge badge--round badge--circle"
@@ -24,10 +24,13 @@
 </template>
 
 <script>
-import { ApiLoginController } from '~/controllers';
 import { menu } from '../util';
 
 export default {
+
+    inject: [
+        'apiLogin'
+    ],
 
     computed: {
 
@@ -39,16 +42,10 @@ export default {
             if (!this.apiLogin.account) {
                 return 'USER';
             }
-
             const { firstName, lastName, email } = this.apiLogin.account;
             const i1 = firstName[0] || null;
             const i2 = lastName[0] || null;
-
             return i1 && i2 ? i1 + i2 : email.substring(0, 2);
-        },
-
-        apiLogin() {
-            return this.get(ApiLoginController);
         },
 
     },
