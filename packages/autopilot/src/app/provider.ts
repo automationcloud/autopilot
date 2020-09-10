@@ -9,8 +9,18 @@ import * as ctl from './controllers';
  */
 export function createControllerProvider(app: App) {
     return {
-        extReg: app.get(ctl.ExtensionRegistryController),
-        extDev: app.get(ctl.ExtensionDevController),
         apiLogin: app.get(ctl.ApiLoginController),
+        appMenu: app.get(ctl.AppMenuController),
+        chromeDownload: app.get(ctl.ChromeDownloadController),
+        emulation: app.get(ctl.EmulationController),
+        expandable: app.get(ctl.ExpandableController),
+        extDev: app.get(ctl.ExtensionDevController),
+        extReg: app.get(ctl.ExtensionRegistryController),
+        project: app.get(ctl.ProjectController),
+        roxi: app.get(ctl.RoxiController),
+        diff: app.get(ctl.ScriptDiffController),
+        scriptReport: app.get(ctl.ScriptReportController),
+        settings: app.get(ctl.SettingsController),
+        tools: app.get(ctl.ToolsController),
     };
 }

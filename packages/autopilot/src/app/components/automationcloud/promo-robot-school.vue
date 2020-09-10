@@ -2,12 +2,16 @@
     <div class="automation-cloud promo promo--blue">
         <img src="resources/ubio-humanoid-blue.svg" alt="robot">
         <article class="promo-content">
-            <h2 class="promo-content-title">Learn how to script in Autopilot</h2>
+            <h2 class="promo-content-title">
+                Learn how to script in Autopilot
+            </h2>
             <p class="promo-content-p dark-blue">
                 Get up to speed with Autopilot and create your first script.
-                Robot School will tutor you. Beware: You may turn a little bit 'robot'.
+                Robot School will tutor you.
+                Beware: You may turn a little bit 'robot'.
             </p>
-            <a class="button" type="click" @click="onClick">
+            <a class="button button--cta"
+                @click="onClick">
                 <span>Robot School</span>
             </a>
         </article>

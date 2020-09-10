@@ -22,7 +22,7 @@
     color: var(--color-cool--800);
 }
 
-.automation-cloud .button::before {
+.automation-cloud .button--cta::before {
     font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
     font-size: 1.1em;
     margin-left: -.4em;
@@ -80,6 +80,10 @@
     background: linear-gradient(to bottom, var(--color-mono--100) 50%, var(--color-cool--400) 50%);
 }
 
+.tray-bg--transparent-mid {
+    background: linear-gradient(to bottom, transparent 50%, var(--color-cool--400) 50%);
+}
+
 .hero--grad {
-    background: linear-gradient(329.78deg, var(--color-yellow--200) 12.31%, var(--color-blue--500) 63.83%);
+    background: linear-gradient(329.78deg, var(--color-yellow--200) 0, var(--color-blue--500) 63.83%);
 }
