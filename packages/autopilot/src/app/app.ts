@@ -14,7 +14,6 @@ import {
     ResolverService,
 } from '@automationcloud/engine';
 
-import { DatasetManager } from './managers/dataset-manager';
 import { InspectManager } from './managers/inspect-manager';
 import { LayoutManager } from './managers/layout-manager';
 import { PlaybackManager } from './managers/playback-manager';
@@ -33,7 +32,6 @@ import ms from 'ms';
 
 export class App extends Engine {
     // Deprecated
-    datasets: DatasetManager;
     inspector: InspectManager;
     layout: LayoutManager;
     playback: PlaybackManager;
@@ -71,10 +69,8 @@ export class App extends Engine {
         this.container.bind(ViewportManager).toDynamicValue(() => this.viewports);
         this.container.bind(LayoutManager).toDynamicValue(() => this.layout);
         this.container.bind(PlaybackManager).toDynamicValue(() => this.playback);
-        this.container.bind(DatasetManager).toDynamicValue(() => this.datasets);
 
         // Old stuff
-        this.datasets = new DatasetManager(this);
         this.inspector = new InspectManager(this);
         this.layout = new LayoutManager(this);
         this.playback = new PlaybackManager(this);
@@ -128,7 +124,6 @@ export class App extends Engine {
         // Old initialization
         const managers: Controller[] = [
             this.layout,
-            this.datasets,
             this.recipes,
             this.viewports,
         ];

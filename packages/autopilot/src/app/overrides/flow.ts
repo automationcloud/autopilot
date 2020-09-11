@@ -1,14 +1,13 @@
 import { FlowService, util } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
-import { DatasetManager } from '../managers/dataset-manager';
-import { ProtocolController, ProjectController } from '../controllers';
+import { ProtocolController, ProjectController, DatasetsController } from '../controllers';
 
 @injectable()
 export class AutopilotFlowService extends FlowService {
 
     constructor(
-        @inject(DatasetManager)
-        protected datasets: DatasetManager,
+        @inject(DatasetsController)
+        protected datasets: DatasetsController,
         @inject(ProtocolController)
         protected protocol: ProtocolController,
         @inject(ProjectController)

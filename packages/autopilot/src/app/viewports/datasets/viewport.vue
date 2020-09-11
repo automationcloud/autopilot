@@ -31,10 +31,14 @@ export default {
         DatasetInput,
     },
 
+    inject: [
+        'datasets',
+    ],
+
     computed: {
         viewport() { return this.app.viewports.datasets; },
         dataset() {
-            return this.app.datasets.getCurrentDataset();
+            return this.datasets.getCurrentDataset();
         },
     },
 

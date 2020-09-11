@@ -3,6 +3,7 @@ export * from './api';
 export * from './app-menu';
 export * from './chrome-download';
 export * from './chrome-manager';
+export * from './datasets';
 export * from './emulation';
 export * from './expandable';
 export * from './extension-dev';

@@ -1,7 +1,6 @@
 import { App } from './app';
 import * as ctl from './controllers';
 import { BrowserService } from '@automationcloud/engine';
-import { DatasetManager } from './managers/dataset-manager';
 
 /**
  * Creates Vue provider which allows injecting
@@ -17,7 +16,7 @@ export function createControllerProvider(app: App) {
         chromeDownload: app.get(ctl.ChromeDownloadController),
         chromeManager: app.get(ctl.ChromeManagerController),
         diff: app.get(ctl.ScriptDiffController),
-        datasets: app.get(DatasetManager),
+        datasets: app.get(ctl.DatasetsController),
         emulation: app.get(ctl.EmulationController),
         expandable: app.get(ctl.ExpandableController),
         extDev: app.get(ctl.ExtensionDevController),

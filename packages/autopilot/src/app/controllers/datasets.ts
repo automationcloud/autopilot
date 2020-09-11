@@ -1,4 +1,6 @@
-import { App } from '../app';
+import { controller } from '../controller';
+import { injectable, inject } from 'inversify';
+import { StorageController } from './storage';
 import { UserData } from '../userdata';
 import { helpers } from '../util';
 import { util, clamp } from '@automationcloud/engine';
@@ -15,22 +17,25 @@ export interface DatasetInput {
     data: any;
 }
 
-export class DatasetManager {
-    app: App;
+@controller()
+@injectable()
+export class DatasetsController {
     userData: UserData;
 
-    datasets!: Dataset[];
+    datasets: Dataset[] = [];
     _currentIndex: number = 0;
 
-    constructor(app: App) {
-        this.app = app;
-        this.userData = app.storage.createUserData('datasets', 500);
+    constructor(
+        @inject(StorageController)
+        storage: StorageController,
+    ) {
+        this.userData = storage.createUserData('datasets', 500);
     }
 
     async init() {
         const { datasets = [], currentIndex = 0 } = await this.userData.loadData();
         this.datasets = datasets.filter(Boolean);
-        this._currentIndex = currentIndex;
+        this._currentIndex = Number(currentIndex) || 0;
     }
 
     update() {
@@ -41,7 +46,7 @@ export class DatasetManager {
     }
 
     get currentIndex() {
-        return clamp(this._currentIndex, 0, this.datasets.length - 1);
+        return clamp(this._currentIndex || 0, 0, this.datasets.length - 1);
     }
 
     loadDatasets(datasets: Dataset[]) {
@@ -56,10 +61,10 @@ export class DatasetManager {
                 inputs: [],
                 excluded: false,
             });
+            this._currentIndex = 0;
             this.update();
         }
-        const index = Math.min(this.currentIndex, this.datasets.length - 1);
-        const current = this.datasets[index];
+        const current = this.datasets[this.currentIndex];
         return current;
     }
 
@@ -116,4 +121,5 @@ export class DatasetManager {
         }
         return helpers.collectPointers(obj).map(_ => _.path);
     }
+
 }

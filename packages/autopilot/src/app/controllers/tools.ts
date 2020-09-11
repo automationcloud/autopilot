@@ -8,9 +8,9 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { ProjectController } from './project';
 import { ApiController } from './api';
-import { DatasetManager } from '../managers/dataset-manager';
 import { PlaybackManager } from '../managers/playback-manager';
 import { ScriptDiffController } from './script-diff';
+import { DatasetsController } from './datasets';
 
 @injectable()
 @controller()
@@ -28,8 +28,8 @@ export class ToolsController {
         protected api: ApiController,
         @inject(BrowserService)
         protected browser: BrowserService,
-        @inject(DatasetManager)
-        protected datasets: DatasetManager,
+        @inject(DatasetsController)
+        protected datasets: DatasetsController,
         @inject(PlaybackManager)
         protected playback: PlaybackManager,
         @inject(CheckpointService)
