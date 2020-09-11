@@ -40,6 +40,10 @@ export default {
 
     mixins: [ParamMixin],
 
+    inject: [
+        'protocol',
+    ],
+
     data() {
         return {
             valid: false,
@@ -49,7 +53,7 @@ export default {
 
     computed: {
         domain() {
-            return this.app.tools.getDomain();
+            return this.protocol.getDomain();
         },
 
         isValidating() {

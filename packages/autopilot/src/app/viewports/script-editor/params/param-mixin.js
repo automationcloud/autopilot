@@ -2,6 +2,12 @@ import { util } from '@automationcloud/engine';
 import { helpers } from '../../../util';
 
 export default {
+    inject: [
+        'protocol',
+        'project',
+        'datasets',
+    ],
+
     props: {
         param: { type: Object, required: true },
         item: { type: Object, required: true },
@@ -14,11 +20,13 @@ export default {
         viewport() {
             return this.app.viewports.scriptEditor;
         },
+
         label() {
             return this.param.label || util.humanize(this.param.name);
         },
+
         script() {
-            return this.app.project.script;
+            return this.project.script;
         },
 
         el() {
@@ -44,9 +52,9 @@ export default {
                 case 'classList':
                     return info.classList || [];
                 case 'inputs':
-                    return this.app.datasets.getInputKeys();
+                    return this.datasets.getInputKeys();
                 case 'outputs':
-                    return this.app.tools.getOutputKeys();
+                    return this.protocol.getOutputKeys();
                 case 'stages':
                     return this.script.getStageKeys();
                 case 'globals':
@@ -59,7 +67,7 @@ export default {
                     return helpers.collectPointers(value).map(_ => _.path);
                 }
                 case 'errorCodes':
-                    return this.app.tools.getErrorCodeSuggestions();
+                    return this.protocol.getErrorCodeSuggestions();
                 default:
                     return [];
             }

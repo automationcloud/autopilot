@@ -3,23 +3,18 @@ import os from 'os';
 import path from 'path';
 import { helpers } from '../util';
 import { BrowserService, CheckpointService } from '@automationcloud/engine';
-import { ProtocolProvider, Domain } from '@ubio/protocol';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { ProjectController } from './project';
-import { ApiController, ExecutionError } from './api';
+import { ApiController } from './api';
 import { DatasetManager } from '../managers/dataset-manager';
 import { PlaybackManager } from '../managers/playback-manager';
 import { ScriptDiffController } from './script-diff';
-import { RoxiController } from './roxi';
 
 @injectable()
 @controller()
 export class ToolsController {
-    protocolProvider: ProtocolProvider;
-
-    executionErrors: ExecutionError[] = [];
 
     // TODO split away!
     constructor(
@@ -29,8 +24,6 @@ export class ToolsController {
         protected project: ProjectController,
         @inject(ScriptDiffController)
         protected diff: ScriptDiffController,
-        @inject(RoxiController)
-        protected roxi: RoxiController,
         @inject(ApiController)
         protected api: ApiController,
         @inject(BrowserService)
@@ -41,21 +34,11 @@ export class ToolsController {
         protected playback: PlaybackManager,
         @inject(CheckpointService)
         protected checkpoints: CheckpointService,
-    ) {
-        this.protocolProvider = new ProtocolProvider({
-            ttl: 10 * 60000,
-            autoRefresh: true,
-            url: 'https://protocol.automationcloud.net/schema.json',
-        });
-        this.protocolProvider.latest = null;
-        this.events.on('serviceUpdated', () => this.refreshExecutionErrors());
-    }
+    ) {}
+
+    async init() {}
 
     get script() { return this.project.script; }
-
-    async init() {
-        this.refreshExecutionErrors().catch(() => {});
-    }
 
     // Loaders
 
@@ -140,61 +123,6 @@ export class ToolsController {
         const checkpointCtx = this.script.getCheckpointContext();
         if (checkpointCtx) {
             this.script.setPlayhead(checkpointCtx.children.first);
-        }
-    }
-
-    // Protocol
-
-    getAvailableDomains(): Domain[] {
-        const { latest } = this.protocolProvider;
-        return latest ? latest.getDomains() : [];
-    }
-
-    getDomain(): Domain | null {
-        const { latest } = this.protocolProvider;
-        if (!latest) {
-            return null;
-        }
-        return latest.getDomain(this.project.metadata.domainId);
-    }
-
-    getInputKeys(): string[] {
-        const domain = this.getDomain();
-        return domain ? domain.getInputs().map(_ => _.key) : [];
-    }
-
-    getOutputKeys(): string[] {
-        const domain = this.getDomain();
-        return domain ? domain.getOutputs().map(_ => _.key) : [];
-    }
-
-    getErrorCodeSuggestions(): string[] {
-        const domain = this.getDomain();
-        if (!domain) {
-            return [];
-        }
-        return this.executionErrors.map(e => e.code);
-    }
-
-    forceProtocolRefresh() {
-        this.protocolProvider.forceRefreshLatest().catch(err => console.error('Protocol fetch failed', err));
-    }
-
-    // Errors
-
-    async refreshExecutionErrors() {
-        try {
-            await this.protocolProvider.fetchLatest();
-            const domain = this.getDomain();
-            this.executionErrors = await this.api.getExecutionErrors('Generic');
-            if (domain) {
-                this.executionErrors.push(...(await this.api.getExecutionErrors(domain.id)));
-            }
-            this.executionErrors.sort((a, b) => (a.code < b.code ? -1 : 1));
-            console.info('Execution errors refreshed');
-        } catch (err) {
-            console.warn('Execution errors fetch failed', err);
-            this.executionErrors = [];
         }
     }
 

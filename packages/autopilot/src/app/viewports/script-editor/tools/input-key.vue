@@ -16,6 +16,10 @@
 <script>
 export default {
 
+    inject: [
+        'protocol',
+    ],
+
     props: {
         value: { type: String }
     },
@@ -23,7 +27,7 @@ export default {
     computed: {
 
         domain() {
-            return this.app.tools.getDomain();
+            return this.protocol.getDomain();
         },
 
         options() {

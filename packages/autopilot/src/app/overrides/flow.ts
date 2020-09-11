@@ -1,13 +1,20 @@
 import { FlowService, util } from '@automationcloud/engine';
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
+import { DatasetManager } from '../managers/dataset-manager';
+import { ProtocolController, ProjectController } from '../controllers';
 
 @injectable()
 export class AutopilotFlowService extends FlowService {
-    get app() {
-        // Note: whilst we don't have a fully IoCized Autopilot
-        // this seems to be the only solution for passing the app instance here.
-        // Otherwise we run into circular dependencies.
-        return (global as any).app;
+
+    constructor(
+        @inject(DatasetManager)
+        protected datasets: DatasetManager,
+        @inject(ProtocolController)
+        protected protocol: ProtocolController,
+        @inject(ProjectController)
+        protected project: ProjectController,
+    ) {
+        super();
     }
 
     isInputsCached() {
@@ -15,18 +22,18 @@ export class AutopilotFlowService extends FlowService {
     }
 
     async requestInputData(key: string) {
-        const data = this.app.datasets.getInputData(key, '');
+        const data = this.datasets.getInputData(key, '');
         return util.deepClone(data);
     }
 
     async peekInputData(key: string) {
-        const data = this.app.datasets.getInputData(key, '', false);
+        const data = this.datasets.getInputData(key, '', false);
         return util.deepClone(data);
     }
 
     async sendOutputData(key: string, data: any) {
-        const { draft } = this.app.project.metadata;
-        const domain = this.app.tools.getDomain();
+        const { draft } = this.project.metadata;
+        const domain = this.protocol.getDomain();
         if (!domain) {
             throw new Error('Cannot access protocol for validation');
         }

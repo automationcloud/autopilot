@@ -50,6 +50,11 @@ import { ExpandableController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'protocol',
+        'datasets',
+    ],
+
     props: {
         input: { type: Object },
         index: { type: Number },
@@ -84,7 +89,7 @@ export default {
 
     computed: {
         viewport() { return this.app.viewports.datasets; },
-        dataset() { return this.app.datasets.getCurrentDataset(); },
+        dataset() { return this.datasets.getCurrentDataset(); },
 
         expandId() {
             return this.viewport.getInputExpandId(this.input);
@@ -95,11 +100,11 @@ export default {
         },
 
         inputKeys() {
-            return this.app.tools.getInputKeys();
+            return this.protocol.getInputKeys();
         },
 
         domain() {
-            return this.app.tools.getDomain();
+            return this.protocol.getDomain();
         },
 
         isValid() {

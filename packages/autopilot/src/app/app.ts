@@ -106,6 +106,7 @@ export class App extends Engine {
     get config() { return this.get(Configuration); }
     get tools() { return this.get(ToolsController); }
     get expandable() { return this.get(ct.ExpandableController); }
+    get protocol() { return this.get(ct.ProtocolController); }
 
     async init() {
         // New controllers are initialized this way

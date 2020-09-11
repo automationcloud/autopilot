@@ -30,6 +30,11 @@
 <script>
 export default {
 
+    inject: [
+        'protocol',
+        'project',
+    ],
+
     computed: {
 
         viewport() {
@@ -37,7 +42,7 @@ export default {
         },
 
         metadata() {
-            return this.app.project.metadata;
+            return this.project.metadata;
         },
 
         metadataProxy() {
@@ -45,12 +50,11 @@ export default {
         },
 
         availableDomains() {
-            return this.app.tools.getAvailableDomains();
+            return this.protocol.getAvailableDomains();
         },
 
         executionErrors() {
-            return this.app.tools.executionErrors
-                .map(er => er.code);
+            return this.protocol.executionErrors.map(er => er.code);
         }
 
     }

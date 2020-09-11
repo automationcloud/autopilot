@@ -13,6 +13,7 @@ import { PlaybackManager } from '../managers/playback-manager';
 import { EmulationController } from './emulation';
 import { ToolsController } from './tools';
 import { controller } from '../controller';
+import { ProtocolController } from './protocol';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 
@@ -40,6 +41,8 @@ export class AppMenuController {
         protected emulation: EmulationController,
         @inject(ToolsController)
         protected tools: ToolsController,
+        @inject(ProtocolController)
+        protected protocol: ProtocolController,
         @inject(ProxyService)
         protected proxy: ProxyService,
     ) {
@@ -346,7 +349,7 @@ export class AppMenuController {
         yield { type: 'separator' };
         yield {
             label: 'Refresh Protocol',
-            click: () => this.tools.forceProtocolRefresh(),
+            click: () => this.protocol.forceRefresh(),
         };
         yield {
             label: 'Test Checkpoint',

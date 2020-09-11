@@ -117,13 +117,13 @@ export class ScriptSearchController {
                 suggestions.push({ type: 'action', value: type, score });
             }
         }
-        for (const inputKey of this.app.tools.getInputKeys()) {
+        for (const inputKey of this.app.protocol.getInputKeys()) {
             const score = helpers.biasedFuzzyMatch(q, inputKey);
             if (score > -1) {
                 suggestions.push({ type: 'input', value: inputKey, score });
             }
         }
-        for (const code of this.app.tools.getErrorCodeSuggestions()) {
+        for (const code of this.app.protocol.getErrorCodeSuggestions()) {
             const score = helpers.biasedFuzzyMatch(q, code);
             if (score > -1) {
                 suggestions.push({ type: 'errorCode', value: code, score });

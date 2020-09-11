@@ -39,22 +39,19 @@
 <script>
 export default {
 
-    components: {
-
-    },
-
-    props: {
-
-    },
+    inject: [
+        'protocol',
+        'project',
+    ],
 
     computed: {
 
         script() {
-            return this.app.project.script;
+            return this.project.script;
         },
 
         domain() {
-            return this.app.tools.getDomain();
+            return this.protocol.getDomain();
         },
 
         viewport() {

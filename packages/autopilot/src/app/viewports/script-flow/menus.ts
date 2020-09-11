@@ -305,7 +305,7 @@ export class ScriptFlowMenusController {
     }
 
     private *buildCreateComposedAction(): IterableIterator<ModalMenuItem> {
-        const domain = this.app.tools.getDomain();
+        const domain = this.app.protocol.getDomain();
         if (!domain) {
             return;
         }

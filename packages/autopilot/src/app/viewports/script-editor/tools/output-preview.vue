@@ -42,13 +42,9 @@ export default {
         };
     },
 
-    computed: {
-
-        domain() {
-            return this.app.tools.getDomain();
-        },
-
-    },
+    inject: [
+        'protocol',
+    ],
 
     mounted() {
         this.validate();
@@ -58,6 +54,12 @@ export default {
         defKey: 'validate',
         data: 'validate',
         domain: 'validate'
+    },
+
+    computed: {
+        domain() {
+            return this.protocol.getDomain();
+        },
     },
 
     methods: {
@@ -76,7 +78,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .output-preview__validation-error {
     margin: var(--gap--small) 0;
 }
