@@ -71,4 +71,9 @@ Object.defineProperties(window, {
             return app.browser.page;
         },
     },
+    controllers: {
+        get() {
+            return createControllerProvider(app);
+        }
+    }
 });

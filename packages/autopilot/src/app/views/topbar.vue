@@ -66,10 +66,6 @@ export default {
             return this.get(AppMenuController);
         },
 
-        env() {
-            return this.app.settings.env;
-        },
-
         clipboardLoader() {
             return this.app.ui.clipboardLoader;
         },
@@ -122,7 +118,6 @@ export default {
                         });
                     }
                 },
-                this.switchEnvMenuItem(),
                 { type: 'separator' },
                 {
                     label: `Autopilot ${pkg.version}`,
@@ -133,15 +128,6 @@ export default {
                     enabled: false,
                 },
             ]);
-        },
-
-        switchEnvMenuItem() {
-            const newEnv = this.env === 'production' ? 'staging' : 'production';
-
-            return {
-                label: 'Switch to ' + newEnv,
-                click: () => this.app.settings.setEnv(newEnv),
-            };
         },
 
         refreshWindowState() {

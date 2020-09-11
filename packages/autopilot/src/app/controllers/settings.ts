@@ -65,9 +65,18 @@ export class SettingsController {
         this.events.emit('settingsUpdated');
     }
 
-    setEnv(newEnv: SettingsEnv) {
-        this.env = newEnv;
-        this.update();
+    switchToStaging() { this.setEnv('staging'); }
+
+    switchToProduction() { this.setEnv('production'); }
+
+    protected async setEnv(env: SettingsEnv) {
+        if (env !== this.env) {
+            console.info(`👾 Switching to ${env}...`);
+            this.env = env;
+            this.update();
+        }
+
+        console.info('🏡You are on ' + this.env);
     }
 
     get<T extends ConfigValue>(decl: PropertyDecl<T>): T {
