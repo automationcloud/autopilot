@@ -8,7 +8,6 @@ import { createControllerProvider } from './provider';
 
 import './components';
 import './directives';
-import { CommandController } from './controllers';
 
 process.env.ENGINE_ENV = 'autopilot';
 
@@ -72,9 +71,9 @@ Object.defineProperties(window, {
             return app.browser.page;
         },
     },
-    command: {
+    controllers: {
         get() {
-            return app.get(CommandController);
+            return createControllerProvider(app);
         }
     }
 });

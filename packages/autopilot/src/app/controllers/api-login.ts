@@ -14,7 +14,7 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
-import { SettingsController } from './settings';
+import { SettingsController, SettingsEnv } from './settings';
 import { httpServerPort } from '../globals';
 const REDIRECT_URL = `http://localhost:${httpServerPort}/automationcloud/loginResult`;
 
@@ -28,6 +28,7 @@ const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 export class ApiLoginController {
     protected userData: UserData;
     protected account: AccountInfo | null = null;
+    protected targetEnv: SettingsEnv | null = null;
 
     initialized: boolean = false;
     loggingIn: boolean = false;
@@ -43,6 +44,7 @@ export class ApiLoginController {
         protected api: ApiRequest,
     ) {
         this.userData = this.storage.createUserData('auth', 500);
+        this.events.on('settingsUpdated', () => this.init());
     }
 
     get authAgent() { return this.api.authAgent; }
@@ -60,7 +62,10 @@ export class ApiLoginController {
     }
 
     async init() {
-        await this.silentLogin();
+        if (this.targetEnv !== this.settings.env) {
+            this.targetEnv = this.settings.env;
+            await this.silentLogin();
+        }
     }
 
     async silentLogin() {
