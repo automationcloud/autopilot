@@ -65,16 +65,6 @@ export class SettingsController {
         this.events.emit('settingsUpdated');
     }
 
-    async updateAsync() {
-        await this.userData.saveData({
-            entries: this.entries,
-            env: this.env,
-        });
-
-        this._applyConfigValues();
-        this.events.emit('settingsUpdated');
-    }
-
     setEnv(newEnv: SettingsEnv) {
         this.env = newEnv;
         this.update();
@@ -92,11 +82,6 @@ export class SettingsController {
     setEntries(entries: Array<[string, string | null]>) {
         this._addEntries(entries);
         this.update();
-    }
-
-    async setEntriesAsync(entries: Array<[string, string | null]>) {
-        this._addEntries(entries);
-        await this.updateAsync();
     }
 
     *allEntries(): IterableIterator<[string, string]> {

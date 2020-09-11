@@ -1,18 +1,18 @@
 <template>
-    <div class="chrome-connection">
+    <div class="browser">
 
-        <div class="chrome-connection__target flexrow"
+        <div class="target flexrow"
             v-for="target of targets"
             tabindex="0"
             data-selection-id="target.targetId"
             @uiactivate="attach(target)"
             @dblclick="attach(target)">
 
-            <div class="chrome-connection__summary">
-                <div class="chrome-connection__title">
+            <div class="summary">
+                <div class="title">
                     {{ target.title }}
                 </div>
-                <div class="chrome-connection__url">
+                <div class="url">
                     {{ target.url }}
                 </div>
             </div>
@@ -37,25 +37,25 @@
 <script>
 export default {
 
-    components: {
-    },
+    inject: [
+        'browser',
+        'chromeManager',
+    ],
 
     computed: {
-
         targets() {
-            return this.app.chromeManager.targets;
+            return this.chromeManager.targets;
         },
-
     },
 
     methods: {
 
         isAttachedTo(target) {
-            return this.app.browser.isAttachedTo(target.targetId);
+            return this.browser.isAttachedTo(target.targetId);
         },
 
         attach(target) {
-            this.app.browser.attach(target.targetId);
+            this.browser.attach(target.targetId);
         },
 
     },
@@ -63,12 +63,12 @@ export default {
 };
 </script>
 
-<style>
-.chrome-connection {
+<style scoped>
+.browser {
     padding: var(--gap--small);
 }
 
-.chrome-connection__summary {
+.summary {
     flex: 1;
     min-width: 0;
     white-space: nowrap;
@@ -76,7 +76,7 @@ export default {
     text-overflow: ellipsis;
 }
 
-.chrome-connection__title {
+.title {
     margin: var(--gap--small) 0;
     font-weight: 500;
 }

@@ -1,7 +1,7 @@
 import { App } from '../app';
 import {
     ApiViewport,
-    ChromeConnectionViewport,
+    BrowserViewport,
     DatasetsViewport,
     ExtensionsViewport,
     InspectionsViewport,
@@ -18,7 +18,7 @@ import { LayoutDirection } from './layout-manager';
 export class ViewportManager {
     app: App;
     api: ApiViewport;
-    chromeConnection: ChromeConnectionViewport;
+    browserViewport: BrowserViewport;
     datasets: DatasetsViewport;
     extensions: ExtensionsViewport;
     inspections: InspectionsViewport;
@@ -49,7 +49,7 @@ export class ViewportManager {
         this.recipes = new RecipesViewport(app);
         this.searchScripts = new SearchScriptsViewport(app);
         this.settings = new SettingsViewport(app);
-        this.chromeConnection = new ChromeConnectionViewport(app);
+        this.browserViewport = new BrowserViewport(app);
 
         this.all = Object.values(this).filter(_ => _ instanceof Viewport);
     }

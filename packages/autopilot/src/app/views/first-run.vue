@@ -6,172 +6,144 @@
             <span>Autopilot</span>
         </div>
 
-        <div class="container">
-            <section class="hero--grad section">
-                <img src="resources/product-logos/autopilot.svg" style="width: 150px; margin: var(--gap) 0;" />
+        <div class="main">
+            <div class="hero--grad section">
+                <img src="resources/product-logos/autopilot.svg"
+                    style="width: 150px; margin: var(--gap) 0;" />
                 <div class="section-content" style="color: white;">
-                    <h3 style="margin-bottom: var(--gap);">Welcome to Autopilot and the Automation Cloud</h3>
-                    <p>Autopilot allows you to script powerful, contextually aware workflows on any website or connect any API.</p>
+                    <h3>
+                        Welcome to Autopilot and the Automation Cloud
+                    </h3>
+                    <p>
+                        Autopilot allows you to script powerful,
+                        contextually aware workflows on any website
+                        or connect any API.
+                    </p>
 
                     <span class="chromium-link">
-                        <img src="resources/chromium-icon.png" alt="chromium" class="chromium-image">
-                        Let's get connect Autopilot to Chromium so you can get scripting.
+                        <img src="resources/chromium-icon.png"
+                            alt="chromium"
+                            class="chromium-image">
+                        Let's install Chromium so you can get scripting.
                     </span>
                 </div>
-            </section>
+            </div>
 
-            <section class="section">
+            <div class="section" style="flex: 1">
                 <div class="section-content">
-                    <h6>1. Download and install Chromium.</h6>
-                    <button
-                        class="button button--secondary "
-                        @click.prevent="openChromiumLink">
-                        Download Chromium
-                    </button>
-                </div>
-
-                <div class="section-content">
-                    <h6>2. Connect Chromium to Autopilot</h6>
-                    <div class="chromium-select">
-                        <span>Chromium: </span>
-                        <button type="click"
-                            class="button button--secondary"
-                            @click="selectChromiumApp">
-                            Find Chromium Application
-                        </button>
-                        <span class="check-icon"
+                    <h6>
+                        1. Download and install Chromium.
+                    </h6>
+                    <div class="section-controls">
+                        <button
+                            class="button button--cta"
                             :class="{
-                                'check-icon--valid': chromiumPath
-                            }">
-                                <i class="far fa-check-circle"></i>
-                        </span>
-                        <span class="chromium-path"> {{ chromiumPath }} </span>
+                                'button--secondary': canInstall,
+                                'button--disabled': !canInstall,
+                            }"
+                            @click="install()"
+                            :disabled="!canInstall">
+                            Install Chromium
+                        </button>
+                        <div class="progress">
+                            <template v-if="chromeDownload.status === 'idle'">
+                                <i class="progress-icon far fa-check-circle"
+                                    :class="{
+                                        'progress-icon--done': installed,
+                                    }">
+                                </i>
+                            </template>
+                            <template v-else>
+                                <i class="progress-icon fas fa-spinner fa-spin progress-icon--progress">
+                                </i>
+                                <span v-if="chromeDownload.status === 'downloading'">
+                                    Downloading... {{ chromeDownload.progress }}%
+                                </span>
+                                <span v-if="chromeDownload.status === 'extracting'">
+                                    Installing... Please hold on.
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+
+                    <p>
+                        Chromium will be installed with the Autopilot application.
+                        We’ll then use that version of the browser for your automations with Autopilot.
+                    </p>
+
+                    <hr class="section-divider"/>
+
+                    <h6>
+                        2. Run scripts locally or <u>Register for Automation Cloud account</u> at any time.
+                    </h6>
+                    <div class="section-controls">
+                        <button
+                            class="button button--cta"
+                            :class="{
+                                'button--primary': installed,
+                                'button--disabled': !installed,
+                            }"
+                            :disabled="!installed"
+                            @click="continueToAutopilot()">
+                            Continue to Autopilot
+                        </button>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section class="section tray-bg--light-mid">
-                <div class="section-content" style="margin-bottom: var(--gap--large);">
-                    <h6>Run scripts locally or <u> Regiter for Automation Cloud account</u> at any time.</h6>
-                    <button
-                        class="button"
-                        :class="{
-                            'button--primary': valid,
-                            'button--disabled': !valid,
-                        }"
-                        :disabled="!valid"
-                        @click="saveAndReload">
-                        Continue to Autopilot
-                    </button>
-                </div>
-
+            <div class="section tray-bg--transparent-mid">
                 <promo-robot-school style="align-self: end;"/>
-            </section>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
-import { SettingsController } from '~/controllers';
-import { showOpenDialog } from '../util/helpers';
-import os from 'os';
-import { shell } from 'electron';
-
-export const CHROMIUM_VERSION = {
-    MAC: '768968',
-    WIN: '768966',
-    LINUX: '768968',
-};
-
-const CHROMIUM_URL = 'https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html';
 
 export default {
+
     components: {
         PromoRobotSchool
     },
 
-    data() {
-        return {
-            chromiumPath: '',
-        };
-    },
-
-    mounted() {
-        const [path] = this.app.settings.entries.filter(entry => /^CHROME_PATH/.test(entry[0]) && !!entry[1]);
-        const chromiumPath = path || ['', ''];
-        this.chromiumPath = chromiumPath[1] || '';
-    },
+    inject: [
+        'settings',
+        'chromeDownload',
+        'firstRun',
+    ],
 
     computed: {
 
-        settings() {
-            return this.get(SettingsController);
+        canInstall() {
+            return !this.installed && this.chromeDownload.status === 'idle';
         },
 
-        osPlatform() {
-            return os.platform();
-        },
-
-        valid() {
-            return this.chromiumPath;
-        },
-
-        chromiumLink() {
-            const prefix = this.getChromiumLinkPrefix();
-            return `${CHROMIUM_URL}?prefix=${prefix}/`;
+        installed() {
+            return this.chromeDownload.isInstalled();
         },
 
     },
 
     methods: {
 
-        selectChromiumApp() {
-            showOpenDialog({ title: 'Select application' })
-                .then(paths => {
-                    this.setChromePath(paths[0]);
-                })
-                .catch(_ => this.chromiumPath = '');
+        async install() {
+            try {
+                await this.chromeDownload.downloadAndInstall();
+            } catch (err) {
+                console.error(err);
+                alert('Installation failed. Please report this problem to Automation Cloud support.');
+            }
         },
 
-        openChromiumLink() {
-            shell.openExternal(this.chromiumLink);
-        },
-
-        getChromiumLinkPrefix() {
-            if (os.platform() === 'darwin') {
-                return `Mac/${CHROMIUM_VERSION.MAC}`;
+        async continueToAutopilot() {
+            try {
+                await this.chromeDownload.updateChromeSettings();
+                this.firstRun.setFirstRun(false);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to set up Chrome. Please report this problem to Automation Cloud support.');
             }
-
-            if (os.platform() === 'win32') {
-                return `Win_x64/${CHROMIUM_VERSION.WIN}`;
-            }
-
-            if (os.platform() === 'linux') {
-                return `Linux_x64/${CHROMIUM_VERSION.LINUX}`;
-            }
-
-            return '';
-        },
-
-        setChromePath(path = '') {
-            if (!path) {
-                this.chromiumPath = '';
-                return;
-            }
-
-            this.chromiumPath = this.osPlatform === 'darwin' ?
-                path + '/Contents/MacOS/Chromium' :
-                path;
-
-            this.settings.setEntries([
-                ['CHROME_PATH', this.chromiumPath],
-            ]);
-        },
-
-        saveAndReload() {
-            this.settings.setEntriesAsync([['IS_FIRST_RUN', 'false']])
-                .then(_ => location.reload());
         },
     }
 };
@@ -206,7 +178,7 @@ export default {
     -webkit-user-drag: none;
 }
 
-.container {
+.main {
     overflow-y: auto;
     height: inherit;
     display: flex;
@@ -227,18 +199,44 @@ export default {
     align-self: center;
 }
 
+.section-controls {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.section h3 {
+    margin-bottom: var(--gap--large);
+}
+
 .section h6 {
     color: var(--color-blue--600);
     font-weight: 400;
 }
 
-.check-icon {
+.section-divider {
+    margin: var(--gap--large) 0;
+}
+
+.progress {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
     margin-left: var(--gap);
+    color: var(--ui-color--blue);
+}
+
+.progress-icon {
+    margin: 0 var(--gap--small);
     font-size: 1.8em;
     color: var(--color-mono--200);
 }
 
-.check-icon--valid {
+.progress-icon--progress {
+    color: var(--ui-color--blue);
+}
+
+.progress-icon--done {
     color: var(--ui-color--green);
 }
 
@@ -252,38 +250,4 @@ export default {
     margin-right: var(--gap);
     width: 25px;
 }
-
-.chromium-select {
-    display: flex;
-    align-items: center;
-    flex-flow: row wrap;
-}
-
-.chromium-select > * {
-    margin-right: var(--gap--small);
-}
-
-.chromium-path {
-    display: inline-block;
-    padding: var(--gap--small) 0;
-}
-
-.footer {
-    background-color: var(--color-mono--300);
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: end;
-}
-
-.footer button {
-    color: var(--ui-color--white);
-    margin: var(--gap);
-    margin-right: var(--gap--large);
-}
-
-.footer button:disabled {
-    background-color: var(--color-mono--500);
-    color: var(--ui-color--white);
-}
-
 </style>

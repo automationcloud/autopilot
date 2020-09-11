@@ -14,7 +14,6 @@ import {
     ResolverService,
 } from '@automationcloud/engine';
 
-import { ChromeManager } from './managers/chrome-manager';
 import { DatasetManager } from './managers/dataset-manager';
 import { InspectManager } from './managers/inspect-manager';
 import { LayoutManager } from './managers/layout-manager';
@@ -34,7 +33,6 @@ import ms from 'ms';
 
 export class App extends Engine {
     // Deprecated
-    chromeManager: ChromeManager;
     datasets: DatasetManager;
     inspector: InspectManager;
     layout: LayoutManager;
@@ -76,7 +74,6 @@ export class App extends Engine {
         this.container.bind(DatasetManager).toDynamicValue(() => this.datasets);
 
         // Old stuff
-        this.chromeManager = new ChromeManager(this);
         this.datasets = new DatasetManager(this);
         this.inspector = new InspectManager(this);
         this.layout = new LayoutManager(this);
@@ -131,7 +128,6 @@ export class App extends Engine {
         const managers: Controller[] = [
             this.layout,
             this.datasets,
-            this.chromeManager,
             this.recipes,
             this.viewports,
         ];

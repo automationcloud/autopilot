@@ -12,7 +12,7 @@
                     Expert scripters and the Automation Cloud team monitor all issues and conversations there.
                 </p>
                 <button
-                    class="button button--primary"
+                    class="button button--primary button--cta"
                     type="click"
                     @click="onLinkClick('comunity')">
                     <span>Community</span>
@@ -39,7 +39,7 @@
                     Access reference documentation about the Autopilot tool and the Automation Cloud API.
                 </p>
                 <button
-                    class="button button--primary"
+                    class="button button--primary button--cta"
                     type="click"
                     @click="onLinkClick('robotSchool')">
                     <span>Robot School</span>
@@ -60,17 +60,17 @@
                 </p>
 
                 <button
-                    class="button button--primary"
+                    class="button button--primary button--cta"
                     type="click"
                     @click="onLinkClick('dashboard')">
                     {{ authorised ? 'Dashboard' : 'Sign in to your Dashboard' }}
                 </button>
                 <button
                     v-show="!authorised"
-                    class="button button--tertiary"
+                    class="button button--tertiary button--cta"
                     type="click"
                     @click="onLinkClick('signup')">
-                    Sign-up and get started
+                    Sign up and get started
                 </button>
             </article>
         </div>

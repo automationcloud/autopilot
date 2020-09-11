@@ -1,8 +1,8 @@
 <template>
     <div v-if="initialized">
         <first-run v-if="isFirstRun" />
-        <div class="root"
-            v-else
+        <div v-else
+            class="root"
             @mousedown="onMouseDown">
             <div class="root__scroll-overlay"
                 v-if="scrolling"
@@ -29,9 +29,6 @@ import Playback from './playback.vue';
 import Disconnected from './disconnected.vue';
 import Inspecting from './inspecting.vue';
 import FirstRun from './first-run.vue';
-import { booleanConfig } from '@automationcloud/engine';
-
-const IS_FIRST_RUN = booleanConfig('IS_FIRST_RUN', true);
 
 export default {
 
@@ -45,14 +42,21 @@ export default {
         FirstRun,
     },
 
+    inject: [
+        'firstRun',
+    ],
+
     data() {
         return {
             scrolling: false,
-            isFirstRun: this.app.config.get(IS_FIRST_RUN),
         };
     },
 
     computed: {
+
+        isFirstRun() {
+            return this.firstRun.isFirstRun();
+        },
 
         initialized() {
             return this.app.initialized;
