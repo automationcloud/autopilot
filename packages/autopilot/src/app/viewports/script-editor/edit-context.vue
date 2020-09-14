@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import ErrorCode from './tools/error-code.vue';
+import ErrorCode from './error-code.vue';
 
 export default {
 
