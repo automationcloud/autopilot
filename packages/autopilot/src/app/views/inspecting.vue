@@ -10,18 +10,22 @@
 <script>
 export default {
 
+    inject: [
+        'inspect',
+    ],
+
     computed: {
         inspecting() {
-            return this.app.inspector.isInspecting();
+            return this.inspect.isInspecting();
         },
         prompt() {
-            return this.app.inspector.prompt || '<span class="section__title"> Select element on the page</span>';
+            return this.inspect.prompt || '<span class="section__title"> Select element on the page</span>';
         }
     },
 
     methods: {
         stopInspect() {
-            this.app.inspector.stopInspect();
+            this.inspect.stopInspect();
         },
     }
 

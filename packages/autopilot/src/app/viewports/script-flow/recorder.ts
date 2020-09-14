@@ -1,6 +1,7 @@
 import { ScriptFlowViewport } from '.';
 import { util, RemoteElementInfo } from '@automationcloud/engine';
 import { clipboard, helpers } from '../../util';
+import { InspectController } from '../../controllers/inspect';
 
 export class ActionRecorderController {
     viewport: ScriptFlowViewport;
@@ -11,6 +12,10 @@ export class ActionRecorderController {
 
     get app() {
         return this.viewport.app;
+    }
+
+    get inspect() {
+        return this.app.get(InspectController);
     }
 
     async recordAction(type: string): Promise<void> {
@@ -33,7 +38,7 @@ export class ActionRecorderController {
 
     async recordMatcher(type: string) {
         const document = await this.app.browser.page.document();
-        const res = await this.app.inspector.recordElement(document);
+        const res = await this.inspect.recordElement(document);
         const spec: any = {
             label: '',
             type,
@@ -59,7 +64,7 @@ export class ActionRecorderController {
 
     async recordSingleElAction(type: string) {
         const document = await this.app.browser.page.document();
-        const res = await this.app.inspector.recordElement(document);
+        const res = await this.inspect.recordElement(document);
         const spec: any = {
             type,
             pipeline: {
@@ -99,7 +104,7 @@ export class ActionRecorderController {
 
     async recordComposedAction(inputKey: string, path: string = '') {
         const document = await this.app.browser.page.document();
-        const res = await this.app.inspector.recordElement(document);
+        const res = await this.inspect.recordElement(document);
         const spec: any = {
             type: 'placeholder',
             label: [inputKey, ...path.split('/')].filter(Boolean).join('.'),

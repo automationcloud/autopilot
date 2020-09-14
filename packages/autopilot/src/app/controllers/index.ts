@@ -10,6 +10,7 @@ export * from './extension-dev';
 export * from './extension-loader';
 export * from './extension-registry';
 export * from './first-run';
+export * from './inspect';
 export * from './project';
 export * from './protocol';
 export * from './roxi';

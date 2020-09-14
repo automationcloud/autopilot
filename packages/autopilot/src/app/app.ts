@@ -14,7 +14,6 @@ import {
     ResolverService,
 } from '@automationcloud/engine';
 
-import { InspectManager } from './managers/inspect-manager';
 import { LayoutManager } from './managers/layout-manager';
 import { PlaybackManager } from './managers/playback-manager';
 import { RecipeManager } from './managers/recipe-manager';
@@ -32,7 +31,6 @@ import ms from 'ms';
 
 export class App extends Engine {
     // Deprecated
-    inspector: InspectManager;
     layout: LayoutManager;
     playback: PlaybackManager;
     recipes: RecipeManager;
@@ -71,7 +69,6 @@ export class App extends Engine {
         this.container.bind(PlaybackManager).toDynamicValue(() => this.playback);
 
         // Old stuff
-        this.inspector = new InspectManager(this);
         this.layout = new LayoutManager(this);
         this.playback = new PlaybackManager(this);
         this.recipes = new RecipeManager(this);

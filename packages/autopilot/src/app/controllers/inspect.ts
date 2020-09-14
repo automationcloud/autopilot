@@ -1,32 +1,29 @@
-import { App } from '../app';
-import { RemoteElement, HIGHLIGHT_CONFIG, CdpNode } from '@automationcloud/engine';
+import { RemoteElement, BrowserService, HIGHLIGHT_CONFIG, CdpNode } from '@automationcloud/engine';
+import { injectable, inject } from 'inversify';
+import { controller } from '../controller';
 import { remote } from 'electron';
 const { BrowserWindow } = remote;
 import assert from 'assert';
 import { EventEmitter } from 'events';
 
-export interface RecordElementOptions {
-    prompt?: string;
-    unique?: boolean;
-}
-
-export interface RecordElementResult {
-    element: RemoteElement;
-    selector: string;
-}
-
-export class InspectManager extends EventEmitter {
-    app: App;
+@injectable()
+@controller()
+export class InspectController {
 
     scopeEl: RemoteElement | null = null;
     prompt: string = '';
 
-    constructor(app: App) {
-        super();
-        this.app = app;
+    protected emitter: EventEmitter = new EventEmitter();
+
+    constructor(
+        @inject(BrowserService)
+        protected browser: BrowserService,
+    ) {
         // TODO stop inspect on Escape
-        this.app.browser.on('global:Overlay.inspectNodeRequested', ev => this.onInspectNodeRequested(ev));
+        this.browser.on('global:Overlay.inspectNodeRequested', ev => this.onInspectNodeRequested(ev));
     }
+
+    async init() {}
 
     /**
      * Activates an "inspect element" mode and returns clicked element with its selector.
@@ -78,7 +75,7 @@ export class InspectManager extends EventEmitter {
             highlightConfig: HIGHLIGHT_CONFIG,
         });
         this.scopeEl = null;
-        this.emit('stop');
+        this.emitter.emit('stop');
     }
 
     async grabElement(scopeEl: RemoteElement, prompt: string = ''): Promise<RemoteElement | null> {
@@ -90,8 +87,8 @@ export class InspectManager extends EventEmitter {
         await this.startInspect(scopeEl);
         const result = await new Promise<RemoteElement | null>(resolve => {
             const inspector = this;
-            inspector.addListener('element', onElement);
-            inspector.addListener('stop', onStop);
+            inspector.emitter.addListener('element', onElement);
+            inspector.emitter.addListener('stop', onStop);
 
             function onElement(result: RemoteElement) {
                 cleanup();
@@ -104,8 +101,8 @@ export class InspectManager extends EventEmitter {
             }
 
             function cleanup() {
-                inspector.removeListener('element', onElement);
-                inspector.removeListener('stop', onStop);
+                inspector.emitter.removeListener('element', onElement);
+                inspector.emitter.removeListener('stop', onStop);
                 inspector.stopInspect();
             }
         });
@@ -146,7 +143,7 @@ export class InspectManager extends EventEmitter {
             if (!contains) {
                 return;
             }
-            this.emit('element', el);
+            this.emitter.emit('element', el);
         } catch (err) {
             console.error('Inspect element failed', err);
         }
@@ -178,4 +175,15 @@ export class InspectManager extends EventEmitter {
             scopeEl.page.toolkitBinding,
         );
     }
+
+}
+
+export interface RecordElementOptions {
+    prompt?: string;
+    unique?: boolean;
+}
+
+export interface RecordElementResult {
+    element: RemoteElement;
+    selector: string;
 }
