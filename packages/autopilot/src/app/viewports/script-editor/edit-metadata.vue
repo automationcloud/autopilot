@@ -15,10 +15,12 @@
         </div>
 
         <div class="form-row">
-            <div class="form-row__label">Draft</div>
+            <div class="form-row__label">Strict validation</div>
             <div class="form-row__controls">
                 <input type="checkbox"
-                    v-model="metadataProxy.draft"/>
+                    v-model="metadataProxy.draft"
+                    :true-value="false"
+                    :false-value="true"/>
             </div>
         </div>
 

@@ -43,7 +43,8 @@
                       v-if="action.optional">
                     opt
                 </sup>
-                <span class="label"
+                <span v-if="label"
+                    class="label"
                     :class="{
                         'label--dynamic': !action.isLabelEditable()
                     }">

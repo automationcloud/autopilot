@@ -23,7 +23,7 @@ const DIALOG_FILTERS = [
 
 export const DEFAULT_METADATA: ProjectMetadata = {
     domainId: 'Generic',
-    draft: false,
+    draft: true,
     scriptId: null,
     serviceId: null,
 };

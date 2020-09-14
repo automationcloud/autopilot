@@ -200,7 +200,11 @@ export function Recordset(spec: { label?: string; help?: string; singular: strin
  * @param spec
  * @public
  */
-export function Preview(spec: { label?: string; placeholder?: string } = {}) {
+export function Preview(spec: {
+    label?: string;
+    placeholder?: string;
+    outputKeyProp?: string;
+} = {}) {
     return paramDecorator('preview', spec);
 }
 

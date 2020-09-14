@@ -19,6 +19,7 @@ The pipeline should return a single element with \`key: string\` and \`data: any
     @params.Preview({
         label: 'Output Preview',
         placeholder: 'Run the action to preview the output value.',
+        outputKeyProp: '$outputKey',
     })
     $output: any = undefined;
 
