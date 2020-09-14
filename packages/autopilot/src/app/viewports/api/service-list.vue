@@ -60,6 +60,10 @@ export default {
         ServiceItem,
     },
 
+    inject: [
+        'protocol'
+    ],
+
     props: {
 
     },
@@ -73,7 +77,7 @@ export default {
         controller() { return this.viewport.services; },
 
         availableDomains() {
-            return this.app.tools.getAvailableDomains();
+            return this.protocol.getAvailableDomains();
         },
     },
 

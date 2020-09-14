@@ -132,8 +132,8 @@ export class PlaybackManager {
             playbackEvent: 'playContext',
         });
         const selected = this.getSelectedItem();
-        const playhead =
-            selected instanceof Context ? selected.children.first : selected instanceof Action ? selected : null;
+        const playhead = selected instanceof Context ? selected.children.first :
+            selected instanceof Action ? selected : this.script.getFirstAction();
         await this.resumeFromAction('context', playhead);
     }
 

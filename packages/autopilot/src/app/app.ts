@@ -14,8 +14,6 @@ import {
     ResolverService,
 } from '@automationcloud/engine';
 
-import { DatasetManager } from './managers/dataset-manager';
-import { InspectManager } from './managers/inspect-manager';
 import { LayoutManager } from './managers/layout-manager';
 import { PlaybackManager } from './managers/playback-manager';
 import { RecipeManager } from './managers/recipe-manager';
@@ -33,8 +31,6 @@ import ms from 'ms';
 
 export class App extends Engine {
     // Deprecated
-    datasets: DatasetManager;
-    inspector: InspectManager;
     layout: LayoutManager;
     playback: PlaybackManager;
     recipes: RecipeManager;
@@ -71,11 +67,8 @@ export class App extends Engine {
         this.container.bind(ViewportManager).toDynamicValue(() => this.viewports);
         this.container.bind(LayoutManager).toDynamicValue(() => this.layout);
         this.container.bind(PlaybackManager).toDynamicValue(() => this.playback);
-        this.container.bind(DatasetManager).toDynamicValue(() => this.datasets);
 
         // Old stuff
-        this.datasets = new DatasetManager(this);
-        this.inspector = new InspectManager(this);
         this.layout = new LayoutManager(this);
         this.playback = new PlaybackManager(this);
         this.recipes = new RecipeManager(this);
@@ -106,6 +99,7 @@ export class App extends Engine {
     get config() { return this.get(Configuration); }
     get tools() { return this.get(ToolsController); }
     get expandable() { return this.get(ct.ExpandableController); }
+    get protocol() { return this.get(ct.ProtocolController); }
 
     async init() {
         // New controllers are initialized this way
@@ -127,7 +121,6 @@ export class App extends Engine {
         // Old initialization
         const managers: Controller[] = [
             this.layout,
-            this.datasets,
             this.recipes,
             this.viewports,
         ];

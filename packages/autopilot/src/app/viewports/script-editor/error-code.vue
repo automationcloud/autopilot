@@ -9,6 +9,10 @@
 <script>
 export default {
 
+    inject: [
+        'protocol',
+    ],
+
     props: {
         value: { type: String, default: '' }
     },
@@ -16,7 +20,7 @@ export default {
     computed: {
 
         options() {
-            return this.app.tools.getErrorCodeSuggestions();
+            return this.protocol.getErrorCodeSuggestions();
         }
 
     },

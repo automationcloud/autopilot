@@ -11,6 +11,12 @@ import { ExpandableController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'protocol',
+        'project',
+        'expandable',
+    ],
+
     computed: {
 
         expandKey() {
@@ -22,12 +28,12 @@ export default {
         },
 
         allOutputKeys() {
-            const domain = this.app.tools.getDomain();
+            const domain = this.protocol.getDomain();
             return domain ? domain.getOutputs().map(_ => _.key) : [];
         },
 
         reachedOutputKeys() {
-            const script = this.app.project.script;
+            const script = this.project.script;
             return script.$outputs.map(_ => _.key);
         },
 
@@ -45,7 +51,7 @@ export default {
     methods: {
 
         toggleExpand() {
-            this.app.ui.toggleExpand(this.expandKey);
+            this.expandable.toggleExpand(this.expandKey);
         }
 
     }

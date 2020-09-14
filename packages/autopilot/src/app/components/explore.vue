@@ -10,13 +10,14 @@
                 @click="toggleExpand(key, value)"
                 @contextmenu.prevent.stop="onContextMenu($event, key, value)">
                 <div class="explore__expand">
-                <i
-                    v-if="canExpand(value)"
-                    class="fa"
-                    :class="{
-                        'fa-caret-right': !isExpanded(key),
-                        'fa-caret-down': isExpanded(key)
-                    }"></i>
+                    <i
+                        v-if="canExpand(value)"
+                        class="fas"
+                        :class="{
+                            'fa-caret-right': !isExpanded(key),
+                            'fa-caret-down': isExpanded(key)
+                        }"></i>
+                    <span v-else style="opacity: .5">∙</span>
                 </div>
                 <div class="explore__key">{{ transformKey(key) }}</div>
                 <div class="explore__value"

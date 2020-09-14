@@ -99,13 +99,8 @@
 </template>
 
 <script>
-import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
 
 export default {
-
-    components: {
-        PromoRobotSchool
-    },
 
     inject: [
         'settings',

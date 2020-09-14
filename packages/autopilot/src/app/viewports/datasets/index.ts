@@ -1,6 +1,10 @@
 import { StatelessViewport } from '../../viewport';
 import { helpers, clipboard } from '../../util';
-import { Dataset, DatasetInput } from '../../managers/dataset-manager';
+import {
+    DatasetsController,
+    Dataset,
+    DatasetInput,
+} from '../../controllers/datasets';
 
 export class DatasetsViewport extends StatelessViewport {
     getViewportId(): string {
@@ -15,23 +19,27 @@ export class DatasetsViewport extends StatelessViewport {
         return 'fas fa-sign-in-alt';
     }
 
+    get datasets() {
+        return this.app.get(DatasetsController);
+    }
+
     createCurrentDatasetProxy(): Dataset {
-        const ds = this.app.datasets.getCurrentDataset();
+        const ds = this.datasets.getCurrentDataset();
         return helpers.createEditProxy(ds, (k, v) => {
             (ds as any)[k] = v;
-            this.app.datasets.update();
+            this.datasets.update();
         });
     }
 
     save() {
-        this.app.datasets.update();
+        this.datasets.update();
     }
 
     getInputExpandId(input: DatasetInput) {
-        const ds = this.app.datasets.getCurrentDataset();
+        const ds = this.datasets.getCurrentDataset();
         return (
             'ds-' +
-            this.app.datasets.currentIndex +
+            this.datasets.currentIndex +
             '-' +
             ds.inputs.findIndex(_ => _.key === input.key && _.stage === input.stage)
         );
@@ -39,14 +47,14 @@ export class DatasetsViewport extends StatelessViewport {
 
     getJsonInputs() {
         const res: any = {};
-        for (const input of this.app.datasets.getCurrentDataset().inputs) {
+        for (const input of this.datasets.getCurrentDataset().inputs) {
             res[input.key] = input.data;
         }
         return res;
     }
 
     addInput(input: DatasetInput, overwrite: boolean = false) {
-        const ds = this.app.datasets.getCurrentDataset();
+        const ds = this.datasets.getCurrentDataset();
         const existing = ds.inputs.find(_ => _.key === input.key && _.stage === input.stage);
         if (existing) {
             if (!overwrite) {
@@ -65,7 +73,7 @@ export class DatasetsViewport extends StatelessViewport {
     }
 
     removeInput(idx: number) {
-        const ds = this.app.datasets.getCurrentDataset();
+        const ds = this.datasets.getCurrentDataset();
         ds.inputs.splice(idx, 1);
         this.save();
     }

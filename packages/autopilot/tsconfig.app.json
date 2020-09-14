@@ -6,7 +6,7 @@
     ],
     "compilerOptions": {
         "rootDir": "./src/app",
-        "outDir": "./out/app",
+        "outDir": "./out/app"
     },
     "include": ["src/app"],
 }

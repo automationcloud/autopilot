@@ -12,6 +12,7 @@ import { inject, injectable } from 'inversify';
 import { StorageController } from './storage';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
+import { DatasetsController } from './datasets';
 
 const rimrafAsync = promisify(rimraf);
 
@@ -22,7 +23,7 @@ const DIALOG_FILTERS = [
 
 export const DEFAULT_METADATA: ProjectMetadata = {
     domainId: 'Generic',
-    draft: false,
+    draft: true,
     scriptId: null,
     serviceId: null,
 };
@@ -54,6 +55,8 @@ export class ProjectController {
         protected resolver: ResolverService,
         @inject(EventBus)
         protected events: EventBus,
+        @inject(DatasetsController)
+        protected datasets: DatasetsController,
     ) {
         this.userData = storage.createUserData('project-manager', 300);
         events.on('projectInvalidated', () => {
@@ -105,7 +108,7 @@ export class ProjectController {
     serializeProjectState() {
         return {
             script: this.script.toJSON(),
-            datasets: this.app.datasets.datasets.filter(ds => !ds.excluded),
+            datasets: this.datasets.datasets.filter(ds => !ds.excluded),
             metadata: this.metadata,
         };
     }
@@ -185,7 +188,7 @@ export class ProjectController {
                 this.diff.setNewBase(json.script);
             }
             if (json.datasets) {
-                this.app.datasets.loadDatasets(json.datasets);
+                this.datasets.loadDatasets(json.datasets);
             }
             Object.assign(this.metadata, json.metadata);
             this.filePath = filePath;

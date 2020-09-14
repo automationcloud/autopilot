@@ -82,16 +82,12 @@
 </template>
 
 <script>
-import PromoRobotSchool from '~/components/automationcloud/promo-robot-school.vue';
 import { shell } from 'electron';
 import {
     ApiLoginController
 } from '~/controllers';
 
 export default {
-    components: {
-        PromoRobotSchool,
-    },
 
     data() {
         return {

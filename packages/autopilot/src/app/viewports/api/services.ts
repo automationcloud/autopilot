@@ -1,5 +1,6 @@
 import { ApiViewport } from '.';
 import { ApiService } from '../../controllers/api';
+import { DatasetsController } from '../../controllers/datasets';
 import throttle from 'promise-smart-throttle';
 import { helpers } from '../../util';
 
@@ -35,8 +36,9 @@ export class ServicesController {
     get api() {
         return this.viewport.app.api;
     }
+
     get datasets() {
-        return this.viewport.app.datasets;
+        return this.viewport.app.get(DatasetsController);
     }
 
     async refresh() {

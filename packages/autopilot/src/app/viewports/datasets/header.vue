@@ -29,7 +29,7 @@
         </modal>
         <select class="input input--inverse stretch"
             v-model="currentIndex">
-            <option v-for="(ds, i) of datasets"
+            <option v-for="(ds, i) of allDatasets"
                 :value="i">
                 {{ ds.excluded ? '[private]' : '' }} {{ ds.name }}
             </option>
@@ -46,6 +46,10 @@ import { menu } from '../../util';
 
 export default {
 
+    inject: [
+        'datasets'
+    ],
+
     data() {
         return {
             editing: false,
@@ -57,15 +61,15 @@ export default {
 
         currentIndex: {
             get() {
-                return this.app.datasets.currentIndex;
+                return this.datasets.currentIndex;
             },
             set(index) {
-                this.app.datasets.selectDataset(index);
+                this.datasets.selectDataset(index);
             }
         },
 
-        datasets() {
-            return this.app.datasets.datasets;
+        allDatasets() {
+            return this.datasets.datasets;
         },
 
         datasetProxy() {
@@ -80,7 +84,7 @@ export default {
                 {
                     label: 'Create dataset',
                     click: () => {
-                        this.app.datasets.createDataset();
+                        this.datasets.createDataset();
                         this.editing = true;
                     },
                 },
@@ -90,7 +94,7 @@ export default {
                 },
                 {
                     label: 'Delete dataset',
-                    click: () => this.app.datasets.deleteCurrentDataset(),
+                    click: () => this.datasets.deleteCurrentDataset(),
                 }
             ]);
         },

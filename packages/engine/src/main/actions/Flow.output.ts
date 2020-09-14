@@ -29,6 +29,7 @@ use Fold Array to send arrays instead.
     @params.Preview({
         label: 'Output Preview',
         placeholder: 'Run the action to preview the output value.',
+        outputKeyProp: 'outputKey',
     })
     $output: any = undefined;
 
@@ -46,7 +47,7 @@ use Fold Array to send arrays instead.
     }
 
     async exec() {
-        util.assertScript(this.outputKey, 'Output key is required');
+        util.assertScript(this.outputKey, 'Output key is not specified');
         await this.retry(async () => {
             const el = await this.selectOne(this.pipeline);
             this.$output = el.value;

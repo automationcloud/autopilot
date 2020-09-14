@@ -89,6 +89,10 @@ export default {
         SbNode
     },
 
+    inject: [
+        'inspect',
+    ],
+
     props: {
         value: { type: String, required: true },
         scopeEl: { type: Object },
@@ -219,7 +223,7 @@ export default {
             if (!this.scopeEl) {
                 return;
             }
-            const result = await this.app.inspector.recordElement(this.scopeEl, { unique: this.unique });
+            const result = await this.inspect.recordElement(this.scopeEl, { unique: this.unique });
             if (result) {
                 const node = await this.dom.resolveNodeFromEl(result.element);
                 this.isDomShown = true;
