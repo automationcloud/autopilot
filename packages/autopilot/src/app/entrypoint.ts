@@ -55,6 +55,11 @@ app.init().then(() => {
 
 // Expose globals for DevTools
 Object.defineProperties(window, {
+    AP: {
+        get() {
+            return createControllerProvider(app);
+        }
+    },
     util: { value: util },
     script: {
         get() {
@@ -70,10 +75,5 @@ Object.defineProperties(window, {
         get() {
             return app.browser.page;
         },
-    },
-    controllers: {
-        get() {
-            return createControllerProvider(app);
-        }
     }
 });

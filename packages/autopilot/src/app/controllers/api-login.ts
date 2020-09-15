@@ -1,6 +1,6 @@
 import uuid from 'uuid';
 import querystring from 'querystring';
-import assert from 'assert';
+import Ajv from 'ajv';
 import { shell } from 'electron';
 import { injectable, inject } from 'inversify';
 import {
@@ -9,6 +9,8 @@ import {
     OAuth2GrantType,
     OAuth2Agent,
     stringConfig,
+    JsonSchema,
+    Exception,
 } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
@@ -16,6 +18,7 @@ import { UserData } from '../userdata';
 import { StorageController } from './storage';
 import { SettingsController, SettingsEnv } from './settings';
 import { httpServerPort } from '../globals';
+
 const REDIRECT_URL = `http://localhost:${httpServerPort}/automationcloud/loginResult`;
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
@@ -23,12 +26,18 @@ const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
 const AC_AUTHORIZATION_URL = stringConfig('AC_AUTHORIZATION_URL', '');
 const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 
+const DEFAULT_TOKENS: TokensPerEnv = { staging: null, production: null };
+
+const ajv = new Ajv();
+
 @injectable()
 @controller({ priority: 2000 }) // ExtensionRegistry depends on it
 export class ApiLoginController {
     protected userData: UserData;
-    protected account: AccountInfo | null = null;
-    protected targetEnv: SettingsEnv | null = null;
+
+    tokens: TokensPerEnv = { ...DEFAULT_TOKENS };
+    account: AccountInfo | null = null;
+    targetEnv: SettingsEnv | null = null;
 
     initialized: boolean = false;
     loggingIn: boolean = false;
@@ -43,65 +52,75 @@ export class ApiLoginController {
         @inject(ApiRequest)
         protected api: ApiRequest,
     ) {
+        // TOOD rename the file?
         this.userData = this.storage.createUserData('auth', 500);
-        this.events.on('settingsUpdated', () => this.init());
+        this.events.on('settingsUpdated', () => this.initLogin());
     }
 
-    get authAgent() { return this.api.authAgent; }
-    get authorised() { return this.authAgent.params.accessToken; }
+    async init() {
+        this.tokens = await this.userData.loadData({
+            ...DEFAULT_TOKENS
+        });
+        // Login in background
+        this.initLogin();
+        // TODO subscribe to ApiRequest auth invalidated event to clear authentication status
+    }
+
+    update() {
+        this.userData.update(this.tokens);
+    }
+
+    async initLogin(force: boolean = false) {
+        const needLogin = force || (this.targetEnv !== this.settings.env);
+        if (!needLogin) {
+            return;
+        }
+        try {
+            this.invalidateAuth();
+            const { refreshToken } = this;
+            if (!refreshToken) {
+                // Continue unauthenticated
+                return;
+            }
+            this.loggingIn = true;
+            this.api.authAgent.setTokens({ refreshToken });
+            this.account = await this.fetchAccountInfo();
+            console.info('Signed in', this.account?.email);
+        } catch (error) {
+            console.warn('Sign in failed', { error });
+            this.saveRefreshToken(null);
+        } finally {
+            this.loggingIn = false;
+        }
+    }
+
+    get refreshToken() {
+        return this.tokens[this.settings.env];
+    }
+
+    get isAuthenticated() {
+        return this.account != null;
+    }
+
     get userInitial() {
         if (!this.account) {
             return 'U';
         }
-
         const { firstName, lastName, email } = this.account;
         const i1 = firstName[0] || null;
         const i2 = lastName[0] || null;
-
         return i1 && i2 ? i1 + i2 : email.substring(0, 2);
     }
 
-    async init() {
-        if (this.targetEnv !== this.settings.env) {
-            this.targetEnv = this.settings.env;
-            await this.silentLogin();
-        }
-    }
-
-    async silentLogin() {
-        this.invalidate();
-        this.loggingIn = true;
-        try {
-            const tokens = await this.userData.loadData();
-            const refreshToken = tokens[this.settings.env] || null;
-            if (refreshToken) {
-                this.authAgent.setTokens({ refreshToken });
-                await this.setAccountInfo();
-                console.info('signed in: ' + this.account?.email);
-            }
-        } catch (error) {
-            console.info('not signed in:', { error });
-        }
-
-        this.loggingIn = false;
-    }
-
-
-    protected invalidate() {
-        this.authAgent.invalidate();
-        this.account = null;
-    }
-
     async logout() {
+        this.saveRefreshToken(null);
+        // Send a logout request
         const baseUrl = this.settings.get(AC_LOGOUT_URL);
         const request = new Request({
             baseUrl,
-            auth: this.authAgent,
+            auth: this.api.authAgent,
         });
-
-        await request.send('get', '/');
-        this.invalidate();
-        this.saveRefreshToken(null);
+        await request.send('get', '');
     }
 
     async manageAccount() {
@@ -128,12 +147,11 @@ export class ApiLoginController {
         const url = this.getLoginUrl();
         await shell.openExternal(url);
         const code = await this.waitForCode(timeout);
-
         const tokens = await this.exchangeToken(code);
-        this.authAgent.setTokens(tokens);
+        this.api.authAgent.setTokens(tokens);
         if (tokens.refreshToken) {
             this.saveRefreshToken(tokens.refreshToken);
-            await this.setAccountInfo();
+            this.account = await this.fetchAccountInfo();
             console.info('signed in: ' + this.account?.email);
         }
     }
@@ -158,10 +176,9 @@ export class ApiLoginController {
         return new Promise((resolve, reject) => {
             const timer = setTimeout(onTimeout, timeout);
             const events = this.events;
-
             events.addListener('loginResult', onResult);
 
-            // add cancel button & flow?
+            // TODO add cancel button & flow?
             function onResult(code: string) {
                 cleanup();
                 if (!code) {
@@ -180,7 +197,6 @@ export class ApiLoginController {
                 events.removeListener('loginResult', onResult);
             }
         });
-
     }
 
     protected async exchangeToken(code: string) {
@@ -189,37 +205,59 @@ export class ApiLoginController {
             tokenUrl,
             clientId,
         });
-
         const tokens = await oauth2.createToken({
             'grant_type': OAuth2GrantType.AUTHORIZATION_CODE,
             'client_id': clientId,
             'redirect_uri': REDIRECT_URL,
             code,
         });
-
         return tokens;
     }
 
-    protected async setAccountInfo() {
+    protected async fetchAccountInfo(): Promise<AccountInfo> {
+        // TODO tweak those retries
         const request = new Request({
-            auth: this.authAgent,
-            statusCodesToRetry: [[400, 401]],
-            retryDelay: 500,
-            retryAttempts: 4,
+            auth: this.api.authAgent,
+            statusCodesToRetry: [400, 401],
+            retryDelay: 100,
+            retryAttempts: 2,
         });
-
         const accountUrl = this.settings.get(AC_ACCOUNT_INFO_URL);
-        const res = await request.get(accountUrl);
-        this.account = decodeAccountInfoResponse(res);
+        const body = await request.get(accountUrl);
+        const valid = accountInfoValidator(body);
+        if (!valid) {
+            const messages = accountInfoValidator.errors?.map(_ => _.message ?? '').join('\n') || '';
+            throw new Exception({
+                name: 'AccountFetchFailed',
+                message: `Account details invalid:\n\n${messages}`,
+            });
+        }
+        return {
+            email: body.email,
+            emailVerified: body.email_verified ?? false,
+            firstName: body.given_name ?? '',
+            lastName: body.family_name ?? '',
+            username: body.preferred_username ?? '',
+            organisationId: body.organisationId ?? null,
+            userId: body.userId ?? null,
+        };
     }
 
-    protected async saveRefreshToken(refreshToken: string | null) {
-        const tokens = await this.userData.loadData();
-        tokens[this.settings.env] = refreshToken;
-
-        this.userData.update(tokens);
+    protected invalidateAuth() {
+        this.api.authAgent.invalidate();
+        this.account = null;
     }
 
+    protected saveRefreshToken(refreshToken: string | null) {
+        this.tokens[this.settings.env] = refreshToken;
+        this.update();
+    }
+
+}
+
+interface TokensPerEnv {
+    staging: string | null;
+    production: string | null;
 }
 
 interface AccountInfo {
@@ -232,25 +270,18 @@ interface AccountInfo {
     userId: string | null;
 }
 
-function decodeAccountInfoResponse(res: { [key: string]: any }): AccountInfo {
-    assertPropertyType(res, 'email', 'string');
-    return {
-        email: res.email,
-        emailVerified: res.email_verified || false,
-        firstName: res.given_name || '',
-        lastName: res.family_name || '',
-        username: res.preferred_username || '',
-        organisationId: res.organisationId || null,
-        userId: res.userId || null,
-    };
-}
-
-function assertPropertyType(obj: { [key: string]: any }, propertyName: string, type: string, optional: boolean = false) {
-    const val = obj[propertyName];
-    if (val == null && optional) {
-        return;
+const accountInfoSchema: JsonSchema = {
+    type: 'object',
+    required: ['email'],
+    properties: {
+        'email': { type: 'string' },
+        'email_verified': { type: 'boolean' },
+        'given_name': { type: 'string' },
+        'family_name': { type: 'string' },
+        'preferred_username': { type: 'string' },
+        'organisationId': { type: 'string' },
+        'userId': { type: 'string' },
     }
+};
 
-    const actualType = typeof val;
-    assert(actualType === type, `expected ${propertyName} to be ${type}, but got ${actualType}`);
-}
+const accountInfoValidator = ajv.compile(accountInfoSchema);

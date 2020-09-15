@@ -35,7 +35,7 @@ export default {
         },
 
         roxiBarShown() {
-            return this.roxi.isSecretConfigured() && this.apiLogin && this.apiLogin.authorised;
+            return this.roxi.isSecretConfigured() && this.apiLogin && this.apiLogin.isAuthenticated;
         },
 
         sampleSuccess() {

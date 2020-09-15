@@ -4,6 +4,7 @@
         "**/out": true,
         "**/dist": true,
         "**/.tmp": true,
-        "**/static/build": true
+        "**/static/build": true,
+        "**/*.tsbuildinfo": true
     }
 }

@@ -1,4 +1,3 @@
-import { App } from '../app';
 import { UserData } from '../userdata';
 import { RegistryService, ExtensionManifest, Extension, ExtensionSpec, ExtensionVersion, Configuration, numberConfig } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
@@ -27,8 +26,6 @@ export class ExtensionRegistryController {
     protected _manifestMap: Map<string, ExtensionManifest> = new Map();
 
     constructor(
-        @inject('App')
-        protected app: App,
         @inject(StorageController)
         protected storage: StorageController,
         @inject(EventBus)

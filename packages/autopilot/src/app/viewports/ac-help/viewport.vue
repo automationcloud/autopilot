@@ -63,10 +63,10 @@
                     class="button button--primary button--cta"
                     type="click"
                     @click="onLinkClick('dashboard')">
-                    {{ authorised ? 'Dashboard' : 'Sign in to your Dashboard' }}
+                    {{ isAuthenticated ? 'Dashboard' : 'Sign in to your Dashboard' }}
                 </button>
                 <button
-                    v-show="!authorised"
+                    v-show="!isAuthenticated"
                     class="button button--tertiary button--cta"
                     type="click"
                     @click="onLinkClick('signup')">
@@ -104,7 +104,7 @@ export default {
 
     computed: {
         apiLogin() { return this.get(ApiLoginController); },
-        authorised() { return this.apiLogin.authorised; },
+        isAuthenticated() { return this.apiLogin.isAuthenticated; },
     },
 
     methods: {

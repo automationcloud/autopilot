@@ -31,7 +31,7 @@ export default {
     computed: {
         isShown() {
             return this.app.initialized &&
-                !this.apiLogin.authorised &&
+                !this.apiLogin.isAuthenticated &&
                 !this.apiLogin.loggingIn;
         }
     },
