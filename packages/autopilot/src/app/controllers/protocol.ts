@@ -83,7 +83,9 @@ export class ProtocolController {
             this.executionErrors.sort((a, b) => (a.code < b.code ? -1 : 1));
             console.info('Execution errors refreshed');
         } catch (err) {
-            console.warn('Execution errors fetch failed', err);
+            if (err.status !== 401) {
+                console.warn('Execution errors fetch failed', err);
+            }
             this.executionErrors = [];
         }
     }

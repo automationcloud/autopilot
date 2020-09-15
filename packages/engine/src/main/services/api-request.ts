@@ -9,30 +9,23 @@ const AC_API_CLIENT_KEY = stringConfig('AC_API_CLIENT_KEY', '');
 
 @injectable()
 export class ApiRequest {
-    protected _authAgent: OAuth2Agent;
+    authAgent!: OAuth2Agent;
+    request!: Request;
+
     constructor(
         @inject(Configuration)
         protected config: Configuration,
     ) {
-        this._authAgent = new OAuth2Agent({
-            tokenUrl: this.tokenUrl,
-            clientId: this.clientId,
-            clientSecret: this.clientSecret,
+        this.setup();
+    }
+
+    setup() {
+        this.authAgent = new OAuth2Agent({
+            tokenUrl: this.config.get(AC_API_TOKEN_URL),
+            clientId: this.config.get(AC_API_CLIENT_ID),
+            clientSecret: this.config.get(AC_API_CLIENT_KEY),
         });
-    }
-
-    get clientId() { return this.config.get(AC_API_CLIENT_ID); }
-    get tokenUrl() { return this.config.get(AC_API_TOKEN_URL); }
-    get clientSecret() { return this.config.get(AC_API_CLIENT_KEY); }
-    get authAgent() {
-        this._authAgent.params.tokenUrl = this.tokenUrl;
-        this._authAgent.params.clientId = this.clientId;
-        this._authAgent.params.clientSecret = this.clientSecret;
-        return this._authAgent;
-    }
-
-    get request() {
-        return new Request({
+        this.request = new Request({
             baseUrl: this.config.get(AC_API_URL),
             auth: this.authAgent,
         });

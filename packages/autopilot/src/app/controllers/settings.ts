@@ -54,6 +54,7 @@ export class SettingsController {
         this._addEntries(entries);
         this.env = env;
         this._applyConfigValues();
+        this.events.emit('settingsReady');
     }
 
     update() {
