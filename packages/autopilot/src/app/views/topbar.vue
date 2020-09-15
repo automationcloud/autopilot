@@ -147,7 +147,7 @@ export default {
     flex: 0 0 auto;
     display: flex;
     flex-flow: row nowrap;
-    height: 40px;
+    min-height: 40px;
 
     background: var(--color-mono--800);
     color: var(--ui-color--white);

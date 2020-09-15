@@ -3,7 +3,7 @@
         <dev-extensions v-if="isDevEnabled"/>
         <signin-warning class="ext-warning"
             message="to the Automation Cloud to browse and load Extensions"/>
-        <extensions v-if="apiLogin.authorised"/>
+        <extensions v-if="apiLogin.isAuthenticated"/>
     </div>
 </template>
 

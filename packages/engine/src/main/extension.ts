@@ -14,7 +14,7 @@ import Ajv from 'ajv';
 import { JsonSchema } from './schema';
 
 const globAsync = promisify(glob);
-const ajv = new Ajv();
+const ajv = new Ajv({ messages: true });
 
 export interface ExtensionSpec {
     name: string;

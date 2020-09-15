@@ -8,9 +8,9 @@
             </button>
         </template>
         <template v-else>
-            <button v-if="!authorised"
+            <button v-if="!isAuthenticated"
                 class="button button--small button--yellow frameless"
-                @click="apiLogin.startLogin">
+                @click="apiLogin.startLogin()">
                 Sign in
             </button>
             <span v-else
@@ -33,13 +33,9 @@ export default {
     ],
 
     computed: {
-
-        authorised() { return this.apiLogin.authorised; },
-
+        isAuthenticated() { return this.apiLogin.isAuthenticated; },
         loggingIn() { return this.apiLogin.loggingIn; },
-
         text() { return this.apiLogin.userInitial; },
-
     },
 
     methods: {
@@ -66,7 +62,6 @@ export default {
                     },
                 }
             ];
-
             menu.popupMenu(menuItems);
         },
     },

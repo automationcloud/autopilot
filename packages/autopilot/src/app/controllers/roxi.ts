@@ -44,7 +44,7 @@ export class RoxiController {
     async init() {
         const proxy = this.proxy;
         proxy.clearRoutes();
-        if (this.isEnabled() && this.apiLogin.authorised) {
+        if (this.isEnabled() && this.apiLogin.isAuthenticated) {
             this.tags = await this.fetchTags();
             this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTag());
             if (this.proxyConfig != null) {
