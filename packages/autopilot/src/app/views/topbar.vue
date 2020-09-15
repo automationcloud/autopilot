@@ -144,10 +144,11 @@ export default {
 
 <style>
 .topbar {
+    --topbar-height: 38px;
     flex: 0 0 auto;
     display: flex;
     flex-flow: row nowrap;
-    min-height: 40px;
+    min-height: var(--topbar-height);
 
     background: var(--color-mono--800);
     color: var(--ui-color--white);
@@ -173,6 +174,7 @@ export default {
     justify-content: flex-end;
     margin: 0 var(--gap--small);
     -webkit-app-region: no-drag;
+    height: var(--topbar-height);
 }
 
 .topbar__link {

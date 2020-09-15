@@ -40,6 +40,7 @@ export class ExtensionRegistryController {
         this.events.on('extensionsUpdated', () => {
             this._extMap = new Map(this.installedExtensions.map(_ => [_.spec.name, _]));
         });
+        this.events.on('apiAuthUpdated', () => this.init());
         const interval = this.getAutoRefreshInterval();
         if (interval > 0) {
             // TODO consider making those checks cancellable
@@ -54,7 +55,6 @@ export class ExtensionRegistryController {
     }
 
     async init() {
-        // Refresh in background
         this.refresh().catch(() => { });
         await this.initInstalledExtensions();
     }
@@ -140,7 +140,9 @@ export class ExtensionRegistryController {
                 this.installedExtensions.push(ext);
                 console.info('Loaded extension', spec.name, spec.version);
             } catch (error) {
-                console.warn(`Could not install extension ${spec.name}:${spec.version}`, error);
+                if (error.status !== 401) {
+                    console.warn(`Could not install extension ${spec.name}:${spec.version}`, error);
+                }
             }
         });
         await Promise.all(promises);

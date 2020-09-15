@@ -1,15 +1,16 @@
 <template>
     <div class="api">
-        <div class="api__error"
-            v-if="apiLogin.isAuthenticated && viewport.error">
-            <error :err="viewport.error"
-                :allow-dismiss="true"
-                @dismiss="viewport.dismissError()"/>
-        </div>
-
-        <loaded-info/>
-        <signin-warning message="to access Services and run automations on the Automation Cloud"/>
+        <signin-warning class="signin-warning"
+            message="to access Services and run automations on the Automation Cloud"/>
         <template v-if="apiLogin.isAuthenticated">
+            <div class="api__error"
+                v-if="apiLogin.isAuthenticated && viewport.error">
+                <error :err="viewport.error"
+                    :allow-dismiss="true"
+                    @dismiss="viewport.dismissError()"/>
+            </div>
+
+            <loaded-info/>
             <service-list v-if="!this.viewport.selectedService"/>
             <template v-else>
                 <service-view v-if="!this.viewport.selectedJob"/>
@@ -41,3 +42,9 @@ export default {
 
 };
 </script>
+
+<style scoped>
+.signin-warning {
+    padding: 0 var(--gap);
+}
+</style>

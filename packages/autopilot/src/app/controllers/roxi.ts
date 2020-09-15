@@ -68,7 +68,6 @@ export class RoxiController {
             const res = await this.api.getDistinctTags();
             return res;
         } catch (err) {
-            console.warn('Fetch tags failed', err);
             return [];
         }
     }

@@ -12,6 +12,7 @@ import {
     ReporterService,
     ProxyService,
     ResolverService,
+    ApiRequest,
 } from '@automationcloud/engine';
 
 import { LayoutManager } from './managers/layout-manager';
@@ -28,6 +29,7 @@ import { EventBus } from './event-bus';
 import * as ct from './controllers';
 import { ToolsController } from './controllers/tools';
 import ms from 'ms';
+import { AutopilotApiRequest } from './overrides/api-request';
 
 export class App extends Engine {
     // Deprecated
@@ -61,6 +63,7 @@ export class App extends Engine {
         this.container.rebind(Configuration).to(AutopilotConfiguration).inSingletonScope();
         this.container.rebind(FlowService).to(AutopilotFlowService).inSingletonScope();
         this.container.rebind(ReporterService).to(AutopilotReporterService).inSingletonScope();
+        this.container.rebind(ApiRequest).to(AutopilotApiRequest).inSingletonScope();
 
         // TODO inbox: this allows providing IoC with adhoc-bound managers
         // Clean this up after everything is migrated to IoC
