@@ -81,7 +81,8 @@ export class InterceptedRequest {
     responseStatusCode?: number;
     responseHeaders?: CdpHeaderEntry[];
     networkId?: string;
-    modifications: InterceptorModifications = {};
+
+    protected modifications: InterceptorModifications = {};
 
     constructor(public page: Page, payload: CdpRequestPaused) {
         this.requestId = payload.requestId;
@@ -153,7 +154,7 @@ export class InterceptedRequest {
                 method,
                 url,
                 postData,
-                headers: this.getEffectiveHeaders(),
+                headers: this.getEffectiveHeaderEntries(),
             },
         };
     }
@@ -190,18 +191,29 @@ export class InterceptedRequest {
         return undefined;
     }
 
+    getEffectiveHeaderEntries(): CdpHeaderEntry[] | undefined {
+        const headers = this.getEffectiveHeaders();
+        return headers ? convertHeadersToEntries(headers) : undefined;
+    }
+
     protected assignModifications(mods: InterceptorModifications) {
-        Object.assign(this.modifications, {
-            method: mods.method,
-            url: mods.url,
-            postData: mods.postData,
-            headers: mods.headers,
-        });
+        if (mods.method) {
+            this.modifications.method = mods.method;
+        }
+        if (mods.url) {
+            this.modifications.url = mods.url;
+        }
+        if (mods.postData) {
+            this.modifications.postData = mods.postData;
+        }
+        if (mods.headers) {
+            this.modifications.headers = convertHeadersToObject(mods.headers);
+        }
         // Extra headers are merged with previously defined ones
         if (mods.extraHeaders) {
             this.modifications.extraHeaders = {
                 ...this.modifications.extraHeaders,
-                ...mods.extraHeaders,
+                ...convertHeadersToObject(mods.extraHeaders),
             };
         }
     }
