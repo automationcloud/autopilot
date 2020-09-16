@@ -25,6 +25,12 @@ export class ScriptReportController {
         this.reset();
     }
 
+    reset() {
+        this.errors = [];
+        this.warnings = [];
+        this.infos = [];
+    }
+
     async runInspections() {
         this.reset();
         this.busy = true;
@@ -47,12 +53,5 @@ export class ScriptReportController {
             this.busy = false;
         }
     }
-
-    reset() {
-        this.errors = [];
-        this.warnings = [];
-        this.infos = [];
-    }
-
 
 }

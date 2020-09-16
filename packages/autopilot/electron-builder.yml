@@ -9,6 +9,9 @@ mac:
   hardenedRuntime: true
 dmg:
   sign: false
+  window:
+    width: 540
+    height: 338
 win:
   target: nsis
 linux:

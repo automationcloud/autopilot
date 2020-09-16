@@ -31,7 +31,7 @@ const DEFAULT_TOKENS: TokensPerEnv = { staging: null, production: null };
 const ajv = new Ajv();
 
 @injectable()
-@controller()
+@controller({ priority: 2000 })
 export class ApiLoginController {
     protected userData: UserData;
 
@@ -39,7 +39,6 @@ export class ApiLoginController {
     account: AccountInfo | null = null;
     targetEnv: SettingsEnv | null = null;
 
-    initialized: boolean = false;
     loggingIn: boolean = false;
 
     constructor(
@@ -53,9 +52,7 @@ export class ApiLoginController {
         protected api: ApiRequest,
     ) {
         this.userData = this.storage.createUserData('auth', 500);
-        this.events.on('settingsUpdated', () => {
-            this.initLogin();
-        });
+        this.events.on('settingsUpdated', () => this.onSettingsUpdated());
     }
 
     async init() {
@@ -65,21 +62,6 @@ export class ApiLoginController {
 
     update() {
         this.userData.update(this.tokens);
-    }
-
-    async initLogin(force: boolean = false) {
-        const needLogin = force || (this.targetEnv !== this.settings.env);
-        if (!needLogin) {
-            return;
-        }
-        this.invalidate();
-        const { refreshToken } = this;
-        if (!refreshToken) {
-            // Continue unauthenticated
-            return;
-        }
-        this.api.authAgent.setTokens({ refreshToken });
-        await this.authenticate();
     }
 
     get refreshToken() {
@@ -110,6 +92,7 @@ export class ApiLoginController {
             auth: this.api.authAgent,
         });
         await request.send('get', '');
+        this.events.emit('apiAuthUpdated');
     }
 
     async manageAccount() {
@@ -137,11 +120,9 @@ export class ApiLoginController {
         await shell.openExternal(url);
         const code = await this.waitForCode(timeout);
         const tokens = await this.exchangeToken(code);
-        this.api.authAgent.setTokens(tokens);
-        if (tokens.refreshToken) {
-            this.saveRefreshToken(tokens.refreshToken);
-            await this.authenticate();
-        }
+        this.saveRefreshToken(tokens.refreshToken);
+        this.initLogin();
+        this.events.emit('apiAuthUpdated');
     }
 
     protected getLoginUrl(): string {
@@ -158,6 +139,47 @@ export class ApiLoginController {
         });
         const url = this.settings.get(AC_AUTHORIZATION_URL);
         return url + '?' + query;
+    }
+
+    protected async authenticate() {
+        try {
+            this.loggingIn = true;
+            this.account = await this.fetchAccountInfo();
+            console.info('Signed in', this.account?.email);
+        } catch (error) {
+            console.warn('Sign in failed', { error });
+            await this.logout().catch(() => { });
+        } finally {
+            this.loggingIn = false;
+        }
+    }
+
+    protected initLogin() {
+        this.targetEnv = this.settings.env;
+        this.invalidate();
+        const { refreshToken } = this;
+        if (refreshToken) {
+            this.api.authAgent.setTokens({ refreshToken });
+            this.authenticate().catch(() => { });
+        }
+    }
+
+    protected invalidate() {
+        this.api.authAgent.invalidate();
+        this.account = null;
+    }
+
+    protected saveRefreshToken(refreshToken: string | null) {
+        this.tokens[this.settings.env] = refreshToken;
+        this.update();
+    }
+
+    protected async onSettingsUpdated() {
+        if (this.targetEnv === this.settings.env) {
+            return;
+        }
+        this.initLogin();
+        this.events.emit('apiAuthUpdated');
     }
 
     protected async waitForCode(timeout: number): Promise<string> {
@@ -202,21 +224,6 @@ export class ApiLoginController {
         return tokens;
     }
 
-    protected async authenticate() {
-        try {
-            this.loggingIn = true;
-            this.account = await this.fetchAccountInfo();
-            this.events.emit('apiAuthUpdated', this.isAuthenticated);
-            console.info('Signed in', this.account?.email);
-        } catch (error) {
-            console.warn('Sign in failed', { error });
-            await this.logout().catch(() => {});
-            this.events.emit('apiAuthUpdated', this.isAuthenticated);
-        } finally {
-            this.loggingIn = false;
-        }
-    }
-
     protected async fetchAccountInfo(): Promise<AccountInfo> {
         const accountUrl = this.settings.get(AC_ACCOUNT_INFO_URL);
         const request = new Request({
@@ -241,16 +248,6 @@ export class ApiLoginController {
             organisationId: body.organisationId ?? null,
             userId: body.userId ?? null,
         };
-    }
-
-    protected invalidate() {
-        this.api.authAgent.invalidate();
-        this.account = null;
-    }
-
-    protected saveRefreshToken(refreshToken: string | null) {
-        this.tokens[this.settings.env] = refreshToken;
-        this.update();
     }
 
 }

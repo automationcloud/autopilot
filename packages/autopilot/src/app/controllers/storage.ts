@@ -33,8 +33,7 @@ export class StorageController {
         ipcRenderer.send('refreshProfileCount');
     }
 
-    async init() {
-    }
+    async init() {}
 
     createUserData(clusterId: string, debounceSave?: number): UserData {
         return new UserData(this, clusterId, debounceSave);

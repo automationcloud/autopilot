@@ -13,9 +13,10 @@
             </div>
             <div class="section"
                 v-if="extReg.installedManifests.length">
-                <div class="section__subtitle"
-                    @click="expandable.toggleExpand('ext-installed')">
-                    Installed ({{ extReg.installedManifests.length }})
+                <div class="section__subtitle">
+                    <span @click="expandable.toggleExpand('ext-installed')">
+                        Installed ({{ extReg.installedManifests.length }})
+                    </span>
                     <expand id="ext-installed"/>
                 </div>
                 <template v-if="expandable.isExpanded('ext-installed')">

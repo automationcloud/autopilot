@@ -39,7 +39,7 @@ Vue.mixin({
 });
 
 app.init().then(() => {
-    const controllers = app.getControllerInstances();
+    const controllers = app.getControllerInstances().map(_ => _.instance);
     const rootView = new Vue({
         el: '#app',
         template: '<root-view/>',

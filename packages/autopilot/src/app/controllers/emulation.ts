@@ -7,7 +7,7 @@ import { BrowserService, EmulationMode, EmulationService } from '@automationclou
 export type ThrottlingMode = 'none' | '3g' | '2g';
 
 @injectable()
-@controller()
+@controller({ backgroundInit: true })
 export class EmulationController {
     userData: UserData;
 
