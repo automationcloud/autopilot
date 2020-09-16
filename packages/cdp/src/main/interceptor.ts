@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { Page } from './page';
 import { Browser } from './browser';
 import { CdpRequest, CdpRequestPaused, CdpHeaderEntry, CdpNetworkErrorReason, CdpHeaders } from './types';
-import { convertHeadersToEntries } from './util';
+import { convertHeadersToEntries, convertHeadersToObject } from './util';
 
 export type InterceptorScope = Page | Browser;
 export type InterceptorHandler = (req: InterceptedRequest) => Promise<InterceptorOutcome | void>;
@@ -144,8 +144,8 @@ export class InterceptedRequest {
      * @param mods Optional request modifications.
      */
     continue(mods: InterceptorModifications = {}): InterceptorOutcome {
-        this.modifications = mods;
-        const { method, url, postData, headers } = this.modifications;
+        this.assignModifications(mods);
+        const { method, url, postData } = this.modifications;
         return {
             method: 'Fetch.continueRequest',
             params: {
@@ -153,7 +153,7 @@ export class InterceptedRequest {
                 method,
                 url,
                 postData,
-                headers: headers ? convertHeadersToEntries(headers) : undefined,
+                headers: this.getEffectiveHeaders(),
             },
         };
     }
@@ -170,11 +170,40 @@ export class InterceptedRequest {
      * @param mods Optional request modifications.
      */
     pass(mods: InterceptorModifications = {}): InterceptorOutcome {
-        Object.assign(this.modifications, mods);
+        this.assignModifications(mods);
         return {
             method: 'pass',
             params: {},
         };
+    }
+
+    getEffectiveHeaders(): CdpHeaders | undefined {
+        if (this.modifications.headers) {
+            return convertHeadersToObject(this.modifications.headers);
+        }
+        if (this.modifications.extraHeaders) {
+            return {
+                ...this.request.headers,
+                ...convertHeadersToObject(this.modifications.extraHeaders),
+            };
+        }
+        return undefined;
+    }
+
+    protected assignModifications(mods: InterceptorModifications) {
+        Object.assign(this.modifications, {
+            method: mods.method,
+            url: mods.url,
+            postData: mods.postData,
+            headers: mods.headers,
+        });
+        // Extra headers are merged with previously defined ones
+        if (mods.extraHeaders) {
+            this.modifications.extraHeaders = {
+                ...this.modifications.extraHeaders,
+                ...mods.extraHeaders,
+            };
+        }
     }
 }
 
@@ -214,7 +243,12 @@ export interface InterceptorModifications {
      */
     postData?: string;
     /**
+     * If specified, extra headers are added to request.
+     */
+    extraHeaders?: CdpHeaders;
+    /**
      * If specified, request headers are replaced.
+     * Note: this replaces headers completely, with any extra headers discarded.
      */
     headers?: CdpHeaders;
 }

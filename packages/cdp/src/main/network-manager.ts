@@ -190,6 +190,9 @@ export class NetworkManager {
                 if (ireq.modifications.headers) {
                     ireq.modifications.headers = convertHeadersToObject(ireq.modifications.headers);
                 }
+                if (ireq.modifications.extraHeaders) {
+                    ireq.modifications.extraHeaders = convertHeadersToObject(ireq.modifications.extraHeaders);
+                }
                 if (outcome && outcome.method !== 'pass') {
                     await this.page.send(outcome.method, outcome.params);
                     return;
@@ -198,13 +201,13 @@ export class NetworkManager {
                 this.logger.warn('Request interception failed', { error });
             }
         }
-        const { method, url, postData, headers, } = ireq.modifications;
+        const { method, url, postData } = ireq.modifications;
         this.page.sendAndForget('Fetch.continueRequest', {
             requestId: ev.requestId,
             method,
             url,
             postData,
-            headers: headers ? convertHeadersToEntries(headers) : undefined,
+            headers: ireq.getEffectiveHeaders(),
         });
     }
 
