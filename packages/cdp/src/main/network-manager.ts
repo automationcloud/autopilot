@@ -185,11 +185,6 @@ export class NetworkManager {
         for (const interceptor of this.page.allInterceptors()) {
             try {
                 const outcome = await interceptor.handler(ireq);
-                // Legacy scripts may still use entries headers,
-                // this makes sure that they are compatible to newer interfceptors with object headers.
-                if (ireq.modifications.headers) {
-                    ireq.modifications.headers = convertHeadersToObject(ireq.modifications.headers);
-                }
                 if (outcome && outcome.method !== 'pass') {
                     await this.page.send(outcome.method, outcome.params);
                     return;
@@ -198,14 +193,8 @@ export class NetworkManager {
                 this.logger.warn('Request interception failed', { error });
             }
         }
-        const { method, url, postData, headers, } = ireq.modifications;
-        this.page.sendAndForget('Fetch.continueRequest', {
-            requestId: ev.requestId,
-            method,
-            url,
-            postData,
-            headers: headers ? convertHeadersToEntries(headers) : undefined,
-        });
+        const continuePayload = ireq.continue();
+        this.page.sendAndForget(continuePayload.method, continuePayload.params);
     }
 
     /**

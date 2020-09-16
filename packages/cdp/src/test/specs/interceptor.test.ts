@@ -40,7 +40,7 @@ describe('Interceptor', () => {
         });
     });
 
-    context('fail', () => {
+    describe('fail', () => {
         beforeEach(() => {
             runtime.browser.interceptRequests(async req => {
                 logs.push([req.request.url, 'i1']);
@@ -68,7 +68,7 @@ describe('Interceptor', () => {
         });
     });
 
-    context('fulfill', () => {
+    describe('fulfill', () => {
         beforeEach(() => {
             runtime.browser.interceptRequests(async req => {
                 logs.push([req.request.url, 'i1']);
@@ -104,8 +104,8 @@ describe('Interceptor', () => {
         });
     });
 
-    context('continue', () => {
-        context('without modifications', () => {
+    describe('continue', () => {
+        describe('without modifications', () => {
             beforeEach(() => {
                 runtime.browser.interceptRequests(async req => {
                     logs.push([req.request.url, 'i1']);
@@ -130,8 +130,9 @@ describe('Interceptor', () => {
             });
         });
 
-        context('with modifications', () => {
-            beforeEach(() => {
+        describe('with modifications', () => {
+
+            it('rewrites the request', async () => {
                 runtime.browser.interceptRequests(async req => {
                     logs.push([req.request.url, 'i1']);
                     return req.continue({
@@ -141,12 +142,6 @@ describe('Interceptor', () => {
                         ] as any
                     });
                 });
-                runtime.browser.interceptRequests(async req => {
-                    logs.push([req.request.url, 'i2']);
-                });
-            });
-
-            it('rewrites the request', async () => {
                 await runtime.goto('/index.html');
                 const body = await runtime.page.querySelector('body');
                 const { text } = await body!.getInfo();
@@ -157,7 +152,39 @@ describe('Interceptor', () => {
                 assert.equal(href, runtime.getUrl('/index.html'));
             });
 
+            it('adds extra headers', async () => {
+                runtime.browser.interceptRequests(async req => {
+                    return req.pass({
+                        extraHeaders: { 'X-Foo': 'Farr' },
+                    });
+                });
+                runtime.browser.interceptRequests(async req => {
+                    return req.continue({
+                        url: runtime.getUrl('/headers'),
+                        extraHeaders: [
+                            { name: 'X-Boo', value: 'Barr' },
+                        ] as any
+                    });
+                });
+                await runtime.goto('/index.html');
+                const body = await runtime.page.querySelector('body');
+                const { text } = await body!.getInfo();
+                const json = JSON.parse(text);
+                assert.equal(json['x-foo'], 'Farr');
+                assert.equal(json['x-boo'], 'Barr');
+                // Make sure the rewrite is not observed by page
+                const href = await runtime.page.evaluateJson(() => location.href);
+                assert.equal(href, runtime.getUrl('/index.html'));
+            });
+
             it('does not run next interceptors in chain', async () => {
+                runtime.browser.interceptRequests(async req => {
+                    logs.push([req.request.url, 'i1']);
+                    return req.continue();
+                });
+                runtime.browser.interceptRequests(async req => {
+                    logs.push([req.request.url, 'i2']);
+                });
                 await runtime.goto('/index.html');
                 assert(logs.some(_ => _[1] === 'i1'));
                 assert(!logs.some(_ => _[1] === 'i2'));
@@ -165,20 +192,14 @@ describe('Interceptor', () => {
         });
     });
 
-    context('pass', () => {
-        beforeEach(() => {
+    describe('pass', () => {
+
+        it('modifies request', async () => {
             runtime.browser.interceptRequests(async req => {
-                logs.push([req.request.url, 'i1']);
                 return req.pass({
                     url: runtime.getUrl('/index-alt.html'),
                 });
             });
-            runtime.browser.interceptRequests(async req => {
-                logs.push([req.request.url, 'i2']);
-            });
-        });
-
-        it('modifies request', async () => {
             await runtime.goto('/index.html');
             const h1 = await runtime.page.querySelector('h1');
             const { text } = await h1!.getInfo();
@@ -188,7 +209,41 @@ describe('Interceptor', () => {
             assert.equal(href, runtime.getUrl('/index.html'));
         });
 
+        it('adds extra headers', async () => {
+            runtime.browser.interceptRequests(async req => {
+                return req.pass({
+                    extraHeaders: { 'X-Foo': 'Farr' },
+                });
+            });
+            runtime.browser.interceptRequests(async req => {
+                return req.pass({
+                    extraHeaders: { 'X-Boo': 'Barr' }
+                });
+            });
+            runtime.browser.interceptRequests(async req => {
+                return req.pass({
+                    url: runtime.getUrl('/headers'),
+                });
+            });
+            await runtime.goto('/index.html');
+            const body = await runtime.page.querySelector('body');
+            const { text } = await body!.getInfo();
+            const json = JSON.parse(text);
+            assert.equal(json['x-foo'], 'Farr');
+            assert.equal(json['x-boo'], 'Barr');
+            // Make sure the rewrite is not observed by page
+            const href = await runtime.page.evaluateJson(() => location.href);
+            assert.equal(href, runtime.getUrl('/index.html'));
+        });
+
         it('runs next interceptors in chain', async () => {
+            runtime.browser.interceptRequests(async req => {
+                logs.push([req.request.url, 'i1']);
+                return req.pass();
+            });
+            runtime.browser.interceptRequests(async req => {
+                logs.push([req.request.url, 'i2']);
+            });
             await runtime.goto('/index.html');
             assert(logs.some(_ => _[1] === 'i1'));
             assert(logs.some(_ => _[1] === 'i2'));

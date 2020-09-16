@@ -74,6 +74,10 @@
                 "property": "only"
             },
             {
+                "object": "context",
+                "property": "only"
+            },
+            {
                 "object": "it",
                 "property": "only"
             }
