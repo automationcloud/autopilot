@@ -36,11 +36,11 @@ export class ExtensionRegistryController {
         protected config: Configuration,
     ) {
         this.userData = storage.createUserData('extensions');
+        this.events.on('apiAuthUpdated', () => this.init());
         this.events.on('extensionPublished', () => this.refresh());
         this.events.on('extensionsUpdated', () => {
             this._extMap = new Map(this.installedExtensions.map(_ => [_.spec.name, _]));
         });
-        this.events.on('apiAuthUpdated', () => this.init());
         const interval = this.getAutoRefreshInterval();
         if (interval > 0) {
             // TODO consider making those checks cancellable
@@ -55,8 +55,8 @@ export class ExtensionRegistryController {
     }
 
     async init() {
-        this.refresh().catch(() => { });
         await this.initInstalledExtensions();
+        this.refresh().catch(() => { });
     }
 
     update() {

@@ -3,7 +3,6 @@ import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { SettingsController } from './settings';
-import { ApiLoginController } from './api-login';
 import {
     stringConfig,
     booleanConfig,
@@ -19,7 +18,7 @@ const ROXI_CACHE = booleanConfig('ROXI_CACHE', false);
 const ROXI_PARTITION = stringConfig('ROXI_PARTITION', 'Autopilot');
 
 @injectable()
-@controller()
+@controller({ backgroundInit: true })
 export class RoxiController {
     tags: string[] = [];
     proxyConfig: ProxyConfig | null = null;
@@ -33,33 +32,31 @@ export class RoxiController {
         protected api: ApiController,
         @inject(SettingsController)
         protected settings: SettingsController,
-        @inject(ApiLoginController)
-        protected apiLogin: ApiLoginController,
     ) {
-
         const onInit = debounce(this.init.bind(this), 500);
-        this.events.on('settingsUpdated', onInit);
+        this.events.on('apiAuthUpdated', onInit);
     }
 
     async init() {
         const proxy = this.proxy;
         proxy.clearRoutes();
-        if (this.isEnabled() && this.apiLogin.isAuthenticated) {
-            this.tags = await this.fetchTags();
-            this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTag());
-            if (this.proxyConfig != null) {
-                proxy.addRoute(/.*/, {
-                    host: this.getRoxiHost(),
-                    username: encodeURIComponent(
-                        JSON.stringify({
-                            ...this.proxyConfig.connection,
-                            cache: this.isUseCache(),
-                            partition: this.getPartition(),
-                        }),
-                    ),
-                    password: this.getRoxiSecret(),
-                });
-            }
+        if (!this.isEnabled()) {
+            return;
+        }
+        this.tags = await this.fetchTags();
+        this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTag());
+        if (this.proxyConfig != null) {
+            proxy.addRoute(/.*/, {
+                host: this.getRoxiHost(),
+                username: encodeURIComponent(
+                    JSON.stringify({
+                        ...this.proxyConfig.connection,
+                        cache: this.isUseCache(),
+                        partition: this.getPartition(),
+                    }),
+                ),
+                password: this.getRoxiSecret(),
+            });
         }
     }
 

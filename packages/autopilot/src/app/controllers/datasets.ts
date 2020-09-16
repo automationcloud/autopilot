@@ -17,8 +17,8 @@ export interface DatasetInput {
     data: any;
 }
 
-@controller()
 @injectable()
+@controller({ backgroundInit: true })
 export class DatasetsController {
     userData: UserData;
 

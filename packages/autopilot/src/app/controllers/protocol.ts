@@ -6,7 +6,9 @@ import { EventBus } from '../event-bus';
 import { ExecutionError, ApiController } from './api';
 
 @injectable()
-@controller()
+@controller({
+    backgroundInit: true
+})
 export class ProtocolController {
     protocolProvider: ProtocolProvider;
     executionErrors: ExecutionError[] = [];

@@ -105,23 +105,30 @@ export class App extends Engine {
     get protocol() { return this.get(ct.ProtocolController); }
 
     async init() {
-        // New controllers are initialized this way
-        for (const ctl of this.getControllerInstances()) {
+        for (const { descriptor, instance } of this.getControllerInstances()) {
             const startedAt = Date.now();
             try {
-                await ctl.init();
+                if (descriptor.backgroundInit) {
+                    instance.init()
+                        .catch(err => {
+                            console.warn(`Failed to initialize ${instance.constructor.name}`, err);
+                        });
+                } else {
+                    await instance.init();
+                }
             } catch (err) {
-                console.warn(`Failed to initialize ${ctl.constructor.name}, some functionality may be unavailable`, err);
+                console.warn(`Failed to initialize ${instance.constructor.name}`, err);
             } finally {
                 const duration = Date.now() - startedAt;
                 if (duration > 50) {
-                    console.warn(`🐢 ${ctl.constructor.name} initialized in ${ms(duration)}`);
+                    console.warn(`🐢 ${instance.constructor.name} initialized in ${ms(duration)}`);
                 }
             }
         }
 
-        // Note: order of initialization matters atm
+        // DEPRECATED: use controllers instead, port these whenever time allows
         // Old initialization
+        // Note: order of initialization matters atm
         const managers: Controller[] = [
             this.layout,
             this.recipes,
@@ -147,7 +154,13 @@ export class App extends Engine {
     }
 
     getControllerInstances() {
-        return this.getControllerDescriptors().map(_ => this.get(_.class));
+        return this.getControllerDescriptors().map(descriptor => {
+            const instance = this.get(descriptor.class);
+            return {
+                descriptor,
+                instance,
+            };
+        });
     }
 
 }

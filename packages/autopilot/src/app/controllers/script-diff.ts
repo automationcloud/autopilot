@@ -8,8 +8,8 @@ import { controller } from '../controller';
 
 const UI_DIFF_ENABLED = booleanConfig('UI_DIFF_ENABLED', true);
 
-@controller()
 @injectable()
+@controller({ backgroundInit: true })
 export class ScriptDiffController {
     userData: UserData;
 

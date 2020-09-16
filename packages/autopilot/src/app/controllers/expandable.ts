@@ -4,7 +4,7 @@ import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
 
 @injectable()
-@controller()
+@controller({ backgroundInit: true })
 export class ExpandableController {
     userData: UserData;
 
