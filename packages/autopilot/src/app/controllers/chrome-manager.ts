@@ -144,6 +144,9 @@ export class ChromeManagerController {
             `--user-data-dir=${chromeUserDir}`,
         ];
         this.chromeProcess = spawn(chromePath, args, { stdio });
+        this.chromeProcess.on('exit', () => {
+            this.chromeProcess = null;
+        });
         if (this.chromeProcess.stdout) {
             this.chromeProcess.stdout.on('data', data => {
                 console.debug('chrome stdout', data.toString());
