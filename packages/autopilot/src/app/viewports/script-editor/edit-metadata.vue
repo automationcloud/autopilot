@@ -2,6 +2,16 @@
     <div class="edit-metadata">
 
         <div class="form-row">
+            <div class="form-row__label">Strict validation</div>
+            <div class="form-row__controls">
+                <input type="checkbox"
+                    v-model="metadataProxy.draft"
+                    :true-value="false"
+                    :false-value="true"/>
+            </div>
+        </div>
+
+        <div class="form-row">
             <div class="form-row__label">Domain</div>
             <div class="form-row__controls">
                 <select class="input"
@@ -13,18 +23,6 @@
                 </select>
             </div>
         </div>
-
-        <div class="form-row">
-            <div class="form-row__label">Strict validation</div>
-            <div class="form-row__controls">
-                <input type="checkbox"
-                    v-model="metadataProxy.draft"
-                    :true-value="false"
-                    :false-value="true"/>
-            </div>
-        </div>
-
-        <!-- <explore :data="{ executionErrors }"/> -->
 
     </div>
 </template>
@@ -54,10 +52,6 @@ export default {
         availableDomains() {
             return this.protocol.getAvailableDomains();
         },
-
-        executionErrors() {
-            return this.protocol.executionErrors.map(er => er.code);
-        }
 
     }
 
