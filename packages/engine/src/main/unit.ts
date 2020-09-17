@@ -147,6 +147,9 @@ export abstract class Unit<P> extends model.Entity<P> {
      */
     readParams(spec: any) {
         for (const param of this.getParams()) {
+            if (!param.serialized) {
+                continue;
+            }
             // Value is read from either spec, or param defaults, or class-level defaults
             // (whichever one is non-null first)
             const val = [spec[param.name], param.value, (this as any)[param.name]].find(_ => _ != null);
