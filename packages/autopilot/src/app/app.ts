@@ -13,7 +13,7 @@ import {
     ProxyService,
     ResolverService,
     ApiRequest,
-    SsoService,
+    HttpCallbackService,
 } from '@automationcloud/engine';
 
 import { LayoutManager } from './managers/layout-manager';
@@ -31,7 +31,7 @@ import * as ct from './controllers';
 import { ToolsController } from './controllers/tools';
 import ms from 'ms';
 import { AutopilotApiRequest } from './overrides/api-request';
-import { AutopilotSsoService } from './overrides/sso';
+import { AutopilotHttpCallbackService } from './overrides/http-callback';
 
 export class App extends Engine {
     // Deprecated
@@ -66,7 +66,7 @@ export class App extends Engine {
         this.container.rebind(FlowService).to(AutopilotFlowService).inSingletonScope();
         this.container.rebind(ReporterService).to(AutopilotReporterService).inSingletonScope();
         this.container.rebind(ApiRequest).to(AutopilotApiRequest).inSingletonScope();
-        this.container.rebind(SsoService).to(AutopilotSsoService).inSingletonScope();
+        this.container.rebind(HttpCallbackService).to(AutopilotHttpCallbackService).inSingletonScope();
 
         // TODO inbox: this allows providing IoC with adhoc-bound managers
         // Clean this up after everything is migrated to IoC

@@ -1,5 +1,5 @@
 import http from 'http';
-import { activateWindow, findWindowForProfile } from './windows';
+import { sendToAllWindows } from './windows';
 import { AddressInfo } from 'net';
 
 import Koa from 'koa';
@@ -15,7 +15,7 @@ export class ControlServer {
         this.app = new Koa();
         this.router = new Router();
         this.router.get('/acLoginCallback', this.onLoginResult.bind(this));
-        this.router.get('/ssoCallback', this.onSsoCallback.bind(this));
+        this.router.get('/httpCallback', this.onHttpCallback.bind(this));
         this.app.use(
             bodyParser({
                 jsonLimit: '20mb',
@@ -40,13 +40,8 @@ export class ControlServer {
     }
 
     onLoginResult(ctx: Koa.Context) {
-        const profileId = ctx.query.state;
-        const wnd = findWindowForProfile(profileId);
-        if (wnd) {
-            activateWindow(wnd);
-            const code = ctx.query.code;
-            wnd.webContents.send('acLoginResult', code);
-        }
+        const code = ctx.query.code;
+        sendToAllWindows('acLoginResult', code);
         ctx.status = 200;
         ctx.type = 'html';
         ctx.body = `
@@ -57,21 +52,16 @@ export class ControlServer {
         `;
     }
 
-    onSsoCallback(ctx: Koa.Context) {
-        const { profileId } = ctx.query;
-        const wnd = findWindowForProfile(profileId);
-        if (!wnd) {
-            ctx.status = 400;
-            ctx.body = `
-            <h2>Error</h2>
-            <p>Autopilot is unable to process this request.</p>
-            `;
-            return;
-        }
-        wnd.webContents.send('ssoResult', ctx.query);
+    onHttpCallback(ctx: Koa.Context) {
+        sendToAllWindows('httpCallbackResult', {
+            method: ctx.method.toLowerCase(),
+            url: ctx.url,
+            query: ctx.query,
+            headers: ctx.headers,
+            body: ctx.body,
+        });
         ctx.body = `
         <body onload="setTimeout(() => self.close(), 100)">
-            <h2>Authorization successful</h2>
             <p>You may now close the window.</p>
         </body>
         `;
