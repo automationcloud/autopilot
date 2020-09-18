@@ -2,7 +2,7 @@ import { BrowserWindow, screen } from 'electron';
 import { Profile, getLastProfile, updateProfile } from './settings';
 import path from 'path';
 import os from 'os';
-import { getPort } from './server';
+import { controlServer } from './globals';
 
 export const windows: BrowserWindow[] = [];
 
@@ -19,8 +19,12 @@ export function createLastProfileWindow() {
     createWindow(profile);
 }
 
+export function findWindowForProfile(profileId: string) {
+    return windows.find(w => (w as any).profile.id === profileId) ?? null;
+}
+
 export function createWindow(profile: Profile) {
-    const existing = windows.find(w => (w as any)?.profile.id === profile.id);
+    const existing = findWindowForProfile(profile.id);
     if (existing) {
         activateWindow(existing);
     } else {
@@ -73,7 +77,7 @@ function createNewWindow(profile: Profile) {
 
     (wnd as any).profile = profile;
     (wnd as any).appPath = path.resolve(__dirname, '../..');
-    (wnd as any).httpServerPort = getPort();
+    (wnd as any).controlServerPort = controlServer.getServerPort();
     wnd.loadURL('file://' + path.join(__dirname, '../../static/app.html'));
     wnd.on('ready-to-show', () => wnd.show());
     wnd.on('resize', saveBounds);

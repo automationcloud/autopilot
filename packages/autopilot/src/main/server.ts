@@ -1,50 +1,69 @@
 import http from 'http';
-import { windows } from './windows';
+import { sendToAllWindows } from './windows';
 import { AddressInfo } from 'net';
 
-export const server = http.createServer(function (req, res) {
-    const url = new URL('http://localhost' + req.url);
-    switch (url.pathname) {
-        case '/automationcloud/loginResult':
-            onLoginResult(url);
+import Koa from 'koa';
+import Router from 'koa-router2';
+import bodyParser from 'koa-bodyparser';
 
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.write(`<html><body onload="setTimeout(1000, self.close());">
-                <div>
-                    <h2>Automation Cloud Authentication</h2>
-                    <p>You may now close the window</p>
-                </div>
-            </body></html>`);
-            res.end();
-            break;
-        default:
-            res.writeHead(404);
-            res.end(JSON.stringify({ error: 'Resource not found' }));
+export class ControlServer {
+    app: Koa;
+    server: http.Server;
+    router: Router;
+
+    constructor(public port: number = 0) {
+        this.app = new Koa();
+        this.router = new Router();
+        this.router.get('/acLoginCallback', this.onLoginResult.bind(this));
+        this.router.get('/httpCallback', this.onHttpCallback.bind(this));
+        this.app.use(
+            bodyParser({
+                jsonLimit: '20mb',
+            }),
+        );
+        this.app.use(this.router.routes());
+        this.server = http.createServer(this.app.callback());
     }
-});
 
-export function startServer(callback: (port: number) => void) {
-    server.listen(0, () => {
-        const port = getPort();
-        console.info(`Server is running on http://localhost:${port}`);
-        callback(port);
-    });
-}
+    async start() {
+        return new Promise((resolve, reject) => {
+            this.server.listen(this.port, () => {
+                const port = this.getServerPort();
+                console.info(`Server is running on http://localhost:${port}`);
+                resolve();
+            }).on('error', reject);
+        });
+    }
 
-export function getPort(): number {
-    return (server.address() as AddressInfo).port;
-}
+    getServerPort(): number {
+        return (this.server.address() as AddressInfo).port;
+    }
 
-function onLoginResult(url: URL) {
-    const profileId = url.searchParams.get('state');
-    const code = url.searchParams.get('code');
-    const wnd = windows.find(w => (w as any)?.profile.id === profileId);
-    if (wnd) {
-        // activate the window
-        if (wnd.isMinimized()) {
-            wnd.restore();
-        }
-        wnd.focus();
-        wnd.webContents.send('loginResult', code);
+    onLoginResult(ctx: Koa.Context) {
+        const code = ctx.query.code;
+        sendToAllWindows('acLoginResult', code);
+        ctx.status = 200;
+        ctx.type = 'html';
+        ctx.body = `
+        <body onload="setTimeout(() => self.close(), 100)">
+        <h2>Automation Cloud Authentication</h2>
+        <p>You may now close the window.</p>
+        </body>
+        `;
+    }
+
+    onHttpCallback(ctx: Koa.Context) {
+        sendToAllWindows('httpCallbackResult', {
+            method: ctx.method.toLowerCase(),
+            url: ctx.url,
+            query: ctx.query,
+            headers: ctx.headers,
+            body: ctx.body,
+        });
+        ctx.body = `
+        <body onload="setTimeout(() => self.close(), 100)">
+            <p>You may now close the window.</p>
+        </body>
+        `;
     }
 }

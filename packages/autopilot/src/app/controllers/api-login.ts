@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import querystring from 'querystring';
 import Ajv from 'ajv';
-import { shell } from 'electron';
+import { shell, ipcRenderer } from 'electron';
 import { injectable, inject } from 'inversify';
 import {
     ApiRequest,
@@ -17,9 +17,7 @@ import { EventBus } from '../event-bus';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
 import { SettingsController, SettingsEnv } from './settings';
-import { httpServerPort } from '../globals';
-
-const REDIRECT_URL = `http://localhost:${httpServerPort}/automationcloud/loginResult`;
+import { controlServerPort } from '../globals';
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
 const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
@@ -53,6 +51,7 @@ export class ApiLoginController {
     ) {
         this.userData = this.storage.createUserData('auth', 500);
         this.events.on('settingsUpdated', () => this.onSettingsUpdated());
+        ipcRenderer.on('acLoginResult', (_ev, code: string) => this.events.emit('acLoginResult', code));
     }
 
     async init() {
@@ -134,11 +133,15 @@ export class ApiLoginController {
             nonce,
             scope: 'openid',
             'client_id': clientId,
-            'redirect_uri': REDIRECT_URL,
+            'redirect_uri': this.getRedirectUrl(),
             'response_type': 'code',
         });
         const url = this.settings.get(AC_AUTHORIZATION_URL);
         return url + '?' + query;
+    }
+
+    protected getRedirectUrl() {
+        return `http://localhost:${controlServerPort}/acLoginCallback`;
     }
 
     protected async authenticate() {
@@ -186,7 +189,7 @@ export class ApiLoginController {
         return new Promise((resolve, reject) => {
             const timer = setTimeout(onTimeout, timeout);
             const events = this.events;
-            events.addListener('loginResult', onResult);
+            events.addListener('acLoginResult', onResult);
 
             // TODO add cancel button & flow?
             function onResult(code: string) {
@@ -218,7 +221,7 @@ export class ApiLoginController {
         const tokens = await oauth2.createToken({
             'grant_type': OAuth2GrantType.AUTHORIZATION_CODE,
             'client_id': clientId,
-            'redirect_uri': REDIRECT_URL,
+            'redirect_uri': this.getRedirectUrl(),
             code,
         });
         return tokens;

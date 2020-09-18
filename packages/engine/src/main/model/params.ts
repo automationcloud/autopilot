@@ -17,7 +17,16 @@ export type BasicParamType = 'string' | 'enum' | 'number' | 'boolean' | 'selecto
  *
  * @internal
  */
-export type AdvancedParamType = 'json' | 'javascript' | 'definition' | 'template' | 'keys' | 'recordset' | 'pipeline' | 'preview';
+export type AdvancedParamType =
+    'json' |
+    'javascript' |
+    'definition' |
+    'template' |
+    'keys' |
+    'recordset' |
+    'pipeline' |
+    'button' |
+    'preview';
 
 /**
  * All possible parameter types.
@@ -31,7 +40,15 @@ export type ParamType = BasicParamType | AdvancedParamType;
  *
  * @internal
  */
-export type StringSource = 'attributes' | 'classList' | 'inputs' | 'outputs' | 'globals' | 'locals' | 'dataPaths' | 'errorCodes';
+export type StringSource =
+    'attributes' |
+    'classList' |
+    'inputs' |
+    'outputs' |
+    'globals' |
+    'locals' |
+    'dataPaths' |
+    'errorCodes';
 
 /**
  * Represents parameter metadata for actions and pipes.
@@ -45,6 +62,7 @@ export type StringSource = 'attributes' | 'classList' | 'inputs' | 'outputs' | '
 export interface ParamSpec {
     type: BasicParamType | AdvancedParamType;
     name: string;
+    serialized: boolean;
     label?: string;
     help?: string;
     placeholder?: string;
@@ -194,6 +212,18 @@ export function Recordset(spec: { label?: string; help?: string; singular: strin
 }
 
 /**
+ * Declares Button parameter.
+ * @param spec
+ * @public
+ */
+export function Button(spec: { label?: string; help?: string } = {}) {
+    return paramDecorator('button', {
+        ...spec,
+        serialized: false,
+    });
+}
+
+/**
  * Declares Preview parameter, used to display the intermediary of an action or pipe.
  * The parameter is rendered as JSON explorer component.
  *
@@ -228,10 +258,11 @@ function paramDecorator(type: ParamType, spec: any) {
         const params: ParamSpec[] = Reflect.getOwnMetadata(PARAMS_SYMBOL, target) || [];
         params.push({
             value: null,
+            serialized: true,
+            label: util.humanize(propertyKey),
             ...spec,
             name: propertyKey,
             type,
-            label: spec.label || util.humanize(propertyKey),
         });
         Reflect.defineMetadata(PARAMS_SYMBOL, params, target);
     };

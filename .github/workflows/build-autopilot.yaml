@@ -29,3 +29,11 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+
+      - name: Notify Slack on Success
+        if: ${{ success() }}
+        uses: docker://automationcloud/rsslack:latest
+        with:
+          channel: "#autopilot"
+          message: ":rocket: Autopilot pre-release ${{ env.TAG }} is now available: https://github.com/automationcloud/autopilot/releases/tag/${{ env.TAG }}"
+          slack_token: ${{ secrets.SLACK_TOKEN }}
