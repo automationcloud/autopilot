@@ -51,7 +51,6 @@
                     <i v-else class="fas fa-plus"></i>
                 </button>
             </template>
-            <!-- TODO spinner when updating -->
         </aside>
 
     </div>
