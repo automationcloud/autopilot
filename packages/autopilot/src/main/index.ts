@@ -1,7 +1,7 @@
 import { app, ipcMain } from 'electron';
 import { getProfile, getAllProfiles, createNewProfile } from './settings';
 import { windows, createWindow, createLastProfileWindow, activateWindow } from './windows';
-import { startServer } from './server';
+import { controlServer } from './globals';
 import { checkForUpdates } from './updater';
 import { createUbioSymlink } from '@automationcloud/engine';
 
@@ -17,16 +17,16 @@ if (!primary) {
     app.quit();
 }
 
-app.on('ready', () => {
-    checkForUpdates();
-    app.name = 'UBIO Autopilot';
-    startServer(port => {
-        if (!port) {
-            // Server not started or invalid port
-            app.quit();
-        }
+app.on('ready', async () => {
+    try {
+        checkForUpdates();
+        app.name = 'UBIO Autopilot';
+        await controlServer.start();
         createLastProfileWindow();
-    });
+    } catch (error) {
+        console.error(error);
+        app.quit();
+    }
 });
 
 app.on('second-instance', () => {

@@ -21,6 +21,8 @@ export class ExtensionRegistryController {
     searchQuery: string = '';
     loading: boolean = false;
     error: Error | null = null;
+    // Manifest which is being "worked on" when installing, uninstalling and updating extension
+    processingManifest: ExtensionManifest | null = null;
 
     protected _extMap: Map<string, Extension> = new Map();
     protected _manifestMap: Map<string, ExtensionManifest> = new Map();
@@ -153,8 +155,9 @@ export class ExtensionRegistryController {
         if (this.loading) {
             return;
         }
-        this.loading = true;
         try {
+            this.loading = true;
+            this.processingManifest = manifest;
             const ext = await this.registry.loadExtension(manifest.name, manifest.latestVersion);
             this._addExtension(ext);
             this.events.emit('extensionsUpdated');
@@ -163,6 +166,7 @@ export class ExtensionRegistryController {
             console.warn(`Could not install extension ${manifest.name}`, err);
         } finally {
             this.loading = false;
+            this.processingManifest = null;
         }
     }
 
@@ -170,8 +174,9 @@ export class ExtensionRegistryController {
         if (this.loading) {
             return;
         }
-        this.loading = true;
         try {
+            this.loading = true;
+            this.processingManifest = manifest;
             this.installedExtensions = this.installedExtensions.filter(e => e.spec.name !== manifest.name);
             this.update();
             this.events.emit('extensionsUpdated');
@@ -180,6 +185,7 @@ export class ExtensionRegistryController {
             console.warn(`Could not uninstall extension ${manifest.name}`, err);
         } finally {
             this.loading = false;
+            this.processingManifest = null;
         }
     }
 
@@ -187,8 +193,9 @@ export class ExtensionRegistryController {
         if (this.loading) {
             return;
         }
-        this.loading = true;
         try {
+            this.loading = true;
+            this.processingManifest = manifest;
             const ext = await this.registry.loadExtension(manifest.name, manifest.latestVersion);
             this._addExtension(ext);
             this.events.emit('extensionsUpdated');
@@ -197,6 +204,7 @@ export class ExtensionRegistryController {
             console.warn(`Extension update failed ${manifest.name}`, err);
         } finally {
             this.loading = false;
+            this.processingManifest = null;
         }
     }
 

@@ -26,20 +26,29 @@
                 <button v-if="extReg.isOutdated(manifest)"
                     class="button button--yellow button--icon"
                     @click="extReg.updateExtension(manifest)"
-                    title="Update the extension to latest version">
-                    <i class="fas fa-arrow-circle-up"></i>
+                    title="Update the extension to latest version"
+                    :disabled="extReg.loading">
+                    <i v-if="isProcessing"
+                        class="fas fa-spinner fa-spin"></i>
+                    <i v-else class="fas fa-arrow-circle-up"></i>
                 </button>
                 <button class="button button--secondary button--icon"
                     @click="extReg.uninstallExtension(manifest)"
-                    title="Uninstall extension">
-                    <i class="fas fa-times"></i>
+                    title="Uninstall extension"
+                    :disabled="extReg.loading">
+                    <i v-if="isProcessing"
+                        class="fas fa-spinner fa-spin"></i>
+                    <i v-else class="fas fa-times"></i>
                 </button>
             </template>
             <template v-else>
                 <button class="button button--primary button--icon"
                     @click="extReg.installExtension(manifest)"
-                    title="Install extension">
-                    <i class="fas fa-plus"></i>
+                    title="Install extension"
+                    :disabled="extReg.loading">
+                    <i v-if="isProcessing"
+                        class="fas fa-spinner fa-spin"></i>
+                    <i v-else class="fas fa-plus"></i>
                 </button>
             </template>
         </aside>
@@ -49,9 +58,13 @@
 
 <script>
 import { util } from '@automationcloud/engine';
-import { ExtensionRegistryController, ExpandableController } from '~/controllers';
 
 export default {
+
+    inject: [
+        'expandable',
+        'extReg',
+    ],
 
     props: {
         manifest: { type: Object, required: true },
@@ -59,8 +72,6 @@ export default {
     },
 
     computed: {
-        expandable() { return this.get(ExpandableController); },
-        extReg() { return this.get(ExtensionRegistryController); },
 
         title() {
             return this.manifest.title ||
@@ -73,7 +84,11 @@ export default {
 
         description() {
             return this.manifest.description.trim();
-        }
+        },
+
+        isProcessing() {
+            return this.extReg.loading && this.extReg.processingManifest === this.manifest;
+        },
 
     },
 

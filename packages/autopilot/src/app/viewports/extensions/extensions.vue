@@ -29,10 +29,11 @@
             </div>
             <div class="section"
                 v-if="extReg.availableManifests.length">
-                <div class="section__subtitle"
-                    @click="expandable.toggleExpand('ext-available')">
-                    <!-- <expand id="ext-available"/> -->
+                <div class="section__subtitle">
+                    <span @click="expandable.toggleExpand('ext-available')">
                     Available ({{ extReg.availableManifests.length }})
+                    </span>
+                    <!-- <expand id="ext-available"/> -->
                 </div>
                 <!-- <template v-if="expandable.isExpanded('ext-available')"> -->
                     <ext-item

@@ -13,6 +13,7 @@
 import ParamMixin from './param-mixin';
 
 import ParamBoolean from './param-boolean.vue';
+import ParamButton from './param-button.vue';
 import ParamDefinition from './param-definition.vue';
 import ParamEnum from './param-enum.vue';
 import ParamJavascript from './param-javascript.vue';
@@ -32,6 +33,7 @@ export default {
 
     components: {
         ParamBoolean,
+        ParamButton,
         ParamDefinition,
         ParamEnum,
         ParamJavascript,

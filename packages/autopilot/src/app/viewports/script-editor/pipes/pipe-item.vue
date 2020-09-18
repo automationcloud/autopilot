@@ -33,7 +33,8 @@
                     :stop-propagation="true"
                     :id="pipe.id"/>
 
-                <span class="pipe-label">
+                <span class="pipe-label"
+                    v-if="!pipe.label">
                     <span class="pipe-ns"
                         v-if="metadata.ns">
                         {{ metadata.ns }}.
@@ -491,6 +492,7 @@ input.enabled {
 }
 
 .custom-label {
+    margin: 0 var(--gap--small);
     background: var(--color-blue--500);
     cursor: pointer;
 }
