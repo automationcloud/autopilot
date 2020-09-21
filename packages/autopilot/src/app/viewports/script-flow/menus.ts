@@ -311,7 +311,7 @@ export class ScriptFlowMenusController {
         }
         for (const input of domain.getInputs()) {
             const typeDef = input.getTypeDef();
-            const spec = typeDef.spec;
+            const spec = typeDef?.spec ?? {};
             if (spec.type === 'string') {
                 yield {
                     label: input.key,

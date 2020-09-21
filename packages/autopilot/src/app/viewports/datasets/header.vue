@@ -1,7 +1,6 @@
 <template>
     <div class="header">
-        <modal class="section"
-            :shown="editing"
+        <modal :shown="editing"
             @close="editing = false">
             <div class="section__title">
                 Edit dataset
@@ -9,7 +8,7 @@
             <div class="form-row">
                 <div class="form-row__label">Name</div>
                 <div class="form-row__controls">
-                    <input class="input"
+                    <input class="input stretch"
                         v-model="datasetProxy.name"/>
                 </div>
             </div>
@@ -110,6 +109,5 @@ export default {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-    color: #fff;
 }
 </style>

@@ -54,7 +54,7 @@ export class ProtocolController {
         if (!latest) {
             return null;
         }
-        return latest.getDomain(this.project.metadata.domainId);
+        return latest.getDomain(this.project.metadata.domainId) ?? null;
     }
 
     getInputKeys(): string[] {
