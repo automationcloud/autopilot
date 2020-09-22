@@ -58,8 +58,8 @@ export class QueueConsumer {
             try {
                 this.state.state = 'idle';
                 this.logger.info('Consuming executions from Redis list');
-                const jobId = await this.receiveJobId();
-                await this.runner.run(jobId);
+                const { jobId, organisationId } = await this.receiveItem();
+                await this.runner.run(jobId, organisationId);
             } catch (error) {
                 if (this.shouldConsume) {
                     this.logger.warn('Failed to run job, will try again in 2 seconds', { error });
@@ -75,10 +75,18 @@ export class QueueConsumer {
         }
     }
 
-    async receiveJobId(): Promise<string> {
+    async receiveItem(): Promise<QueueItem> {
         const { workerTag } = this.state;
         const [, value] = await this.redis.brpop(`push:${workerTag}:jobs`, 0 as any);
         const { data: payload } = JSON.parse(value);
-        return payload.jobId;
+        return {
+            jobId: payload.jobId,
+            organisationId: payload.organisationId,
+        };
     }
+}
+
+interface QueueItem {
+    jobId: string;
+    organisationId: string;
 }

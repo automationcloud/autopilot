@@ -14,6 +14,7 @@ export class WorkerState {
     state: 'idle' | 'initializing' | 'running' | 'consume-failing' | 'terminating-execution' | 'disconnected' = 'idle';
     execution: Execution | null = null;
     script: Script | null = null;
+    organisationId: string | null = null;
     executionId: string | null = null;
     jobId: string | null = null;
     serviceId: string | null = null;
@@ -69,6 +70,7 @@ export class WorkerState {
         this.state = 'idle';
         this.execution = null;
         this.script = null;
+        this.organisationId = null;
         this.executionId = null;
         this.jobId = null;
         this.serviceId = null;

@@ -23,6 +23,14 @@ export class ApiService {
         protected api: ApiRequest,
     ) {}
 
+    setOrganisationId(organisationId: string) {
+        this.api.request.config.headers['x-ubio-organisation-id'] = organisationId;
+    }
+
+    clearOrganisationId() {
+        delete this.api.request.config.headers['x-ubio-organisation-id'];
+    }
+
     async createExecution(spec: { jobId: string; workerId: string; workerVersion: string }): Promise<Execution> {
         return await this.api.post(`/private/executions`, {
             body: {
