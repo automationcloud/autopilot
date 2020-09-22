@@ -55,10 +55,12 @@ export class Runner {
         });
     }
 
-    async run(jobId: string): Promise<void> {
+    async run(jobId: string, organisationId: string): Promise<void> {
         this.state.jobStartedAt = Date.now();
+        this.state.organisationId = organisationId;
         this.state.jobId = jobId;
         this.state.state = 'initializing';
+        this.api.setOrganisationId(organisationId);
         const execution = await this.api.createExecution({
             jobId,
             workerId: this.state.workerId,
@@ -189,6 +191,7 @@ export class Runner {
             this.logger.error('Execution finalization failed', { error });
         } finally {
             this.state.clear();
+            this.api.clearOrganisationId();
         }
     }
 
