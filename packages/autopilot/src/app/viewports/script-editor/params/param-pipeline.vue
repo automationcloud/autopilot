@@ -1,11 +1,12 @@
 <template>
     <div class="param--pipeline">
 
-        <template v-if="pipelineController">
-            <div class="param__title">
-                {{ label }}
-            </div>
+        <div class="param__title"
+            v-if="isShowLabel">
+            {{ label }}
+        </div>
 
+        <template v-if="pipelineController">
             <pipeline-nested
                 :pipeline-controller="pipelineController"
                 :pipeline="value"/>
@@ -27,15 +28,22 @@ export default {
 
     mixins: [ParamMixin],
 
-    components: {
-        // PipelineNested: () => import('./pipeline-nested.vue')
-    },
+    components: {},
 
     beforeCreate() {
         // https://vuejs.org/v2/guide/components-edge-cases.html#Circular-References-Between-Components
         this.$options.components.PipelineNested = require('../pipes/pipeline-nested.vue').default;
         this.$options.components.Pipeline = require('../pipes/pipeline.vue').default;
-    }
+    },
+
+    computed: {
+
+        isShowLabel() {
+            const hasMultiplePipelines = this.item.getParams().filter(_ => _.type === 'pipeline').length > 1;
+            return this.pipelineController || hasMultiplePipelines;
+        },
+
+    },
 
 };
 </script>

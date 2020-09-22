@@ -16,20 +16,25 @@
 
 .param--pipeline {
     flex: 1;
-    margin: var(--gap) 0;
-    padding: 0 var(--gap);
+    padding: var(--gap);
 }
 
 .param--pipeline .param--pipeline {
     background: #fff;
-    padding-top: var(--gap);
+    padding-bottom: 0;
     padding-right: 0;
     margin-bottom: 0;
 }
 
 .param__title {
-    font-weight: bold;
     padding-bottom: var(--gap--small);
+
+    font-size: var(--font-size--small);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    color: var(--color-cool--500);
 }
 
 .param__field {
