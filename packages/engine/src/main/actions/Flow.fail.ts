@@ -24,8 +24,13 @@ This message can be obtained by constructing a pipeline which returns a string v
 
     @params.Pipeline()
     pipeline!: Pipeline;
+
     @params.String({ source: 'errorCodes' })
     errorCode: string = 'Failure';
+
+    getLabel() {
+        return this.errorCode;
+    }
 
     async exec() {
         const result = await this.retry(async () => {

@@ -18,6 +18,7 @@ import { UserData } from '../userdata';
 import { StorageController } from './storage';
 import { SettingsController, SettingsEnv } from './settings';
 import { controlServerPort } from '../globals';
+import { EventEmitter } from 'events';
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
 const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
@@ -32,6 +33,7 @@ const ajv = new Ajv();
 @controller({ priority: 2000 })
 export class ApiLoginController {
     protected userData: UserData;
+    protected emitter = new EventEmitter();
 
     tokens: TokensPerEnv = { ...DEFAULT_TOKENS };
     account: AccountInfo | null = null;
@@ -51,7 +53,7 @@ export class ApiLoginController {
     ) {
         this.userData = this.storage.createUserData('auth', 500);
         this.events.on('settingsUpdated', () => this.onSettingsUpdated());
-        ipcRenderer.on('acLoginResult', (_ev, code: string) => this.events.emit('acLoginResult', code));
+        ipcRenderer.on('acLoginResult', (_ev, code: string) => this.emitter.emit('acLoginResult', code));
     }
 
     async init() {
@@ -188,8 +190,8 @@ export class ApiLoginController {
     protected async waitForCode(timeout: number): Promise<string> {
         return new Promise((resolve, reject) => {
             const timer = setTimeout(onTimeout, timeout);
-            const events = this.events;
-            events.addListener('acLoginResult', onResult);
+            const emitter = this.emitter;
+            emitter.addListener('acLoginResult', onResult);
 
             // TODO add cancel button & flow?
             function onResult(code: string) {
@@ -207,7 +209,7 @@ export class ApiLoginController {
 
             function cleanup() {
                 clearTimeout(timer);
-                events.removeListener('loginResult', onResult);
+                emitter.removeListener('loginResult', onResult);
             }
         });
     }
