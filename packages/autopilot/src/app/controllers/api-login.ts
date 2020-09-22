@@ -109,7 +109,8 @@ export class ApiLoginController {
             this.loggingIn = true;
             await this.login(timeout);
         } catch (error) {
-            alert(error.message);
+            const msg = ['Login failed', error.message].filter(Boolean).join(': ');
+            alert(msg);
             console.error(error);
         } finally {
             this.loggingIn = false;
