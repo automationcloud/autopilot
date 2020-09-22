@@ -12,7 +12,11 @@ export class TestHelpers {
     ) {}
 
     async getExecutionById(executionId: string): Promise<any> {
-        return await this.api.get(`/private/executions/${executionId}`);
+        return await this.api.get(`/private/executions/${executionId}`, {
+            headers: {
+                'x-ubio-organisation-id': 'test-organisation-id',
+            }
+        });
     }
 
     async createExecution(execution: any): Promise<any> {
@@ -23,7 +27,7 @@ export class TestHelpers {
 
     async runNewExecution(executionSpec: any): Promise<void> {
         const execution = await this.createExecution(executionSpec);
-        await this.runner.run(execution.id);
+        await this.runner.run(execution.id, 'test-organisation-id');
     }
 
     async getProxyRoute(id: string) {

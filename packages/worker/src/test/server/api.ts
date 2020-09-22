@@ -25,6 +25,16 @@ async function getScript(name: string) {
     return Json5.parse(text);
 }
 
+router.use('/api/private', (ctx, next) => {
+    const organisationId = ctx.headers['x-ubio-organisation-id'];
+    if (organisationId !== 'test-organisation-id') {
+        ctx.status = 403;
+        ctx.body = { message: 'organisationId not specified' };
+        return;
+    }
+    return next();
+});
+
 router.post('/api/~/executions', ctx => {
     const { id, serviceId, input, options, ip, proxyId, checkpointId = null } = ctx.request.body as any;
     const execution = {
