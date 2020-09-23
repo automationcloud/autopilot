@@ -6,5 +6,7 @@
         "**/.tmp": true,
         "**/static/build": true,
         "**/*.tsbuildinfo": true
-    }
+    },
+    "licenser.license": "AL2",
+    "licenser.author": "Ubio Limited"
 }

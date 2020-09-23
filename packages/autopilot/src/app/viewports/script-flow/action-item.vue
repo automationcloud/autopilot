@@ -51,13 +51,11 @@
                     {{ label }}
                 </span>
 
-                <div class="group group--gap--small">
-                    <span class="badge badge--cool badge--inline badge--small"
-                        v-if="action.$iteration != null"
-                        title="Current loop iteration">
-                      {{ action.$iteration }}
-                    </span>
-                </div>
+                <span v-if="action.$iteration != null"
+                    class="hint"
+                    title="Current loop iteration">
+                    {{ action.$iteration }}
+                </span>
             </div>
 
             <div class="runtime">
@@ -346,7 +344,7 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0 2px 0 var(--gap--small);
+    margin-left: var(--gap--small);
 }
 
 .label--dynamic {
@@ -354,6 +352,14 @@ export default {
     color: #fff;
     background: var(--color-blue--500);
     border-radius: 2px;
+}
+
+.hint {
+    padding: 2px 4px;
+    color: #fff;
+    background: var(--color-blue--500);
+    border-radius: 2px;
+    margin-left: var(--gap--small);
 }
 
 .delay--slow {
