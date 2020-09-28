@@ -15,6 +15,7 @@
 export * from './api-login';
 export * from './api';
 export * from './app-menu';
+export * from './autopilot-stats';
 export * from './chrome-download';
 export * from './chrome-manager';
 export * from './datasets';

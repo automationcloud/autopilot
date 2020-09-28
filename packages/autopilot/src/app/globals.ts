@@ -17,9 +17,10 @@ import path from 'path';
 
 // Extract properties set by main process
 const wnd = remote.getCurrentWindow();
-const { profile, appPath, controlServerPort } = wnd as any;
+const { profile, appPath, controlServerPort, instanceId } = wnd as any;
 
 export {
+    instanceId,
     profile,
     appPath,
     controlServerPort,

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { BrowserWindow, screen } from 'electron';
-import { Profile, getLastProfile, updateProfile } from './settings';
+import { Profile, getLastProfile, updateProfile, getSettings } from './settings';
 import path from 'path';
 import os from 'os';
 import { controlServer } from './globals';
@@ -88,7 +88,8 @@ function createNewWindow(profile: Profile) {
         title: `Autopilot (${profile.name})`,
         titleBarStyle: os.platform() === 'darwin' ? 'hiddenInset' : 'hidden',
     });
-
+    const { instanceId } = getSettings();
+    (wnd as any).instanceId = instanceId;
     (wnd as any).profile = profile;
     (wnd as any).appPath = path.resolve(__dirname, '../..');
     (wnd as any).controlServerPort = controlServer.getServerPort();
