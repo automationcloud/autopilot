@@ -18,11 +18,19 @@ import { promises as fs, readFileSync } from 'fs';
 import path from 'path';
 import debounce from 'debounce-promise';
 
+const DEFAULT_SETTINGS: Settings = {
+    instanceId: uuid.v4(),
+    channel: 'stable',
+    lastProfileId: 'default',
+    profiles: [newProfile('default', 'Default')],
+};
 const settingsFile = path.resolve(os.homedir(), '.autopilot', 'settings.json');
 const settings = loadSettingsSync();
 const saveSettings = debounce(_saveSettings, 300);
+saveSettings();
 
 export interface Settings {
+    instanceId: string;
     lastProfileId: string;
     profiles: Profile[];
     channel: 'stable' | 'beta';
@@ -38,29 +46,23 @@ export interface Profile {
 }
 
 function loadSettingsSync(): Settings {
+    const settings: Settings = { ...DEFAULT_SETTINGS };
     try {
         const text = readFileSync(settingsFile, 'utf-8');
-        return JSON.parse(text);
+        const json = JSON.parse(text);
+        Object.assign(settings, json);
     } catch (err) {
         if (err.code !== 'ENOENT') {
             console.warn(err);
         }
-        return createDefaultSettings();
     }
+    return settings;
 }
 
 async function _saveSettings() {
     const dir = path.dirname(settingsFile);
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(settingsFile, JSON.stringify(settings, null, 2), 'utf-8');
-}
-
-function createDefaultSettings(): Settings {
-    return {
-        channel: 'stable',
-        lastProfileId: 'default',
-        profiles: [newProfile('default', 'Default')],
-    };
 }
 
 export function getSettings() {
