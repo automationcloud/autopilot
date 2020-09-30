@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ApiRequest } from '@automationcloud/engine';
+import { ApiRequest, BrowserService } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { instanceId } from '../globals';
 import os from 'os';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
+
+// eslint-disable-next-line import/no-commonjs
+const pkg = require('../../../package.json');
 
 const startedAt = Date.now();
 
@@ -30,6 +33,8 @@ export class AutopilotStatsController {
         protected apiRequest: ApiRequest,
         @inject(EventBus)
         protected events: EventBus,
+        @inject(BrowserService)
+        protected browser: BrowserService,
     ) {}
 
     async init() {
@@ -38,9 +43,12 @@ export class AutopilotStatsController {
 
     async trackInstance() {
         try {
+
             await this.apiRequest.post('/AutopilotStats/trackInstance', {
                 body: {
                     instanceId,
+                    version: pkg.version,
+                    chromeVersion: await this.getBrowserVersion(),
                     platform: os.platform(),
                     cpuCores: os.cpus().length,
                     startupTime: Date.now() - startedAt,
@@ -48,6 +56,15 @@ export class AutopilotStatsController {
             });
         } catch (error) {
             console.warn('Cannot report stats', error);
+        }
+    }
+
+    protected async getBrowserVersion() {
+        try {
+            const info = await this.browser.getVersion();
+            return info.browserVersion;
+        } catch (error) {
+            return 'unknown';
         }
     }
 
