@@ -32,8 +32,14 @@
                 v-if="hasChildren"/>
 
             <i class="action-icon"
+                v-if="!iconIsUrl"
                 :class="icon">
             </i>
+
+            <img 
+                :src="icon" 
+                v-if="iconIsUrl"
+                class="favicon">
 
             <div class="summary">
                 <span class="type">
@@ -156,6 +162,10 @@ export default {
 
         icon() {
             return this.app.ui.objects.getActionIcon(this.action.type);
+        },
+
+        iconIsUrl() {
+            return this.app.ui.objects.getActionIcon(this.action.type).match(/^https?:/);
         },
 
         isFinished() {
@@ -326,6 +336,12 @@ export default {
 
 .expand + .action-icon {
     margin-left: -8px;
+}
+
+.favicon {
+    width: 18px;
+    height: 18px;
+    margin: 0 8px 0 -2px;
 }
 
 .summary {
