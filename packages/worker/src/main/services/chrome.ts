@@ -58,7 +58,7 @@ export class ChromeLaunchService {
                 // '--disable-seccomp-filter-sandbox',
                 `--disk-cache-dir=${this.getCacheDir()}`,
                 '--disk-cache-size=104857600', // 100MB
-                `--proxy-server=http://127.0.0.1:${this.proxy.getProxyPort()}`,
+                //`--proxy-server=http://127.0.0.1:${this.proxy.getProxyPort()}`,
                 '--ignore-certificate-errors',
                 '--window-size=1280,800',
                 `--ignore-certificate-errors-spki-list=${SPKI_SIGNATURES.join(',')}`,
