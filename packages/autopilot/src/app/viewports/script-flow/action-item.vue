@@ -165,7 +165,7 @@ export default {
         },
 
         iconIsUrl() {
-            return this.app.ui.objects.getActionIcon(this.action.type).match(/http/);
+            return this.app.ui.objects.getActionIcon(this.action.type).match(/^https?:/);
         },
 
         isFinished() {
