@@ -89,10 +89,13 @@ function createNewWindow(profile: Profile) {
         titleBarStyle: os.platform() === 'darwin' ? 'hiddenInset' : 'hidden',
     });
     const { instanceId } = getSettings();
-    (wnd as any).instanceId = instanceId;
-    (wnd as any).profile = profile;
-    (wnd as any).appPath = path.resolve(__dirname, '../..');
-    (wnd as any).controlServerPort = controlServer.getServerPort();
+    Object.assign(wnd, {
+        instanceId,
+        profile,
+        appPath: path.resolve(__dirname, '../..'),
+        controlServerPort: controlServer.getServerPort(),
+        startedAt: Date.now(),
+    });
     wnd.loadURL('file://' + path.join(__dirname, '../../static/app.html'));
     wnd.on('ready-to-show', () => wnd.show());
     wnd.on('resize', saveBounds);

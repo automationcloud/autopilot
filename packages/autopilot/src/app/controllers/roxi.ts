@@ -16,25 +16,31 @@ import { ProxyConfig, ApiController } from './api';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
-import { SettingsController } from './settings';
 import {
     stringConfig,
-    booleanConfig,
-    ProxyService
+    ProxyService, ApiRequest, ProxyRouteUpstream, Configuration
 } from '@automationcloud/engine';
-import { debounce } from 'debounce';
+import { UserData } from '../userdata';
+import { StorageController } from './storage';
+import { popupMenu } from '../util/menu';
+import { MenuItemConstructorOptions } from 'electron';
 
-const ROXI_ENABLED = booleanConfig('ROXI_ENABLED', false);
 const ROXI_HOST = stringConfig('ROXI_HOST', 'proxy.automationcloud.net:8001');
 const ROXI_SECRET = stringConfig('ROXI_SECRET', '');
-const ROXI_TAGS = stringConfig('ROXI_TAGS', 'gb');
-const ROXI_CACHE = booleanConfig('ROXI_CACHE', false);
 const ROXI_PARTITION = stringConfig('ROXI_PARTITION', 'Autopilot');
+
+export type ProxyConnectionType = 'direct' | 'roxi' | 'proxy';
 
 @injectable()
 @controller({ backgroundInit: true })
 export class RoxiController {
-    tags: string[] = [];
+    userData: UserData;
+
+    selectedTag: string = '';
+    useRoxi: boolean = false;
+    useRoxiCache: boolean = false;
+
+    availableTags: string[] = [];
     proxyConfig: ProxyConfig | null = null;
 
     constructor(
@@ -44,116 +50,186 @@ export class RoxiController {
         protected events: EventBus,
         @inject(ApiController)
         protected api: ApiController,
-        @inject(SettingsController)
-        protected settings: SettingsController,
+        @inject(ApiRequest)
+        protected apiRequest: ApiRequest,
+        @inject(Configuration)
+        protected config: Configuration,
+        @inject(StorageController)
+        protected storage: StorageController,
     ) {
-        const onInit = debounce(this.init.bind(this), 500);
-        this.events.on('apiAuthUpdated', onInit);
+        this.userData = storage.createUserData('roxi', 300);
+        this.events.on('apiAuthUpdated', () => this.init());
     }
 
     async init() {
-        const proxy = this.proxy;
-        proxy.clearRoutes();
-        if (!this.isEnabled()) {
+        const {
+            selectedTag = '',
+            useRoxiCache = false,
+            useRoxi = false
+        } = await this.userData.loadData();
+        this.selectedTag = selectedTag;
+        this.useRoxiCache = useRoxiCache;
+        this.useRoxi = useRoxi;
+        await this.refreshAvailableTags();
+        await this.configureProxy();
+    }
+
+    update() {
+        this.userData.update({
+            selectedTag: this.selectedTag,
+            useRoxiCache: this.useRoxiCache,
+            useRoxi: this.useRoxi,
+        });
+    }
+
+    protected async configureProxy() {
+        try {
+            this.proxyConfig = null;
+            this.proxy.clearRoutes();
+            if (!this.isAuthenticated() || this.selectedTag === '') {
+                return;
+            }
+            this.proxyConfig = await this.sampleProxy(this.selectedTag);
+            if (!this.proxyConfig) {
+                return;
+            }
+            const upstream = this.isUsingRoxi() ? this.getRoxiUpstreamConfig(this.proxyConfig) :
+                this.getProxyUpstreamConfig(this.proxyConfig);
+            this.proxy.addRoute(/.*/, upstream);
+            this.proxy.closeAllSockets();
+        } catch (error) {
+            console.warn('Could not configure proxy', { error });
+            this.proxy.clearRoutes();
+            this.proxy.closeAllSockets();
+        }
+    }
+
+    protected async refreshAvailableTags() {
+        this.availableTags = [];
+        if (!this.isAuthenticated()) {
             return;
         }
-        this.tags = await this.fetchTags();
-        this.proxyConfig = await this.fetchSampleProxy(this.getSelectedTag());
-        if (this.proxyConfig != null) {
-            proxy.addRoute(/.*/, {
-                host: this.getRoxiHost(),
-                username: encodeURIComponent(
-                    JSON.stringify({
-                        ...this.proxyConfig.connection,
-                        cache: this.isUseCache(),
-                        partition: this.getPartition(),
-                    }),
-                ),
-                password: this.getRoxiSecret(),
-            });
-        }
-    }
-
-    async fetchTags(): Promise<string[]> {
         try {
-            const res = await this.api.getDistinctTags();
-            return res;
-        } catch (err) {
-            return [];
+            this.availableTags = await this.api.getDistinctTags();
+        } catch (error) {
+            console.warn('Could not fetch proxy tags', { error });
         }
     }
 
-    async fetchSampleProxy(tag: string): Promise<ProxyConfig | null> {
+    async sampleProxy(tag: string): Promise<ProxyConfig | null> {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
         try {
             return await this.api.sample([tag]);
         } catch (error) {
+            console.warn('Could not fetch proxy tags', { error });
             return null;
         }
     }
 
-    isSecretConfigured() {
-        return !!this.getRoxiSecret();
+    isAuthenticated() {
+        return !!this.apiRequest.authAgent.params.refreshToken;
     }
 
-    isEnabled() {
-        return this.isSecretConfigured() && this.settings.get(ROXI_ENABLED);
+    isUsingRoxi() {
+        return this.useRoxi && this.isRoxiConfigured();
     }
 
-    setEnabled(enabled: boolean) {
-        this.settings.set(ROXI_ENABLED, enabled);
+    isRoxiConfigured() {
+        return !!this.config.get(ROXI_SECRET);
     }
 
-    getSelectedTag() {
-        return this.settings.get(ROXI_TAGS).split(',')[0];
-    }
-
-    toggleTag(tag: string) {
-        this.settings.set(ROXI_TAGS, tag);
-    }
-
-    isUseCache() {
-        return this.settings.get(ROXI_CACHE);
-    }
-
-    setUseCache(useCache: boolean) {
-        this.settings.set(ROXI_CACHE, useCache);
-    }
-
-    getPartition() {
-        return this.settings.get(ROXI_PARTITION);
-    }
-
-    setPartition(partition: string) {
-        this.settings.set(ROXI_PARTITION, partition);
-    }
-
-    getRoxiHost() {
-        return this.settings.get(ROXI_HOST);
-    }
-
-    getRoxiSecret() {
-        return this.settings.get(ROXI_SECRET);
-    }
-
-    isSampleProxyFound() {
+    isActive() {
         return !!this.proxyConfig;
     }
 
-    // For debugging
-    connectDirectly() {
-        const proxy = this.proxy;
-        const { proxyConfig } = this;
-        if (!proxyConfig) {
-            alert('No proxy configuration available');
-            return;
-        }
-        proxy.clearRoutes();
-        proxy.addRoute(/.*/, {
+    set(updates: {
+        selectedTag?: string;
+        useRoxi?: boolean;
+        useRoxiCache?: boolean;
+    }) {
+        Object.assign(this, updates);
+        this.update();
+        this.configureProxy();
+    }
+
+    protected getProxyUpstreamConfig(proxyConfig: ProxyConfig): ProxyRouteUpstream {
+        return {
             useHttps: false,
             host: proxyConfig.connection.hostname + ':' + proxyConfig.connection.port,
             username: encodeURIComponent(proxyConfig.connection.username),
             password: encodeURIComponent(proxyConfig.connection.password),
-        });
-        proxy.closeAllSockets();
+        };
+    }
+
+    protected getRoxiUpstreamConfig(proxyConfig: ProxyConfig): ProxyRouteUpstream {
+        const host = this.config.get(ROXI_HOST);
+        const secret = this.config.get(ROXI_SECRET);
+        const partition = this.config.get(ROXI_PARTITION);
+        return {
+            useHttps: true,
+            host,
+            username: encodeURIComponent(
+                JSON.stringify({
+                    ...proxyConfig.connection,
+                    cache: this.useRoxiCache,
+                    partition,
+                }),
+            ),
+            password: secret,
+        };
+    }
+
+    popupMenu() {
+        const menuItems: MenuItemConstructorOptions[] = [
+            {
+                label: 'Connect directly',
+                type: 'checkbox',
+                checked: !this.isActive(),
+                click: () => {
+                    this.set({
+                        selectedTag: ''
+                    });
+                }
+            },
+            { type: 'separator' }
+        ];
+        for (const tag of this.availableTags) {
+            menuItems.push({
+                label: tag,
+                type: 'checkbox',
+                checked: this.selectedTag === tag,
+                click: () => {
+                    this.set({
+                        selectedTag: tag
+                    });
+                }
+            });
+        }
+        if (this.isRoxiConfigured()) {
+            menuItems.push({ type: 'separator' });
+            menuItems.push({
+                label: 'Use roxi',
+                type: 'checkbox',
+                checked: this.isUsingRoxi(),
+                click: () => {
+                    this.set({
+                        useRoxi: !this.useRoxi,
+                    });
+                }
+            });
+            menuItems.push({
+                label: 'Use roxi cache',
+                type: 'checkbox',
+                checked: this.useRoxiCache,
+                click: () => {
+                    this.set({
+                        useRoxiCache: !this.useRoxiCache,
+                    });
+                }
+            });
+        }
+        popupMenu(menuItems);
     }
 }

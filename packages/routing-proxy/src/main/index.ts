@@ -147,14 +147,16 @@ export class RoutingProxy extends EventEmitter {
 
     protected createTunnelingHttpRequest(req: http.IncomingMessage, upstream: ProxyRouteUpstream): http.ClientRequest {
         const [hostname, port] = upstream.host.split(':');
-        const fwdReq = https.request({
+        const options = {
             hostname,
             port,
             path: req.url,
             method: req.method,
             headers: req.headers,
-            ca: CA_CERTIFICATES,
-        });
+        };
+        const fwdReq = upstream.useHttps ?
+            https.request({ ...options, ca: CA_CERTIFICATES}) :
+            http.request(options);
         if (upstream.username || upstream.password) {
             fwdReq.setHeader('Proxy-Authorization', this.makeAuthHeader(upstream));
         }
