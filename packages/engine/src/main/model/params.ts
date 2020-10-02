@@ -40,7 +40,9 @@ export type AdvancedParamType =
     'recordset' |
     'pipeline' |
     'button' |
-    'preview';
+    'preview' |
+    'outcome' |
+    'ref';
 
 /**
  * All possible parameter types.
@@ -183,6 +185,15 @@ export function Definition(spec: { label?: string; help?: string } = {}) {
 }
 
 /**
+ * Declares a param reference parameter. Designed to be used by Get Outcome pipe.
+ * @param spec
+ * @beta
+ */
+export function ParamRef(spec: { label?: string; help?: string } = {}) {
+    return paramDecorator('ref', spec);
+}
+
+/**
  * Declares Template parameter.
  *
  * @param spec
@@ -250,6 +261,23 @@ export function Preview(spec: {
     outputKeyProp?: string;
 } = {}) {
     return paramDecorator('preview', spec);
+}
+
+/**
+ * Declares Outcome parameter, used to display the intermediary of an action or pipe.
+ * Action outcomes can be consumed by Get Outcome pipe.
+ *
+ * The parameter is rendered as JSON explorer component.
+ *
+ * @param spec
+ * @beta
+ */
+export function Outcome(spec: {
+    label?: string;
+    placeholder?: string;
+    outputKeyProp?: string;
+} = {}) {
+    return paramDecorator('outcome', spec);
 }
 
 /**

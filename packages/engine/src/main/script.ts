@@ -36,6 +36,7 @@ import crypto from 'crypto';
 import { ExtensionVersion } from './extension';
 import { Inspection, InspectionReport, InspectionNode, ScriptInspection, ContextInspection, ActionInspection } from './inspection';
 import { DefinitionAction } from './definition';
+import { ActionParamReference } from '.';
 
 const CONTEXT_MATCH_INTERVAL = numberConfig('CONTEXT_MATCH_INTERVAL', 100);
 const CONTEXT_MATCH_SLOW_MARGIN = numberConfig('CONTEXT_MATCH_SLOW_MARGIN', 3000);
@@ -1006,6 +1007,7 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
             }
         }
     }
+
 }
 
 /**

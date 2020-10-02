@@ -14,7 +14,7 @@
 
 import { params } from '../model';
 import { Pipe } from '../pipe';
-import { RuntimeCtx } from '../runtime';
+import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
 import { Pipeline } from '../pipeline';
 import * as util from '../util';

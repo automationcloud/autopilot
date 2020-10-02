@@ -17,9 +17,9 @@ import assert from 'assert';
 import * as util from './util';
 import * as model from './model';
 import { Context } from './context';
-import { migrateActionSpec } from './migrations';
+import { migrateActionSpec, pipeRenameMap } from './migrations';
 import { retry, RetryOptions } from './retry';
-import { RuntimeCtx } from './runtime';
+import { RuntimeCtx } from './ctx';
 import { Element } from './element';
 import { Pipeline } from './pipeline';
 import { Pipe } from './pipe';
@@ -770,6 +770,11 @@ export interface ActionRuntime {
     finishedAt: number | null;
     error: Error | null;
     bypassed: boolean | null;
+}
+
+export interface ActionParamReference {
+    actionId: string;
+    paramName: string;
 }
 
 export type ActionStatus = 'idle' | 'running' | 'success' | 'fail';

@@ -34,17 +34,25 @@ Following top-level variables are available:
     pipeline!: Pipeline;
 
     @params.JavaScript()
-    expression: string = '';
+    expression: string = '// Enter your code here\nreturn el.value;';
+
+    @params.Outcome()
+    $outcome: any = undefined;
 
     @params.Number({
         min: 1000,
     })
     timeout: number = 60000;
 
+    reset() {
+        super.reset();
+        this.$outcome = undefined;
+    }
+
     async exec() {
         const els = await this.selectAll(this.pipeline);
         const ctx = this.createCtx();
         const js = util.compileAsyncJs(this.expression, 'ctx', 'els', 'el');
-        await js(ctx, els, els[0]);
+        this.$outcome = await js(ctx, els, els[0]);
     }
 }

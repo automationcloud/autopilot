@@ -15,7 +15,7 @@
 import { params } from '../model';
 import { Pipe } from '../pipe';
 import { Pipeline } from '../pipeline';
-import { RuntimeCtx } from '../runtime';
+import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
 
 export class ListSortBy extends Pipe {

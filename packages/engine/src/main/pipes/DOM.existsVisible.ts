@@ -16,7 +16,7 @@ import { params } from '../model';
 import { Pipe } from '../pipe';
 import { Element } from '../element';
 import { Pipeline } from '../pipeline';
-import { RuntimeCtx } from '../runtime';
+import { RuntimeCtx } from '../ctx';
 
 export class QueryExistsVisible extends Pipe {
     static $type = 'DOM.existsVisible';
