@@ -283,14 +283,6 @@ After last child is executed, the control is passed back to While so that the co
 
 <p>Sets a global variable, which can be subsequently obtained using Get Global pipe.</p>
 <p>The pipeline should return a single element. Its value will be associated with specified key.</p>
-<h3 id="parameters-5">Parameters</h3>
-<ul>
-<li>key: a symbolic variable name for holding the stage value</li>
-</ul>
-<h3 id="use-for-12">Use For</h3>
-<ul>
-<li>storing the results of other actions so that they could be accessed later in scripts</li>
-</ul>
 <h1 id="page">Page</h1>
 <h2 id="Page.click">Page.click</h2>
 
@@ -328,7 +320,7 @@ thus it is a good practice to place an <a href="#expect">Expect</a> next to Clic
 </ul>
 </li>
 </ul>
-<h3 id="parameters-6">Parameters</h3>
+<h3 id="parameters-5">Parameters</h3>
 <ul>
 <li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
 otherwise an error is thrown if pipeline returns 0 elements</li>
@@ -341,7 +333,7 @@ this is to prevent accidentally clicking at wrong location if the element is cur
 <li>shift: if checked, the emulated click will be sent with Shift key pressed</li>
 <li>Meta: if checked, the emulated click will be sent with Meta key pressed</li>
 </ul>
-<h3 id="use-for-13">Use For</h3>
+<h3 id="use-for-12">Use For</h3>
 <ul>
 <li>clicking buttons</li>
 <li>selecting options</li>
@@ -384,14 +376,14 @@ as multipart/form-data stream following the rules:<ul>
 </li>
 </ul>
 <p>Note: it is handy to configure the request object using Compose pipe.</p>
-<h3 id="parameters-7">Parameters</h3>
+<h3 id="parameters-6">Parameters</h3>
 <ul>
 <li>mode: Fetch or XHR (Fetch is preferred, but XHR may be necessary if website replaces <code>window.fetch</code>
 with its own incompatible implementation)</li>
 <li>request body format: specifies how to treat <code>/ body</code> of request object (see above)</li>
 <li>response body format: specifies how to parse the response</li>
 </ul>
-<h3 id="use-for-14">Use For</h3>
+<h3 id="use-for-13">Use For</h3>
 <ul>
 <li>advanced scripting, to send network requests manually</li>
 </ul>
@@ -400,9 +392,9 @@ with its own incompatible implementation)</li>
 
 <p>Same as Click, but does not send emulated Mouse Down and Mouse Up events.
 Instead, the element is checked for visibility, and the mouse is positioned over it.</p>
-<h3 id="parameters-8">Parameters</h3>
+<h3 id="parameters-7">Parameters</h3>
 <p>See Click.</p>
-<h3 id="use-for-15">Use For</h3>
+<h3 id="use-for-14">Use For</h3>
 <ul>
 <li>hovering over elements without clicking them (e.g. to reveal old style dropdown menus which work on mouse hover)</li>
 </ul>
@@ -434,7 +426,7 @@ causing the input to become clear</li>
 <li>if Use Blur is enabled, a synthetic <code>blur</code> event is triggered on the element via client-side JavaScript</li>
 <li>the screenshot is taken (if executed debug screenshots are enabled for the job)</li>
 </ul>
-<h3 id="parameters-9">Parameters</h3>
+<h3 id="parameters-8">Parameters</h3>
 <ul>
 <li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
 otherwise an error is thrown if pipeline returns 0 elements</li>
@@ -449,7 +441,7 @@ are sent simultaneously</li>
 <li>press Enter: if checked, an Enter keystroke is sent to the webpage after typing text</li>
 <li>use blur: if checked, a synthetic <code>blur</code> event is triggered on the element after typing</li>
 </ul>
-<h3 id="use-for-16">Use For</h3>
+<h3 id="use-for-15">Use For</h3>
 <ul>
 <li>typing text into text input fields</li>
 </ul>
@@ -465,7 +457,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 <li><code>filename</code> (string)</li>
 </ul>
 <p>The Blob object should first be downloaded using <a href="#fetch-blob">Fetch Blob</a>.</p>
-<h3 id="use-for-17">Use For</h3>
+<h3 id="use-for-16">Use For</h3>
 <ul>
 <li>uploading files via HTML forms (<code>&lt;input type = &quot;file&quot;/&gt;</code>)</li>
 </ul>
@@ -474,7 +466,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 
 <p>Navigates to the URL, evaluated by pipeline.</p>
 <p>The pipeline should produce a single element with string value, which is treated as URL to navigate to.</p>
-<h3 id="parameters-10">Parameters</h3>
+<h3 id="parameters-9">Parameters</h3>
 <ul>
 <li>reject netwrok errors: if checked, an error will be thrown if navigation results in network-level errors
 (i.e. domain name not resolved, connection failed, etc)</li>
@@ -483,7 +475,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 <li>open new tab: if checked, opens new tab and performs navigation in it (the new tab also becomes active)</li>
 <li>close other tabs: if checked, closes all other tabs after navigating, useful in conjunction with &quot;Open new tab&quot;</li>
 </ul>
-<h3 id="use-for-18">Use For</h3>
+<h3 id="use-for-17">Use For</h3>
 <ul>
 <li>performing initial navigation</li>
 <li>navigating to known URLs (e.g. checkout page)</li>
@@ -492,7 +484,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 
 
 <p>Captures the screenshot and sends it to the Job.</p>
-<h3 id="parameters-11">Parameters</h3>
+<h3 id="parameters-10">Parameters</h3>
 <ul>
 <li>full page: emulate viewport to match content width and content height of current webpage,
 which generally results in full page screenshot
@@ -503,7 +495,7 @@ which generally results in full page screenshot
 <li>min height: minimum height for full page emulation</li>
 <li>max height: maximum height for full page emulation</li>
 </ul>
-<h3 id="use-for-19">Use For</h3>
+<h3 id="use-for-18">Use For</h3>
 <ul>
 <li>taking debug screenshots</li>
 <li>sending public screenshots</li>
@@ -524,7 +516,7 @@ which generally results in full page screenshot
 <li><code>sameWebsite</code></li>
 <li><code>expires</code></li>
 </ul>
-<h3 id="use-for-20">Use For</h3>
+<h3 id="use-for-19">Use For</h3>
 <ul>
 <li>scripting flows which require cookies to be set prior to navigation</li>
 </ul>

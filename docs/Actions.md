@@ -321,14 +321,6 @@ Sets a global variable, which can be subsequently obtained using Get Global pipe
 
 The pipeline should return a single element. Its value will be associated with specified key.
 
-### Parameters
-
-- key: a symbolic variable name for holding the stage value
-
-### Use For
-
-- storing the results of other actions so that they could be accessed later in scripts
-
 
 # Page
 

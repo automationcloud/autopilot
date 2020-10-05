@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/cdp",
-    "version": "32.10.0",
+    "version": "32.10.1",
     "description": "Chrome DevTools Protocol Driver",
     "main": "out/main/index.js",
     "scripts": {

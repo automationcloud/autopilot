@@ -1422,10 +1422,6 @@ The input key is evaluated using nested pipeline.
 Returns the value of specific Global variable (set by Set Global action).
 An error is thrown if Global variable is not set.
 
-### Use For
-
-- accessing global variables (advanced scripting)
-
 
 <h2 id="Value.getInput">Value.getInput</h2>
 

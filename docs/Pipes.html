@@ -1218,15 +1218,11 @@ The input key is evaluated using nested pipeline.</p>
 
 <p>Returns the value of specific Global variable (set by Set Global action).
 An error is thrown if Global variable is not set.</p>
-<h3 id="use-for-77">Use For</h3>
-<ul>
-<li>accessing global variables (advanced scripting)</li>
-</ul>
 <h2 id="Value.getInput">Value.getInput</h2>
 
 
 <p>Returns the value of specified Job Input.</p>
-<h3 id="use-for-78">Use For</h3>
+<h3 id="use-for-77">Use For</h3>
 <ul>
 <li>accessing Job Inputs for further manipulation (e.g. filter by Job Input value)</li>
 </ul>
@@ -1234,7 +1230,7 @@ An error is thrown if Global variable is not set.</p>
 
 
 <p>Returns the specified JSON object.</p>
-<h3 id="use-for-79">Use For</h3>
+<h3 id="use-for-78">Use For</h3>
 <ul>
 <li>testing (quickly providing pipelines with any data)</li>
 <li>building templates for Job Outputs and Network Requests,
@@ -1249,7 +1245,7 @@ which can subsequently be modified or extended</li>
 
 <p>Returns <code>true</code> if input value is either an empty string, an empty array or <code>null</code>.
 The string is considered empty if it contains nothing but whitespace.</p>
-<h3 id="use-for-80">Use For</h3>
+<h3 id="use-for-79">Use For</h3>
 <ul>
 <li>checking for null values, especially if previous pipe is optional
 (that is, allowed to return <code>null</code> values instead of throwing errors, which is a common pipe convention)</li>
@@ -1259,7 +1255,7 @@ The string is considered empty if it contains nothing but whitespace.</p>
 
 
 <p>Gets the input without requesting it, i.e. doesn&#39;t set job.state = &#39;awaitingInput&#39; if the input not exists yet.</p>
-<h3 id="use-for-81">Use For</h3>
+<h3 id="use-for-80">Use For</h3>
 <ul>
 <li>checking if the Job Input is supplied by the time of playback</li>
 </ul>
