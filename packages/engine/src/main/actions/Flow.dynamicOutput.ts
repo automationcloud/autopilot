@@ -30,9 +30,9 @@ The pipeline should return a single element with \`key: string\` and \`data: any
     @params.Pipeline()
     pipeline!: Pipeline;
 
-    @params.Preview({
-        label: 'Output Preview',
-        placeholder: 'Run the action to preview the output value.',
+    @params.Outcome({
+        label: 'Output Result',
+        placeholder: 'Run the action to see the output value.',
         outputKeyProp: '$outputKey',
     })
     $output: any = undefined;
