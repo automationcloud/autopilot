@@ -348,9 +348,13 @@ export default {
 }
 
 .favicon {
-    width: 18px;
-    height: 18px;
-    margin: 0 8px 0 -2px;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px 0 8px;
+}
+
+.expand + .favicon {
+    margin-left: -2px;
 }
 
 .summary {
