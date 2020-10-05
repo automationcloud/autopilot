@@ -1006,6 +1006,7 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
             }
         }
     }
+
 }
 
 /**

@@ -29,7 +29,7 @@ export * from './module';
 export * from './pipe';
 export * from './pipeline';
 export * from './rig';
-export * from './runtime';
+export * from './ctx';
 export * from './script';
 export * from './schema';
 export * from './search';

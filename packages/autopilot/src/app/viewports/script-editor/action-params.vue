@@ -39,7 +39,9 @@ export default {
         paramPartitions() {
             let index = this.params.length;
             for (const [i, param] of this.params.entries()) {
-                if (param.type === 'pipeline' || param.type === 'preview') {
+                if (param.type === 'pipeline' ||
+                    param.type === 'preview' ||
+                    param.type === 'outcome') {
                     index = i + 1;
                 }
             }

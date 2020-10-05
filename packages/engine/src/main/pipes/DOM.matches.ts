@@ -14,7 +14,7 @@
 
 import { Pipe } from '../pipe';
 import { params } from '../model';
-import { RuntimeCtx } from '../runtime';
+import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
 
 export class DomMatchesSelector extends Pipe {

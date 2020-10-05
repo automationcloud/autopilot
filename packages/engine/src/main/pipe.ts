@@ -15,7 +15,7 @@
 import uuid from 'uuid';
 import * as util from './util';
 import { Pipeline } from './pipeline';
-import { RuntimeCtx } from './runtime';
+import { RuntimeCtx } from './ctx';
 import { Action } from './action';
 import { Element } from './element';
 import { Module } from './module';

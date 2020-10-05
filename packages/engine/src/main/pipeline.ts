@@ -17,7 +17,7 @@ import * as util from './util';
 import * as model from './model';
 import { Action } from './action';
 import { Pipe } from './pipe';
-import { RuntimeCtx } from './runtime';
+import { RuntimeCtx } from './ctx';
 import { Element } from './element';
 import { Script } from './script';
 import { Context } from './context';

@@ -1,5 +1,5 @@
 <template>
-    <div class="param--button param--inset">
+    <div class="param--button">
 
         <label class="param__field">
             <button class="button button--primary"

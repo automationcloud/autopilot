@@ -20,9 +20,11 @@ import ParamJavascript from './param-javascript.vue';
 import ParamJson from './param-json.vue';
 import ParamKeys from './param-keys.vue';
 import ParamNumber from './param-number.vue';
+import ParamOutcome from './param-outcome.vue';
 import ParamPipeline from './param-pipeline.vue';
 import ParamPreview from './param-preview.vue';
 import ParamRecordset from './param-recordset.vue';
+import ParamRef from './param-ref.vue';
 import ParamSelector from './param-selector.vue';
 import ParamString from './param-string.vue';
 import ParamTemplate from './param-template.vue';
@@ -40,9 +42,11 @@ export default {
         ParamJson,
         ParamKeys,
         ParamNumber,
+        ParamOutcome,
         ParamPipeline,
         ParamPreview,
         ParamRecordset,
+        ParamRef,
         ParamSelector,
         ParamString,
         ParamTemplate,
