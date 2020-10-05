@@ -6,6 +6,7 @@
 - Eval
   - [Eval.javascript](#Eval.javascript)
 - Flow
+  - [Flow.computeOutcome](#Flow.computeOutcome)
   - [Flow.dynamicOutput](#Flow.dynamicOutput)
   - [Flow.each](#Flow.each)
   - [Flow.else](#Flow.else)
@@ -72,6 +73,13 @@ Following top-level variables are available:
 
 
 # Flow
+
+<h2 id="Flow.computeOutcome">Flow.computeOutcome</h2>
+
+
+Computes a pipeline, storing a result which can subsequently be accessed
+with `Flow.getOutcome` pipe.
+
 
 <h2 id="Flow.dynamicOutput">Flow.dynamicOutput</h2>
 
@@ -247,10 +255,6 @@ Its value will be sent as output data.
 
 Note: multiple elements are not automatically serialized to arrays;
 use Fold Array to send arrays instead.
-
-### Parameters
-
-- output key
 
 
 <h2 id="Flow.sleep">Flow.sleep</h2>

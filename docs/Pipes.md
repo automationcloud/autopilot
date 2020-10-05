@@ -115,6 +115,7 @@
   - [Value.getGlobal](#Value.getGlobal)
   - [Value.getInput](#Value.getInput)
   - [Value.getJson](#Value.getJson)
+  - [Value.getOutcome](#Value.getOutcome)
   - [Value.isEmpty](#Value.isEmpty)
   - [Value.peekInput](#Value.peekInput)
 
@@ -1446,6 +1447,12 @@ Returns the specified JSON object.
 - testing (quickly providing pipelines with any data)
 - building templates for Job Outputs and Network Requests,
   which can subsequently be modified or extended
+
+
+<h2 id="Value.getOutcome">Value.getOutcome</h2>
+
+
+Returns an outcome of another action.
 
 
 <h2 id="Value.isEmpty">Value.isEmpty</h2>

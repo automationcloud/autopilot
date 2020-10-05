@@ -30,6 +30,7 @@
 </ul>
 </li>
 <li>Flow<ul>
+<li><a href="#Flow.computeOutcome">Flow.computeOutcome</a></li>
 <li><a href="#Flow.dynamicOutput">Flow.dynamicOutput</a></li>
 <li><a href="#Flow.each">Flow.each</a></li>
 <li><a href="#Flow.else">Flow.else</a></li>
@@ -92,6 +93,11 @@
 <li><code>ctx</code> — a context object</li>
 </ul>
 <h1 id="flow">Flow</h1>
+<h2 id="Flow.computeOutcome">Flow.computeOutcome</h2>
+
+
+<p>Computes a pipeline, storing a result which can subsequently be accessed
+with <code>Flow.getOutcome</code> pipe.</p>
 <h2 id="Flow.dynamicOutput">Flow.dynamicOutput</h2>
 
 
@@ -229,17 +235,13 @@ If the value is <code>true</code>, then the control is passed to the children, o
 Its value will be sent as output data.</p>
 <p>Note: multiple elements are not automatically serialized to arrays;
 use Fold Array to send arrays instead.</p>
-<h3 id="parameters-3">Parameters</h3>
-<ul>
-<li>output key</li>
-</ul>
 <h2 id="Flow.sleep">Flow.sleep</h2>
 
 
 <p>Waits for specified number of milliseconds.</p>
 <p>This is unreliable (but easy) method of waiting for arbitrarily long processes to finish.
 It is recommended to use Expect for scripting such cases, whenever it is possible to do so.</p>
-<h3 id="parameters-4">Parameters</h3>
+<h3 id="parameters-3">Parameters</h3>
 <ul>
 <li>delay: milliseconds to wait</li>
 </ul>
@@ -261,7 +263,7 @@ Use this action only when imperative success handling is required.</p>
 If the value is <code>true</code>, the control is passed to children, otherwise the children are skipped.
 After last child is executed, the control is passed back to While so that the condition could be checked again.</p>
 <p>The scope of children is not modified by this pipeline (children will receive the scope from the parent of this action).</p>
-<h3 id="parameters-5">Parameters</h3>
+<h3 id="parameters-4">Parameters</h3>
 <ul>
 <li>limit: maximum number of iterations allowed (to prevent endless loops)</li>
 </ul>
@@ -281,7 +283,7 @@ After last child is executed, the control is passed back to While so that the co
 
 <p>Sets a global variable, which can be subsequently obtained using Get Global pipe.</p>
 <p>The pipeline should return a single element. Its value will be associated with specified key.</p>
-<h3 id="parameters-6">Parameters</h3>
+<h3 id="parameters-5">Parameters</h3>
 <ul>
 <li>key: a symbolic variable name for holding the stage value</li>
 </ul>
@@ -326,7 +328,7 @@ thus it is a good practice to place an <a href="#expect">Expect</a> next to Clic
 </ul>
 </li>
 </ul>
-<h3 id="parameters-7">Parameters</h3>
+<h3 id="parameters-6">Parameters</h3>
 <ul>
 <li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
 otherwise an error is thrown if pipeline returns 0 elements</li>
@@ -382,7 +384,7 @@ as multipart/form-data stream following the rules:<ul>
 </li>
 </ul>
 <p>Note: it is handy to configure the request object using Compose pipe.</p>
-<h3 id="parameters-8">Parameters</h3>
+<h3 id="parameters-7">Parameters</h3>
 <ul>
 <li>mode: Fetch or XHR (Fetch is preferred, but XHR may be necessary if website replaces <code>window.fetch</code>
 with its own incompatible implementation)</li>
@@ -398,7 +400,7 @@ with its own incompatible implementation)</li>
 
 <p>Same as Click, but does not send emulated Mouse Down and Mouse Up events.
 Instead, the element is checked for visibility, and the mouse is positioned over it.</p>
-<h3 id="parameters-9">Parameters</h3>
+<h3 id="parameters-8">Parameters</h3>
 <p>See Click.</p>
 <h3 id="use-for-15">Use For</h3>
 <ul>
@@ -432,7 +434,7 @@ causing the input to become clear</li>
 <li>if Use Blur is enabled, a synthetic <code>blur</code> event is triggered on the element via client-side JavaScript</li>
 <li>the screenshot is taken (if executed debug screenshots are enabled for the job)</li>
 </ul>
-<h3 id="parameters-10">Parameters</h3>
+<h3 id="parameters-9">Parameters</h3>
 <ul>
 <li>optional: if checked, the pipeline is allowed to return 0 elements in which case the action is bypassed,
 otherwise an error is thrown if pipeline returns 0 elements</li>
@@ -472,7 +474,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 
 <p>Navigates to the URL, evaluated by pipeline.</p>
 <p>The pipeline should produce a single element with string value, which is treated as URL to navigate to.</p>
-<h3 id="parameters-11">Parameters</h3>
+<h3 id="parameters-10">Parameters</h3>
 <ul>
 <li>reject netwrok errors: if checked, an error will be thrown if navigation results in network-level errors
 (i.e. domain name not resolved, connection failed, etc)</li>
@@ -490,7 +492,7 @@ The action assigns the blob to this input, allowing for uploading files using <c
 
 
 <p>Captures the screenshot and sends it to the Job.</p>
-<h3 id="parameters-12">Parameters</h3>
+<h3 id="parameters-11">Parameters</h3>
 <ul>
 <li>full page: emulate viewport to match content width and content height of current webpage,
 which generally results in full page screenshot
