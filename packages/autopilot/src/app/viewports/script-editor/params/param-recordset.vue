@@ -1,5 +1,5 @@
 <template>
-    <div class="param--recordset param--inset">
+    <div class="param--recordset">
 
         <div class="recordset__title">
             {{ label }}

@@ -1,5 +1,5 @@
 <template>
-    <div class="param--enum param--inset">
+    <div class="param--enum">
         <label class="param__field">
             <div class="param__label">
                 {{ label }}

@@ -1,6 +1,6 @@
 <template>
-    <div class="param--json param--inline">
-        <codemirror v-model="value"/>
+    <div class="param--json">
+        <codemirror class="param__code" v-model="value"/>
     </div>
 </template>
 

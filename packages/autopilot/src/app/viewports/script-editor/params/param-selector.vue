@@ -1,5 +1,5 @@
 <template>
-    <div class="param--selector param--inset">
+    <div class="param--selector">
 
         <sb v-model="value"
                 :scope-el="el && el.remote"/>

@@ -73,11 +73,17 @@ Note: it is handy to configure the request object using Compose pipe.
     @params.Pipeline()
     pipeline!: Pipeline;
 
-    @params.Preview({
-        label: 'Response Preview',
+    @params.Outcome({
+        label: 'Request',
         placeholder: 'Run the action to send a request.',
     })
-    $payload?: NetworkResult = undefined;
+    $request?: FetchRequestSpec = undefined;
+
+    @params.Outcome({
+        label: 'Response',
+        placeholder: 'Run the action to send a request.',
+    })
+    $response?: FetchResponseSpec = undefined;
 
     @params.Enum({
         enum: ['Fetch', 'Node', 'Node+Proxy']
@@ -103,13 +109,19 @@ Note: it is handy to configure the request object using Compose pipe.
     @params.Number({ min: 0 })
     retries: number = 3;
 
+    // Existing actions still rely on both request and response passed to child scope
+    // This should be considered deprecated
+    $result?: NetworkResult = undefined;
+
     get $fetch() {
         return this.$engine.get(FetchService);
     }
 
     reset() {
         super.reset();
-        this.$payload = undefined;
+        this.$result = undefined;
+        this.$request = undefined;
+        this.$response = undefined;
     }
 
     hasChildren() {
@@ -117,11 +129,11 @@ Note: it is handy to configure the request object using Compose pipe.
     }
 
     async resolveChildrenScope() {
-        if (!this.$payload) {
+        if (!this.$response) {
             return [];
         }
         const inputSet = await this.resolveScope();
-        return inputSet.map(el => el.clone(this.$payload));
+        return inputSet.map(el => el.clone(this.$response));
     }
 
     afterRun() {
@@ -153,10 +165,12 @@ Note: it is handy to configure the request object using Compose pipe.
                 retry: false,
             });
         }
-        this.$payload = {
+        this.$result = {
             request: requestSpec,
             response,
         };
+        this.$request = requestSpec;
+        this.$response = response;
     }
 
 }

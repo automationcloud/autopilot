@@ -1,5 +1,5 @@
 <template>
-    <div class="param--preview param--inset">
+    <div class="param--preview">
         <div class="section__subtitle">
             {{ label }}
         </div>

@@ -1,6 +1,9 @@
 <template>
-    <div class="param--javascript param--inline">
-        <codemirror v-model="value"/>
+    <div class="param--javascript">
+        <div class="section__subtitle">
+            {{ label }}
+        </div>
+        <codemirror class="param__code" v-model="value"/>
     </div>
 </template>
 

@@ -37,7 +37,7 @@ The pipeline should return a single element with \`key: string\` and \`data: any
     })
     $output: any = undefined;
 
-    // For preview validation
+    // This is needed so that output validation works
     $outputKey: string = '';
 
     reset() {

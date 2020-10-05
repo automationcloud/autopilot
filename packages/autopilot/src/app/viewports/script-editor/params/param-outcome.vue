@@ -1,5 +1,6 @@
 <template>
-    <div class="param--preview param--inset">
+    <div class="param--preview">
+
         <div class="section__subtitle">
             {{ label }}
         </div>
@@ -15,7 +16,7 @@
                     'preview-box--valid': isValidating && valid,
                     'preview-box--invalid': isValidating && !valid,
                 }">
-                <explore :data="{ preview: value }"/>
+                <explore :data="{ value }"/>
                 <template v-if="isValidating">
                     <div class="preview-message preview-message--valid"
                         v-if="valid">

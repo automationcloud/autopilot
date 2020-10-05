@@ -1,13 +1,10 @@
 .param {
     flex-basis: 100%;
+    margin: var(--gap);
 }
 
 .param select {
     max-width: 100%;
-}
-
-.param--inset {
-    margin: var(--gap);
 }
 
 .param--boolean {
@@ -17,6 +14,7 @@
 .param--pipeline {
     flex: 1;
     padding: var(--gap);
+    margin: 0;
 }
 
 .param--pipeline .param--pipeline {
@@ -51,4 +49,8 @@
 .param__controls {
     flex: 1;
     min-width: 0;
+}
+
+.param--pipeline .param__code {
+    margin: 0 calc(-1 * var(--gap));
 }

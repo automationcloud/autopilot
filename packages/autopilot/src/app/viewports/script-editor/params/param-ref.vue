@@ -1,5 +1,5 @@
 <template>
-    <div class="param--ref param--inset">
+    <div class="param--ref">
 
         <label class="param__field">
             <div class="param__label">

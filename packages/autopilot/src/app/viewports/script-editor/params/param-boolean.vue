@@ -1,5 +1,5 @@
 <template>
-    <div class="param--boolean param--inset">
+    <div class="param--boolean">
         <label>
             <input
                 type="checkbox"
