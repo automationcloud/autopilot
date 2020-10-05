@@ -17,7 +17,7 @@ import assert from 'assert';
 import * as util from './util';
 import * as model from './model';
 import { Context } from './context';
-import { migrateActionSpec, pipeRenameMap } from './migrations';
+import { migrateActionSpec } from './migrations';
 import { retry, RetryOptions } from './retry';
 import { RuntimeCtx } from './ctx';
 import { Element } from './element';

@@ -129,11 +129,11 @@ Note: it is handy to configure the request object using Compose pipe.
     }
 
     async resolveChildrenScope() {
-        if (!this.$response) {
+        if (!this.$result) {
             return [];
         }
         const inputSet = await this.resolveScope();
-        return inputSet.map(el => el.clone(this.$response));
+        return inputSet.map(el => el.clone(this.$result));
     }
 
     afterRun() {
