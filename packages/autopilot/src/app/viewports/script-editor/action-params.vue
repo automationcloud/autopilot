@@ -33,7 +33,7 @@ export default {
     computed: {
 
         params() {
-            return this.action.getParams();
+            return this.action.getParams().filter(_ => !_.hidden);
         },
 
         paramPartitions() {
