@@ -36,10 +36,15 @@
                 :class="icon">
             </i>
 
-            <img 
-                :src="icon" 
+            <img
+                :src="icon"
                 v-if="iconIsUrl"
                 class="favicon">
+
+            <i class="deprecated-icon fas fa-thumbs-down"
+                :title="'Deprecated: ' + deprecated"
+                v-if="deprecated">
+            </i>
 
             <div class="summary">
                 <span class="type">
@@ -198,6 +203,10 @@ export default {
 
         metadata() {
             return this.action.$class.$metadata;
+        },
+
+        deprecated() {
+            return this.action.$class.$deprecated;
         },
 
         label() {
@@ -464,10 +473,14 @@ export default {
     font-size: .9em;
     color: var(--border-color--focus);
     margin-left: var(--gap--small);
+    cursor: pointer;
 }
 
-.help-icon:hover {
-    cursor: pointer;
+.deprecated-icon  {
+    font-size: .9em;
+    margin-right: var(--gap--small);
+    color: var(--color-yellow--600);
+    cursor: help;
 }
 
 @keyframes pop {

@@ -19,13 +19,10 @@ import { Element } from '../element';
 
 export class ValueGetGlobal extends Pipe {
     static $type = 'Value.getGlobal';
+    static $deprecated = 'Use outcomes instead.';
     static $help = `
 Returns the value of specific Global variable (set by Set Global action).
 An error is thrown if Global variable is not set.
-
-### Use For
-
-- accessing global variables (advanced scripting)
 `;
 
     @params.String({

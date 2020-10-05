@@ -43,11 +43,18 @@
                         {{ metadata.method }}
                     </span>
                 </span>
+
                 <span class="hint custom-label"
                     v-if="pipe.label"
                     @click="viewport.showEditNotes = true">
                     {{ pipe.label }}
                 </span>
+
+                <i class="deprecated-icon fas fa-thumbs-down"
+                    :title="'Deprecated: ' + deprecated"
+                    v-if="deprecated">
+                </i>
+
                 <span class="hint"
                     v-else
                     v-for="hint in hintParams">
@@ -302,6 +309,10 @@ export default {
             return this.viewport.isShowVerboseFeedback();
         },
 
+        deprecated() {
+            return this.pipe.$class.$deprecated;
+        },
+
     },
 
     methods: {
@@ -520,6 +531,13 @@ input.enabled {
 
 .help-icon:hover {
     cursor: pointer;
+}
+
+.deprecated-icon  {
+    font-size: .9em;
+    margin-right: var(--gap--small);
+    color: var(--color-yellow--600);
+    cursor: help;
 }
 
 /* Arrow business */
