@@ -27,7 +27,10 @@ Returns \`true\` if element contains specified class name, false otherwise.
 - reading boolean state from class names
 `;
 
-    @params.String({ source: 'classList' })
+    @params.String({
+        source: 'classList',
+        showInHeader: true,
+    })
     className: string = '';
 
     getDatum(info: RemoteElementInfo) {

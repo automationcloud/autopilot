@@ -33,8 +33,11 @@ An error is thrown if multiple elements are found within each element.
 - DOM.queryXpathAll: for the equivalent pipe which allows multiple elements to be found by Xpath expression
 `;
 
-    @params.String()
+    @params.String({
+        showInHeader: true,
+    })
     expression: string = '';
+
     @params.Boolean({
         help: 'Produce 0 elements instead of throwing an error when no elements are found.',
     })

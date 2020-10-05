@@ -40,7 +40,6 @@ export type AdvancedParamType =
     'recordset' |
     'pipeline' |
     'button' |
-    'preview' |
     'outcome' |
     'ref';
 
@@ -98,9 +97,10 @@ export function String(
         label?: string;
         help?: string;
         placeholder?: string;
+        showInHeader?: boolean;
     } = {},
 ) {
-    return paramDecorator('string', spec);
+    return paramDecorator('string', { ...spec });
 }
 
 /**
@@ -115,6 +115,7 @@ export function Enum(spec: {
     label?: string;
     help?: string;
     placeholder?: string;
+    showInHeader?: boolean;
 }) {
     return paramDecorator('enum', { ...spec });
 }
@@ -133,9 +134,10 @@ export function Number(
         placeholder?: string;
         min?: number;
         max?: number;
+        showInHeader?: boolean;
     } = {},
 ) {
-    return paramDecorator('number', spec);
+    return paramDecorator('number', { ...spec });
 }
 
 /**
@@ -144,7 +146,7 @@ export function Number(
  * @public
  */
 export function Boolean(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('boolean', spec);
+    return paramDecorator('boolean', { ...spec });
 }
 
 /**
@@ -152,7 +154,11 @@ export function Boolean(spec: { label?: string; help?: string } = {}) {
  * @param spec
  * @public
  */
-export function Selector(spec: { label?: string; help?: string } = {}) {
+export function Selector(spec: {
+    label?: string;
+    help?: string;
+    showInHeader?: boolean;
+} = {}) {
     return paramDecorator('selector', { ...spec });
 }
 
@@ -162,7 +168,7 @@ export function Selector(spec: { label?: string; help?: string } = {}) {
  * @public
  */
 export function Json(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('json', spec);
+    return paramDecorator('json', { ...spec });
 }
 
 /**
@@ -171,7 +177,7 @@ export function Json(spec: { label?: string; help?: string } = {}) {
  * @public
  */
 export function JavaScript(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('javascript', spec);
+    return paramDecorator('javascript', { ...spec });
 }
 
 /**
@@ -181,7 +187,7 @@ export function JavaScript(spec: { label?: string; help?: string } = {}) {
  * @public
  */
 export function Definition(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('definition', spec);
+    return paramDecorator('definition', { ...spec });
 }
 
 /**
@@ -190,7 +196,7 @@ export function Definition(spec: { label?: string; help?: string } = {}) {
  * @beta
  */
 export function ParamRef(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('ref', spec);
+    return paramDecorator('ref', { ...spec });
 }
 
 /**
@@ -202,7 +208,7 @@ export function ParamRef(spec: { label?: string; help?: string } = {}) {
  * @internal
  */
 export function Template(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('template', spec);
+    return paramDecorator('template', { ...spec });
 }
 
 /**
@@ -213,7 +219,7 @@ export function Template(spec: { label?: string; help?: string } = {}) {
  *   please avoid depending on it.
  */
 export function Keys(spec: { label?: string; help?: string } = {}) {
-    return paramDecorator('keys', spec);
+    return paramDecorator('keys', { ...spec });
 }
 
 /**
@@ -232,8 +238,13 @@ export function Pipeline(spec: { label?: string; help?: string } = {}) {
  * @param spec
  * @public
  */
-export function Recordset(spec: { label?: string; help?: string; singular: string; fields: RecordsetField[] }) {
-    return paramDecorator('recordset', spec);
+export function Recordset(spec: {
+    label?: string;
+    help?: string;
+    singular: string;
+    fields: RecordsetField[];
+}) {
+    return paramDecorator('recordset', { ...spec });
 }
 
 /**
@@ -249,21 +260,6 @@ export function Button(spec: { label?: string; help?: string } = {}) {
 }
 
 /**
- * Declares Preview parameter, used to display the intermediary of an action or pipe.
- * The parameter is rendered as JSON explorer component.
- *
- * @param spec
- * @public
- */
-export function Preview(spec: {
-    label?: string;
-    placeholder?: string;
-    outputKeyProp?: string;
-} = {}) {
-    return paramDecorator('preview', spec);
-}
-
-/**
  * Declares Outcome parameter, used to display the intermediary of an action or pipe.
  * Action outcomes can be consumed by Get Outcome pipe.
  *
@@ -276,9 +272,15 @@ export function Outcome(spec: {
     label?: string;
     placeholder?: string;
     outputKeyProp?: string;
+    hidden?: boolean;
 } = {}) {
-    return paramDecorator('outcome', spec);
+    return paramDecorator('outcome', { ...spec });
 }
+
+/**
+ * @deprecated Use Outcome instead.
+ */
+export const Preview = Outcome;
 
 /**
  * @public

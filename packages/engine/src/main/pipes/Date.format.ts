@@ -45,7 +45,10 @@ for more information about pattern strings and formatting.
     })
     inputFormat: string = '';
 
-    @params.String({ placeholder: 'YYYY-MM-DD HH:mm:ss' })
+    @params.String({
+        placeholder: 'YYYY-MM-DD HH:mm:ss',
+        showInHeader: true,
+    })
     outputFormat: string = 'YYYY-MM-DD HH:mm:ss';
 
     @params.Boolean({

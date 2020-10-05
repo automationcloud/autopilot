@@ -23,7 +23,9 @@ export class DomMatchesSelector extends Pipe {
 Returns \`true\` if element matches specifed selector.
 `;
 
-    @params.Selector()
+    @params.Selector({
+        showInHeader: true,
+    })
     selector: string = '';
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {

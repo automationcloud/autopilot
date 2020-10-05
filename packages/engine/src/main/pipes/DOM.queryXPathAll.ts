@@ -31,8 +31,11 @@ Returns all Element nodes found by specified Xpath expression.
 - DOM.queryXPathOne: for the equivalent pipe which returns a single node
 `;
 
-    @params.String()
+    @params.String({
+        showInHeader: true,
+    })
     expression: string = '';
+
     @params.Boolean({
         help: 'Produce 0 elements instead of throwing an error when no elements are found.',
     })

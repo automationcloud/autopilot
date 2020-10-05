@@ -42,6 +42,7 @@ An error is thrown if input value is not an object or an array.
     @params.String({
         source: 'dataPaths',
         help: 'JSON pointer into input object where the new value is to be written.',
+        showInHeader: true,
     })
     path: string = '';
 

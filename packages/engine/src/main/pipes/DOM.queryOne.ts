@@ -33,8 +33,11 @@ An error is thrown if multiple elements are found within each element.
 - DOM.queryAll: for the equivalent pipe which allows multiple elements to be found by selector
 `;
 
-    @params.Selector()
+    @params.Selector({
+        showInHeader: true,
+    })
     selector: string = '';
+
     @params.Boolean({
         help: 'Produce 0 elements instead of throwing an error when no elements are found.',
     })

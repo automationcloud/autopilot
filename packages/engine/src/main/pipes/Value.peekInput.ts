@@ -27,7 +27,10 @@ Gets the input without requesting it, i.e. doesn't set job.state = 'awaitingInpu
 - checking if the Job Input is supplied by the time of playback
 `;
 
-    @params.String({ source: 'inputs' })
+    @params.String({
+        source: 'inputs',
+        showInHeader: true,
+    })
     inputKey: string = '';
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {

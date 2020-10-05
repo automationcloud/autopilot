@@ -27,7 +27,10 @@ Returns the value of specified Job Input.
 - accessing Job Inputs for further manipulation (e.g. filter by Job Input value)
 `;
 
-    @params.String({ source: 'inputs' })
+    @params.String({
+        source: 'inputs',
+        showInHeader: true,
+    })
     inputKey: string = '';
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {

@@ -35,6 +35,7 @@ An error is thrown if input value is not object/array.
     @params.String({
         source: 'dataPaths',
         help: 'JSON pointer into input value.',
+        showInHeader: true,
     })
     path: string = '';
 

@@ -34,6 +34,7 @@ This is simpler equivalent to Equals pipe, where one of the operands is constant
 
     @params.String({
         help: 'String constant to test input value against.',
+        showInHeader: true,
     })
     text: string = '';
 

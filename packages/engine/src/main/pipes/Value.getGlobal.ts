@@ -28,6 +28,7 @@ An error is thrown if Global variable is not set.
     @params.String({
         source: 'globals',
         help: 'Key of the Global variable (as specified by Set Global action).',
+        showInHeader: true,
     })
     key: string = '';
 

@@ -33,8 +33,10 @@ An error is thrown if attribute does not exist on one of the input elements.
     @params.String({
         source: 'attributes',
         help: 'Name of the attribute.',
+        showInHeader: true,
     })
     attribute: string = '';
+
     @params.Boolean({
         help: 'Return `null` instead of throwing an error if attribute does not exist.',
     })

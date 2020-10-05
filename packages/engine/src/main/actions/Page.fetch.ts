@@ -76,6 +76,7 @@ Note: it is handy to configure the request object using Compose pipe.
     @params.Outcome({
         label: 'Request',
         placeholder: 'Run the action to send a request.',
+        hidden: true,
     })
     $request?: FetchRequestSpec = undefined;
 

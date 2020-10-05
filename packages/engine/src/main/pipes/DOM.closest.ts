@@ -24,8 +24,11 @@ Returns the closest ancestor of an element matching specified selector.
 Throws an error if no such element is found.
 `;
 
-    @params.Selector()
+    @params.Selector({
+        showInHeader: true,
+    })
     selector: string = '';
+
     @params.Boolean({
         help: 'Omit an element if no matching ancestor is found.',
     })

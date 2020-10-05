@@ -56,7 +56,6 @@
                 </i>
 
                 <span class="hint"
-                    v-else
                     v-for="hint in hintParams">
                     {{ hint }}
                 </span>
@@ -215,18 +214,17 @@ export default {
         },
 
         hintParams() {
-            const stringParams = this.pipe.getParams()
-                .filter(_ => _.type === 'string')
-                .filter(_ => _.name !== 'label')
+            const values = this.pipe.getParams()
+                .filter(_ => !!_.showInHeader)
                 .map(p => this.getParam(p.name));
-            return stringParams
+            return values
                 .concat(this.definitionLabel)
                 .map(_ => String(_ || '').trim())
                 .filter(Boolean);
         },
 
         params() {
-            return this.pipe.getParams();
+            return this.pipe.getParams().filter(_ => !_.hidden);
         },
 
         // Feedback

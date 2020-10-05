@@ -29,7 +29,10 @@ Discards specified number of elements and returns everything else.
 - excluding other kinds of elements like table headers or column headers
 `;
 
-    @params.Number({ min: 0 })
+    @params.Number({
+        min: 0,
+        showInHeader: true,
+    })
     count: number = 1;
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {

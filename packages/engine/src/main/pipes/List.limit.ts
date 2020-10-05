@@ -34,6 +34,7 @@ A typical usage scenario is to have limit \`1\` which ensures that the output se
     @params.Number({
         min: 0,
         help: 'number of elements to keep',
+        showInHeader: true,
     })
     count: number = 1;
 

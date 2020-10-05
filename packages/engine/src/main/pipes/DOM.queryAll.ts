@@ -31,7 +31,9 @@ Returns all Element nodes found by specified selector.
 - DOM.queryOne: for the equivalent pipe which returns a single node
 `;
 
-    @params.Selector()
+    @params.Selector({
+        showInHeader: true,
+    })
     selector: string = '';
 
     @params.Boolean({

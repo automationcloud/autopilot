@@ -34,7 +34,9 @@ Non-string values are coerced to strings and are tested according to rules speci
 - general purpose string containment tests against string constant
 `;
 
-    @params.String()
+    @params.String({
+        showInHeader: true,
+    })
     text: string = '';
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {
