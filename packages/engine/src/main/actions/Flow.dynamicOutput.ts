@@ -31,7 +31,7 @@ The pipeline should return a single element with \`key: string\` and \`data: any
     pipeline!: Pipeline;
 
     @params.Outcome({
-        label: 'Output Result',
+        label: 'Result',
         placeholder: 'Run the action to see the output value.',
         outputKeyProp: '$outputKey',
     })
