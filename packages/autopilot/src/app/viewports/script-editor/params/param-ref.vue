@@ -16,7 +16,7 @@
                             v-for="action of group.actions"
                             :key="action.id"
                             :value="action.id">
-                            {{ action.label }}
+                            {{ getActionLabel(action) }}
                         </option>
                     </optgroup>
                 </select>
@@ -102,10 +102,16 @@ export default {
     methods: {
 
         getFilteredActions(context) {
-            return context.children.filter(action => {
+            const actions = [...context.descendentActions()];
+            return actions.filter(action => {
                 return action.id !== this.item.$action.id &&
                     action.getParams().some(_ => _.type === 'outcome');
             });
+        },
+
+        getActionLabel(action) {
+            const indent = '&nbsp;&nbsp;'.repeat(action.depth);
+            return indent + (action.label.trim() || action.type);
         }
 
     }
