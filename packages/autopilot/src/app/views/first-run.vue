@@ -8,8 +8,9 @@
 
         <div class="main">
             <div class="hero--grad section">
-                <img src="resources/product-logos/autopilot.svg"
-                    style="width: 150px; margin: var(--gap) 0;" />
+                <img class="app-image"
+                    src="resources/product-logos/autopilot.svg"
+                    width="150"/>
                 <div class="section-content" style="color: white;">
                     <h3>
                         Welcome to Autopilot and the Automation Cloud
@@ -88,10 +89,15 @@
                             Continue to Autopilot
                         </button>
                     </div>
+
+                    <p>
+                        Note: we log anonymous usage stats (Autopilot runs, versions used) so that
+                        we can continually improve Autopilot.
+                    </p>
                 </div>
             </div>
 
-            <div class="section tray-bg--transparent-mid">
+            <div class="section section--tray tray-bg--transparent-mid">
                 <promo-robot-school style="align-self: end;"/>
             </div>
         </div>
@@ -182,16 +188,17 @@ export default {
 }
 
 .section {
-    padding: var(--gap) var(--gap--large);
     display: flex;
     flex-flow: column wrap;
 }
 
+.section--tray {
+    padding: var(--gap);
+}
+
 .section-content {
-    padding: var(--gap) var(--gap--large);
-    width: 100%;
-    max-width: 450px;
-    align-self: center;
+    padding: var(--gap--large);
+    margin-left: 92px;
 }
 
 .section-controls {
@@ -244,5 +251,10 @@ export default {
 .chromium-image {
     margin-right: var(--gap);
     width: 25px;
+}
+
+.app-image {
+    padding: var(--gap);
+    margin-left: 56px;
 }
 </style>

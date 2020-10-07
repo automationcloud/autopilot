@@ -41,7 +41,6 @@ export default {
     align-items: flex-start;
     box-shadow: 0 4px 4px rgba(0,0,0,.25);
     border-radius: 4px;
-    margin: var(--gap) 0;
 }
 
 .promo img {
@@ -64,7 +63,6 @@ export default {
 .promo-content-p {
     font-size: 1.2em;
     color: #fff;
-    max-width: 560px;
     margin: var(--gap) 0;
 }
 
