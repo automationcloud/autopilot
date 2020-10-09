@@ -80,8 +80,9 @@ export class Page {
         // await target.send('Network.setCacheDisabled', { cacheDisabled: true });
         await target.send('Runtime.enable');
         await target.send('Animation.enable');
-        await target.send('Animation.setPlaybackRate', {
-            playbackRate: 1000,
+        // await target.send('Animation.setPlaybackRate', { playbackRate: 1000, });
+        await target.send('Page.addScriptToEvaluateOnNewDocument', {
+            source: `Object.defineProperty(navigator, 'webdriver', { get: () => undefined });`
         });
         target.browser.emit('pageCreated', page);
         return page;
