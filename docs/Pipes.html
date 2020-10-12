@@ -32,7 +32,6 @@
 </ul>
 </li>
 <li>Browser<ul>
-<li><a href="#Browser.getBlob">Browser.getBlob</a></li>
 <li><a href="#Browser.getCookies">Browser.getCookies</a></li>
 <li><a href="#Browser.getFrameInfo">Browser.getFrameInfo</a></li>
 <li><a href="#Browser.selectNetworkResources">Browser.selectNetworkResources</a></li>
@@ -76,6 +75,7 @@
 </li>
 <li>Data<ul>
 <li><a href="#Data.formatUrl">Data.formatUrl</a></li>
+<li><a href="#Data.getBlob">Data.getBlob</a></li>
 <li><a href="#Data.restoreLocal">Data.restoreLocal</a></li>
 <li><a href="#Data.saveLocal">Data.saveLocal</a></li>
 </ul>
@@ -213,16 +213,6 @@ An error is thrown if the result is not a boolean.</p>
 <li>combining multiple booleans using logical OR (conjunction)</li>
 </ul>
 <h1 id="browser">Browser</h1>
-<h2 id="Browser.getBlob">Browser.getBlob</h2>
-
-
-<p>Returns blob content in a specified encoding.</p>
-<p>Input value must be a Blob object, returned by Send Network Request action with &quot;blob&quot; response type.</p>
-<p>Caution: decoding large blobs may result in decreased application and engine performance.</p>
-<h3 id="use-for-4">Use For</h3>
-<ul>
-<li>sending base64 encoded blobs as part of Send Network Request action</li>
-</ul>
 <h2 id="Browser.getCookies">Browser.getCookies</h2>
 
 
@@ -231,7 +221,7 @@ An error is thrown if the result is not a boolean.</p>
 
 
 <p>Returns information about current frame and its loading state.</p>
-<h3 id="use-for-5">Use For</h3>
+<h3 id="use-for-4">Use For</h3>
 <ul>
 <li>implementing assertions on frame loading, readiness or failure to load</li>
 </ul>
@@ -239,7 +229,7 @@ An error is thrown if the result is not a boolean.</p>
 
 
 <p>Returns information about network requests and responses that match specified filters.</p>
-<h3 id="use-for-6">Use For</h3>
+<h3 id="use-for-5">Use For</h3>
 <ul>
 <li>extracting data from ongoing network requests</li>
 </ul>
@@ -255,7 +245,7 @@ matching specified criteria.</p>
 <p>This pipe is a simple group with a customized label.
 The input set is passed to the inner pipeline and the output set of the inner pipeline
 becomes the output set of this pipe.</p>
-<h3 id="use-for-7">Use For</h3>
+<h3 id="use-for-6">Use For</h3>
 <ul>
 <li>structuring complex pipelines</li>
 </ul>
@@ -275,7 +265,7 @@ Throws an error if no such element is found.</p>
 
 
 <p>Replace the DOM node of each input element with top #document node.</p>
-<h3 id="use-for-8">Use For</h3>
+<h3 id="use-for-7">Use For</h3>
 <ul>
 <li>accessing elements outside of current DOM scope (e.g. inside <code>each</code> loop)</li>
 </ul>
@@ -284,7 +274,7 @@ Throws an error if no such element is found.</p>
 
 <p>Returns the value of specified DOM attribute.
 An error is thrown if attribute does not exist on one of the input elements.</p>
-<h3 id="use-for-9">Use For</h3>
+<h3 id="use-for-8">Use For</h3>
 <ul>
 <li>extracting information from DOM attributes</li>
 </ul>
@@ -292,7 +282,7 @@ An error is thrown if attribute does not exist on one of the input elements.</p>
 
 
 <p>Returns text content of direct text node children of an element, ignoring nested elements.</p>
-<h3 id="use-for-10">Use For</h3>
+<h3 id="use-for-9">Use For</h3>
 <ul>
 <li>accessing text content of immediate children when semantic markup does not allow
 for more precise targeting</li>
@@ -302,7 +292,7 @@ for more precise targeting</li>
 
 <p>Returns the value of specified style, computed by browser.
 Throws an error if the style is not recognized by browser and therefore cannot be computed.</p>
-<h3 id="use-for-11">Use For</h3>
+<h3 id="use-for-10">Use For</h3>
 <ul>
 <li>addressing edge cases where filtering or value extraction is only possible by looking at CSS styles
 (e.g. color, borders, etc.)</li>
@@ -311,7 +301,7 @@ Throws an error if the style is not recognized by browser and therefore cannot b
 
 
 <p>Retrieves specified property from the element&#39;s owner document.</p>
-<h3 id="use-for-12">Use For</h3>
+<h3 id="use-for-11">Use For</h3>
 <ul>
 <li>accessing current url</li>
 <li>accessing referrer to compose network requests</li>
@@ -323,7 +313,7 @@ Throws an error if the style is not recognized by browser and therefore cannot b
 
 <p>Returns a fully resolved URL as specified by href attribute of <code>&lt;a&gt;</code> DOM elements (links).
 An error is thrown if input element is not a link.</p>
-<h3 id="use-for-13">Use For</h3>
+<h3 id="use-for-12">Use For</h3>
 <ul>
 <li>extracting absolute href value from links</li>
 </ul>
@@ -331,7 +321,7 @@ An error is thrown if input element is not a link.</p>
 
 
 <p>Returns <code>innerHTML</code> property of an element.</p>
-<h3 id="use-for-14">Use For</h3>
+<h3 id="use-for-13">Use For</h3>
 <ul>
 <li>extracting HTML content</li>
 </ul>
@@ -344,7 +334,7 @@ An error is thrown if input element is not a link.</p>
 
 
 <p>Returns <code>innerText</code> DOM property of elements.</p>
-<h3 id="use-for-15">Use For</h3>
+<h3 id="use-for-14">Use For</h3>
 <ul>
 <li>reading <code>innerText</code> specifically
 (i.e. when fallback logic of Extract Text produces incorrect or unwanted results)</li>
@@ -355,7 +345,7 @@ An error is thrown if input element is not a link.</p>
 <p>Returns text extracted from DOM element by reading its
 innerText, textContent or value (whichever first is defined)
 and normalizing the whitespace.</p>
-<h3 id="use-for-16">Use For</h3>
+<h3 id="use-for-15">Use For</h3>
 <ul>
 <li>general purpose text extraction from the page</li>
 </ul>
@@ -368,7 +358,7 @@ for more specialized extractors that don&#39;t fallback over multiple text sourc
 
 
 <p>Returns <code>textContent</code> DOM property of elements.</p>
-<h3 id="use-for-17">Use For</h3>
+<h3 id="use-for-16">Use For</h3>
 <ul>
 <li>reading <code>textContent</code> specifically
 (i.e. when fallback logic of Extract Text produces incorrect or unwanted results)</li>
@@ -377,7 +367,7 @@ for more specialized extractors that don&#39;t fallback over multiple text sourc
 
 
 <p>Returns <code>value</code> DOM property of elements.</p>
-<h3 id="use-for-18">Use For</h3>
+<h3 id="use-for-17">Use For</h3>
 <ul>
 <li>reading <code>value</code> specifically
 (i.e. when fallback logic of Text produces incorrect or unwanted results)</li>
@@ -386,7 +376,7 @@ for more specialized extractors that don&#39;t fallback over multiple text sourc
 
 
 <p>Returns <code>true</code> if element contains specified class name, false otherwise.</p>
-<h3 id="use-for-19">Use For</h3>
+<h3 id="use-for-18">Use For</h3>
 <ul>
 <li>filtering</li>
 <li>reading boolean state from class names</li>
@@ -396,7 +386,7 @@ for more specialized extractors that don&#39;t fallback over multiple text sourc
 
 <p>Returns DOM contentDocument node of the IFRAME element.
 An error is thrown if applied to non-frame elements.</p>
-<h3 id="use-for-20">Use For</h3>
+<h3 id="use-for-19">Use For</h3>
 <ul>
 <li>accessing the contents of iframes</li>
 </ul>
@@ -405,7 +395,7 @@ An error is thrown if applied to non-frame elements.</p>
 
 <p>Discards elements that enclose other elements from the same set.
 This leaves only the &quot;innermost&quot; elements in the output set.</p>
-<h3 id="use-for-21">Use For</h3>
+<h3 id="use-for-20">Use For</h3>
 <ul>
 <li>squashing element sets that are loosely defined,
 in particular if website does not have semantic DOM structure to work with</li>
@@ -418,7 +408,7 @@ in particular if website does not have semantic DOM structure to work with</li>
 
 
 <p>For each element returns the value of its <code>disabled</code> DOM property.</p>
-<h3 id="use-for-22">Use For</h3>
+<h3 id="use-for-21">Use For</h3>
 <ul>
 <li>asserting that buttons or other form controls are interactable</li>
 </ul>
@@ -426,7 +416,7 @@ in particular if website does not have semantic DOM structure to work with</li>
 
 
 <p>For each element returns the value of its <code>selected</code> or <code>checked</code> DOM property.</p>
-<h3 id="use-for-23">Use For</h3>
+<h3 id="use-for-22">Use For</h3>
 <ul>
 <li>extracting boolean values of checkboxes, radio buttons and <code>option</code> elements</li>
 </ul>
@@ -438,7 +428,7 @@ in particular if website does not have semantic DOM structure to work with</li>
 <li>its content box has both width and height greater than zero</li>
 <li>its CSS styles don&#39;t include visibility: hidden</li>
 </ul>
-<h3 id="use-for-24">Use For</h3>
+<h3 id="use-for-23">Use For</h3>
 <ul>
 <li>filtering invisible elements for further manipulations</li>
 <li>asserting element visibility in expectations</li>
@@ -457,7 +447,7 @@ An error is thrown if no next sibling exists.</p>
 
 <p>Discards elements that are enclosed by other elements from the same set.
 This leaves only the &quot;outermost&quot; elements in the output set.</p>
-<h3 id="use-for-25">Use For</h3>
+<h3 id="use-for-24">Use For</h3>
 <ul>
 <li>squashing element sets that are loosely defined,
 in particular if website does not have semantic DOM structure to work with</li>
@@ -475,7 +465,7 @@ An error is thrown if parent not found (i.e. applied to #document).</p>
 <ul>
 <li>optional: if checked,</li>
 </ul>
-<h3 id="use-for-26">Use For</h3>
+<h3 id="use-for-25">Use For</h3>
 <ul>
 <li>traversing DOM hierarchy to locate the desired element</li>
 </ul>
@@ -488,7 +478,7 @@ An error is thrown if no previous sibling exists.</p>
 
 
 <p>Returns all Element nodes found by specified selector.</p>
-<h3 id="use-for-27">Use For</h3>
+<h3 id="use-for-26">Use For</h3>
 <ul>
 <li>returning a group of elements (e.g. prices) for further manipulation (e.g. text parsing)</li>
 </ul>
@@ -501,7 +491,7 @@ An error is thrown if no previous sibling exists.</p>
 
 <p>Returns Element node found by specified selector.
 An error is thrown if multiple elements are found within each element.</p>
-<h3 id="use-for-28">Use For</h3>
+<h3 id="use-for-27">Use For</h3>
 <ul>
 <li>selecting a unique Element on the page</li>
 <li>for each element in a set, selecting a unique sub-element</li>
@@ -514,7 +504,7 @@ An error is thrown if multiple elements are found within each element.</p>
 
 
 <p>Returns all Element nodes found by specified Xpath expression.</p>
-<h3 id="use-for-29">Use For</h3>
+<h3 id="use-for-28">Use For</h3>
 <ul>
 <li>returning a group of elements (e.g. prices) for further manipulation (e.g. text parsing)</li>
 </ul>
@@ -527,7 +517,7 @@ An error is thrown if multiple elements are found within each element.</p>
 
 <p>Returns Element node found by specified Xpath expression.
 An error is thrown if multiple elements are found within each element.</p>
-<h3 id="use-for-30">Use For</h3>
+<h3 id="use-for-29">Use For</h3>
 <ul>
 <li>selecting a unique Element on the page</li>
 <li>for each element in a set, selecting a unique sub-element</li>
@@ -552,9 +542,19 @@ An error is thrown if multiple elements are found within each element.</p>
 </ul>
 <p>Query parameters are automatically URI-encoded.</p>
 <p>An error is thrown if input value is not an object, or if there&#39;s not enough information to construct a URL.</p>
-<h3 id="use-for-31">Use For</h3>
+<h3 id="use-for-30">Use For</h3>
 <ul>
 <li>composing URLs for network requests and other applications</li>
+</ul>
+<h2 id="Data.getBlob">Data.getBlob</h2>
+
+
+<p>Returns blob content in a specified encoding.</p>
+<p>Input value must be a Blob object, returned by Send Network Request action with &quot;blob&quot; response type.</p>
+<p>Caution: decoding large blobs may result in decreased application and engine performance.</p>
+<h3 id="use-for-31">Use For</h3>
+<ul>
+<li>sending base64 encoded blobs as part of Send Network Request action</li>
 </ul>
 <h2 id="Data.restoreLocal">Data.restoreLocal</h2>
 

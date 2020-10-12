@@ -8,7 +8,6 @@
   - [Boolean.not](#Boolean.not)
   - [Boolean.or](#Boolean.or)
 - Browser
-  - [Browser.getBlob](#Browser.getBlob)
   - [Browser.getCookies](#Browser.getCookies)
   - [Browser.getFrameInfo](#Browser.getFrameInfo)
   - [Browser.selectNetworkResources](#Browser.selectNetworkResources)
@@ -46,6 +45,7 @@
   - [DOM.queryXPathOne](#DOM.queryXPathOne)
 - Data
   - [Data.formatUrl](#Data.formatUrl)
+  - [Data.getBlob](#Data.getBlob)
   - [Data.restoreLocal](#Data.restoreLocal)
   - [Data.saveLocal](#Data.saveLocal)
 - Date
@@ -179,20 +179,6 @@ An error is thrown if the result is not a boolean.
 
 
 # Browser
-
-<h2 id="Browser.getBlob">Browser.getBlob</h2>
-
-
-Returns blob content in a specified encoding.
-
-Input value must be a Blob object, returned by Send Network Request action with "blob" response type.
-
-Caution: decoding large blobs may result in decreased application and engine performance.
-
-### Use For
-
-- sending base64 encoded blobs as part of Send Network Request action
-
 
 <h2 id="Browser.getCookies">Browser.getCookies</h2>
 
@@ -598,6 +584,20 @@ An error is thrown if input value is not an object, or if there's not enough inf
 ### Use For
 
 - composing URLs for network requests and other applications
+
+
+<h2 id="Data.getBlob">Data.getBlob</h2>
+
+
+Returns blob content in a specified encoding.
+
+Input value must be a Blob object, returned by Send Network Request action with "blob" response type.
+
+Caution: decoding large blobs may result in decreased application and engine performance.
+
+### Use For
+
+- sending base64 encoded blobs as part of Send Network Request action
 
 
 <h2 id="Data.restoreLocal">Data.restoreLocal</h2>

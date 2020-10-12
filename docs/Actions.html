@@ -25,12 +25,16 @@
 <li><a href="#placeholder">placeholder</a></li>
 </ul>
 </li>
+<li>Data<ul>
+<li><a href="#Data.computeOutcome">Data.computeOutcome</a></li>
+<li><a href="#Data.setBlob">Data.setBlob</a></li>
+</ul>
+</li>
 <li>Eval<ul>
 <li><a href="#Eval.javascript">Eval.javascript</a></li>
 </ul>
 </li>
 <li>Flow<ul>
-<li><a href="#Flow.computeOutcome">Flow.computeOutcome</a></li>
 <li><a href="#Flow.dynamicOutput">Flow.dynamicOutput</a></li>
 <li><a href="#Flow.each">Flow.each</a></li>
 <li><a href="#Flow.else">Flow.else</a></li>
@@ -81,6 +85,22 @@
 <p>Use this action to get quick access to pipeline configuration and deciding what to do with its results later.</p>
 <p>After pipeline is congifured, use Change Type to convert the placeholder into one of the actions.</p>
 <p>Running the placeholder will result in an error.</p>
+<h1 id="data">Data</h1>
+<h2 id="Data.computeOutcome">Data.computeOutcome</h2>
+
+
+<p>Computes a pipeline, storing a result which can subsequently be accessed
+with <code>Value.getOutcome</code> pipe.</p>
+<h2 id="Data.setBlob">Data.setBlob</h2>
+
+
+<p>Computes a pipeline, storing a result as a blob with specified encoding.</p>
+<p>The pipeline should evaluate to object with following structure:</p>
+<ul>
+<li><code>filename</code> (string) — filename of blob</li>
+<li><code>content</code> (string) — string content in encoding as specified by <code>encoding</code> parameter</li>
+</ul>
+<p>The blob can subsequently be obtained using <code>Data.getBlob</code> pipe.</p>
 <h1 id="eval">Eval</h1>
 <h2 id="Eval.javascript">Eval.javascript</h2>
 
@@ -93,11 +113,6 @@
 <li><code>ctx</code> — a context object</li>
 </ul>
 <h1 id="flow">Flow</h1>
-<h2 id="Flow.computeOutcome">Flow.computeOutcome</h2>
-
-
-<p>Computes a pipeline, storing a result which can subsequently be accessed
-with <code>Flow.getOutcome</code> pipe.</p>
 <h2 id="Flow.dynamicOutput">Flow.dynamicOutput</h2>
 
 

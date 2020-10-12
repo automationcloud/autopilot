@@ -3,10 +3,12 @@
 - Custom
   - [definition](#definition)
   - [placeholder](#placeholder)
+- Data
+  - [Data.computeOutcome](#Data.computeOutcome)
+  - [Data.setBlob](#Data.setBlob)
 - Eval
   - [Eval.javascript](#Eval.javascript)
 - Flow
-  - [Flow.computeOutcome](#Flow.computeOutcome)
   - [Flow.dynamicOutput](#Flow.dynamicOutput)
   - [Flow.each](#Flow.each)
   - [Flow.else](#Flow.else)
@@ -58,6 +60,28 @@ After pipeline is congifured, use Change Type to convert the placeholder into on
 Running the placeholder will result in an error.
 
 
+# Data
+
+<h2 id="Data.computeOutcome">Data.computeOutcome</h2>
+
+
+Computes a pipeline, storing a result which can subsequently be accessed
+with `Value.getOutcome` pipe.
+
+
+<h2 id="Data.setBlob">Data.setBlob</h2>
+
+
+Computes a pipeline, storing a result as a blob with specified encoding.
+
+The pipeline should evaluate to object with following structure:
+
+- `filename` (string) — filename of blob
+- `content` (string) — string content in encoding as specified by `encoding` parameter
+
+The blob can subsequently be obtained using `Data.getBlob` pipe.
+
+
 # Eval
 
 <h2 id="Eval.javascript">Eval.javascript</h2>
@@ -73,13 +97,6 @@ Following top-level variables are available:
 
 
 # Flow
-
-<h2 id="Flow.computeOutcome">Flow.computeOutcome</h2>
-
-
-Computes a pipeline, storing a result which can subsequently be accessed
-with `Flow.getOutcome` pipe.
-
 
 <h2 id="Flow.dynamicOutput">Flow.dynamicOutput</h2>
 
