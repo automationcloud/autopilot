@@ -17,10 +17,10 @@ import * as util from '../util';
 import { Pipe } from '../pipe';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-import { BlobService } from '../services';
+import { BlobEncoding, BlobService } from '../services';
 
-export class BrowserGetBlob extends Pipe {
-    static $type = 'Browser.getBlob';
+export class DataGetBlob extends Pipe {
+    static $type = 'Data.getBlob';
     static $help = `
 Returns blob content in a specified encoding.
 
@@ -34,9 +34,9 @@ Caution: decoding large blobs may result in decreased application and engine per
 `;
 
     @params.Enum({
-        enum: ['binary', 'utf8', 'base64', 'hex', 'ascii', 'utf16le', 'ucs2'],
+        enum: Object.values(BlobEncoding),
     })
-    encoding: string = 'binary';
+    encoding: BlobEncoding = BlobEncoding.BINARY;
 
     get $blobs() {
         return this.$engine.get(BlobService);

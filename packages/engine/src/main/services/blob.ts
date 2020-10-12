@@ -34,6 +34,16 @@ export interface Blob {
     length: number;
 }
 
+export enum BlobEncoding {
+    BINARY = 'binary',
+    UTF8 = 'utf8',
+    BASE64 = 'base64',
+    HEX = 'hex',
+    ASCII = 'ascii',
+    UTF16LE = 'utf16le',
+    USC2 = 'usc2',
+}
+
 @injectable()
 @SessionHandler()
 export class BlobService {

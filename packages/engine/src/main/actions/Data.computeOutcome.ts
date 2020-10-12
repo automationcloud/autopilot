@@ -16,12 +16,12 @@ import { Action } from '../action';
 import { Pipeline } from '../pipeline';
 import { params } from '../model';
 
-export class FlowComputeOutcome extends Action {
-    static $type = 'Flow.computeOutcome';
+export class DataComputeOutcome extends Action {
+    static $type = 'Data.computeOutcome';
     static $icon = 'fas fa-microchip';
     static $help = `
 Computes a pipeline, storing a result which can subsequently be accessed
-with \`Flow.getOutcome\` pipe.
+with \`Value.getOutcome\` pipe.
 `;
 
     @params.Pipeline()
