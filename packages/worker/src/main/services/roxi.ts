@@ -61,6 +61,7 @@ export class RoxiService {
             host: this.config.get(ROXI_HOST),
             username,
             password: this.config.get(ROXI_SECRET),
+            useHttps: true,
         });
     }
 }
