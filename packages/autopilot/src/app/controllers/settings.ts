@@ -25,10 +25,6 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['EXTENSIONS_DIR', StorageController.getFile('extensions')],
     ['AC_API_URL:staging', 'https://api-staging.automationcloud.net'],
     ['AC_API_URL:production', 'https://api.automationcloud.net'],
-    ['ROXI_HOST:staging', 'proxy-staging.automationcloud.net:8001'],
-    ['ROXI_HOST:production', 'proxy.automationcloud.net:8001'],
-    ['PAYMENT_DELEGATE_URL:staging', 'https://payment-broker-staging.automationcloud.net/Payment/delegate'],
-    ['PAYMENT_DELEGATE_URL:production', 'https://payment-broker.automationcloud.net/Payment/delegate'],
     ['AC_API_TOKEN_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/token'],
     ['AC_API_TOKEN_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/token'],
     ['AC_API_CLIENT_ID', 'autopilot'],
@@ -41,6 +37,8 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['AC_AUTHORIZATION_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/auth'],
     ['AC_ACCOUNT_INFO_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/userinfo'],
     ['AC_ACCOUNT_INFO_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/userinfo'],
+    ['ROXI_HOST:staging', 'proxy-staging.automationcloud.net:8001'],
+    ['ROXI_HOST:production', 'proxy.automationcloud.net:8001']
 ];
 
 @injectable()
