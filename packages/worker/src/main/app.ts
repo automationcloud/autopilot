@@ -55,12 +55,12 @@ export class WorkerBaseApp extends Application {
         this.container.options.skipBaseClassChecks = true;
         engine.container = this.container;
         this.container.rebind('RootContainer').toConstantValue(this.container);
-        this.container.rebind(EngineLogger).to(WorkerLogger).inSingletonScope();
-        this.container.rebind(FrameworkLogger).to(WorkerLogger).inSingletonScope();
+        this.container.bind(WorkerLogger).toSelf().inSingletonScope();
+        this.container.rebind(EngineLogger).toService(WorkerLogger);
+        this.container.rebind(FrameworkLogger).toService(WorkerLogger);
 
         // Overrides
 
-        this.container.rebind(EngineLogger).to(WorkerLogger).inSingletonScope();
         this.container.rebind(CheckpointService).to(WorkerCheckpointService).inSingletonScope();
         this.container.rebind(FlowService).to(WorkerFlowService).inSingletonScope();
         this.container.rebind(ReporterService).to(WorkerReporterService).inSingletonScope();
