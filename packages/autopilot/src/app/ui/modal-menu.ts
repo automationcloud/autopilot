@@ -71,7 +71,6 @@ export class ModalMenuController implements Controller {
 
     hide() {
         this.reset();
-        this.app.viewports.focusActive();
     }
 
     getDisplayedItems(): ModalMenuItem[] {
