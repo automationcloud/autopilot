@@ -30,6 +30,9 @@ Returns an outcome of another action.
     })
     ref: ActionParamReference = { actionId: '', paramName: '' };
 
+    @params.Boolean()
+    optional: boolean = false;
+
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {
         const value = this.getValue();
         return this.map(inputSet, el => {
@@ -48,7 +51,7 @@ Returns an outcome of another action.
             throw util.scriptError('Action parameter not found', { ref });
         }
         const value = action.getParamValue(param.name);
-        if (value === undefined) {
+        if (value === undefined && !this.optional) {
             throw util.createError({
                 code: 'OutcomeNotAvailable',
                 message: 'Outcome not available (make sure referenced action ran successfully)',
@@ -56,6 +59,6 @@ Returns an outcome of another action.
                 details: { ref, value }
             });
         }
-        return value;
+        return value ?? null;
     }
 }

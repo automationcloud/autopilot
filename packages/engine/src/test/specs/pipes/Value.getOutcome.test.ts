@@ -29,7 +29,7 @@ describe('Value.getOutcome', () => {
         });
 
         context('action was not run', () => {
-            it('throws an error', async () => {
+            it('throws an error if non optional', async () => {
                 const { resultAction } = createTestRig();
                 try {
                     await resultAction.selectOne((resultAction as any).pipeline);
@@ -37,6 +37,12 @@ describe('Value.getOutcome', () => {
                 } catch (err) {
                     assert.equal(err.name, 'OutcomeNotAvailable');
                 }
+            });
+
+            it('resolves null if optional', async () => {
+                const { resultAction } = createTestRig({ optional: true });
+                const res = await resultAction.selectOne((resultAction as any).pipeline);
+                assert.equal(res.value, null);
             });
         });
 
