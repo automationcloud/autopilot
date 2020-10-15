@@ -66,6 +66,7 @@ export abstract class Command<V extends Viewport<any>> {
             this.viewport.getCommandBuffer().registerNewCommand(this);
         }
         this.app.events.emit('commandExecuted', this);
+        this.viewport.focus();
     }
 
     async executeUndo() {
