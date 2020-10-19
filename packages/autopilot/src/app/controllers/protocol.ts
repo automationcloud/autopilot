@@ -65,7 +65,8 @@ export class ProtocolController {
 
     getDomain(): Domain | null {
         const { latest } = this.protocolProvider;
-        if (!latest) {
+        const { draft } = this.project.metadata;
+        if (!latest || draft) {
             return null;
         }
         return latest.getDomain(this.project.metadata.domainId) ?? null;

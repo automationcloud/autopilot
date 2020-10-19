@@ -11,7 +11,8 @@
             </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row"
+            v-if="!metadataProxy.draft">
             <div class="form-row__label">Domain</div>
             <div class="form-row__controls">
                 <select class="input"
