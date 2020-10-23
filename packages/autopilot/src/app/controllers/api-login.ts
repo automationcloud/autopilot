@@ -67,6 +67,7 @@ export class ApiLoginController {
     ) {
         this.userData = this.storage.createUserData('auth', 500);
         this.events.on('settingsUpdated', () => this.onSettingsUpdated());
+        this.events.on('apiAuthInvalidated', () => this.invalidate(true));
         ipcRenderer.on('acLoginResult', (_ev, code: string) => this.emitter.emit('acLoginResult', code));
     }
 
@@ -83,8 +84,8 @@ export class ApiLoginController {
         return this.tokens[this.settings.env];
     }
 
-    get isAuthenticated() {
-        return this.account != null;
+    get isAuthenticated(): boolean {
+        return this.account != null && this.refreshToken != null;
     }
 
     get userInitial() {
@@ -98,8 +99,7 @@ export class ApiLoginController {
     }
 
     async logout() {
-        this.invalidate();
-        this.saveRefreshToken(null);
+        this.invalidate(true);
         // Send a logout request
         const baseUrl = this.settings.get(AC_LOGOUT_URL);
         const request = new Request({
@@ -184,9 +184,12 @@ export class ApiLoginController {
         }
     }
 
-    protected invalidate() {
+    protected invalidate(eraseRefreshToken: boolean = false) {
         this.api.authAgent.invalidate();
         this.account = null;
+        if (eraseRefreshToken) {
+            this.saveRefreshToken(null);
+        }
     }
 
     protected saveRefreshToken(refreshToken: string | null) {
