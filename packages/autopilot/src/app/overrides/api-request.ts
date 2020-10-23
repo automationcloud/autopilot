@@ -34,12 +34,11 @@ export class AutopilotApiRequest extends ApiRequest {
         this.request.onRetry = (error, info) => {
             console.debug('API request failed, retrying', info, error);
         };
-        this.request.onError = (error, info) => {
+        this.request.onError = (_error, info) => {
             if (info.status === 401) {
-                console.info('401 from API request, invalidating refresh token', info, error);
+                console.info('API responded with 401, invalidating refresh token', { details: info });
                 this.events.emit('apiAuthInvalidated');
             }
-            throw error;
         };
 
     }
