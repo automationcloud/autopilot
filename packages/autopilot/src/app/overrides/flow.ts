@@ -46,12 +46,15 @@ export class AutopilotFlowService extends FlowService {
 
     async sendOutputData(key: string, data: any) {
         const { draft } = this.project.metadata;
+        if (draft) {
+            return;
+        }
         const domain = this.protocol.getDomain();
         if (!domain) {
             throw new Error('Cannot access protocol for validation');
         }
         const validation = await domain.validateOutput(key, data);
-        if (!validation.valid && !draft) {
+        if (!validation.valid) {
             throw new Error('Output is invalid. Disable "strict validation" mode to suppress the error.');
         }
     }
