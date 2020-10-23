@@ -38,11 +38,11 @@ export class BrowserService extends Browser {
 
     constructor(
         @inject(Logger)
-        public logger: Logger,
+        logger: Logger,
         @inject(Configuration)
         protected _config: Configuration,
     ) {
-        super(logger);
+        super({ logger });
         this.syncConfig();
         this.on('pageCreated', this.onPageCreated.bind(this));
         this.on('targetAttached', this.onTargetAttached.bind(this));

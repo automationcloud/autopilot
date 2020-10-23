@@ -19,7 +19,7 @@ import { Target } from './target';
 import fetch from 'node-fetch';
 import { EventEmitter } from 'events';
 import uuid from 'uuid';
-import { Logger } from './logger';
+import { ConsoleLogger, Logger } from './logger';
 import { Interceptor, InterceptorHandler } from './interceptor';
 
 export interface BrowserConfig {
@@ -28,6 +28,7 @@ export interface BrowserConfig {
     navigationTimeout: number;
     stableBoxTimeout: number;
     toolkitBinding: string;
+    logger: Logger;
 }
 
 /**
@@ -46,10 +47,9 @@ export interface BrowserConfig {
 export class Browser extends EventEmitter {
     connection: Connection;
     config: BrowserConfig;
-    logger: Logger;
     interceptors: Interceptor[] = [];
 
-    constructor(logger: Logger, config: Partial<BrowserConfig> = {}) {
+    constructor(config: Partial<BrowserConfig> = {}) {
         super();
         this.config = {
             chromePort: 9222,
@@ -57,10 +57,14 @@ export class Browser extends EventEmitter {
             navigationTimeout: 30000,
             stableBoxTimeout: 5000,
             toolkitBinding: uuid.v4(),
+            logger: new ConsoleLogger(),
             ...config,
         };
         this.connection = new Connection(this);
-        this.logger = logger;
+    }
+
+    get logger(): Logger {
+        return this.config.logger;
     }
 
     applyConfig(config: Partial<BrowserConfig>) {

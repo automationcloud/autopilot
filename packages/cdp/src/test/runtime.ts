@@ -14,7 +14,6 @@
 
 import { Browser, Page } from '../main';
 import assert from 'assert';
-import { logger } from './logger';
 
 const chromePort = Number(process.env.CHROME_PORT) || 9123;
 
@@ -24,9 +23,7 @@ export class TestRuntime {
     baseUrl: string = process.env.TEST_SERVER_URL || 'http://localhost:3007';
 
     constructor() {
-        this.browser = new Browser(logger, {
-            chromePort,
-        });
+        this.browser = new Browser({ chromePort });
     }
 
     get page() {
