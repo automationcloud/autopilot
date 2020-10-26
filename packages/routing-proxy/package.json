@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/routing-proxy",
-    "version": "32.15.1",
+    "version": "32.15.2",
     "main": "out/main",
     "scripts": {},
     "files": [
