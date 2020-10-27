@@ -20,7 +20,6 @@ import { params } from '../model';
 export class AppendGlobalAction extends Action {
     static $type = 'Global.appendGlobal';
     static $icon = 'fas fa-globe';
-    static $deprecated = 'Use outcomes instead.';
     static $help = `
 Evaluates pipeline and appends resulting values to Global variable, which should contain an array.
 

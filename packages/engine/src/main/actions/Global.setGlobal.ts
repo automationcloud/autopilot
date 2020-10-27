@@ -20,7 +20,6 @@ import { params } from '../model';
 export class SetGlobalAction extends Action {
     static $type = 'Global.setGlobal';
     static $icon = 'fas fa-globe';
-    static $deprecated = 'Use outcomes instead.';
     static $help = `
 Sets a global variable, which can be subsequently obtained using Get Global pipe.
 
