@@ -138,7 +138,7 @@ export const currencies: Currency[] = [
     { code: 'sar', symbols: ['﷼', 'ر.س.'], name: 'Saudi Arabia Riyal', exponent: 2 },
     { code: 'sbd', symbols: ['sb$'], name: 'Solomon Islands Dollar', exponent: 2 },
     { code: 'scr', symbols: ['₨'], name: 'Seychelles Rupee', exponent: 2 },
-    { code: 'sdg', symbols: [], name: 'Sudanese Pound', exponent: 2 },
+    { code: 'sdg', symbols: ['ج.س.'], name: 'Sudanese Pound', exponent: 2 },
     { code: 'sek', symbols: ['kr'], name: 'Sweden Krona', exponent: 2 },
     { code: 'sgd', symbols: ['sg$'], name: 'Singapore Dollar', exponent: 2 },
     { code: 'shp', symbols: [], name: 'Saint Helena Pound', exponent: 2 },
