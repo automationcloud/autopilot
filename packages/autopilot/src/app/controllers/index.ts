@@ -28,6 +28,7 @@ export * from './first-run';
 export * from './inspect';
 export * from './layout';
 export * from './pipe-recipes';
+export * from './playback';
 export * from './project';
 export * from './protocol';
 export * from './roxi';

@@ -30,7 +30,6 @@ import {
     HttpCallbackService,
 } from '@automationcloud/engine';
 
-import { PlaybackManager } from './managers/playback-manager';
 import { ViewportManager } from './managers/viewport-manager';
 import { StorageController } from './controllers/storage';
 import { AutopilotBrowserService } from './overrides/browser';
@@ -47,7 +46,6 @@ import { AutopilotHttpCallbackService } from './overrides/http-callback';
 
 export class App extends Engine {
     // Deprecated
-    playback: PlaybackManager;
     viewports: ViewportManager;
 
     ui: AppUiControllers;
@@ -81,10 +79,8 @@ export class App extends Engine {
         // TODO inbox: this allows providing IoC with adhoc-bound managers
         // Clean this up after everything is migrated to IoC
         this.container.bind(ViewportManager).toDynamicValue(() => this.viewports);
-        this.container.bind(PlaybackManager).toDynamicValue(() => this.playback);
 
         // Old stuff
-        this.playback = new PlaybackManager(this);
         this.viewports = new ViewportManager(this);
 
         this.ui = createUiControllers(this);

@@ -23,6 +23,10 @@ import LogOutputs from './log-outputs.vue';
 
 export default {
 
+    inject: [
+        'playback'
+    ],
+
     components: {
         LogItem,
         LogOutputs,
@@ -37,7 +41,7 @@ export default {
     computed: {
 
         items() {
-            return this.app.playback.logs.slice().reverse();
+            return this.playback.logs.slice().reverse();
         },
 
         filteredItems() {
@@ -54,7 +58,7 @@ export default {
         },
 
         timestampOrigin() {
-            const first = this.app.playback.logs[0] || { timestamp: Date.now() };
+            const first = this.playback.logs[0] || { timestamp: Date.now() };
             return first.timestamp;
         }
 

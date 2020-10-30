@@ -22,9 +22,9 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { ProjectController } from './project';
 import { ApiController } from './api';
-import { PlaybackManager } from '../managers/playback-manager';
 import { ScriptDiffController } from './script-diff';
 import { DatasetsController } from './datasets';
+import { PlaybackController } from './playback';
 
 @injectable()
 @controller()
@@ -44,8 +44,8 @@ export class ToolsController {
         protected browser: BrowserService,
         @inject(DatasetsController)
         protected datasets: DatasetsController,
-        @inject(PlaybackManager)
-        protected playback: PlaybackManager,
+        @inject(PlaybackController)
+        protected playback: PlaybackController,
         @inject(CheckpointService)
         protected checkpoints: CheckpointService,
     ) {}

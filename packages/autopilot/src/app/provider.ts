@@ -39,6 +39,7 @@ export function createControllerProvider(app: App) {
         inspect: app.get(ctl.InspectController),
         layout: app.get(ctl.LayoutController),
         project: app.get(ctl.ProjectController),
+        playback: app.get(ctl.PlaybackController),
         protocol: app.get(ctl.ProtocolController),
         pipeRecipes: app.get(ctl.PipeRecipesController),
         roxi: app.get(ctl.RoxiController),

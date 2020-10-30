@@ -12,56 +12,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Context, Action, Script, Engine, BrowserService } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import { App } from '../app';
-import { Context, Action, Script } from '@automationcloud/engine';
+import { controller } from '../controller';
+import { ExpandableController } from './expandable';
+import { ProjectController } from './project';
 
-export interface PlaybackTimer {
-    accumulator: number;
-    tickAt: number;
-}
-
-export type PlaybackLogType =
-    | 'playback'
-    | 'context.enter'
-    | 'context.leave'
-    | 'action.start'
-    | 'action.end'
-    | 'input'
-    | 'output'
-    | 'success'
-    | 'fail';
-
-export interface PlaybackLogSpec {
-    type: PlaybackLogType;
-    context?: Context;
-    action?: Action;
-    output?: any;
-    input?: any;
-    error?: any;
-    breakpointId?: string;
-    playbackEvent?: 'pause' | 'playScript' | 'playContext' | 'playAction';
-}
-
-export interface PlaybackLog extends PlaybackLogSpec {
-    timestamp: number;
-}
-
-export class PlaybackManager {
-    app: App;
+@injectable()
+@controller()
+export class PlaybackController {
     timer!: PlaybackTimer;
     logs: PlaybackLog[] = [];
     breakpointIds: string[] = [];
     _timer: any = null;
     private _lastBreakpointId: string | null = null;
 
-    constructor(app: App) {
-        this.app = app;
+    constructor(
+        @inject(ProjectController)
+        protected project: ProjectController,
+        @inject(Engine)
+        protected engine: Engine,
+        @inject(BrowserService)
+        protected browser: BrowserService,
+        @inject(ExpandableController)
+        protected expandable: ExpandableController,
+        // Circular dependency cannot be resolved until viewports are
+        // decomposed into separate components
+        @inject('App')
+        protected app: App,
+    ) {
         this.resetTimer();
     }
 
+    async init() {}
+
     get script() {
-        return this.app.project.script;
+        return this.project.script;
     }
+
     get scriptFlow() {
         return this.app.viewports.scriptFlow;
     }
@@ -232,18 +221,18 @@ export class PlaybackManager {
 
     async reset() {
         this.pause();
-        if (this.app.browser.isAttached()) {
+        if (this.browser.isAttached()) {
             try {
-                await this.app.browser.page.clearBrowsingData();
-                await this.app.browser.page.navigate('about:blank');
+                await this.browser.page.clearBrowsingData();
+                await this.browser.page.navigate('about:blank');
             } catch (err) {
                 console.warn('Current target cleanup failed', err);
             }
         }
-        await this.app.finishSession();
-        await this.app.startSession();
-        await this.app.project.init();
-        this.app.expandable.collapseAll();
+        await this.engine.finishSession();
+        await this.engine.startSession();
+        await this.project.init();
+        this.expandable.collapseAll();
         this.scriptFlow.clearSelection();
         this.resetTimer();
         this.clearLogs();
@@ -316,6 +305,23 @@ export class PlaybackManager {
     }
 
     // Breakpoints
+
+    getBreakpointableSelectedAction() {
+        const action = this.getSelectedItem();
+        if (action instanceof Action && !['matcher', 'definition'].includes(action.type)) {
+            return action;
+        }
+        return null;
+    }
+
+    hasBreakpoint(actionId: string) {
+        return this.breakpointIds.includes(actionId);
+    }
+
+    toggleBreakpoint(actionId: string) {
+        return this.hasBreakpoint(actionId) ?
+            this.removeBreakpoint(actionId) : this.addBreakpoint(actionId);
+    }
 
     addBreakpoint(actionId: string) {
         this.breakpointIds.push(actionId);
@@ -398,4 +404,35 @@ export class PlaybackManager {
             this.pause();
         }
     }
+}
+
+export interface PlaybackTimer {
+    accumulator: number;
+    tickAt: number;
+}
+
+export type PlaybackLogType =
+    | 'playback'
+    | 'context.enter'
+    | 'context.leave'
+    | 'action.start'
+    | 'action.end'
+    | 'input'
+    | 'output'
+    | 'success'
+    | 'fail';
+
+export interface PlaybackLogSpec {
+    type: PlaybackLogType;
+    context?: Context;
+    action?: Action;
+    output?: any;
+    input?: any;
+    error?: any;
+    breakpointId?: string;
+    playbackEvent?: 'pause' | 'playScript' | 'playContext' | 'playAction';
+}
+
+export interface PlaybackLog extends PlaybackLogSpec {
+    timestamp: number;
 }
