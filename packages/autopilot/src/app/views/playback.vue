@@ -88,6 +88,10 @@ import { EmulationController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'playback',
+    ],
+
     components: {
         PlaybackStatus
     },
@@ -95,43 +99,43 @@ export default {
     computed: {
         throttlingMode() { return this.get(EmulationController).throttlingMode; },
         script() { return this.app.project.script; },
-        isPaused() { return this.app.playback.isPaused(); },
-        isRunning() { return this.app.playback.isRunning(); },
-        isCanPlayScript() { return this.app.playback.isCanPlayScript(); },
-        isCanPlayContext() { return this.app.playback.isCanPlayContext(); },
-        isCanPlayAction() { return this.app.playback.isCanPlayAction(); },
-        isCanMatchContexts() { return this.app.playback.isCanMatchContexts(); },
-        timer() { return this.app.playback.getTimer(); },
+        isPaused() { return this.playback.isPaused(); },
+        isRunning() { return this.playback.isRunning(); },
+        isCanPlayScript() { return this.playback.isCanPlayScript(); },
+        isCanPlayContext() { return this.playback.isCanPlayContext(); },
+        isCanPlayAction() { return this.playback.isCanPlayAction(); },
+        isCanMatchContexts() { return this.playback.isCanMatchContexts(); },
+        timer() { return this.playback.getTimer(); },
         error() { return this.script.$playback.error; }
     },
 
     methods: {
         pause() {
-            this.app.playback.pause();
+            this.playback.pause();
         },
 
         playScript() {
-            this.app.playback.playScript();
+            this.playback.playScript();
         },
 
         playContext() {
-            this.app.playback.playContext();
+            this.playback.playContext();
         },
 
         playAction(advance) {
-            this.app.playback.playAction(advance);
+            this.playback.playAction(advance);
         },
 
         matchContexts() {
-            this.app.playback.matchContexts();
+            this.playback.matchContexts();
         },
 
         reset() {
-            this.app.playback.reset();
+            this.playback.reset();
         },
 
         resetTimer() {
-            this.app.playback.resetTimer();
+            this.playback.resetTimer();
         },
 
         dismissError() {

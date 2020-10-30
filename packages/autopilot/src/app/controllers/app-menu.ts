@@ -22,12 +22,12 @@ import { ViewportManager } from '../managers/viewport-manager';
 import { ProjectController } from './project';
 import { dom, helpers } from '../util';
 import { Viewport } from '../viewport';
-import { LayoutManager } from '../managers/layout-manager';
-import { PlaybackManager } from '../managers/playback-manager';
 import { EmulationController } from './emulation';
 import { ToolsController } from './tools';
 import { controller } from '../controller';
 import { ProtocolController } from './protocol';
+import { LayoutController } from './layout';
+import { PlaybackController } from './playback';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 
@@ -45,12 +45,12 @@ export class AppMenuController {
         protected settings: SettingsController,
         @inject(ViewportManager)
         protected viewports: ViewportManager,
-        @inject(LayoutManager)
-        protected layout: LayoutManager,
+        @inject(LayoutController)
+        protected layout: LayoutController,
         @inject(ProjectController)
         protected project: ProjectController,
-        @inject(PlaybackManager)
-        protected playback: PlaybackManager,
+        @inject(PlaybackController)
+        protected playback: PlaybackController,
         @inject(EmulationController)
         protected emulation: EmulationController,
         @inject(ToolsController)

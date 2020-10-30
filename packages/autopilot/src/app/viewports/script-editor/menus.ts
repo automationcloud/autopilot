@@ -18,6 +18,7 @@ import { ScriptEditorViewport } from '.';
 import { dom } from '../../util';
 import { MenuItemConstructorOptions } from 'electron';
 import { PipeClass, model } from '@automationcloud/engine';
+import { PipeRecipesController } from '../../controllers/pipe-recipes';
 
 const standardPipeCategories = [
     'Assert',
@@ -43,6 +44,10 @@ export class ScriptEditorMenusController {
 
     get app() {
         return this.viewport.app;
+    }
+
+    get pipeRecipes() {
+        return this.app.get(PipeRecipesController);
     }
 
     showCreatePipeMenu() {
@@ -177,7 +182,7 @@ export class ScriptEditorMenusController {
     }
 
     private *buildCreatePipeRecipe(): IterableIterator<ModalMenuItem> {
-        const { pipeGroups } = this.app.recipes;
+        const { pipeGroups } = this.pipeRecipes;
         if (pipeGroups.length) {
             yield { type: 'header', label: 'Recipes' };
             for (const group of pipeGroups) {

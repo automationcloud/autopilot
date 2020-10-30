@@ -22,7 +22,7 @@ import { ScriptFlowMenusController } from './menus';
 import { ActionRecorderController } from './recorder';
 import { ScriptViewport, InsertLocation } from '../script-viewport';
 import { DragAndDropActionsController } from './dnd-actions';
-import { BreakpointsController } from './breakpoints';
+import { PlaybackController } from '../../controllers/playback';
 
 type ScriptFlowItem = Context | Action;
 
@@ -42,7 +42,6 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     menus: ScriptFlowMenusController;
     recorder: ActionRecorderController;
     dndActions: DragAndDropActionsController;
-    breakpoints: BreakpointsController;
 
     constructor(app: App) {
         super(app);
@@ -51,7 +50,10 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.menus = new ScriptFlowMenusController(this);
         this.recorder = new ActionRecorderController(this);
         this.dndActions = new DragAndDropActionsController(this);
-        this.breakpoints = new BreakpointsController(this);
+    }
+
+    get playback() {
+        return this.app.get(PlaybackController);
     }
 
     getViewportId(): string {
@@ -88,43 +90,6 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
             if (selectedAction.type === 'send-network-request') {
                 return true;
             }
-        }
-        return false;
-    }
-
-    showBreakpointOptions(): boolean {
-        if (this.isActionSelected()) {
-            const selectedAction: Action = this.getLastSelectedItem() as Action;
-            if (selectedAction.type !== 'matcher' && selectedAction.type !== 'definition') {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    showSetBreakpoint(): boolean {
-        if (this.getLastSelectedItem() instanceof Action) {
-            const selectedAction: Action = this.getLastSelectedItem() as Action;
-            if (!this.app.playback.breakpointIds.includes(selectedAction.id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    showRemoveBreakpoint(): boolean {
-        if (this.getLastSelectedItem() instanceof Action) {
-            const selectedAction: Action = this.getLastSelectedItem() as Action;
-            if (this.app.playback.breakpointIds.includes(selectedAction.id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    showRemoveAllBreakpoints(): boolean {
-        if (this.app.playback.breakpointIds.length > 0) {
-            return true;
         }
         return false;
     }

@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from '../app';
+import { inject, injectable } from 'inversify';
+import { controller } from '../controller';
 import { UserData } from '../userdata';
+import { StorageController } from './storage';
 
 export interface PipeRecipe {
     name: string;
@@ -25,15 +27,18 @@ export interface PipeGroup {
     recipes: PipeRecipe[];
 }
 
-export class RecipeManager {
-    app: App;
+@injectable()
+@controller()
+export class PipeRecipesController {
     userData: UserData;
 
     pipeGroups: PipeGroup[] = [];
 
-    constructor(app: App) {
-        this.app = app;
-        this.userData = app.storage.createUserData('recipes');
+    constructor(
+        @inject(StorageController)
+        storage: StorageController,
+    ) {
+        this.userData = storage.createUserData('recipes');
     }
 
     async init() {

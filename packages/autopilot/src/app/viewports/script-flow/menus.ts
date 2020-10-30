@@ -26,6 +26,7 @@ import { ScriptFlowViewport } from '.';
 import { dom } from '../../util';
 import { MenuItemConstructorOptions } from 'electron';
 import { InputDef, Domain } from '@ubio/protocol';
+import { PlaybackController } from '../../controllers/playback';
 
 const standardActionCategories = [
     'Page',
@@ -43,6 +44,10 @@ export class ScriptFlowMenusController {
 
     get app() {
         return this.viewport.app;
+    }
+
+    get playback() {
+        return this.app.get(PlaybackController);
     }
 
     showCreateMenu() {
@@ -156,22 +161,16 @@ export class ScriptFlowMenusController {
             label: `Reset ${lbl}`,
             click: () => this.viewport.commands.reset(),
         };
-        if (this.viewport.showBreakpointOptions()) {
+        const action = this.playback.getBreakpointableSelectedAction();
+        if (action) {
             yield { type: 'separator' };
             yield {
-                label: `Set breakpoint`,
-                click: () => this.viewport.breakpoints.setBreakpoint(),
-                enabled: this.viewport.showSetBreakpoint(),
-            };
-            yield {
-                label: `Remove breakpoint`,
-                click: () => this.viewport.breakpoints.removeBreakpoint(),
-                enabled: this.viewport.showRemoveBreakpoint(),
+                label: this.playback.hasBreakpoint(action.id) ? `Remove breakpoint` : 'Set breakpoint',
+                click: () => this.playback.toggleBreakpoint(action.id),
             };
             yield {
                 label: `Remove all breakpoints`,
-                click: () => this.viewport.breakpoints.removeAllBreakpoints(),
-                enabled: this.viewport.showRemoveAllBreakpoints(),
+                click: () => this.playback.clearBreakpoints(),
             };
         }
     }

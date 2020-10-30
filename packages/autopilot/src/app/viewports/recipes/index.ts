@@ -15,9 +15,9 @@
 import { StatelessViewport } from '../../viewport';
 import { helpers, clipboard } from '../../util';
 import assert from 'assert';
-import { PipeGroup, PipeRecipe } from '../../managers/recipe-manager';
 import { MenuItemConstructorOptions } from 'electron';
 import { util } from '@automationcloud/engine';
+import { PipeGroup, PipeRecipe, PipeRecipesController } from '../../controllers/pipe-recipes';
 
 export class RecipesViewport extends StatelessViewport {
     getViewportId(): string {
@@ -25,21 +25,25 @@ export class RecipesViewport extends StatelessViewport {
     }
 
     getViewportName(): string {
-        return 'Recipes';
+        return 'Pipeline Recipes';
     }
 
     getViewportIcon(): string {
         return 'fas fa-utensils';
     }
 
+    get pipeRecipes() {
+        return this.app.get(PipeRecipesController);
+    }
+
     get pipeGroups() {
-        return this.app.recipes.pipeGroups;
+        return this.pipeRecipes.pipeGroups;
     }
 
     update() {
         // We're mostly working with data persisted by RecipesManager, hence the shortcut
         super.update();
-        this.app.recipes.update();
+        this.pipeRecipes.update();
     }
 
     getPipeGroupId(group: PipeGroup) {

@@ -41,7 +41,7 @@
             <div class="form-row__controls">
                 <div class="modal-create-recipe__pipe"
                     v-for="pipe in selectedPipes">
-                    {{ pipe.$type }}
+                    {{ pipe.type }}
                 </div>
             </div>
         </div>
@@ -63,6 +63,10 @@
 
 <script>
 export default {
+
+    inject: [
+        'pipeRecipes'
+    ],
 
     props: {
 
@@ -98,7 +102,7 @@ export default {
     methods: {
 
         getGroupNames() {
-            return this.app.recipes.pipeGroups.map(_ => _.name);
+            return this.pipeRecipes.pipeGroups.map(_ => _.name);
         },
 
         createRecipe() {

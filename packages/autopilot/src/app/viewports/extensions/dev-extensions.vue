@@ -63,6 +63,12 @@ import {
 
 export default {
 
+    inject: [
+        'expandable',
+        'extDev',
+        'extReg',
+    ],
+
     data() {
         return {
             adding: false,
@@ -79,24 +85,12 @@ export default {
             return this.app.project.script;
         },
 
-        expandable() {
-            return this.get(ExpandableController);
-        },
-
-        devExt() {
-            return this.get(ExtensionDevController);
-        },
-
-        extRegistry() {
-            return this.get(ExtensionRegistryController);
-        },
-
         extensions() {
-            return this.devExt.extensions;
+            return this.extDev.extensions;
         },
 
         processing() {
-            return this.devExt.processing;
+            return this.extDev.processing;
         },
 
         expanded() {
@@ -108,19 +102,20 @@ export default {
     methods: {
 
         async addExtension() {
-            await this.devExt.showAddExtensionPopup();
+            await this.extDev.showAddExtensionPopup();
+            this.expandable.expand(this.expandId);
         },
 
         async removeExtension(ext) {
-            await this.devExt.removeExtension(ext);
+            await this.extDev.removeExtension(ext);
         },
 
         async publishExtension(ext) {
-            await this.devExt.publishExtension(ext);
+            await this.extDev.publishExtension(ext);
         },
 
         isExtensionPublished(ext) {
-            return this.extRegistry.isVersionExist(ext.spec.name, ext.spec.version);
+            return this.extReg.isVersionExist(ext.spec.name, ext.spec.version);
         },
 
         toggleExpanded() {

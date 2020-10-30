@@ -32,9 +32,16 @@
 
 <script>
 import LayoutViewport from './layout-viewport.vue';
+import { EventEmitter } from 'events';
+
+const events = new EventEmitter();
 
 export default {
     name: 'layout-item',
+
+    inject: [
+        'layout'
+    ],
 
     components: {
         LayoutViewport
@@ -64,13 +71,13 @@ export default {
 
     mounted() {
         window.addEventListener('resize', this.updateSize);
-        this.app.layout.addListener('resize', this.updateSize);
+        events.addListener('resize', this.updateSize);
         this.updateSize();
     },
 
     destroyed() {
         window.removeEventListener('resize', this.updateSize);
-        this.app.layout.removeListener('resize', this.updateSize);
+        events.removeListener('resize', this.updateSize);
     },
 
     methods: {
@@ -88,7 +95,7 @@ export default {
             window.removeEventListener('mousemove', this.onResize);
             window.removeEventListener('mouseup', this.stopResize);
             window.removeEventListener('mouseleave', this.stopResize);
-            this.app.layout.update();
+            this.layout.update();
         },
 
         onResize(ev) {
@@ -119,7 +126,7 @@ export default {
             const bSize = a.size + b.size - aSize;
             a.size = aSize;
             b.size = bSize;
-            this.app.layout.emit('resize');
+            events.emit('resize');
         },
 
         updateSize() {

@@ -28,15 +28,20 @@
 <script>
 export default {
 
+    inject: [
+        'playback',
+        'project',
+    ],
+
     computed: {
-        script() { return this.app.project.script; },
+        script() { return this.project.script; },
         status() { return this.script.$playback.status; }
     },
 
     methods: {
 
         jumpTo() {
-            this.app.playback.jumpToPlayhead();
+            this.playback.jumpToPlayhead();
         },
 
     }

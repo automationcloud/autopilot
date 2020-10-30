@@ -118,6 +118,12 @@ import { ScriptDiffController, ExpandableController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'playback',
+        'expandable',
+        'diff',
+    ],
+
     props: {
         action: { type: Object, required: true }
     },
@@ -131,14 +137,6 @@ export default {
 
         viewport() {
             return this.app.viewports.scriptFlow;
-        },
-
-        expandable() {
-            return this.get(ExpandableController);
-        },
-
-        diff() {
-            return this.get(ScriptDiffController);
         },
 
         script() {
@@ -194,7 +192,7 @@ export default {
         },
 
         hasBreakpoint() {
-            return this.app.playback.breakpointIds.includes(this.action.id);
+            return this.playback.hasBreakpoint(this.action.id);
         },
 
         dnd() {
