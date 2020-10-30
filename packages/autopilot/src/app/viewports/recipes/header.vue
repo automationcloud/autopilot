@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="title">
-            Recipes
+            Pipeline Recipes
         </div>
     </div>
 </template>

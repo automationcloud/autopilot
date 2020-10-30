@@ -27,7 +27,7 @@ import {
     SettingsViewport,
 } from '../viewports';
 import { Viewport } from '../viewport';
-import { LayoutDirection } from './layout-manager';
+import { LayoutDirection } from '../util/layout-item';
 
 export class ViewportManager {
     app: App;

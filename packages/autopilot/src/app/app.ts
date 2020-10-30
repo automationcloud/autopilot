@@ -30,9 +30,7 @@ import {
     HttpCallbackService,
 } from '@automationcloud/engine';
 
-import { LayoutManager } from './managers/layout-manager';
 import { PlaybackManager } from './managers/playback-manager';
-import { RecipeManager } from './managers/recipe-manager';
 import { ViewportManager } from './managers/viewport-manager';
 import { StorageController } from './controllers/storage';
 import { AutopilotBrowserService } from './overrides/browser';
@@ -49,9 +47,7 @@ import { AutopilotHttpCallbackService } from './overrides/http-callback';
 
 export class App extends Engine {
     // Deprecated
-    layout: LayoutManager;
     playback: PlaybackManager;
-    recipes: RecipeManager;
     viewports: ViewportManager;
 
     ui: AppUiControllers;
@@ -85,13 +81,10 @@ export class App extends Engine {
         // TODO inbox: this allows providing IoC with adhoc-bound managers
         // Clean this up after everything is migrated to IoC
         this.container.bind(ViewportManager).toDynamicValue(() => this.viewports);
-        this.container.bind(LayoutManager).toDynamicValue(() => this.layout);
         this.container.bind(PlaybackManager).toDynamicValue(() => this.playback);
 
         // Old stuff
-        this.layout = new LayoutManager(this);
         this.playback = new PlaybackManager(this);
-        this.recipes = new RecipeManager(this);
         this.viewports = new ViewportManager(this);
 
         this.ui = createUiControllers(this);
@@ -120,6 +113,7 @@ export class App extends Engine {
     get tools() { return this.get(ToolsController); }
     get expandable() { return this.get(ct.ExpandableController); }
     get protocol() { return this.get(ct.ProtocolController); }
+    get layout() { return this.get(ct.LayoutController); }
 
     async init() {
         for (const { descriptor, instance } of this.getControllerInstances()) {
@@ -146,12 +140,7 @@ export class App extends Engine {
         // DEPRECATED: use controllers instead, port these whenever time allows
         // Old initialization
         // Note: order of initialization matters atm
-        const managers: Controller[] = [
-            this.layout,
-            this.recipes,
-            this.viewports,
-        ];
-        const ctrls = managers.concat(this.uiControllers);
+        const ctrls = this.uiControllers.concat([this.viewports]);
         for (const ctl of ctrls) {
             try {
                 await ctl.init();
