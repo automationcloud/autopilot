@@ -68,8 +68,10 @@
 }
 
 select option, option {
-    color: #000 !important;    // yep, that's right
-    // https://github.com/ubio/css/blob/5a31a487426b05100f1a0ca4103317e45b6556c0/stylesheets/base.css#L133
+    color: #000 !important;    /* yep, that's right */
+    /*
+    https://github.com/ubio/css/blob/5a31a487426b05100f1a0ca4103317e45b6556c0/stylesheets/base.css#L133
+    */
 }
 
 .subtle {
