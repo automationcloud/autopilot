@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import marked from 'marked';
+import { mdToHtml } from '../../../util/helpers';
 
 export default {
 
@@ -17,7 +17,7 @@ export default {
 
         notesHtml() {
             return (this.pipe.notes || '').trim() ?
-                marked(this.pipe.notes) : '';
+                mdToHtml(this.pipe.notes) : '';
         }
 
     }

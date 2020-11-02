@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import marked from 'marked';
-import sanitizeHtml from 'sanitize-html';
-
 import { Controller } from '../controller';
 import { App } from '../app';
+import { mdToHtml } from '../util/helpers';
 
 export class HelpController implements Controller {
     helpItem: HelpItem | null = null;
@@ -38,7 +36,7 @@ export class HelpController implements Controller {
     protected getActionHelpItem(type: string): HelpItem {
         const ActionClass = this.app.resolver.getActionClass(type);
         const text = ActionClass.$help.trim();
-        const help = text ? sanitize(marked(text)) : '';
+        const help = text ? mdToHtml(text) : '';
 
         return {
             label: ActionClass.$type,
@@ -49,7 +47,7 @@ export class HelpController implements Controller {
     protected getPipeHelpItem(type: string): HelpItem {
         const PipeClass = this.app.resolver.getPipeClass(type);
         const text = PipeClass.$help.trim();
-        const help = text ? sanitize(marked(text)) : '';
+        const help = text ? mdToHtml(text) : '';
 
         return {
             label: PipeClass.$type,
@@ -86,8 +84,3 @@ export interface HelpItem {
     help: string;
 }
 
-function sanitize(html: string) {
-    return sanitizeHtml(html, {
-        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'hr', 'code', 'pre'],
-    });
-}

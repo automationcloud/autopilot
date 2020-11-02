@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, screen, shell } from 'electron';
 import { Profile, getLastProfile, updateProfile, getSettings } from './settings';
 import path from 'path';
 import os from 'os';
@@ -103,6 +103,12 @@ function createNewWindow(profile: Profile) {
     wnd.on('focus', () => {
         wnd.webContents.send('focus');
         // settings.setLastProfile(profile.id);
+    });
+    wnd.webContents.on('will-navigate', (ev, url) => {
+        if (/^https?:\/\//i.test(url)) {
+            ev.preventDefault();
+            shell.openExternal(url);
+        }
     });
     // wnd.openDevTools();
     return wnd;

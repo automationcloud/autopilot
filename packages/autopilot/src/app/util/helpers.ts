@@ -19,6 +19,8 @@ import rimraf from 'rimraf';
 import { promisify } from 'util';
 import mkdirp from 'mkdirp';
 import Json5 from 'json5';
+import marked from 'marked';
+import sanitize from 'sanitize-html';
 
 export const rimrafAsync = promisify(rimraf);
 export const mkdirpAsync = promisify(mkdirp);
@@ -245,4 +247,11 @@ export function makeSafeString(str: string, others: string[]): string {
 export function isUuid(str: string) {
     const r = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89AB][0-9a-f]{3}-[0-9a-f]{12}$', 'i');
     return r.test(str);
+}
+
+export function mdToHtml(text: string) {
+    const html = marked(text);
+    return sanitize(html, {
+        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
+    });
 }
