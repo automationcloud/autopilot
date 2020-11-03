@@ -104,12 +104,16 @@ function createNewWindow(profile: Profile) {
         wnd.webContents.send('focus');
         // settings.setLastProfile(profile.id);
     });
-    wnd.webContents.on('will-navigate', (ev, url) => {
+
+    const handleNavigate = (ev: Electron.Event, url: string) => {
         if (/^https?:\/\//i.test(url)) {
             ev.preventDefault();
             shell.openExternal(url);
         }
-    });
+    };
+
+    wnd.webContents.on('will-navigate', handleNavigate);
+    wnd.webContents.on('new-window', handleNavigate);
     // wnd.openDevTools();
     return wnd;
 
