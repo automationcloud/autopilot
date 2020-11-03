@@ -1,3 +1,7 @@
+## 32.16.0
+
+- feat(autopilot): open links provided from help and pipe/action notes with external browser
+
 ## 32.2.0
 
 - feat(autopilot): inline help icon for actions and pipes
