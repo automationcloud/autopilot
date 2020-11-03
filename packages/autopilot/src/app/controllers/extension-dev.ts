@@ -141,6 +141,8 @@ export class ExtensionDevController {
                     name: ext.spec.name,
                     version: ext.spec.version,
                     description: ext.spec.description,
+                    private: ext.spec.private,
+                    tags: ext.spec.tags,
                     tarballBase64: buffer.toString('base64'),
                 }
             });

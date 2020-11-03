@@ -90,6 +90,7 @@ export class ApiViewport extends Viewport<ApiViewportState> {
 
     async refresh() {
         try {
+            this.error = null;
             this.loadedService = null;
             this.loadedScript = null;
             this.loadedServiceActiveScript = null;

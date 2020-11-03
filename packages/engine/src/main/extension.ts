@@ -37,6 +37,8 @@ export interface ExtensionSpec {
     description: string;
     modules: string[];
     entrypoint?: string;
+    tags: string[];
+    private: boolean;
 }
 
 export interface ExtensionManifest {
@@ -45,6 +47,8 @@ export interface ExtensionManifest {
     description: string;
     latestVersion: string;
     versions: string[];
+    tags: string[];
+    private: boolean;
 }
 
 export interface ExtensionVersion {
@@ -183,7 +187,18 @@ export class Extension {
         } = pkg;
         const modules = pkg.extension?.modules ?? pkg.modules ?? [];
         const entrypoint = pkg.extension?.entrypoint;
-        return { name, version, title, description, modules, entrypoint };
+        const isPrivate = pkg.extension?.private ?? true;
+        const tags = pkg.extension?.tags ?? [];
+        return {
+            name,
+            version,
+            title,
+            description,
+            modules,
+            entrypoint,
+            private: isPrivate,
+            tags,
+        };
     }
 
     static async loadPackageJson(dir: string): Promise<any> {

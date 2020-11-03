@@ -10,8 +10,11 @@
         <section style="flex: 1">
             <div class="ext-title" @click="toggleExpand()">
                 {{ title }}
-                <i class="help-circle fas fa-question-circle"
+                <i class="icon-help fas fa-question-circle"
                     v-if="description"></i>
+                <i class="icon-private fas fa-lock"
+                    v-if="manifest.private"
+                    title="This extension cannot be used by other organisations"></i>
             </div>
             <div class="ext-description" v-if="isExpanded && description">
                 {{ description }}
@@ -149,8 +152,18 @@ export default {
     background: var(--color-cool--500);
 }
 
-.help-circle {
+.icon-help {
     margin-left: var(--gap--small);
     color: var(--color-cool--600);
+}
+
+.icon-private {
+    margin-left: var(--gap--small);
+    color: var(--color-yellow--400);
+}
+
+.icon-public {
+    margin-left: var(--gap--small);
+    color: var(--color-blue--400);
 }
 </style>

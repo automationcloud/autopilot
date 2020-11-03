@@ -65,6 +65,8 @@ describe('Extension', () => {
             description: '',
             version: '1.0.0',
             modules: [],
+            private: false,
+            tags: [],
         });
         (extension as any).loadModulesSync = () => {
             extension.actionClasses = [MyCustomAction];
@@ -94,6 +96,8 @@ describe('Extension', () => {
             description: '',
             version: '1.0.0',
             modules: [],
+            private: false,
+            tags: [],
         });
         (extension as any).loadModulesSync = () => {
             extension.inspectionClasses = [MyInspection];

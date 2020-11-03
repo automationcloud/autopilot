@@ -31,6 +31,8 @@ export class RegistryServiceMock extends RegistryService {
             title: '',
             description: 'Commonly used actions and pipes',
             versions: ['2.5.4', '2.5.3', '2.5.2', '2.5.1', '2.5.0', '2.4.0', '2.3.0', '2.2.0', '2.1.0', '2.0.0'],
+            tags: [],
+            private: false,
         },
         {
             name: '@automationcloud/extension-captcha',
@@ -38,6 +40,8 @@ export class RegistryServiceMock extends RegistryService {
             description: 'Captcha solvers',
             latestVersion: '1.0.0',
             versions: ['1.0.0'],
+            tags: [],
+            private: false,
         }
     ];
 
@@ -55,6 +59,8 @@ export class RegistryServiceMock extends RegistryService {
                 title: '',
                 description: '',
                 modules: [],
+                tags: [],
+                private: false,
             });
         }
         return await super.loadExtension(name, versionRange);

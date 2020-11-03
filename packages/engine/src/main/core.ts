@@ -34,4 +34,6 @@ export const coreExtension = new Extension(__dirname, {
         './pipes/**/*.js',
         './inspections/**/*.js',
     ],
+    tags: [],
+    private: false,
 });
