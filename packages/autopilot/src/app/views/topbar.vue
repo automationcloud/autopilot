@@ -37,10 +37,13 @@ import AccountMenu from './account-menu.vue';
 import TitlebarControls from './titlebar-controls.vue';
 import { popupMenu } from '../util/menu';
 import os from 'os';
-import pkg from '../../../package.json';
 import { AppMenuController } from '~/controllers';
 
 export default {
+
+    inject: [
+        'tools',
+    ],
 
     data() {
         return {
@@ -120,7 +123,7 @@ export default {
                 },
                 { type: 'separator' },
                 {
-                    label: `Autopilot ${pkg.version}`,
+                    label: `Autopilot ${this.tools.version}`,
                     enabled: false,
                 },
                 {
@@ -186,6 +189,9 @@ export default {
     justify-content: center;
     white-space: nowrap;
     cursor: pointer;
+
+    font-family: var(--font-family--alt);
+    font-weight: 400;
 }
 
 @media (max-width: 480px) {

@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div class="title">Settings</div>
+        <div class="title">Preferences</div>
     </div>
 </template>
 

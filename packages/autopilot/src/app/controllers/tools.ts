@@ -25,6 +25,7 @@ import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
 import { DatasetsController } from './datasets';
 import { PlaybackController } from './playback';
+import { version } from '../globals';
 
 @injectable()
 @controller()
@@ -53,6 +54,10 @@ export class ToolsController {
     async init() {}
 
     get script() { return this.project.script; }
+
+    get version() {
+        return version;
+    }
 
     // Loaders
 

@@ -21,7 +21,7 @@ export class SettingsViewport extends StatelessViewport {
     }
 
     getViewportName(): string {
-        return 'Settings';
+        return 'Preferences';
     }
 
     getViewportIcon(): string {
