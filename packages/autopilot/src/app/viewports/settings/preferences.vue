@@ -4,7 +4,6 @@
         <div class="section__title">
             Autopilot
         </div>
-
         <div class="pane">
             <div class="pane-item"
                 v-if="!!apiLogin.account">
@@ -32,11 +31,30 @@
             </div>
         </div>
 
+        <div class="section__title">
+            On Startup
+        </div>
+        <div class="pane">
+            <div class="pane-item">
+                <div class="pane-main">
+                    Load Robot School in browser on startup
+                </div>
+                <div class="pane-aside">
+                    <!-- TODO -->
+                    <toggle v-model="foo"/>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script>
 export default {
+
+    data() {
+        return { foo: false };
+    },
 
     inject: [
         'apiLogin',
