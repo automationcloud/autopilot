@@ -1,11 +1,11 @@
 import { getProfile, getAllProfiles, createNewProfile } from './settings';
 import { ipcMain } from 'electron';
 import { windows, createWindow } from './windows';
-import { getUpdateInfo } from './updater';
+import { getUpdateInfo, installUpdates } from './updater';
 
 export function initIpcListeners() {
 
-    ipcMain.on('profile.activate', (ev, id) => {
+    ipcMain.on('profile.activate', (_ev, id) => {
         const profile = getProfile(id);
         if (profile) {
             createWindow(profile);
@@ -31,6 +31,10 @@ export function initIpcListeners() {
 
     ipcMain.on('updater.check', ev => {
         getUpdateInfo().then(res => ev.reply('updater.checkResult', res));
+    });
+
+    ipcMain.on('updater.installUpdates', _ev => {
+        installUpdates();
     });
 
 }

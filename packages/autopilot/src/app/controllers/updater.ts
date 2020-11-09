@@ -32,6 +32,10 @@ export class UpdaterController {
         return semver.gte(version, this.upstreamVersion);
     }
 
+    installUpdates() {
+        ipcRenderer.send('updater.installUpdates');
+    }
+
 }
 
 interface CheckResults {

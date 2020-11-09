@@ -27,6 +27,11 @@ export async function getUpdateInfo() {
     return res.info;
 }
 
+export async function installUpdates() {
+    await autoUpdater.checkForUpdates();
+    autoUpdater.quitAndInstall();
+}
+
 function configure() {
     const settings = getSettings();
     autoUpdater.allowPrerelease = settings.channel === 'beta';
