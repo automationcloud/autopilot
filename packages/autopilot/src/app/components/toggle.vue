@@ -3,7 +3,9 @@
         :class="{
             'toggl--on': value,
             'toggl--off': !value,
-        }">
+        }"
+        tabindex="0"
+        @uiactivate="toggle()">
         <input
             class="toggl__input"
             type="checkbox"
@@ -23,6 +25,10 @@ export default {
     methods: {
         onChange(ev) {
             this.$emit('input', ev.target.checked);
+        },
+
+        toggle() {
+            this.$emit('input', !this.value);
         }
     }
 };
@@ -44,6 +50,11 @@ export default {
 
     cursor: pointer;
     transition: background-color .3s;
+}
+
+.toggl:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px var(--color-blue--400);
 }
 
 .toggl::after {

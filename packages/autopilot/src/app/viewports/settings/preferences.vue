@@ -26,7 +26,7 @@
                     Current Autopilot version {{ tools.version }}
                 </div>
                 <div class="pane-aside">
-                    <!-- TODO check for updates -->
+                    <update-checker/>
                 </div>
             </div>
         </div>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import UpdateChecker from './update-checker.vue';
+
 export default {
 
     data() {
@@ -58,10 +60,12 @@ export default {
 
     inject: [
         'apiLogin',
-        'tools'
+        'tools',
+        'updater',
     ],
 
     components: {
+        UpdateChecker,
     },
 
     computed: {

@@ -1,0 +1,6 @@
+owner: automationcloud
+repo: autopilot
+provider: github
+vPrefixedTagName: false
+releaseType: prerelease
+updaterCacheDirName: '@automationcloudautopilot-updater'

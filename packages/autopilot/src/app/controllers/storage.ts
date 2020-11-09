@@ -43,8 +43,8 @@ export class StorageController {
     constructor() {
         this.profileId = profileId;
         this.profileName = profile ? profile.name : 'Default';
-        ipcRenderer.on('profileCountChanged', (_ev, count) => (this.profileCount = count));
-        ipcRenderer.send('refreshProfileCount');
+        ipcRenderer.on('profile.countChanged', (_ev, count) => (this.profileCount = count));
+        ipcRenderer.send('profile.refresh');
     }
 
     async init() {}

@@ -46,5 +46,6 @@ export function createControllerProvider(app: App) {
         scriptReport: app.get(ctl.ScriptReportController),
         settings: app.get(ctl.SettingsController),
         tools: app.get(ctl.ToolsController),
+        updater: app.get(ctl.UpdaterController),
     };
 }

@@ -52,11 +52,11 @@ export function createWindow(profile: Profile) {
             if (windows.length === 0) {
                 process.exit(0);
             }
-            sendToAllWindows('profileCountChanged', windows.length);
+            sendToAllWindows('profile.countChanged', windows.length);
         });
 
         windows.push(wnd);
-        sendToAllWindows('profileCountChanged', windows.length);
+        sendToAllWindows('profile.countChanged', windows.length);
     }
 }
 

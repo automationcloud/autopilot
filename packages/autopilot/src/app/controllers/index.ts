@@ -37,3 +37,4 @@ export * from './script-report';
 export * from './settings';
 export * from './storage';
 export * from './tools';
+export * from './updater';
