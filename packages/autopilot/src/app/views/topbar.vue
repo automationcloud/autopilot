@@ -104,7 +104,7 @@ export default {
                     }
                 },
                 {
-                    label: 'Settings',
+                    label: 'Preferences',
                     click: () => {
                         this.app.layout.activateInternalWorkspace({
                             type: 'column',

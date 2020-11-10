@@ -131,8 +131,9 @@ export class SettingsController {
         return decl ? this.config.get(decl) : null;
     }
 
-    setValue(key: string, value: string | null) {
-        this._setSingleValue(key, value);
+    setValue(key: string, value: string | null, useEnv: boolean = false) {
+        const _key = useEnv ? `${key}:${this.env}` : key;
+        this._setSingleValue(_key, value);
         this.update();
     }
 

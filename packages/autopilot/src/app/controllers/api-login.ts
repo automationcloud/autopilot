@@ -28,9 +28,8 @@ import {
 } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
-import { UserData } from '../userdata';
 import { StorageController } from './storage';
-import { SettingsController, SettingsEnv } from './settings';
+import { SettingsController } from './settings';
 import { controlServerPort } from '../globals';
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
@@ -38,18 +37,12 @@ const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
 const AC_AUTHORIZATION_URL = stringConfig('AC_AUTHORIZATION_URL', '');
 const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 
-const DEFAULT_TOKENS: TokensPerEnv = { staging: null, production: null };
-
 const ajv = new Ajv();
 
 @injectable()
 @controller({ priority: 2000 })
 export class ApiLoginController {
-    protected userData: UserData;
-
-    tokens: TokensPerEnv = { ...DEFAULT_TOKENS };
     account: AccountInfo | null = null;
-    targetEnv: SettingsEnv | null = null;
 
     constructor(
         @inject(EventBus)
@@ -61,27 +54,21 @@ export class ApiLoginController {
         @inject(ApiRequest)
         protected api: ApiRequest,
     ) {
-        this.userData = this.storage.createUserData('auth', 500);
         this.events.on('settingsUpdated', () => this.onSettingsUpdated());
-        this.events.on('apiAuthInvalidated', () => this.invalidate(true));
+        this.events.on('apiAuthInvalidated', () => this.onAuthInvalidated());
         ipcRenderer.on('acLoginResult', (_ev, code: string) => this.onAcLoginResult(code));
     }
 
     async init() {
-        this.tokens = await this.userData.loadData({ ...DEFAULT_TOKENS });
-        this.initLogin();
+        this.authenticate().catch(() => { });
     }
 
-    update() {
-        this.userData.update(this.tokens);
-    }
-
-    get refreshToken() {
-        return this.tokens[this.settings.env];
+    updateRefreshToken(refreshToken: string) {
+        this.settings.setValue('AC_API_REFRESH_TOKEN', refreshToken, true);
     }
 
     get isAuthenticated(): boolean {
-        return this.account != null && this.refreshToken != null;
+        return this.account != null && this.api.isAuthenticated();
     }
 
     get userInitial() {
@@ -107,7 +94,7 @@ export class ApiLoginController {
             auth: this.api.authAgent,
         });
         await request.send('get', '');
-        this.invalidate(true);
+        this.updateRefreshToken('');
         this.events.emit('apiAuthUpdated');
     }
 
@@ -148,6 +135,9 @@ export class ApiLoginController {
     }
 
     protected async authenticate() {
+        if (!this.api.isAuthenticated()) {
+            return;
+        }
         try {
             this.account = await this.fetchAccountInfo();
             console.info('Signed in', this.account?.email);
@@ -158,53 +148,28 @@ export class ApiLoginController {
         }
     }
 
-    protected initLogin() {
-        this.targetEnv = this.settings.env;
-        this.invalidate();
-        const { refreshToken } = this;
-        if (refreshToken) {
-            this.api.authAgent.setTokens({ refreshToken });
-            this.authenticate().catch(() => { });
-        }
-    }
-
-    protected invalidate(eraseRefreshToken: boolean = false) {
-        this.api.authAgent.invalidate();
-        this.api.authAgent.params.refreshToken = null;
-        this.account = null;
-        if (eraseRefreshToken) {
-            this.saveRefreshToken(null);
-        }
-    }
-
-    protected saveRefreshToken(refreshToken: string | null) {
-        this.tokens[this.settings.env] = refreshToken;
-        this.update();
-    }
-
-    protected async onAcLoginResult(code: string) {
-        try {
-            const tokens = await this.exchangeToken(code);
-            this.saveRefreshToken(tokens.refreshToken);
-            this.initLogin();
-            this.events.emit('apiAuthUpdated');
-            this.activateWindow();
-        } catch (err) {
-            console.warn('Log in failed', err);
-        }
-    }
-
     protected activateWindow() {
         const wnd = remote.getCurrentWindow();
         wnd.focus();
     }
 
-    protected async onSettingsUpdated() {
-        if (this.targetEnv === this.settings.env) {
-            return;
+    protected onSettingsUpdated() {
+        this.init();
+    }
+
+    protected onAuthInvalidated() {
+        this.updateRefreshToken('');
+    }
+
+    protected async onAcLoginResult(code: string) {
+        try {
+            const tokens = await this.exchangeToken(code);
+            this.updateRefreshToken(tokens.refreshToken);
+            this.events.emit('apiAuthUpdated');
+            this.activateWindow();
+        } catch (err) {
+            console.warn('Log in failed', err);
         }
-        this.initLogin();
-        this.events.emit('apiAuthUpdated');
     }
 
     protected async exchangeToken(code: string) {
@@ -248,11 +213,6 @@ export class ApiLoginController {
         };
     }
 
-}
-
-interface TokensPerEnv {
-    staging: string | null;
-    production: string | null;
 }
 
 interface AccountInfo {

@@ -33,6 +33,7 @@ export class ChromeManagerController {
     chromeProcess: ChildProcess | null = null;
     connected: boolean = false;
     targets: Target[] = [];
+    chromeRestarted: boolean = false;
 
     protected connectPromise: Promise<void> | null = null;
 
@@ -95,6 +96,7 @@ export class ChromeManagerController {
     }
 
     protected async _tryConnectBrowser() {
+        this.chromeRestarted = false;
         for (let i = 0; i < 10; i++) {
             try {
                 if (this.connected) {
@@ -102,8 +104,11 @@ export class ChromeManagerController {
                 }
                 await this.browser.connect();
             } catch (err) {
-                console.debug('browser.connect failed, trying to run Chrome', err);
-                this.runChrome();
+                if (!this.chromeRestarted) {
+                    this.chromeRestarted = true;
+                    console.debug('Failed to connect to Chrome, trying to run it again', err);
+                    this.runChrome();
+                }
                 await new Promise(r => setTimeout(r, 500));
             }
         }
