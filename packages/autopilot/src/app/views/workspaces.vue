@@ -218,8 +218,8 @@ export default {
     justify-content: center;
     white-space: nowrap;
 
-    font-size: 12px;
-    font-weight: 500;
+    font-family: var(--font-family--alt);
+    font-weight: 400;
     -webkit-app-region: no-drag;
 }
 

@@ -4,15 +4,12 @@
         <div class="title">
             <div style="flex: 1"
                 class="section__subtitle">
-                <span @click="toggleExpanded">Local extensions</span>
+                <span @click="toggleExpanded">
+                    Local extensions
+                    ({{ extensions.length }})
+                </span>
                 <expand :id="expandId"/>
             </div>
-            <template v-if="expanded">
-                <button class="button button--primary"
-                    @click="addExtension()">
-                    <span>Add directory</span>
-                </button>
-            </template>
         </div>
 
         <template v-if="expanded">
@@ -49,18 +46,16 @@
                     </button>
                 </div>
             </div>
+            <button class="button button--primary"
+                @click="addExtension()">
+                <span>Add directory</span>
+            </button>
         </template>
 
     </div>
 </template>
 
 <script>
-import {
-    ExtensionDevController,
-    ExtensionRegistryController,
-    ExpandableController,
-} from '~/controllers';
-
 export default {
 
     inject: [

@@ -129,7 +129,7 @@ export class RoxiController {
     }
 
     isAuthenticated() {
-        return !!this.apiRequest.authAgent.params.refreshToken;
+        return this.apiRequest.isAuthenticated();
     }
 
     isUsingRoxi() {

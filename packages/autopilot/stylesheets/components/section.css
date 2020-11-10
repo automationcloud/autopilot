@@ -9,8 +9,9 @@
 .section__title {
     margin: var(--gap--large) 0;
 
-    font-size: 16px;
-    font-weight: 600;
+    font-family: var(--font-family--alt);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .section__subtitle {

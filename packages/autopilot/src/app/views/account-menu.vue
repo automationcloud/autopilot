@@ -1,25 +1,16 @@
 <template>
     <div class="account-menu">
-        <template v-if="loggingIn">
-            <button
-                class="button button--small button--yellow frameless"
-                disabled>
-                Signing in...
-            </button>
-        </template>
-        <template v-else>
-            <button v-if="!isAuthenticated"
-                class="button button--small button--yellow frameless"
-                @click="apiLogin.startLogin()">
-                Sign in
-            </button>
-            <span v-else
-                class="badge badge--round badge--circle"
-                @click="popupMenu"
-                @contextmenu.stop.prevent="popupMenu">
-                {{ text }}
-            </span>
-        </template>
+        <button v-if="!isAuthenticated"
+            class="button button--small button--yellow frameless"
+            @click="apiLogin.startLogin()">
+            Sign in
+        </button>
+        <span v-else
+            class="account-icon"
+            @click="popupMenu"
+            @contextmenu.stop.prevent="popupMenu">
+            {{ text }}
+        </span>
     </div>
 </template>
 
@@ -33,8 +24,7 @@ export default {
     ],
 
     computed: {
-        isAuthenticated() { return this.apiLogin.isAuthenticated; },
-        loggingIn() { return this.apiLogin.loggingIn; },
+        isAuthenticated() { return this.apiLogin.isAuthenticated(); },
         text() { return this.apiLogin.userInitial; },
     },
 
@@ -69,16 +59,4 @@ export default {
 </script>
 
 <style scoped>
-.badge {
-    background: var(--color-yellow--300);
-    color: var(--ui-color);
-    height: 2em;
-}
-
-.badge--circle {
-    text-transform: uppercase;
-    height: 2.2em;
-    width: 2.2em;
-    letter-spacing: 0;
-}
 </style>

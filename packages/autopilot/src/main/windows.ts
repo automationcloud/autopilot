@@ -18,6 +18,9 @@ import path from 'path';
 import os from 'os';
 import { controlServer } from './globals';
 
+// eslint-disable-next-line import/no-commonjs
+const pkg = require('../../package.json');
+
 export const windows: BrowserWindow[] = [];
 
 export function sendToAllWindows(event: string, ...args: any[]) {
@@ -49,11 +52,11 @@ export function createWindow(profile: Profile) {
             if (windows.length === 0) {
                 process.exit(0);
             }
-            sendToAllWindows('profileCountChanged', windows.length);
+            sendToAllWindows('profile.countChanged', windows.length);
         });
 
         windows.push(wnd);
-        sendToAllWindows('profileCountChanged', windows.length);
+        sendToAllWindows('profile.countChanged', windows.length);
     }
 }
 
@@ -95,6 +98,7 @@ function createNewWindow(profile: Profile) {
         appPath: path.resolve(__dirname, '../..'),
         controlServerPort: controlServer.getServerPort(),
         startedAt: Date.now(),
+        version: pkg.version,
     });
     wnd.loadURL('file://' + path.join(__dirname, '../../static/app.html'));
     wnd.on('ready-to-show', () => wnd.show());

@@ -40,7 +40,6 @@ export class AutopilotApiRequest extends ApiRequest {
                 this.events.emit('apiAuthInvalidated');
             }
         };
-
     }
 
 }

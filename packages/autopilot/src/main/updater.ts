@@ -14,9 +14,28 @@
 
 import { autoUpdater } from 'electron-updater';
 import { getSettings } from './settings';
+import path from 'path';
 
-export function checkForUpdates() {
+export function autoCheckForUpdates() {
+    configure();
+    return autoUpdater.checkForUpdatesAndNotify();
+}
+
+export async function getUpdateInfo() {
+    configure();
+    const res = await (autoUpdater as any).getUpdateInfoAndProvider();
+    return res.info;
+}
+
+export async function installUpdates() {
+    await autoUpdater.checkForUpdates();
+    autoUpdater.quitAndInstall();
+}
+
+function configure() {
     const settings = getSettings();
     autoUpdater.allowPrerelease = settings.channel === 'beta';
-    autoUpdater.checkForUpdatesAndNotify();
+    if (process.env.NODE_ENV === 'development') {
+        autoUpdater.updateConfigPath = path.join(__dirname, '../../dev-app-update.yml');
+    }
 }

@@ -1,12 +1,17 @@
 <template>
     <div class="browser">
 
-        <div class="target flexrow"
+        <div class="section__title">
+            Active connection
+        </div>
+
+        <div class="target"
+            :class="{
+                'target--connected': isAttachedTo(target)
+            }"
             v-for="target of targets"
-            tabindex="0"
             data-selection-id="target.targetId"
-            @uiactivate="attach(target)"
-            @dblclick="attach(target)">
+            @uiactivate="attach(target)">
 
             <div class="summary">
                 <div class="title">
@@ -17,15 +22,15 @@
                 </div>
             </div>
 
-            <button class="button button--icon frameless"
+            <button class="button button--secondary"
                 title="Connect to this target"
                 v-if="!isAttachedTo(target)"
                 @click="attach(target)">
-                <i class="fas fa-plug"></i>
+                Connect
             </button>
 
-            <strong class="color--blue"
-                v-if="isAttachedTo(target)">
+            <strong v-if="isAttachedTo(target)"
+                style="padding: var(--gap)">
                 Connected
             </strong>
 
@@ -68,16 +73,33 @@ export default {
     padding: var(--gap--small);
 }
 
+.title {
+    margin: var(--gap--small) 0;
+    font-weight: 500;
+}
+
+.target {
+    display: flex;
+    align-items: center;
+    background: var(--color-mono--100);
+    border-radius: var(--border-radius);
+    padding: var(--gap);
+}
+
+.target + .target {
+    margin-top: var(--gap);
+}
+
+.target--connected {
+    background: var(--color-green--500);
+    color: #fff;
+}
+
 .summary {
     flex: 1;
     min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.title {
-    margin: var(--gap--small) 0;
-    font-weight: 500;
 }
 </style>

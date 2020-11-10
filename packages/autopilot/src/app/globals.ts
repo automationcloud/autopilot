@@ -22,7 +22,8 @@ const {
     appPath,
     controlServerPort,
     instanceId,
-    startedAt
+    startedAt,
+    version,
 } = wnd as any;
 
 export {
@@ -31,6 +32,7 @@ export {
     appPath,
     controlServerPort,
     startedAt,
+    version,
 };
 
 export function getAppPath() {

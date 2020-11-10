@@ -2,19 +2,29 @@
     <div class="ext-item"
         :class="{
             'ext-item--installed': installed,
+            'ext-item--private': manifest.private,
         }">
         <div class="ext-icon">
             <i class="fas fa-puzzle-piece"></i>
         </div>
 
         <section style="flex: 1">
-            <div class="ext-title" @click="toggleExpand()">
+            <div class="ext-headline" @click="toggleExpand()">
+                <span class="ext-private"
+                    title="This extension cannot be used by other organisations"
+                    v-if="manifest.private">
+                    private
+                </span>
+                <span class="ext-title">
                 {{ title }}
+                </span>
                 <i class="icon-help fas fa-question-circle"
                     v-if="description"></i>
+                <!--
                 <i class="icon-private fas fa-lock"
                     v-if="manifest.private"
                     title="This extension cannot be used by other organisations"></i>
+                -->
             </div>
             <div class="ext-description" v-if="isExpanded && description">
                 {{ description }}
@@ -118,12 +128,15 @@ export default {
 }
 
 .ext-item:hover {
-    background: rgba(0,0,0,.01);
+    background: rgba(0,0,0,.025);
+}
+
+.ext-headline {
+    margin: var(--gap--small) 0;
 }
 
 .ext-title {
     font-weight: bold;
-    margin: var(--gap--small) 0;
 }
 
 .ext-description {
@@ -146,6 +159,20 @@ export default {
     text-align: center;
     background: var(--color-cool--200);
     color: #fff;
+}
+
+.ext-private {
+    display: inline-block;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: var(--font-size--small);
+    /* background: var(--color-yellow--500); */
+    /* color: #fff; */
+    color: var(--color-yellow--500);
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 4px;
+    border: 2px solid var(--color-yellow--500);
 }
 
 .ext-item--installed .ext-icon {

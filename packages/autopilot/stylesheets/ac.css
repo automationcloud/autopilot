@@ -1,6 +1,6 @@
 /* automation cloud styles, in the future, we can remove .automationcloud from all code */
 .automation-cloud {
-    font-family: var(--font-family--automation-cloud);
+    font-family: var(--font-family--alt);
 }
 
 /* Do not apply font to fa icons */

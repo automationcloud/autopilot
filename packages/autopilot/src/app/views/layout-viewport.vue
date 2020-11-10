@@ -256,6 +256,8 @@ export default {
     justify-content: space-between;
 
     background: var(--color-mono--600);
+    /* font-family: var(--font-family--alt); */
+    /* font-weight: 400; */
 }
 
 .header-component {

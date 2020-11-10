@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import http from 'http';
-import { sendToAllWindows } from './windows';
+import { sendToAllWindows, windows } from './windows';
 import { AddressInfo } from 'net';
 
 import Koa from 'koa';
@@ -54,8 +54,11 @@ export class ControlServer {
     }
 
     onLoginResult(ctx: Koa.Context) {
-        const code = ctx.query.code;
-        sendToAllWindows('acLoginResult', code);
+        const { code, profileId } = ctx.query;
+        const wnd = windows.find(_ => (_ as any).profile.id === profileId);
+        if (wnd) {
+            wnd.webContents.send('acLoginResult', code);
+        }
         ctx.status = 200;
         ctx.type = 'html';
         ctx.body = `
