@@ -30,7 +30,7 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import { StorageController } from './storage';
 import { SettingsController } from './settings';
-import { controlServerPort } from '../globals';
+import { controlServerPort, profile } from '../globals';
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
 const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
@@ -131,7 +131,7 @@ export class ApiLoginController {
     }
 
     protected getRedirectUrl() {
-        return `http://localhost:${controlServerPort}/acLoginCallback`;
+        return `http://localhost:${controlServerPort}/acLoginCallback?profileId=${profile.id}`;
     }
 
     protected async authenticate() {
