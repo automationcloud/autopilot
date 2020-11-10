@@ -2,9 +2,9 @@
     <div class="api">
         <signin-warning class="signin-warning"
             message="to access Services and run automations on the Automation Cloud"/>
-        <template v-if="apiLogin.isAuthenticated">
+        <template v-if="apiLogin.isAuthenticated()">
             <div class="api__error"
-                v-if="apiLogin.isAuthenticated && viewport.error">
+                v-if="apiLogin.isAuthenticated() && viewport.error">
                 <error :err="viewport.error"
                     :allow-dismiss="true"
                     @dismiss="viewport.dismissError()"/>

@@ -24,7 +24,7 @@ export default {
     ],
 
     computed: {
-        isAuthenticated() { return this.apiLogin.isAuthenticated; },
+        isAuthenticated() { return this.apiLogin.isAuthenticated(); },
         text() { return this.apiLogin.userInitial; },
     },
 

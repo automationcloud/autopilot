@@ -83,11 +83,12 @@
 
 <script>
 import { shell } from 'electron';
-import {
-    ApiLoginController
-} from '~/controllers';
 
 export default {
+
+    inject: [
+        'apiLogin'
+    ],
 
     data() {
         return {
@@ -103,8 +104,7 @@ export default {
     },
 
     computed: {
-        apiLogin() { return this.get(ApiLoginController); },
-        isAuthenticated() { return this.apiLogin.isAuthenticated; },
+        isAuthenticated() { return this.apiLogin.isAuthenticated(); },
     },
 
     methods: {

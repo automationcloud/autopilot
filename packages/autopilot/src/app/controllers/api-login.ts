@@ -67,7 +67,7 @@ export class ApiLoginController {
         this.settings.setValue('AC_API_REFRESH_TOKEN', refreshToken, true);
     }
 
-    get isAuthenticated(): boolean {
+    isAuthenticated(): boolean {
         return this.account != null && this.api.isAuthenticated();
     }
 

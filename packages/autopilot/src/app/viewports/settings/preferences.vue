@@ -6,7 +6,7 @@
         </div>
         <div class="pane">
             <div class="pane-item"
-                v-if="!!apiLogin.account">
+                v-if="apiLogin.isAuthenticated()">
                 <div class="pane-main">
                     <span class="account-icon"
                         style="margin-right: var(--gap)">
