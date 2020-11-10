@@ -82,8 +82,8 @@ export class ApiLoginController {
     }
 
     get accountFullName() {
-        const { firstName, lastName } = this.account || {};
-        return [firstName, lastName].filter(Boolean).join(' ') || '<unknown>';
+        const { firstName, lastName, email } = this.account || {};
+        return [firstName, lastName].filter(Boolean).join(' ') || email || '';
     }
 
     async logout() {
