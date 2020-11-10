@@ -606,20 +606,11 @@ Caution: decoding large blobs may result in decreased application and engine per
 Restores a set saved with Local Save pipe.
 Input set is discared.
 
-### Use For
-
-- Do not. This pipe allows creating very non-intuitive data flows, which are hard to reason about.
-
 
 <h2 id="Data.saveLocal">Data.saveLocal</h2>
 
 
 Saves input set, so that it could be later restored with Local Restore.
-
-### Use For
-
-- Do not. This pipe allows creating very non-intuitive data flows, which are nearly impossible to reason about.
-- Consider using more conventional tools for solving the problem, or create a custom pipe if none work.
 
 
 # Date

@@ -561,19 +561,10 @@ An error is thrown if multiple elements are found within each element.</p>
 
 <p>Restores a set saved with Local Save pipe.
 Input set is discared.</p>
-<h3 id="use-for-32">Use For</h3>
-<ul>
-<li>Do not. This pipe allows creating very non-intuitive data flows, which are hard to reason about.</li>
-</ul>
 <h2 id="Data.saveLocal">Data.saveLocal</h2>
 
 
 <p>Saves input set, so that it could be later restored with Local Restore.</p>
-<h3 id="use-for-33">Use For</h3>
-<ul>
-<li>Do not. This pipe allows creating very non-intuitive data flows, which are nearly impossible to reason about.</li>
-<li>Consider using more conventional tools for solving the problem, or create a custom pipe if none work.</li>
-</ul>
 <h1 id="date">Date</h1>
 <h2 id="Date.format">Date.format</h2>
 
@@ -583,7 +574,7 @@ then returns this date formatted using specified output format.</p>
 <p>An error is thrown if input data is not a string.</p>
 <p>See <a href="https://momentjs.com/docs/#/parsing/string-format/">moment.js docs</a>
 for more information about pattern strings and formatting.</p>
-<h3 id="use-for-34">Use For</h3>
+<h3 id="use-for-32">Use For</h3>
 <ul>
 <li>general purpose date parsing and formatting</li>
 <li>filtering on dates (e.g. format Job Input date to match format on the web page)</li>
@@ -596,7 +587,7 @@ for more information about pattern strings and formatting.</p>
 <p>This pipe is a primary means of working with definitions.
 It allows extracting common functionality of different pipelines as a named definition,
 so that the same pipes could be reused across multiple actions.</p>
-<h3 id="use-for-35">Use For</h3>
+<h3 id="use-for-33">Use For</h3>
 <ul>
 <li>extracting common functionality (e.g. inbound and outbound flight selection
 would share common parts for extracting flight information, prices, etc.)</li>
@@ -619,7 +610,7 @@ which has access to top-level keys of input object</li>
 <li><code>= 42</code> for numbers,</li>
 <li><code>= &quot;/some/path&quot;</code> for string constants which start with <code>/</code></li>
 </ul>
-<h3 id="use-for-36">Use For</h3>
+<h3 id="use-for-34">Use For</h3>
 <ul>
 <li>flexible evaluation of expressions based on input values (arithmetic, boolean, string composition, etc)</li>
 <li>lightweight alternative to JavaScript</li>
@@ -631,7 +622,7 @@ which has access to top-level keys of input object</li>
 If condition is     rue`, evaluates the positive branch pipeline, otherwise evaluates the negative branch.</p>
 <p>Condition pipeline should return a single element for each element in input set.
 An error is thrown if condition value is not a boolean.</p>
-<h3 id="use-for-37">Use For</h3>
+<h3 id="use-for-35">Use For</h3>
 <ul>
 <li>applying different pipelines to elements based on a condition</li>
 <li>advanced scripting</li>
@@ -640,7 +631,7 @@ An error is thrown if condition value is not a boolean.</p>
 
 
 <p>Executes an arbitrary JavaScript code and returns its results.</p>
-<h3 id="use-for-38">Use For</h3>
+<h3 id="use-for-36">Use For</h3>
 <ul>
 <li>advanced scripting</li>
 </ul>
@@ -654,7 +645,7 @@ The input set comes before the inner pipeline&#39;s results.</p>
 which are executed per each element in input set), with #document element as its input set.
 A typical usage is to have a Use Definition pipe inside of it,
 so that multiple definitions can be concatenated together.</p>
-<h3 id="use-for-39">Use For</h3>
+<h3 id="use-for-37">Use For</h3>
 <ul>
 <li>concatenating elements from multiple definitions or other sources</li>
 </ul>
@@ -674,7 +665,7 @@ so that multiple definitions can be concatenated together.</p>
 <p>This is similar to COUNT / GROUP BY from SQL and is primarily used in advanced scripting scenarios
 (e.g. calculate the number of passengers in each group).</p>
 <p>The DOM node of the result is set to top #document.</p>
-<h3 id="use-for-40">Use For</h3>
+<h3 id="use-for-38">Use For</h3>
 <ul>
 <li>advanced scripting</li>
 </ul>
@@ -689,7 +680,7 @@ so that multiple definitions can be concatenated together.</p>
 
 <p>Returns a single element whose value is <code>true</code> if the input set contains one or more elements,
 and <code>false</code> otherwise. The DOM node of the result is set to top #document.</p>
-<h3 id="use-for-41">Use For</h3>
+<h3 id="use-for-39">Use For</h3>
 <ul>
 <li>checking if collection has elements (e.g. as part of filters or matchers)</li>
 </ul>
@@ -700,7 +691,7 @@ and <code>false</code> otherwise. The DOM node of the result is set to top #docu
 The element is then discarded if the value is <code>false</code>, or kept if the value is <code>true</code>.</p>
 <p>Inner pipeline must return a single element for each element in the input set.
 An error is thrown if the resulting value is not a boolean.</p>
-<h3 id="use-for-42">Use For</h3>
+<h3 id="use-for-40">Use For</h3>
 <ul>
 <li>general purpose filtering for various use cases</li>
 </ul>
@@ -715,7 +706,7 @@ An error is thrown if the resulting value is not a boolean.</p>
 <p>For example, if input set contains 2 elements with arrays <code>[1, 2, 3]</code> and <code>[4, 5]</code> respectively,
 then the output set will contain 5 elements with values <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code> respectively.</p>
 <p>An error is thrown if input value is not an array.</p>
-<h3 id="use-for-43">Use For</h3>
+<h3 id="use-for-41">Use For</h3>
 <ul>
 <li>trasnforming arrays (e.g. from Job Input) into elements for subsequent manipulations with other pipes</li>
 </ul>
@@ -727,7 +718,7 @@ then the output set will contain 5 elements with values <code>1</code>, <code>2<
 
 
 <p>Returns a single element whose value is a number of elements in the input set.</p>
-<h3 id="use-for-44">Use For</h3>
+<h3 id="use-for-42">Use For</h3>
 <ul>
 <li>accessing the count of input elements (e.g. to output the number of available options on the website)</li>
 </ul>
@@ -736,7 +727,7 @@ then the output set will contain 5 elements with values <code>1</code>, <code>2<
 
 <p>Returns specified number of first elements in input set and discards everything else.
 A typical usage scenario is to have limit <code>1</code> which ensures that the output set only contains a single element.</p>
-<h3 id="use-for-45">Use For</h3>
+<h3 id="use-for-43">Use For</h3>
 <ul>
 <li>restricting elements to a single element
 (e.g. for <code>click</code> actions, especially when filtering yields more than one element and
@@ -752,7 +743,7 @@ The input set comes after the inner pipeline&#39;s results.</p>
 which are executed per each element in input set), with #document element as its input set.
 A typical usage is to have a Use Definition pipe inside of it,
 so that multiple definitions can be concatenated together.</p>
-<h3 id="use-for-46">Use For</h3>
+<h3 id="use-for-44">Use For</h3>
 <ul>
 <li>concatenating elements from multiple definitions or other sources</li>
 </ul>
@@ -768,7 +759,7 @@ so that multiple definitions can be concatenated together.</p>
 
 
 <p>Returns the elements from the input set in a reversed order.</p>
-<h3 id="use-for-47">Use For</h3>
+<h3 id="use-for-45">Use For</h3>
 <ul>
 <li>advanced scripting</li>
 </ul>
@@ -776,7 +767,7 @@ so that multiple definitions can be concatenated together.</p>
 
 
 <p>Discards specified number of elements and returns everything else.</p>
-<h3 id="use-for-48">Use For</h3>
+<h3 id="use-for-46">Use For</h3>
 <ul>
 <li>excluding placeholder elements from sets, specifically for <code>&lt;option&gt;</code>
 elements whose first element is typically a placeholder and does not represent an actual option</li>
@@ -803,7 +794,7 @@ only discards a continuous sequence of elements either at the start or at the en
 
 <p>For each element evaluates the key using inner pipeline,
 then sorts the elements according to this key, in ascending order.</p>
-<h3 id="use-for-49">Use For</h3>
+<h3 id="use-for-47">Use For</h3>
 <ul>
 <li>advanced scripting</li>
 </ul>
@@ -822,7 +813,7 @@ only discards a continuous sequence of elements either at the start or at the en
 
 <p>Returns a single element whose value is an array containing all values of the input set.
 The DOM node of the result is set to top #document.</p>
-<h3 id="use-for-50">Use For</h3>
+<h3 id="use-for-48">Use For</h3>
 <ul>
 <li>transforming elements into arrays (e.g. to use as part of Job Output)</li>
 </ul>
@@ -838,7 +829,7 @@ The DOM node of the result is set to top #document.</p>
 then returns the boolean result of numeric comparison of these two operands using specified operator.</p>
 <p>Inner pipelines should return a single element for each element in input set.
 An error is thrown if the result is not a number.</p>
-<h3 id="use-for-51">Use For</h3>
+<h3 id="use-for-49">Use For</h3>
 <ul>
 <li>general purpose numerical comparison (e.g. for matching the number of registered luggage against Job Input)</li>
 </ul>
@@ -851,7 +842,7 @@ An error is thrown if the result is not a number.</p>
 Therefore, ranges <code>[0, 3)</code> and <code>[3, 5)</code> form a continuous range <code>[0, 5)</code> with no &quot;holes&quot; in it;
 and the input value <code>3</code> will belong to the second range.</p>
 <p>An error is thrown if input value is not a number, or if the number does not belong to any range.</p>
-<h3 id="use-for-52">Use For</h3>
+<h3 id="use-for-50">Use For</h3>
 <ul>
 <li>mapping continuous ranges into discrete categories (e.g. passenger age groups)</li>
 </ul>
@@ -866,7 +857,7 @@ and the input value <code>3</code> will belong to the second range.</p>
 <p>Evaluates an object with inner pipeline,
 then merges the resulting object with input object by assigning each key of the result to it.</p>
 <p>The inner pipeline must resolve to a single element with object value. An error is thrown if input value is not object/array.</p>
-<h3 id="use-for-53">Use For</h3>
+<h3 id="use-for-51">Use For</h3>
 <ul>
 <li>merging multiple objects together (analogous to <code>Object.assign</code> in JavaScript)</li>
 <li>mixing data from definition into input object</li>
@@ -879,7 +870,7 @@ then merges the resulting object with input object by assigning each key of the 
 <p>Each mapping specifies a JSON pointer and an expression.
 Expressions are evaluated according to rules specified in Expression pipe and are assigned to
 corresponding JSON pointers.</p>
-<h3 id="use-for-54">Use For</h3>
+<h3 id="use-for-52">Use For</h3>
 <ul>
 <li>shaping output objects with bulk move and assign operations</li>
 <li>building template objects for outputs and network requests, which can subsequently be modified or extended</li>
@@ -888,7 +879,7 @@ corresponding JSON pointers.</p>
 
 
 <p>Removes the value at specified path. An error is thrown if input value is not object/array.</p>
-<h3 id="use-for-55">Use For</h3>
+<h3 id="use-for-53">Use For</h3>
 <ul>
 <li>removing unwanted or temporary data (e.g. for composing Job Output objects)</li>
 </ul>
@@ -914,7 +905,7 @@ The DOM node of the result is set to top #document.</p>
 <p>Returns the value at specified path.
 An error is thrown if datum resolves to undefined.
 An error is thrown if input value is not object/array.</p>
-<h3 id="use-for-56">Use For</h3>
+<h3 id="use-for-54">Use For</h3>
 <ul>
 <li>accessing nested data of objects and arrays (e.g. Job Inputs)</li>
 </ul>
@@ -923,7 +914,7 @@ An error is thrown if input value is not object/array.</p>
 
 <p>Returns <code>true</code> if input object contains anything at specified path.
 An error is thrown if input value is not an object or an array.</p>
-<h3 id="use-for-57">Use For</h3>
+<h3 id="use-for-55">Use For</h3>
 <ul>
 <li>checking whether optional data is set (e.g. whether inbound flight object is specified)</li>
 </ul>
@@ -933,7 +924,7 @@ An error is thrown if input value is not an object or an array.</p>
 <p>Creates an object composed of picked input object keys.
 An error is thrown if input value is not object/array.</p>
 <p>This is effectively a keys whitelisting operation in a sense that it removes all keys not explicitly listed.</p>
-<h3 id="use-for-58">Use For</h3>
+<h3 id="use-for-56">Use For</h3>
 <ul>
 <li>removing unwanted or temporary data (e.g. for composing Job Output objects)</li>
 <li>shaping output objects</li>
@@ -955,7 +946,7 @@ An error is thrown if input value is not an object or an array.</p>
 <li>Move Path: for moving values to different keys without modification</li>
 <li>Transform Path: for modifying the value at specified path without moving it</li>
 </ul>
-<h3 id="use-for-59">Use For</h3>
+<h3 id="use-for-57">Use For</h3>
 <ul>
 <li>building an object using values from various sources</li>
 <li>modifying or extending existing objects</li>
@@ -964,7 +955,7 @@ An error is thrown if input value is not an object or an array.</p>
 
 
 <p>Returns a new object with input value placed at specified path.</p>
-<h3 id="use-for-60">Use For</h3>
+<h3 id="use-for-58">Use For</h3>
 <ul>
 <li>creating objects out of other value types for further manipulation</li>
 <li>collecting data from multiple sources</li>
@@ -980,7 +971,7 @@ On No Match parameter controls the behaviour when input string does not match th
 by default an error is thrown.</p>
 <p>See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec">RegExp#exec</a>
 for more information about regular expressions matching and capturing groups.</p>
-<h3 id="use-for-61">Use For</h3>
+<h3 id="use-for-59">Use For</h3>
 <ul>
 <li>extracting parts of string (e.g. to extract flight information from strings like <code>SFO-18 / 01 / 29</code>)</li>
 </ul>
@@ -991,7 +982,7 @@ for more information about regular expressions matching and capturing groups.</p
 The template allows inserting values from input using syntax
 <code>{/path/to/value}</code> where <code>/path/to/value</code> is a JSON pointer into input object.</p>
 <p>An error is thrown if input value is not object/array.</p>
-<h3 id="use-for-62">Use For</h3>
+<h3 id="use-for-60">Use For</h3>
 <ul>
 <li>quickly composing a string representation of objects (e.g. for matching or filtering)</li>
 </ul>
@@ -1008,7 +999,7 @@ with specified separator.</p>
 then returns a string that corresponds to the matched pattern.
 The behaviour when no patterns match is controlled by On No Match parameter.</p>
 <p>An error is thrown if input value is not a string.</p>
-<h3 id="use-for-63">Use For</h3>
+<h3 id="use-for-61">Use For</h3>
 <ul>
 <li>mapping enums from one domain to another (e.g. map <code>mr</code>, <code>ms</code>, <code>mrs</code> titles to website format and vice versa)</li>
 </ul>
@@ -1024,7 +1015,7 @@ for more information about regular expressions matching.</p>
 <li>regexp: regular expression</li>
 <li>flags</li>
 </ul>
-<h3 id="use-for-64">Use For</h3>
+<h3 id="use-for-62">Use For</h3>
 <ul>
 <li>general purpose string matching (e.g. as part of matchers or conditions)</li>
 </ul>
@@ -1038,7 +1029,7 @@ for more information about regular expressions matching.</p>
 
 <p>Parses a boolean value from input string.</p>
 <p>An error is thrown if input value is not a string.</p>
-<h3 id="use-for-65">Use For</h3>
+<h3 id="use-for-63">Use For</h3>
 <ul>
 <li>parsing booleans obtained from string representation (e.g. from web page attribute)</li>
 </ul>
@@ -1052,7 +1043,7 @@ including its rgb, hsv, hsl values.</p>
 
 <p>Parses JSON from input value string.</p>
 <p>An error is thrown if input value is not a valid JSON string.</p>
-<h3 id="use-for-66">Use For</h3>
+<h3 id="use-for-64">Use For</h3>
 <ul>
 <li>advanced scripting (e.g. parse raw network response, or parse JSON from webpage)</li>
 </ul>
@@ -1061,7 +1052,7 @@ including its rgb, hsv, hsl values.</p>
 
 <p>Parses a number value from input string.</p>
 <p>An error is thrown if input value is not a string.</p>
-<h3 id="use-for-67">Use For</h3>
+<h3 id="use-for-65">Use For</h3>
 <ul>
 <li>parsing numbers obtained from string representation (e.g. from web page attribute)
 for subsequent use with other numeric pipes</li>
@@ -1084,7 +1075,7 @@ for subsequent use with other numeric pipes</li>
 
 <p>Replaces accented characters with their ASCII equivalent,
 e.g. <code>å</code> becomes <code>a</code>, <code>œ</code> becomes <code>oe</code> and so on.</p>
-<h3 id="use-for-68">Use For</h3>
+<h3 id="use-for-66">Use For</h3>
 <ul>
 <li>working with international text, especially in matching</li>
 </ul>
@@ -1095,7 +1086,7 @@ e.g. <code>å</code> becomes <code>a</code>, <code>œ</code> becomes <code>oe</c
 An error is thrown if input value is not a string.</p>
 <p>See <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace">String#replace</a>
 for more information about regular expressions and replacement strings.</p>
-<h3 id="use-for-69">Use For</h3>
+<h3 id="use-for-67">Use For</h3>
 <ul>
 <li>general purpose search-and-replace (e.g. trim unwanted characters from string)</li>
 </ul>
@@ -1110,7 +1101,7 @@ for more information about regular expressions and replacement strings.</p>
 <p>Takes input string containing HTML markup and removes unsafe tags
 (e.g. <code>&lt;script&gt;</code>) and attributes (e.g. <code>onclick</code>).</p>
 <p>An error is thrown if input value is not a string.</p>
-<h3 id="use-for-70">Use For</h3>
+<h3 id="use-for-68">Use For</h3>
 <ul>
 <li>pre-processing</li>
 </ul>
@@ -1129,7 +1120,7 @@ and each item of array B exists in array A</li>
 <li>all other data types are coerced to strings, and <code>true</code> is returned if B is a substring of A</li>
 </ul>
 <p>Inner pipelines should return a single element for each element in input set.</p>
-<h3 id="use-for-71">Use For</h3>
+<h3 id="use-for-69">Use For</h3>
 <ul>
 <li>general purpose containment tests which work across multiple data types, specifically:<ul>
 <li>is string a substring of another string</li>
@@ -1151,7 +1142,7 @@ Non-string values are coerced to strings and are tested according to rules speci
 <ul>
 <li>text: string constant to test the input value against</li>
 </ul>
-<h3 id="use-for-72">Use For</h3>
+<h3 id="use-for-70">Use For</h3>
 <ul>
 <li>creating matchers where matching text partially is preferred</li>
 <li>general purpose string containment tests against string constant</li>
@@ -1169,7 +1160,7 @@ then returns a boolean indicating whether the resulting values are conceptually 
 <li>all other data types are coerced to strings and compared according the above rules</li>
 </ul>
 <p>Inner pipelines should return a single element for each element in input set.</p>
-<h3 id="use-for-73">Use For</h3>
+<h3 id="use-for-71">Use For</h3>
 <ul>
 <li>general purpose equality tests</li>
 <li>filtering by matching data from various sources
@@ -1185,7 +1176,7 @@ then returns a boolean indicating whether the resulting values are conceptually 
 <p>Returns <code>true</code> if input value equals to specified string constant.
 Non-string values are coerced to strings and are tested according to rules specified in Equals.</p>
 <p>This is simpler equivalent to Equals pipe, where one of the operands is constant.</p>
-<h3 id="use-for-74">Use For</h3>
+<h3 id="use-for-72">Use For</h3>
 <ul>
 <li>creating matchers with text equality tests</li>
 <li>general purpose equality tests where one of the operands is constant</li>
@@ -1194,7 +1185,7 @@ Non-string values are coerced to strings and are tested according to rules speci
 
 
 <p>Returns specified constant value.</p>
-<h3 id="use-for-75">Use For</h3>
+<h3 id="use-for-73">Use For</h3>
 <ul>
 <li>obtaining a constant value which never changes across script executions
 (e.g. for navigating to specific constant URL)</li>
@@ -1204,7 +1195,7 @@ Non-string values are coerced to strings and are tested according to rules speci
 
 
 <p>Returns an array of specified constant values.</p>
-<h3 id="use-for-76">Use For</h3>
+<h3 id="use-for-74">Use For</h3>
 <ul>
 <li>quickly creating arrays of primitive values (numbers, strings, etc)</li>
 </ul>
@@ -1222,7 +1213,7 @@ An error is thrown if Global variable is not set.</p>
 
 
 <p>Returns the value of specified Job Input.</p>
-<h3 id="use-for-77">Use For</h3>
+<h3 id="use-for-75">Use For</h3>
 <ul>
 <li>accessing Job Inputs for further manipulation (e.g. filter by Job Input value)</li>
 </ul>
@@ -1230,7 +1221,7 @@ An error is thrown if Global variable is not set.</p>
 
 
 <p>Returns the specified JSON object.</p>
-<h3 id="use-for-78">Use For</h3>
+<h3 id="use-for-76">Use For</h3>
 <ul>
 <li>testing (quickly providing pipelines with any data)</li>
 <li>building templates for Job Outputs and Network Requests,
@@ -1245,7 +1236,7 @@ which can subsequently be modified or extended</li>
 
 <p>Returns <code>true</code> if input value is either an empty string, an empty array or <code>null</code>.
 The string is considered empty if it contains nothing but whitespace.</p>
-<h3 id="use-for-79">Use For</h3>
+<h3 id="use-for-77">Use For</h3>
 <ul>
 <li>checking for null values, especially if previous pipe is optional
 (that is, allowed to return <code>null</code> values instead of throwing errors, which is a common pipe convention)</li>
@@ -1255,7 +1246,7 @@ The string is considered empty if it contains nothing but whitespace.</p>
 
 
 <p>Gets the input without requesting it, i.e. doesn&#39;t set job.state = &#39;awaitingInput&#39; if the input not exists yet.</p>
-<h3 id="use-for-80">Use For</h3>
+<h3 id="use-for-78">Use For</h3>
 <ul>
 <li>checking if the Job Input is supplied by the time of playback</li>
 </ul>
