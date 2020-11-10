@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { UserData } from '../userdata';
-import { PropertyDecl, ConfigValue, Configuration } from '@automationcloud/engine';
+import { PropertyDecl, ConfigValue, Configuration, getConfigDeclarations } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
@@ -88,8 +88,7 @@ export class SettingsController {
             this.env = env;
             this.update();
         }
-
-        console.info('🏡You are on ' + this.env);
+        console.info('You are on ' + this.env);
     }
 
     get<T extends ConfigValue>(decl: PropertyDecl<T>): T {
@@ -109,6 +108,32 @@ export class SettingsController {
     *allEntries(): IterableIterator<[string, string]> {
         yield* DEFAULT_SETTINGS;
         yield* this.entries;
+    }
+
+    // TODO this is unused, so kill it if necessary
+    getAllEntries(): SettingsEntry[] {
+        const results: SettingsEntry[] = [];
+        const map: Map<string, string> = new Map(this.entries);
+        for (const [key, decl] of getConfigDeclarations().entries()) {
+            const values = [
+                { env: '', value: map.get(key) },
+                { env: 'staging', value: map.get(key + ':staging') },
+                { env: 'production', value: map.get(key + ':production') },
+            ].filter(_ => _.value != null) as SettingsEntryValue[];
+            const entry = { decl, values };
+            results.push(entry);
+        }
+        return results.sort((a, b) => (a.decl.key > b.decl.key ? 1 : -1));
+    }
+
+    getValue(key: string): any {
+        const decl = getConfigDeclarations().get(key);
+        return decl ? this.config.get(decl) : null;
+    }
+
+    setValue(key: string, value: string | null) {
+        this._setSingleValue(key, value);
+        this.update();
     }
 
     protected _addEntries(entries: Array<[string, string | null]>) {
@@ -144,4 +169,14 @@ export class SettingsController {
         }
     }
 
+}
+
+export interface SettingsEntry {
+    decl: PropertyDecl<any>;
+    values: SettingsEntryValue[];
+}
+
+export interface SettingsEntryValue {
+    env: string;
+    value: string;
 }

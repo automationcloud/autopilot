@@ -15,13 +15,16 @@
 import os from 'os';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
-import { SPKI_SIGNATURES, Target, stringConfig, BrowserService, ProxyService } from '@automationcloud/engine';
+import { SPKI_SIGNATURES, Target, stringConfig, BrowserService, ProxyService, booleanConfig } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { SettingsController } from './settings';
+import { EventBus } from '../event-bus';
 
 const CHROME_PATH = stringConfig('CHROME_PATH', '');
 const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
+const CHROME_HOMEPAGE = stringConfig('CHROME_HOMEPAGE', 'https://robotschool.dev');
+const CHROME_USE_HOMEPAGE = booleanConfig('CHROME_USE_HOMEPAGE', true);
 const chromeUserDir = path.resolve(os.homedir(), '.autopilot', 'chrome', 'userdir');
 
 @controller()
@@ -40,6 +43,8 @@ export class ChromeManagerController {
         protected proxy: ProxyService,
         @inject(SettingsController)
         protected settings: SettingsController,
+        @inject(EventBus)
+        protected events: EventBus,
     ) {
         this.browser.on('targetAttached', target => this.onTargetAttached(target));
         this.browser.on('targetDetached', target => this.onTargetDetached(target));
@@ -50,6 +55,11 @@ export class ChromeManagerController {
             this.browser.detach();
             this.connected = false;
             this.connect();
+        });
+        this.events.on('initialized', () => {
+            if (this.isUsingHomepage() && this.browser.isAttached()) {
+                this.browser.page.navigate(this.getHomepageUrl());
+            }
         });
     }
 
@@ -62,6 +72,14 @@ export class ChromeManagerController {
             this.connectPromise = this._connect();
         }
         return this.connectPromise;
+    }
+
+    isUsingHomepage() {
+        return this.settings.get(CHROME_USE_HOMEPAGE);
+    }
+
+    getHomepageUrl() {
+        return this.settings.get(CHROME_HOMEPAGE);
     }
 
     protected async _connect() {
@@ -149,13 +167,12 @@ export class ChromeManagerController {
         const chromePort = this.browser.getChromePort();
         const proxyPort = this.proxy.getProxyPort();
         const stdio = this.settings.get(CHROME_STDIO) as ProcessStdio;
-
         const args = [
             `--remote-debugging-port=${chromePort}`,
             // `--proxy-server=http://localhost:${proxyPort}`,
             `--ignore-certificate-errors-spki-list=${SPKI_SIGNATURES.join(',')}`,
             `--proxy-server=http://127.0.0.1:${proxyPort}`,
-            `--user-data-dir=${chromeUserDir}`,
+            `--user-data-dir=${chromeUserDir}`
         ];
         this.chromeProcess = spawn(chromePath, args, { stdio });
         this.chromeProcess.on('exit', () => {

@@ -40,8 +40,8 @@
                     Load Robot School in browser on startup
                 </div>
                 <div class="pane-aside">
-                    <!-- TODO -->
-                    <toggle v-model="foo"/>
+                    <toggle :value="getValue('CHROME_USE_HOMEPAGE')"
+                        @input="setValue('CHROME_USE_HOMEPAGE', $event)"/>
                 </div>
             </div>
         </div>
@@ -54,14 +54,11 @@ import UpdateChecker from './update-checker.vue';
 
 export default {
 
-    data() {
-        return { foo: false };
-    },
-
     inject: [
         'apiLogin',
         'tools',
         'updater',
+        'settings',
     ],
 
     components: {
@@ -71,6 +68,18 @@ export default {
     computed: {
 
     },
+
+    methods: {
+
+        getValue(key) {
+            return this.settings.getValue(key);
+        },
+
+        setValue(key, value) {
+            this.settings.setValue(key, value);
+        },
+
+    }
 
 };
 </script>
