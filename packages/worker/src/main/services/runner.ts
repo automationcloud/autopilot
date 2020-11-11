@@ -70,6 +70,7 @@ export class Runner {
     }
 
     async run(jobId: string, organisationId: string): Promise<void> {
+        this.logger.info('Running job', { jobId, organisationId });
         this.state.jobStartedAt = Date.now();
         this.state.organisationId = organisationId;
         this.state.jobId = jobId;

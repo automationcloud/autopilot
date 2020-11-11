@@ -99,6 +99,7 @@ export class WorkerState {
             jobId: this.jobId,
             executionId: this.executionId,
             serviceId: this.serviceId,
+            organisationId: this.organisationId,
         };
     }
 }
@@ -110,4 +111,5 @@ export interface WorkerInfo {
     jobId: string | null;
     executionId: string | null;
     serviceId: string | null;
+    organisationId: string | null;
 }
