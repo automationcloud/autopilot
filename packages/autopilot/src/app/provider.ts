@@ -15,6 +15,7 @@
 import { App } from './app';
 import * as ctl from './controllers';
 import { BrowserService } from '@automationcloud/engine';
+import { EventBus } from './event-bus';
 
 /**
  * Creates Vue provider which allows injecting
@@ -32,17 +33,19 @@ export function createControllerProvider(app: App) {
         datasets: app.get(ctl.DatasetsController),
         diff: app.get(ctl.ScriptDiffController),
         emulation: app.get(ctl.EmulationController),
+        events: app.get(EventBus),
         expandable: app.get(ctl.ExpandableController),
         extDev: app.get(ctl.ExtensionDevController),
         extReg: app.get(ctl.ExtensionRegistryController),
         firstRun: app.get(ctl.FirstRunController),
         inspect: app.get(ctl.InspectController),
         layout: app.get(ctl.LayoutController),
-        project: app.get(ctl.ProjectController),
-        playback: app.get(ctl.PlaybackController),
-        protocol: app.get(ctl.ProtocolController),
         pipeRecipes: app.get(ctl.PipeRecipesController),
+        playback: app.get(ctl.PlaybackController),
+        project: app.get(ctl.ProjectController),
+        protocol: app.get(ctl.ProtocolController),
         roxi: app.get(ctl.RoxiController),
+        screencast: app.get(ctl.ScreencastController),
         scriptReport: app.get(ctl.ScriptReportController),
         settings: app.get(ctl.SettingsController),
         tools: app.get(ctl.ToolsController),

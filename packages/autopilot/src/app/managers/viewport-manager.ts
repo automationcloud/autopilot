@@ -24,6 +24,7 @@ import {
     ScriptEditorViewport,
     ScriptFlowViewport,
     SearchScriptsViewport,
+    ScreencastViewport,
     SettingsViewport,
 } from '../viewports';
 import { Viewport } from '../viewport';
@@ -42,6 +43,7 @@ export class ViewportManager {
     scriptFlow: ScriptFlowViewport;
     searchScripts: SearchScriptsViewport;
     settings: SettingsViewport;
+    screencast: ScreencastViewport;
     // speed: SpeedViewport;
 
     all: Array<Viewport<any>>;
@@ -64,6 +66,7 @@ export class ViewportManager {
         this.searchScripts = new SearchScriptsViewport(app);
         this.settings = new SettingsViewport(app);
         this.browserViewport = new BrowserViewport(app);
+        this.screencast = new ScreencastViewport(app);
 
         this.all = Object.values(this).filter(_ => _ instanceof Viewport);
     }

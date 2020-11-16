@@ -14,7 +14,7 @@
             <disconnected/>
             <layout/>
             <playback/>
-            <inspecting/>
+            <!-- <inspecting/> -->
         </div>
     </div>
 </template>

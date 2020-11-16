@@ -23,6 +23,7 @@ export type SettingsEnv = 'staging' | 'production';
 
 const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['EXTENSIONS_DIR', StorageController.getFile('extensions')],
+    ['EMULATION_MODE', 'disabled'],
     ['AC_API_URL:staging', 'https://api-staging.automationcloud.net'],
     ['AC_API_URL:production', 'https://api.automationcloud.net'],
     ['AC_API_TOKEN_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/token'],

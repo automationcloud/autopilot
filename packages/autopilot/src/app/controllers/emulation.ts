@@ -15,18 +15,23 @@
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { StorageController } from './storage';
-import { UserData } from '../userdata';
-import { BrowserService, EmulationMode, EmulationService } from '@automationcloud/engine';
+import {
+    BrowserService,
+    EmulationMode,
+    EmulationService,
+    stringConfig,
+    EMULATION_MODE
+} from '@automationcloud/engine';
+import { SettingsController } from './settings';
+import { EventBus } from '../event-bus';
 
 export type ThrottlingMode = 'none' | '3g' | '2g';
+
+const THROTTLING_MODE = stringConfig('THROTTLING_MODE', 'none');
 
 @injectable()
 @controller({ backgroundInit: true })
 export class EmulationController {
-    userData: UserData;
-
-    throttlingMode: ThrottlingMode = 'none';
-    emulationMode: EmulationMode = 'disabled';
 
     constructor(
         @inject(StorageController)
@@ -35,66 +40,50 @@ export class EmulationController {
         protected browser: BrowserService,
         @inject(EmulationService)
         protected emulation: EmulationService,
+        @inject(EventBus)
+        protected events: EventBus,
+        @inject(SettingsController)
+        protected settings: SettingsController,
     ) {
-        this.userData = storage.createUserData('emulation');
         this.browser.on('attached', () => this.applyThrottling());
+        this.events.on('settingsUpdated', () => this.init());
     }
 
     async init() {
-        const {
-            throttlingMode = 'none',
-            emulationMode = 'disabled',
-        } = await this.userData.loadData();
-        this.throttlingMode = throttlingMode;
-        this.emulationMode = emulationMode;
         if (this.browser.isAttached()) {
-            await this.applyEmulation();
-            await this.applyThrottling();
+            this.applyEmulation();
+            this.applyThrottling();
         }
     }
 
-    update() {
-        this.userData.update({
-            throttlingMode: this.throttlingMode,
-            emulationMode: this.emulationMode,
-        });
+    getEmulationMode() {
+        return this.settings.get(EMULATION_MODE) as EmulationMode;
     }
 
-    setEmulation(mode: EmulationMode) {
-        this.emulationMode = mode;
-        this.update();
-        this.applyEmulation();
+    setEmulationMode(mode: EmulationMode) {
+        this.settings.set(EMULATION_MODE, mode);
     }
 
-    toggleEmulation(mode: EmulationMode) {
-        const newMode = this.emulationMode === mode ? 'disabled' : mode;
-        this.setEmulation(newMode);
+    getThrottlingMode() {
+        return this.settings.get(THROTTLING_MODE) as ThrottlingMode;
     }
 
-    async applyEmulation() {
-        await this.emulation.setMode(this.emulationMode)
-            .catch(err => console.warn('Apply emulation failed', err));
+    setThrottlingMode(mode: ThrottlingMode) {
+        this.settings.set(THROTTLING_MODE, mode);
     }
 
-    setThrottling(mode: ThrottlingMode) {
-        this.throttlingMode = mode;
-        this.update();
-        this.applyThrottling();
+    protected applyEmulation() {
+        this.emulation.setMode(this.getEmulationMode());
     }
 
-    toggleThrottling(mode: ThrottlingMode) {
-        const newMode = this.throttlingMode === mode ? 'none' : mode;
-        this.setThrottling(newMode);
-    }
-
-    async applyThrottling() {
-        await this.browser.page
+    protected applyThrottling() {
+        this.browser.page
             .send('Network.emulateNetworkConditions', this.getThrottlingEmulationParams())
             .catch(err => console.warn('Apply throttling failed', err));
     }
 
-    getThrottlingEmulationParams(): any {
-        switch (this.throttlingMode) {
+    protected getThrottlingEmulationParams(): any {
+        switch (this.getThrottlingMode()) {
             case '3g':
                 return {
                     offline: false,

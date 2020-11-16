@@ -32,6 +32,7 @@ export * from './playback';
 export * from './project';
 export * from './protocol';
 export * from './roxi';
+export * from './screencast';
 export * from './script-diff';
 export * from './script-report';
 export * from './settings';

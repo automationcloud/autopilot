@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export * from './api';
-export * from './browser';
-export * from './datasets';
-export * from './extensions';
-export * from './inspections';
-export * from './playback-events';
-export * from './recipes';
-export * from './script-editor';
-export * from './script-flow';
-export * from './search-scripts';
-export * from './screencast';
-export * from './settings';
-// export * from './speed';
+import { StatelessViewport } from '../../viewport';
+
+export class ScreencastViewport extends StatelessViewport {
+    getViewportId(): string {
+        return 'screencast';
+    }
+
+    getViewportName(): string {
+        return 'Screencast';
+    }
+
+    getViewportIcon(): string {
+        return 'fas fa-desktop';
+    }
+}
