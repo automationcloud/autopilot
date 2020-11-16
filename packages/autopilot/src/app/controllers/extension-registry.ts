@@ -31,6 +31,7 @@ export class ExtensionRegistryController {
     userData: UserData;
 
     installedExtensions: Extension[] = [];
+    failedExtensionSpecs: ExtensionSpec[] = [];
     allManifests: ExtensionManifest[] = [];
     searchQuery: string = '';
     loading: boolean = false;
@@ -158,10 +159,12 @@ export class ExtensionRegistryController {
             } catch (error) {
                 if (error.status !== 401) {
                     console.warn(`Could not install extension ${spec.name}:${spec.version}`, error);
+                    this.failedExtensionSpecs.push(spec);
                 }
             }
         });
         await Promise.all(promises);
+        this.pruneFailedExtensions();
         this.events.emit('extensionsUpdated');
     }
 
@@ -220,6 +223,17 @@ export class ExtensionRegistryController {
             this.loading = false;
             this.processingManifest = null;
         }
+    }
+
+    async pruneFailedExtensions() {
+        if (!this.failedExtensionSpecs.length) {
+            return;
+        }
+        for (const spec of this.failedExtensionSpecs) {
+            this.installedExtensions = this.installedExtensions.filter(e => e.spec.name !== spec.name);
+        }
+        this.update();
+        this.events.emit('extensionsUpdated');
     }
 
     protected _addExtension(ext: Extension) {

@@ -101,9 +101,20 @@
             </div>
             <div class="pane-item">
                 <div class="pane-main">
+                    Start Chrome in headless mode
+                    <i class="fas fa-question-circle icon-help"
+                        title="The browser will run in background and can be inspected via Screencast panel. Changing this value requires Chrome restart."></i>
+                </div>
+                <div class="pane-aside">
+                    <toggle :value="getValue('CHROME_HEADLESS')"
+                        @input="setValue('CHROME_HEADLESS', $event)"/>
+                </div>
+            </div>
+            <div class="pane-item">
+                <div class="pane-main">
                     Chrome debugging port
                     <i class="fas fa-question-circle icon-help"
-                        title="Chrome DevTools port to connect to. Changing this value requires Autopilot restart."></i>
+                        title="Chrome DevTools port to connect to. Changing this value requires Chrome restart."></i>
                 </div>
                 <div class="pane-aside">
                     <input class="input"

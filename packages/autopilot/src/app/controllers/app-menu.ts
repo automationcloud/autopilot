@@ -326,39 +326,39 @@ export class AppMenuController {
         yield {
             type: 'checkbox',
             label: 'Emulate 2G connection',
-            click: () => this.emulation.setThrottling('2g'),
-            checked: this.emulation.throttlingMode === '2g',
+            click: () => this.emulation.setThrottlingMode('2g'),
+            checked: this.emulation.getThrottlingMode() === '2g',
         };
         yield {
             type: 'checkbox',
             label: 'Emulate 3G connection',
-            click: () => this.emulation.setThrottling('3g'),
-            checked: this.emulation.throttlingMode === '3g',
+            click: () => this.emulation.setThrottlingMode('3g'),
+            checked: this.emulation.getThrottlingMode() === '3g',
         };
         yield {
             type: 'checkbox',
             label: 'Disable network emulation',
-            click: () => this.emulation.setThrottling('none'),
-            checked: this.emulation.throttlingMode === 'none',
+            click: () => this.emulation.setThrottlingMode('none'),
+            checked: this.emulation.getThrottlingMode() === 'none',
         };
         yield { type: 'separator' };
         yield {
             type: 'checkbox',
             label: 'Emulate Desktop',
-            click: () => this.emulation.setEmulation('desktop'),
-            checked: this.emulation.emulationMode === 'desktop',
+            click: () => this.emulation.setEmulationMode('desktop'),
+            checked: this.emulation.getEmulationMode() === 'desktop',
         };
         yield {
             type: 'checkbox',
             label: 'Emulate Mobile',
-            click: () => this.emulation.setEmulation('mobile'),
-            checked: this.emulation.emulationMode === 'mobile',
+            click: () => this.emulation.setEmulationMode('mobile'),
+            checked: this.emulation.getEmulationMode() === 'mobile',
         };
         yield {
             type: 'checkbox',
             label: 'Disable Device Emulation',
-            click: () => this.emulation.setEmulation('disabled'),
-            checked: this.emulation.emulationMode === 'disabled',
+            click: () => this.emulation.setEmulationMode('disabled'),
+            checked: this.emulation.getEmulationMode() === 'disabled',
         };
         yield { type: 'separator' };
         yield {

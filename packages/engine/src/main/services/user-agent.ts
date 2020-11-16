@@ -44,6 +44,8 @@ export class UserAgentService {
     }
 
     async onSessionStart() {
+        this.userAgent = this.getDefaultUserAgent();
+        this.platform = this.getDefaultPlatform();
         await this.applyToAllTargets();
     }
 

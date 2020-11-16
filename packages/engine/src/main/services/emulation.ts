@@ -15,8 +15,11 @@
 import { injectable, inject } from 'inversify';
 import { BrowserService } from './browser';
 import { SessionHandler } from '../session';
+import { Configuration, Logger, stringConfig, Target } from '@automationcloud/cdp';
 
 export type EmulationMode = 'disabled' | 'mobile' | 'desktop';
+
+export const EMULATION_MODE = stringConfig('EMULATION_MODE', 'desktop');
 
 /**
  * @internal
@@ -24,18 +27,28 @@ export type EmulationMode = 'disabled' | 'mobile' | 'desktop';
 @injectable()
 @SessionHandler()
 export class EmulationService {
-    mode: EmulationMode = 'desktop';
+    mode: EmulationMode;
 
     constructor(
         @inject(BrowserService)
         protected browser: BrowserService,
+        @inject(Configuration)
+        protected config: Configuration,
+        @inject(Logger)
+        protected logger: Logger,
     ) {
-        browser.on('attached', () => this.restore());
-        browser.on('emulationInvalid', () => this.restore());
+        browser.on('targetAttached', (target: Target) => this.applyToTarget(target));
+        browser.on('emulationInvalid', () => this.applyToAllTargets());
+        this.mode = this.getDefaultEmulationMode();
+    }
+
+    getDefaultEmulationMode() {
+        return this.config.get(EMULATION_MODE) as EmulationMode;
     }
 
     async onSessionStart() {
-        await this.restore();
+        this.mode = this.getDefaultEmulationMode();
+        await this.applyToAllTargets();
     }
 
     async onSessionFinish() {}
@@ -44,22 +57,27 @@ export class EmulationService {
         return this.mode !== 'disabled';
     }
 
-    async setMode(mode: EmulationMode) {
+    setMode(mode: EmulationMode) {
         this.mode = mode;
-        await this.restore();
+        this.browser.emit('emulationInvalid');
     }
 
-    async restore() {
-        const page = this.browser.getCurrentPage();
-        if (!page) {
+    async applyToAllTargets() {
+        for (const target of this.browser.attachedTargets()) {
+            await this.applyToTarget(target);
+        }
+    }
+
+    async applyToTarget(target: Target) {
+        if (target.type !== 'page') {
             return;
         }
         try {
-            const emulationSettings = this.getEmulationSettings();
             if (this.mode === 'disabled') {
-                await page.send('Emulation.clearDeviceMetricsOverride');
+                await target.send('Emulation.clearDeviceMetricsOverride');
             } else {
-                await page.send('Emulation.setDeviceMetricsOverride', emulationSettings);
+                const emulationSettings = this.getEmulationSettings();
+                await target.send('Emulation.setDeviceMetricsOverride', emulationSettings);
             }
         } catch (error) {
             if (['CdpDisconnected', 'CdpTargetDetached'].includes(error.name)) {

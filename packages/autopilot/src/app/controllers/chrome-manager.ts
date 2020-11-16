@@ -23,6 +23,7 @@ import { EventBus } from '../event-bus';
 
 const CHROME_PATH = stringConfig('CHROME_PATH', '');
 const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
+const CHROME_HEADLESS = booleanConfig('CHROME_HEADLESS', false);
 const CHROME_HOMEPAGE = stringConfig('CHROME_HOMEPAGE', 'https://robotschool.dev');
 const CHROME_USE_HOMEPAGE = booleanConfig('CHROME_USE_HOMEPAGE', true);
 const chromeUserDir = path.resolve(os.homedir(), '.autopilot', 'chrome', 'userdir');
@@ -172,13 +173,15 @@ export class ChromeManagerController {
         const chromePort = this.browser.getChromePort();
         const proxyPort = this.proxy.getProxyPort();
         const stdio = this.settings.get(CHROME_STDIO) as ProcessStdio;
+        const headless = this.settings.get(CHROME_HEADLESS);
         const args = [
             `--remote-debugging-port=${chromePort}`,
             // `--proxy-server=http://localhost:${proxyPort}`,
             `--ignore-certificate-errors-spki-list=${SPKI_SIGNATURES.join(',')}`,
             `--proxy-server=http://127.0.0.1:${proxyPort}`,
-            `--user-data-dir=${chromeUserDir}`
-        ];
+            `--user-data-dir=${chromeUserDir}`,
+            headless ? '--headless' : '',
+        ].filter(Boolean);
         this.chromeProcess = spawn(chromePath, args, { stdio });
         this.chromeProcess.on('exit', () => {
             this.chromeProcess = null;
