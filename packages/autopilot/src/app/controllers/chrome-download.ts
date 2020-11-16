@@ -28,9 +28,9 @@ import { ChromeManagerController } from './chrome-manager';
 const rimRafAsync = promisify(rimRaf);
 
 export const CHROME_REVISIONS = {
-    darwin: '768968',
-    win32: '768966',
-    linux: '768968',
+    darwin: '800250',
+    win32: '800229',
+    linux: '800220',
 };
 export const BASE_URL = 'https://storage.googleapis.com/chromium-browser-snapshots/';
 export const ARCHIVE_PATHS = {
