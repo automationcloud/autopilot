@@ -18,11 +18,11 @@ import { BrowserService } from './browser';
 import { SessionHandler } from '../session';
 
 const USER_AGENT = stringConfig(
-    'USER_AGENT_DESKTOP',
+    'USER_AGENT',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) ' +
-        'Chrome/84.0.4147.89 Safari/537.36',
+        'Chrome/86.0.4240.198 Safari/537.36',
 );
-const USER_AGENT_PLATFORM = stringConfig('USER_AGENT_PLATFORM_DESKTOP', 'Win32');
+const USER_AGENT_PLATFORM = stringConfig('USER_AGENT_PLATFORM', 'Win32');
 
 @injectable()
 @SessionHandler()
