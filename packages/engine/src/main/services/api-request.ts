@@ -16,7 +16,7 @@ import { stringConfig, Configuration } from '@automationcloud/cdp';
 import { injectable, inject } from 'inversify';
 import { RequestOptions, Request, OAuth2Agent } from '@automationcloud/request';
 
-const AC_API_URL = stringConfig('AC_API_URL', 'http://api-router-internal');
+const AC_API_URL = stringConfig('AC_API_URL', 'https://api.automationcloud.net');
 const AC_API_TOKEN_URL = stringConfig('AC_API_TOKEN_URL', '');
 const AC_API_CLIENT_ID = stringConfig('AC_API_CLIENT_ID', '');
 const AC_API_CLIENT_KEY = stringConfig('AC_API_CLIENT_KEY', '');
