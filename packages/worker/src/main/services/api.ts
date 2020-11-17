@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { injectable, inject } from 'inversify';
-import { Execution, Checkpoint } from '../types';
+import { Execution, Checkpoint, ProxyConnection } from '../types';
 import {
     Context,
     Action,
@@ -153,8 +153,8 @@ export class ApiService {
         });
     }
 
-    async getProxyConfig(id: string): Promise<ProxyConfig> {
-        return await this.api.get(`/Proxy/get`, {
+    async getProxyConnection(id: string): Promise<ProxyConnection> {
+        return await this.api.get(`/Proxy/getConnection`, {
             query: { id },
         });
     }
@@ -235,21 +235,4 @@ function presentAction(action: Action): any {
         label: action.label,
         runtime: action.$runtime,
     } : null;
-}
-
-export interface ProxyConfig {
-    id: string;
-    ip: string | null;
-    tags: string[];
-    providerId: string | null;
-    totalBlockedCount: number;
-    refreshIp: boolean;
-    connection: {
-        hostname: string;
-        port: number;
-        authScheme: string;
-        username: string;
-        password: string;
-        dynamicIp: boolean;
-    };
 }

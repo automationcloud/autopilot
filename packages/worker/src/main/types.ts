@@ -22,7 +22,6 @@ export interface Execution {
     draft: boolean;
     domain: string;
     state: string;
-    ip: string;
     proxyId: string;
     checkpointId?: string;
     options?: {
@@ -55,4 +54,12 @@ export interface Checkpoint {
         sessionStorage: Array<[string, string]>;
         globals: GlobalValue[];
     };
+}
+
+export interface ProxyConnection {
+    hostname: string;
+    port: number;
+    authScheme: string;
+    username: string;
+    password: string;
 }
