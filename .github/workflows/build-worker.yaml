@@ -13,10 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Extract tag as env var
+      - name: Extract git tag as ENV var
         run: |
-          ref="${{ github.ref }}"
-          echo "::set-env name=TAG::${ref#refs/tags/}"
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Build and push development image
         uses: docker/build-push-action@v1
