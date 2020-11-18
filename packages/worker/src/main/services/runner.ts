@@ -137,7 +137,6 @@ export class Runner {
         const context = playhead ? playhead.$context : null;
         const stats = {
             proxyId: this.state.getExecution().proxyId,
-            ip: this.state.getExecution().ip,
             workerVersion: this.state.workerVersion,
             sessionTotalTime: Date.now() - this.state.jobStartedAt,
             visitedOrigins: this.statsService.visitedOrigins,
