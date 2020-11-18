@@ -157,7 +157,7 @@ export class ExtensionRegistryController {
                 this.installedExtensions.push(ext);
                 console.info('Loaded extension', spec.name, spec.version);
             } catch (error) {
-                if (error.status !== 401) {
+                if (error?.details?.status !== 401) {
                     console.warn(`Could not install extension ${spec.name}:${spec.version}`, error);
                     this.failedExtensionSpecs.push(spec);
                 }
