@@ -40,11 +40,11 @@ describe('Proxy', () => {
         const [proxyRoute] = proxy.getSerializedRoutes();
         assert.ok(proxyRoute.upstream);
         const decoded = JSON.parse(decodeURIComponent(proxyRoute.upstream?.username || ''));
-        assert.equal(decoded.hostname, route.connection.hostname);
-        assert.equal(decoded.port, route.connection.port);
-        assert.equal(decoded.username, route.connection.username);
-        assert.equal(decoded.password, route.connection.password);
-        assert.equal(decoded.authScheme, route.connection.authScheme);
+        assert.equal(decoded.hostname, route.hostname);
+        assert.equal(decoded.port, route.port);
+        assert.equal(decoded.username, route.username);
+        assert.equal(decoded.password, route.password);
+        assert.equal(decoded.authScheme, route.authScheme);
         assert.equal(decoded.cache, true);
         assert.equal(decoded.partition, 'happy');
     });
