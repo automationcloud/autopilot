@@ -58,7 +58,7 @@ export function toolkit(options: any = {}) {
         if (el.nodeType !== 1) {
             throw new Error(`Cannot extract element information from ${el.nodeName}`);
         }
-        const normalize = (str: string) => (str || '').replace(/\s+/g, ' ').trim();
+        const normalize = (str: string) => String(str || '').replace(/\s+/g, ' ').trim();
         let childText = '';
         for (const childNode of el.childNodes) {
             if (childNode.nodeType === 3) {

@@ -166,7 +166,7 @@ export class ChromeLauncher {
             name: 'ChromeLaunchFailed',
             message:
                 'Could not connect to Chrome debugging port after launch. ' +
-                'Mmake sure valid --remote-debugging-port is used and ' +
+                'Make sure valid --remote-debugging-port is used and ' +
                 ' that another Chrome instance is not running',
             retry: false,
         });
