@@ -204,25 +204,22 @@ router.post('/api/private/execution-events', ctx => {
     ctx.body = {};
 });
 
-router.get('/api/Proxy/get', ctx => {
+router.get('/api/Proxy/getConnection', ctx => {
     const { id } = ctx.query;
-    const proxy: any = {
-        id,
-        connection: {
-            hostname: 'someOtherRoxiHostName',
-            port: 6745,
-            authScheme: 'basic',
-            username: 'testUsername',
-            password: 'pa$$word',
-        },
+    const connection: any = {
+        hostname: 'someOtherRoxiHostName',
+        port: 6745,
+        authScheme: 'basic',
+        username: 'testUsername',
+        password: 'pa$$word',
     };
     if (id === 'basicUsernameNull') {
-        proxy.connection.username = null;
+        connection.username = null;
     }
     if (id === 'basicPasswordNull') {
-        proxy.connection.password = null;
+        connection.password = null;
     }
-    ctx.body = proxy;
+    ctx.body = connection;
 });
 
 router.post('/api/private/screenshots', ctx => {

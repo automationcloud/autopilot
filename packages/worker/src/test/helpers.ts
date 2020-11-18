@@ -45,7 +45,7 @@ export class TestHelpers {
     }
 
     async getProxyRoute(id: string) {
-        return await this.api.get(`/Proxy/get`, {
+        return await this.api.get(`/Proxy/getConnection`, {
             query: { id },
         });
     }

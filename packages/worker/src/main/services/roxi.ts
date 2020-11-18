@@ -48,7 +48,7 @@ export class RoxiService {
 
     async setupExecutionRoutes(execution: Execution) {
         const useRoxiCache = execution.options?.useRoxiCache || false;
-        const { connection } = await this.api.getProxyConfig(execution.proxyId);
+        const connection = await this.api.getProxyConnection(execution.proxyId);
         const username = encodeURIComponent(
             JSON.stringify({
                 ...connection,
@@ -63,5 +63,6 @@ export class RoxiService {
             password: this.config.get(ROXI_SECRET),
             useHttps: true,
         });
+        this.state.proxyConnection = { ...connection, password: '' };
     }
 }
