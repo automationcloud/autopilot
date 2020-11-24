@@ -21,6 +21,7 @@ export * from './fetch';
 export * from './flow';
 export * from './globals';
 export * from './http-callback';
+export * from './pan-proxy';
 export * from './proxy';
 export * from './registry';
 export * from './reporter';
