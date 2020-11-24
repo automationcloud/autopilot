@@ -16,13 +16,11 @@ import { app } from 'electron';
 import { windows, createLastProfileWindow, activateWindow } from './windows';
 import { controlServer } from './globals';
 import { autoCheckForUpdates } from './updater';
-import { createUbioSymlink } from '@automationcloud/engine';
 import { initIpcListeners } from './ipc';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
-process.env.NODE_OPTIONS = '--http-parser=legacy';
-
-createUbioSymlink(`${__dirname}/../..`);
+process.env.NODE_OPTIONS = '--insecure-http-parser';
+process.env.NODE_OPTIONS = '--max-http-header-size=65535';
 
 app.setAsDefaultProtocolClient('ubio');
 

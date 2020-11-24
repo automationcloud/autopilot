@@ -16,7 +16,6 @@ import 'reflect-metadata';
 
 export * from '@automationcloud/cdp';
 export * from '@automationcloud/request';
-// import * as uniproxy from '@automationcloud/uniproxy';
 
 export * from './action';
 export * from './context';
@@ -41,5 +40,5 @@ import * as model from './model';
 const params = model.params;
 export { util, model, params };
 
-// TODO remove once we're fully on v32
-export * from './create-ubio-symlink';
+import { ProxyRoute, ProxyUpstream, SerializedProxyRoute } from '@automationcloud/uniproxy';
+export { ProxyRoute, ProxyUpstream, SerializedProxyRoute };

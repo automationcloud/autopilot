@@ -18,7 +18,7 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import {
     stringConfig,
-    ProxyService, ApiRequest, ProxyRouteUpstream, Configuration
+    ProxyService, ApiRequest, ProxyUpstream, Configuration
 } from '@automationcloud/engine';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
@@ -154,7 +154,7 @@ export class RoxiController {
         this.configureProxy();
     }
 
-    protected getProxyUpstreamConfig(proxyConfig: ProxyConfig): ProxyRouteUpstream {
+    protected getProxyUpstreamConfig(proxyConfig: ProxyConfig): ProxyUpstream {
         return {
             useHttps: false,
             host: proxyConfig.connection.hostname + ':' + proxyConfig.connection.port,
@@ -163,7 +163,7 @@ export class RoxiController {
         };
     }
 
-    protected getRoxiUpstreamConfig(proxyConfig: ProxyConfig): ProxyRouteUpstream {
+    protected getRoxiUpstreamConfig(proxyConfig: ProxyConfig): ProxyUpstream {
         const host = this.config.get(ROXI_HOST);
         const secret = this.config.get(ROXI_SECRET);
         const partition = this.config.get(ROXI_PARTITION);
