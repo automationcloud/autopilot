@@ -1,6 +1,6 @@
 <template>
-    <div class="ac-help automation-cloud">
-        <div class="ac-help-item">
+    <div class="help-resources automation-cloud">
+        <div class="help-resources-item">
 
             <article class="content">
                 <div class="content-header">
@@ -11,21 +11,19 @@
                     Start in the Automation Cloud forum.
                     Expert scripters and the Automation Cloud team monitor all issues and conversations there.
                 </p>
-                <button
-                    class="button button--primary button--cta"
-                    type="click"
-                    @click="onLinkClick('comunity')">
-                    <span>Community</span>
-                </button>
+                <a :href="communityUrl"
+                    class="button button--primary button--cta">
+                    Community
+                </a>
 
                 <div class="box box--primary">
                     <h2 style="margin-top: 0px; font-size: 20px;">Find out more about the Automation Cloud</h2>
-                    <span
-                        style="display: inline-flex; align-items: center; cursor: pointer;"
-                        @click="onLinkClick('comunity')">
-                        <i class="fas fa-angle-right"></i>
+                    <a
+                        class="button button--tertiary button--cta"
+                        style="padding-left: 0px;"
+                        :href="homeUrl">
                         automationcloud.net
-                    </span>
+                    </a>
                 </div>
             </article>
 
@@ -38,12 +36,12 @@
                     Learn the fundamentals of scripting in Autopilot by following our guided tutorials.
                     Access reference documentation about the Autopilot tool and the Automation Cloud API.
                 </p>
-                <button
+                <a
                     class="button button--primary button--cta"
                     type="click"
-                    @click="onLinkClick('robotSchool')">
+                    :href="robotSchoolUrl">
                     <span>Robot School</span>
-                </button>
+                </a>
             </article>
 
             <hr class="content">
@@ -59,66 +57,49 @@
                     Watch jobs while they execute and drill down into the low-level detail.
                 </p>
 
-                <button
+                <a
                     class="button button--primary button--cta"
                     type="click"
-                    @click="onLinkClick('dashboard')">
+                    :href="dashboardUrl">
                     {{ isAuthenticated ? 'Dashboard' : 'Sign in to your Dashboard' }}
-                </button>
-                <button
+                </a>
+                <a
                     v-show="!isAuthenticated"
                     class="button button--tertiary button--cta"
-                    type="click"
-                    @click="onLinkClick('signup')">
+                    :href="registerUrl">
                     Sign up and get started
-                </button>
+                </a>
             </article>
         </div>
 
-        <div class="ac-help-item tray-bg--transparent-light">
+        <div class="help-resources-item tray-bg--transparent-light">
             <promo-robot-school/>
         </div>
     </div>
 </template>
 
 <script>
-import { shell } from 'electron';
-
 export default {
 
     inject: [
-        'apiLogin'
+        'apiLogin',
+        'acUrls',
     ],
-
-    data() {
-        return {
-            links: {
-                comunity: '#',
-                automationCloud: '#',
-                robotSchool: 'https://robotschool.dev',
-                dashboard: '#',
-                singin: '#',
-                signup: '#'
-            }
-        };
-    },
 
     computed: {
         isAuthenticated() { return this.apiLogin.isAuthenticated(); },
+        communityUrl() { return this.acUrls.get('community'); },
+        robotSchoolUrl() { return this.acUrls.get('robotSchool'); },
+        homeUrl() { return this.acUrls.get('home'); },
+        registerUrl() { return this.acUrls.get('register'); },
+        dashboardUrl() { return this.acUrls.get('dashboard'); },
     },
-
-    methods: {
-        onLinkClick(type) {
-            const link = this.links[type];
-            shell.openExternal(link);
-        }
-    }
 
 };
 </script>
 
 <style scoped>
-.ac-help {
+.help-resources {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
@@ -126,7 +107,7 @@ export default {
     font-weight: 400;
 }
 
-.ac-help-item {
+.help-resources-item {
     padding: var(--gap) var(--gap--large);
 }
 

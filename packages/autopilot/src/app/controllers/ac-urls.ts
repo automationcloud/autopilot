@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { StatelessViewport } from '../../viewport';
+import { injectable } from 'inversify';
+import { controller } from '../controller';
 
-export class AutomationCloudHelpViewport extends StatelessViewport {
-    getViewportId(): string {
-        return 'ac-help';
-    }
 
-    getViewportName(): string {
-        return 'Help & Resources';
-    }
+@injectable()
+@controller()
+export class AcUrlsController {
+    urls: Map<string, string> = new Map([
+        ['home', 'https://www.automationcloud.net/'],
+        ['community', 'https://community.automationcloud.net/'],
+        ['robotSchool', 'https://robotschool.dev'],
+        ['dashboard', 'https://dashboard.automationcloud.net/'],
+        ['register', 'https://www.automationcloud.net/pricing']
+    ]);
 
-    getViewportIcon(): string {
-        return 'fas fa-question-circle';
+    async init() {}
+
+    get(key: string): string {
+        return this.urls.get(key) ?? '';
     }
 }

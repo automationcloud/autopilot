@@ -14,6 +14,13 @@
             @click="apiLogin.startLogin()">
             <span>Sign in</span>
         </button>
+
+        <a
+            class="button button--tertiary button--cta"
+            type="click"
+            :href="registerUrl">
+            <span>Sign up for an account</span>
+        </a>
     </div>
 </template>
 
@@ -21,7 +28,8 @@
 export default {
 
     inject: [
-        'apiLogin'
+        'apiLogin',
+        'acUrls'
     ],
 
     props: {
@@ -32,6 +40,9 @@ export default {
         isShown() {
             return this.app.initialized &&
                 !this.apiLogin.isAuthenticated();
+        },
+        registerUrl() {
+            return this.acUrls.get('register');
         }
     },
 
