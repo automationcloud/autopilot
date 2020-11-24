@@ -5,7 +5,6 @@
         { "path": "./packages/fuzzy-search" },
         { "path": "./packages/cdp" },
         { "path": "./packages/engine" },
-        { "path": "./packages/routing-proxy" },
         { "path": "./packages/tools" },
         { "path": "./packages/worker" },
     ]

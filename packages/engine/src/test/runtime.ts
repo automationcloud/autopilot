@@ -23,6 +23,7 @@ import {
     ResolverService,
     RegistryService,
     TestRig,
+    ProxyService,
 } from '../main';
 import { StatsService } from '../main/services/stats';
 import { RegistryServiceMock } from './mocks/registry';
@@ -33,12 +34,18 @@ export class TestRuntime extends TestRig {
     setupEngine() {
         super.setupEngine();
 
-
         this.engine.container.bind(CheckpointServiceMock).toSelf().inSingletonScope();
         this.engine.container.rebind(CheckpointService).toService(CheckpointServiceMock);
 
         this.engine.container.bind(RegistryServiceMock).toSelf().inSingletonScope();
         this.engine.container.rebind(RegistryService).toService(RegistryServiceMock);
+    }
+
+    getChromeAdditionalArgs() {
+        return [
+            `--proxy-server=http://localhost:${this.$proxy.getProxyPort()}`,
+            `--ignore-certificate-errors-spki-list=hMHyzUhJwWbOEUX/mbxS1p15qpou3qTrCgzasXyrELE=`
+        ];
     }
 
     get $resolver() {
@@ -55,6 +62,10 @@ export class TestRuntime extends TestRig {
 
     get $stats() {
         return this.engine.get(StatsService);
+    }
+
+    get $proxy() {
+        return this.engine.get(ProxyService);
     }
 
     get $registry() {

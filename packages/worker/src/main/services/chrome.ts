@@ -15,7 +15,6 @@
 import { injectable, inject } from 'inversify';
 import {
     ChromeLauncher,
-    SPKI_SIGNATURES,
     BrowserService,
     ProxyService,
     Configuration,
@@ -30,6 +29,14 @@ const CHROME_CACHE_DIR = stringConfig('CHROME_CACHE_DIR', `${process.cwd()}/.tmp
 const CHROME_HEADLESS = booleanConfig('CHROME_HEADLESS', false);
 const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
 const CHROME_SHUTDOWN_TIMEOUT = numberConfig('CHROME_SHUTDOWN_TIMEOUT', 5000);
+// To obtain SHA256 SPKI signature fingerprint of certificate:
+// openssl x509 -noout -in ./mycert.crt -pubkey | openssl asn1parse -noout -inform pem -out ./mycert.key
+// openssl dgst -sha256 -binary ./mycert.key | openssl enc -base64
+const CHROME_CA_SPKI = stringConfig('CHROME_CA_SPKI', [
+    'hMHyzUhJwWbOEUX/mbxS1p15qpou3qTrCgzasXyrELE=', // UBIO CA
+    '+BV7LvDL+CT6iq4RpgEpBQWLbjms3UyFfIdN0WUOfk8=', // VGS sandbox
+    'duNwCVgxuLb+901jd6ui3qfljU55KiwgMJB1EuueDB0=', // VGS production
+].join(','));
 
 @injectable()
 export class ChromeLaunchService {
@@ -61,7 +68,7 @@ export class ChromeLaunchService {
                 `--proxy-server=http://127.0.0.1:${this.proxy.getProxyPort()}`,
                 '--ignore-certificate-errors',
                 '--window-size=1280,800',
-                `--ignore-certificate-errors-spki-list=${SPKI_SIGNATURES.join(',')}`,
+                `--ignore-certificate-errors-spki-list=${config.get(CHROME_CA_SPKI)}`,
                 'about:blank',
                 config.get(CHROME_HEADLESS) ? '--headless' : null,
             ].filter(Boolean),
