@@ -109,7 +109,7 @@
 export default {
 
     inject: [
-        'settings',
+        'acUrls',
         'chromeDownload',
         'firstRun',
     ],
@@ -125,7 +125,7 @@ export default {
         },
 
         registerUrl() {
-            return this.settings.getAcProductUrl('register');
+            return this.acUrls.get('register');
         },
 
     },

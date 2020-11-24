@@ -21,11 +21,11 @@
 <script>
 export default {
     inject: [
-        'settings',
+        'acUrls',
     ],
 
     computed: {
-        robotSchoolurl() { return this.settings.getAcProductUrl('robotSchool'); }
+        robotSchoolurl() { return this.acUrls.get('robotSchool'); }
     },
 };
 </script>

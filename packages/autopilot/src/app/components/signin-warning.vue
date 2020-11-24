@@ -29,7 +29,7 @@ export default {
 
     inject: [
         'apiLogin',
-        'settings'
+        'acUrls'
     ],
 
     props: {
@@ -42,7 +42,7 @@ export default {
                 !this.apiLogin.isAuthenticated();
         },
         registerUrl() {
-            return this.settings.getAcProductUrl('register');
+            return this.acUrls.get('register');
         }
     },
 

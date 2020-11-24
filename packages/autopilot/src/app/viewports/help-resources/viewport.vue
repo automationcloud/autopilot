@@ -83,16 +83,16 @@ export default {
 
     inject: [
         'apiLogin',
-        'settings',
+        'acUrls',
     ],
 
     computed: {
         isAuthenticated() { return this.apiLogin.isAuthenticated(); },
-        communityUrl() { return this.settings.getAcProductUrl('community'); },
-        robotSchoolUrl() { return this.settings.getAcProductUrl('robotSchool'); },
-        homeUrl() { return this.settings.getAcProductUrl('home'); },
-        registerUrl() { return this.settings.getAcProductUrl('register'); },
-        dashboardUrl() { return this.settings.getAcProductUrl('dashboard'); },
+        communityUrl() { return this.acUrls.get('community'); },
+        robotSchoolUrl() { return this.acUrls.get('robotSchool'); },
+        homeUrl() { return this.acUrls.get('home'); },
+        registerUrl() { return this.acUrls.get('register'); },
+        dashboardUrl() { return this.acUrls.get('dashboard'); },
     },
 
 };
