@@ -1,4 +1,4 @@
-FROM automationcloud/chrome:86-node14
+FROM automationcloud/chrome:c86-node14
 
 ARG VERSION
 ARG NPM_TOKEN

@@ -17,7 +17,6 @@ import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 import {
-    stringConfig,
     ProxyService, ApiRequest, ProxyUpstream, Configuration
 } from '@automationcloud/engine';
 import { UserData } from '../userdata';
@@ -25,20 +24,15 @@ import { StorageController } from './storage';
 import { popupMenu } from '../util/menu';
 import { MenuItemConstructorOptions } from 'electron';
 
-const ROXI_HOST = stringConfig('ROXI_HOST', 'proxy.automationcloud.net:8001');
-const ROXI_SECRET = stringConfig('ROXI_SECRET', '');
-const ROXI_PARTITION = stringConfig('ROXI_PARTITION', 'Autopilot');
+export type ProxyConnectionType = 'direct' | 'proxy';
 
-export type ProxyConnectionType = 'direct' | 'roxi' | 'proxy';
-
+// TODO rename!
 @injectable()
 @controller({ backgroundInit: true })
 export class RoxiController {
     userData: UserData;
 
     selectedTag: string = '';
-    useRoxi: boolean = false;
-    useRoxiCache: boolean = false;
 
     availableTags: string[] = [];
     proxyConfig: ProxyConfig | null = null;
@@ -64,12 +58,8 @@ export class RoxiController {
     async init() {
         const {
             selectedTag = '',
-            useRoxiCache = false,
-            useRoxi = false
         } = await this.userData.loadData();
         this.selectedTag = selectedTag;
-        this.useRoxiCache = useRoxiCache;
-        this.useRoxi = useRoxi;
         await this.refreshAvailableTags();
         await this.configureProxy();
     }
@@ -77,8 +67,6 @@ export class RoxiController {
     update() {
         this.userData.update({
             selectedTag: this.selectedTag,
-            useRoxiCache: this.useRoxiCache,
-            useRoxi: this.useRoxi,
         });
     }
 
@@ -93,8 +81,7 @@ export class RoxiController {
             if (!this.proxyConfig) {
                 return;
             }
-            const upstream = this.isUsingRoxi() ? this.getRoxiUpstreamConfig(this.proxyConfig) :
-                this.getProxyUpstreamConfig(this.proxyConfig);
+            const upstream = this.getProxyUpstreamConfig(this.proxyConfig);
             this.proxy.addRoute(/.*/, upstream);
             this.proxy.closeAllSockets();
         } catch (error) {
@@ -132,14 +119,6 @@ export class RoxiController {
         return this.apiRequest.isAuthenticated();
     }
 
-    isUsingRoxi() {
-        return this.useRoxi && this.isRoxiConfigured();
-    }
-
-    isRoxiConfigured() {
-        return !!this.config.get(ROXI_SECRET);
-    }
-
     isActive() {
         return !!this.proxyConfig;
     }
@@ -160,24 +139,6 @@ export class RoxiController {
             host: proxyConfig.connection.hostname + ':' + proxyConfig.connection.port,
             username: encodeURIComponent(proxyConfig.connection.username),
             password: encodeURIComponent(proxyConfig.connection.password),
-        };
-    }
-
-    protected getRoxiUpstreamConfig(proxyConfig: ProxyConfig): ProxyUpstream {
-        const host = this.config.get(ROXI_HOST);
-        const secret = this.config.get(ROXI_SECRET);
-        const partition = this.config.get(ROXI_PARTITION);
-        return {
-            useHttps: true,
-            host,
-            username: encodeURIComponent(
-                JSON.stringify({
-                    ...proxyConfig.connection,
-                    cache: this.useRoxiCache,
-                    partition,
-                }),
-            ),
-            password: secret,
         };
     }
 
@@ -203,29 +164,6 @@ export class RoxiController {
                 click: () => {
                     this.set({
                         selectedTag: tag
-                    });
-                }
-            });
-        }
-        if (this.isRoxiConfigured()) {
-            menuItems.push({ type: 'separator' });
-            menuItems.push({
-                label: 'Use roxi',
-                type: 'checkbox',
-                checked: this.isUsingRoxi(),
-                click: () => {
-                    this.set({
-                        useRoxi: !this.useRoxi,
-                    });
-                }
-            });
-            menuItems.push({
-                label: 'Use roxi cache',
-                type: 'checkbox',
-                checked: this.useRoxiCache,
-                click: () => {
-                    this.set({
-                        useRoxiCache: !this.useRoxiCache,
                     });
                 }
             });
