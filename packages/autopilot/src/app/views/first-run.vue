@@ -125,7 +125,7 @@ export default {
         },
 
         registerUrl() {
-            return this.settings.getAcLink('register');
+            return this.settings.getAcProductUrl('register');
         },
 
     },

@@ -25,7 +25,7 @@ export default {
     ],
 
     computed: {
-        robotSchoolurl() { return this.settings.getAcLink('robotSchool'); }
+        robotSchoolurl() { return this.settings.getAcProductUrl('robotSchool'); }
     },
 };
 </script>

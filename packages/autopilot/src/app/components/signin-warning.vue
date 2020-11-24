@@ -42,7 +42,7 @@ export default {
                 !this.apiLogin.isAuthenticated();
         },
         registerUrl() {
-            return this.settings.getAcLink('register');
+            return this.settings.getAcProductUrl('register');
         }
     },
 

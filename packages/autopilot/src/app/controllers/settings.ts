@@ -42,7 +42,7 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['ROXI_HOST:production', 'proxy.automationcloud.net:8001']
 ];
 
-const AC_LINKS: Map<string, string> = new Map([
+const AC_PRODUCT_URLS: Map<string, string> = new Map([
     ['home', 'https://www.automationcloud.net/'],
     ['community', 'https://community.automationcloud.net/'],
     ['robotSchool', 'https://robotschool.dev'],
@@ -146,8 +146,8 @@ export class SettingsController {
         this.update();
     }
 
-    getAcLink(key: string): string {
-        return AC_LINKS.get(key) ?? '';
+    getAcProductUrl(key: string): string {
+        return AC_PRODUCT_URLS.get(key) ?? '';
     }
 
     protected _addEntries(entries: Array<[string, string | null]>) {

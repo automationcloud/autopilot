@@ -88,11 +88,11 @@ export default {
 
     computed: {
         isAuthenticated() { return this.apiLogin.isAuthenticated(); },
-        communityUrl() { return this.settings.getAcLink('community'); },
-        robotSchoolUrl() { return this.settings.getAcLink('robotSchool'); },
-        homeUrl() { return this.settings.getAcLink('home'); },
-        registerUrl() { return this.settings.getAcLink('register'); },
-        dashboardUrl() { return this.settings.getAcLink('dashboard'); },
+        communityUrl() { return this.settings.getAcProductUrl('community'); },
+        robotSchoolUrl() { return this.settings.getAcProductUrl('robotSchool'); },
+        homeUrl() { return this.settings.getAcProductUrl('home'); },
+        registerUrl() { return this.settings.getAcProductUrl('register'); },
+        dashboardUrl() { return this.settings.getAcProductUrl('dashboard'); },
     },
 
 };
