@@ -11,7 +11,7 @@
                 Beware: You may turn a little bit 'robot'.
             </p>
             <a class="button button--cta"
-                :href="robotSchoolurl">
+                :href="robotSchoolUrl">
                 <span>Robot School</span>
             </a>
         </article>
@@ -25,7 +25,7 @@ export default {
     ],
 
     computed: {
-        robotSchoolurl() { return this.acUrls.get('robotSchool'); }
+        robotSchoolUrl() { return this.acUrls.get('robotSchool'); }
     },
 };
 </script>
