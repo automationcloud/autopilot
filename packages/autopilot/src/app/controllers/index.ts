@@ -19,6 +19,7 @@ export * from './autopilot-stats';
 export * from './chrome-download';
 export * from './chrome-manager';
 export * from './datasets';
+export * from './dev-mode';
 export * from './emulation';
 export * from './expandable';
 export * from './extension-dev';

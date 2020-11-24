@@ -16,7 +16,8 @@
         "test-server": "node out/test/server"
     },
     "files": [
-        "out/main/**/*"
+        "out/main/**/*",
+        "certs/**/*"
     ],
     "dependencies": {
         "@automationcloud/cdp": "^32.21.0",

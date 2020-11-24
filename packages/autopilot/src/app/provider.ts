@@ -31,6 +31,7 @@ export function createControllerProvider(app: App) {
         chromeDownload: app.get(ctl.ChromeDownloadController),
         chromeManager: app.get(ctl.ChromeManagerController),
         datasets: app.get(ctl.DatasetsController),
+        devMode: app.get(ctl.DevModeController),
         diff: app.get(ctl.ScriptDiffController),
         emulation: app.get(ctl.EmulationController),
         events: app.get(EventBus),

@@ -1,6 +1,6 @@
 <template>
     <div class="extensions">
-        <dev-extensions v-if="isDevEnabled"/>
+        <dev-extensions v-if="devMode.isEnabled()"/>
         <signin-warning class="ext-warning"
             message="to the Automation Cloud to browse and load Extensions"/>
         <extensions v-if="apiLogin.isAuthenticated()"/>
@@ -17,6 +17,7 @@ export default {
         'apiLogin',
         'extDev',
         'extReg',
+        'devMode',
     ],
 
     components: {
@@ -27,9 +28,6 @@ export default {
     computed: {
         script() {
             return this.app.project.script;
-        },
-        isDevEnabled() {
-            return this.extDev.isDevEnabled();
         },
     },
 

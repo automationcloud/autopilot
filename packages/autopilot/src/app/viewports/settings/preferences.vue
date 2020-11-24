@@ -1,9 +1,20 @@
 <template>
     <div class="preferences">
 
-        <div class="section__title">
+        <div class="section__title"
+            @click="devMode.registerClick()"
+            style="user-select:none">
             Autopilot
         </div>
+
+        <div style="position:relative">
+            <div class="dev-prompt" v-if="devMode.clicks > 2">
+                Click {{ devMode.remainingClicks }} more
+                time{{ devMode.remainingClicks > 1 ? 's' : '' }} to become an
+                <strong>awesome</strong> Autopilot developer!
+            </div>
+        </div>
+
         <div class="pane">
             <div class="pane-item"
                 v-if="apiLogin.isAuthenticated()">
@@ -27,6 +38,18 @@
                 </div>
                 <div class="pane-aside">
                     <update-checker/>
+                </div>
+            </div>
+            <div class="pane-item"
+                v-if="devMode.isEnabled()">
+                <div class="pane-main">
+                    You're a developer!
+                </div>
+                <div class="pane-aside">
+                    <button class="button button--secondary"
+                        @click="devMode.setEnabled(false)">
+                        Quit being a developer
+                    </button>
                 </div>
             </div>
         </div>
@@ -143,14 +166,11 @@ export default {
         'tools',
         'updater',
         'settings',
+        'devMode',
     ],
 
     components: {
         UpdateChecker,
-    },
-
-    computed: {
-
     },
 
     methods: {
@@ -225,5 +245,16 @@ export default {
 .icon-help {
     color: var(--color-blue--500);
     margin: 0 var(--gap--small);
+}
+
+.dev-prompt {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    z-index: 5;
+    background: rgba(255,255,255,.85);
+    padding: 1em;
+    border-radius: var(--border-radius);
+    box-shadow: 0 3px 5px rgba(0,0,0,.25);
 }
 </style>
