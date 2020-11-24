@@ -14,9 +14,9 @@
 
 import { StatelessViewport } from '../../viewport';
 
-export class AutomationCloudHelpViewport extends StatelessViewport {
+export class HelpResourcesViewport extends StatelessViewport {
     getViewportId(): string {
-        return 'ac-help';
+        return 'help-resources';
     }
 
     getViewportName(): string {

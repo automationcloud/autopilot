@@ -16,6 +16,7 @@ export * from './api';
 export * from './browser';
 export * from './datasets';
 export * from './extensions';
+export * from './help-resources';
 export * from './inspections';
 export * from './playback-events';
 export * from './recipes';

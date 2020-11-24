@@ -42,6 +42,14 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['ROXI_HOST:production', 'proxy.automationcloud.net:8001']
 ];
 
+const AC_LINKS: Map<string, string> = new Map([
+    ['home', 'https://www.automationcloud.net/'],
+    ['community', 'https://community.automationcloud.net/'],
+    ['robotSchool', 'https://robotschool.dev'],
+    ['dashboard', 'https://dashboard.automationcloud.net/'],
+    ['register', 'https://www.automationcloud.net/pricing']
+]);
+
 @injectable()
 @controller({ priority: 5000 })
 export class SettingsController {
@@ -136,6 +144,10 @@ export class SettingsController {
         const _key = useEnv ? `${key}:${this.env}` : key;
         this._setSingleValue(_key, value);
         this.update();
+    }
+
+    getAcLink(key: string): string {
+        return AC_LINKS.get(key) ?? '';
     }
 
     protected _addEntries(entries: Array<[string, string | null]>) {

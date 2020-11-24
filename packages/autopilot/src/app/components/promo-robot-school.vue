@@ -11,7 +11,7 @@
                 Beware: You may turn a little bit 'robot'.
             </p>
             <a class="button button--cta"
-                @click="onClick">
+                :href="robotSchoolurl">
                 <span>Robot School</span>
             </a>
         </article>
@@ -19,18 +19,13 @@
 </template>
 
 <script>
-import { shell } from 'electron';
 export default {
-    data() {
-        return {
-            robotSchoolurl: 'https://robotschool.dev',
-        };
-    },
+    inject: [
+        'settings',
+    ],
 
-    methods: {
-        onClick() {
-            shell.openExternal(this.robotSchoolurl);
-        }
+    computed: {
+        robotSchoolurl() { return this.settings.getAcLink('robotSchool'); }
     },
 };
 </script>
