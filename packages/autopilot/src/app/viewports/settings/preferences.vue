@@ -1,9 +1,8 @@
 <template>
     <div class="preferences">
 
-        <div class="section__title"
-            @click="devMode.registerClick()"
-            style="user-select:none">
+        <div class="section__title magic-place"
+            @click="devMode.registerClick()">
             Autopilot
         </div>
 
@@ -44,6 +43,8 @@
                 v-if="devMode.isEnabled()">
                 <div class="pane-main">
                     You're a developer!
+                    <span class="fireworks" ref="fireworks">
+                    </span>
                 </div>
                 <div class="pane-aside">
                     <button class="button button--secondary"
@@ -156,6 +157,7 @@
 <script>
 import UpdateChecker from './update-checker.vue';
 import { remote } from 'electron';
+import { vfx } from '../../util';
 
 const { dialog } = remote;
 
@@ -171,6 +173,20 @@ export default {
 
     components: {
         UpdateChecker,
+    },
+
+    watch: {
+        'isDevModeEnabled'(value) {
+            if (value) {
+                this.celebrate();
+            }
+        }
+    },
+
+    computed: {
+        isDevModeEnabled() {
+            return this.devMode.isEnabled();
+        }
     },
 
     methods: {
@@ -196,12 +212,15 @@ export default {
             }
             const file = filePaths[0];
             this.setValue('CHROME_PATH', file);
-            // TODO reload app?
         },
 
         updateChromePort(ev) {
             const port = Math.min(Math.max(0, ev.target.value), 65535);
             this.setValue('CHROME_PORT', port);
+        },
+
+        celebrate() {
+            setTimeout(() => vfx.fireworks(this.$refs.fireworks, { count: 50 }), 50);
         }
 
     }
@@ -256,5 +275,38 @@ export default {
     padding: 1em;
     border-radius: var(--border-radius);
     box-shadow: 0 3px 5px rgba(0,0,0,.25);
+}
+
+.magic-place {
+    position: relative;
+    user-select: none;
+}
+
+.fireworks {
+    position: absolute;
+}
+
+.fireworks >>> .particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    background: hsl(320deg, 60%, 55%);
+    animation-duration: 2s;
+    animation-name: particle;
+}
+
+@keyframes particle {
+  0% {
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 </style>
