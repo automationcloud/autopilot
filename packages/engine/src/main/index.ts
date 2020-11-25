@@ -35,10 +35,8 @@ export * from './search';
 export * from './services';
 export * from './session';
 
+import * as uniproxy from '@automationcloud/uniproxy';
 import * as util from './util';
 import * as model from './model';
 const params = model.params;
-export { util, model, params };
-
-import { ProxyRoute, ProxyUpstream, SerializedProxyRoute } from '@automationcloud/uniproxy';
-export { ProxyRoute, ProxyUpstream, SerializedProxyRoute };
+export { util, model, params, uniproxy };

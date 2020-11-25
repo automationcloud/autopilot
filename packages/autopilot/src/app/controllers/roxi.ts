@@ -16,9 +16,7 @@ import { ProxyConfig, ApiController } from './api';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { EventBus } from '../event-bus';
-import {
-    ProxyService, ApiRequest, ProxyUpstream, Configuration
-} from '@automationcloud/engine';
+import { ProxyService, ApiRequest, Configuration, uniproxy } from '@automationcloud/engine';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
 import { popupMenu } from '../util/menu';
@@ -133,7 +131,7 @@ export class RoxiController {
         this.configureProxy();
     }
 
-    protected getProxyUpstreamConfig(proxyConfig: ProxyConfig): ProxyUpstream {
+    protected getProxyUpstreamConfig(proxyConfig: ProxyConfig): uniproxy.ProxyUpstream {
         return {
             useHttps: false,
             host: proxyConfig.connection.hostname + ':' + proxyConfig.connection.port,
