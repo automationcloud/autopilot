@@ -25,6 +25,7 @@ import { EventBus } from './event-bus';
  */
 export function createControllerProvider(app: App) {
     return {
+        acUrls: app.get(ctl.AcUrlsController),
         apiLogin: app.get(ctl.ApiLoginController),
         appMenu: app.get(ctl.AppMenuController),
         browser: app.get(BrowserService),

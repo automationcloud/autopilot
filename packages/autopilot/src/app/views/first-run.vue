@@ -75,7 +75,7 @@
                     <hr class="section-divider"/>
 
                     <h6>
-                        2. Run scripts locally or <u>Register for Automation Cloud account</u> at any time.
+                        2. Run scripts locally or <a :href="registerUrl">Register for Automation Cloud account</a> at any time.
                     </h6>
                     <div class="section-controls">
                         <button
@@ -109,7 +109,7 @@
 export default {
 
     inject: [
-        'settings',
+        'acUrls',
         'chromeDownload',
         'firstRun',
     ],
@@ -122,6 +122,10 @@ export default {
 
         installed() {
             return this.chromeDownload.isInstalled();
+        },
+
+        registerUrl() {
+            return this.acUrls.get('register');
         },
 
     },

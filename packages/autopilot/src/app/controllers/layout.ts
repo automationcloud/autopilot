@@ -188,4 +188,8 @@ const DEFAULT_WORKSPACES: LayoutWorkspace[] = [
         name: 'Automation Cloud',
         layout: { type: 'viewport', viewportId: 'api' },
     },
+    {
+        name: '❔',
+        layout: { type: 'viewport', viewportId: 'help-resources' },
+    },
 ];

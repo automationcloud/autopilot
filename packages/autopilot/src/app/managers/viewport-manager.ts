@@ -26,6 +26,7 @@ import {
     SearchScriptsViewport,
     ScreencastViewport,
     SettingsViewport,
+    HelpResourcesViewport,
 } from '../viewports';
 import { Viewport } from '../viewport';
 import { LayoutDirection } from '../util/layout-item';
@@ -36,6 +37,7 @@ export class ViewportManager {
     browserViewport: BrowserViewport;
     datasets: DatasetsViewport;
     extensions: ExtensionsViewport;
+    helpResources: HelpResourcesViewport;
     inspections: InspectionsViewport;
     playbackEvents: PlaybackEventsViewport;
     recipes: RecipesViewport;
@@ -67,6 +69,7 @@ export class ViewportManager {
         this.settings = new SettingsViewport(app);
         this.browserViewport = new BrowserViewport(app);
         this.screencast = new ScreencastViewport(app);
+        this.helpResources = new HelpResourcesViewport(app);
 
         this.all = Object.values(this).filter(_ => _ instanceof Viewport);
     }
