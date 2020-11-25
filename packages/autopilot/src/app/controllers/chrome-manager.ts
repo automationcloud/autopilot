@@ -181,7 +181,7 @@ export class ChromeManagerController {
             `--proxy-server=http://127.0.0.1:${proxyPort}`,
             `--user-data-dir=${chromeUserDir}`,
             headless ? '--headless' : '',
-            ...this.settings.get(CHROME_ADDITIONAL_ARGS),
+            ...this.settings.get(CHROME_ADDITIONAL_ARGS).split(/\s+/),
         ].filter(Boolean);
         this.chromeProcess = spawn(chromePath, args, { stdio });
         this.chromeProcess.on('exit', () => {
