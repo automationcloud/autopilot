@@ -18,10 +18,9 @@ import { Execution } from '../types';
 import { ApiService } from './api';
 import { WorkerState } from './state';
 
-// TODO rename!
 @injectable()
 @SessionHandler()
-export class RoxiService {
+export class ProxySetupService {
     constructor(
         @inject(Configuration)
         protected config: Configuration,
@@ -49,10 +48,10 @@ export class RoxiService {
         this.proxy.clearRoutes();
         this.proxy.addRoute(/.*/, {
             host: `${connection.hostname}:${connection.port}`,
-            username: encodeURIComponent(connection.username),
-            password: encodeURIComponent(connection.password),
+            username: connection.username,
+            password: connection.password,
             useHttps: false,
         });
-        this.state.proxyConnection = { ...connection, password: '' };
+        this.state.proxyConnection = { ...connection, password: '·····' };
     }
 }
