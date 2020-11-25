@@ -34,7 +34,7 @@ describe('Proxy', () => {
         });
     });
 
-    it('sets roxi route', async () => {
+    it.skip('sets default proxy route', async () => {
         const route = await runtime.helpers.getProxyRoute('someRoxiIpAddressId');
         const proxy = runtime.app.container.get(ProxyService);
         const [proxyRoute] = proxy.getRoutes();
@@ -42,5 +42,20 @@ describe('Proxy', () => {
         assert.strictEqual(proxyRoute.upstream?.host, route.hostname + ':' + route.port);
         assert.strictEqual(proxyRoute.upstream?.username, route.username);
         assert.strictEqual(proxyRoute.upstream?.password, route.password);
+    });
+
+    it('sets roxi route', async () => {
+        const route = await runtime.helpers.getProxyRoute('someRoxiIpAddressId');
+        const proxy = runtime.app.container.get(ProxyService);
+        const [proxyRoute] = proxy.getRoutes();
+        assert.ok(proxyRoute.upstream);
+        const decoded = JSON.parse(decodeURIComponent(proxyRoute.upstream?.username || ''));
+        assert.strictEqual(decoded.hostname, route.hostname);
+        assert.strictEqual(decoded.port, route.port);
+        assert.strictEqual(decoded.username, route.username);
+        assert.strictEqual(decoded.password, route.password);
+        assert.strictEqual(decoded.authScheme, route.authScheme);
+        assert.strictEqual(decoded.cache, true);
+        assert.strictEqual(decoded.partition, 'happy');
     });
 });
