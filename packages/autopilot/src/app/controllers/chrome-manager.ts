@@ -15,7 +15,7 @@
 import os from 'os';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
-import { SPKI_SIGNATURES, Target, stringConfig, BrowserService, ProxyService, booleanConfig } from '@automationcloud/engine';
+import { Target, stringConfig, BrowserService, ProxyService, booleanConfig } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { SettingsController } from './settings';
@@ -26,6 +26,7 @@ const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
 const CHROME_HEADLESS = booleanConfig('CHROME_HEADLESS', false);
 const CHROME_HOMEPAGE = stringConfig('CHROME_HOMEPAGE', 'https://robotschool.dev');
 const CHROME_USE_HOMEPAGE = booleanConfig('CHROME_USE_HOMEPAGE', true);
+const CHROME_ADDITIONAL_ARGS = stringConfig('CHROME_ADDITIONAL_ARGS', '');
 const chromeUserDir = path.resolve(os.homedir(), '.autopilot', 'chrome', 'userdir');
 
 @controller()
@@ -177,10 +178,10 @@ export class ChromeManagerController {
         const args = [
             `--remote-debugging-port=${chromePort}`,
             // `--proxy-server=http://localhost:${proxyPort}`,
-            `--ignore-certificate-errors-spki-list=${SPKI_SIGNATURES.join(',')}`,
             `--proxy-server=http://127.0.0.1:${proxyPort}`,
             `--user-data-dir=${chromeUserDir}`,
             headless ? '--headless' : '',
+            ...this.settings.get(CHROME_ADDITIONAL_ARGS).split(/\s+/),
         ].filter(Boolean);
         this.chromeProcess = spawn(chromePath, args, { stdio });
         this.chromeProcess.on('exit', () => {

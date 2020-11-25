@@ -15,7 +15,6 @@
 import 'reflect-metadata';
 
 export * from '@automationcloud/cdp';
-export * from '@automationcloud/routing-proxy';
 export * from '@automationcloud/request';
 
 export * from './action';
@@ -36,10 +35,8 @@ export * from './search';
 export * from './services';
 export * from './session';
 
+import * as uniproxy from '@automationcloud/uniproxy';
 import * as util from './util';
 import * as model from './model';
 const params = model.params;
-export { util, model, params };
-
-// TODO remove once we're fully on v32
-export * from './create-ubio-symlink';
+export { util, model, params, uniproxy };

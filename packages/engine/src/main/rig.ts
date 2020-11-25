@@ -46,8 +46,17 @@ export class TestRig {
             chromePort: this.chromePort,
             chromePath: this.chromePath,
             userDataDir: path.resolve(process.cwd(), '.tmp/chromedata'),
-            additionalArgs: ['--site-per-process', this.chromeHeadless ? '--headless' : null, 'about:blank'],
+            additionalArgs: [
+                '--site-per-process',
+                this.chromeHeadless ? '--headless' : null,
+                ...this.getChromeAdditionalArgs(),
+                'about:blank'
+            ],
         });
+    }
+
+    getChromeAdditionalArgs(): string[] {
+        return [];
     }
 
     /**

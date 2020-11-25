@@ -18,8 +18,9 @@ import * as csskit from './csskit';
 import * as keyboard from './keyboard';
 import * as menu from './menu';
 import * as helpers from './helpers';
+import * as vfx from './vfx';
 
-export { clipboard, csskit, dom, keyboard, menu, helpers };
+export { clipboard, csskit, dom, keyboard, menu, helpers, vfx };
 
 export * from './github';
 export * from './dnd';

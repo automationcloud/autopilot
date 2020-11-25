@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RoutingProxy } from '@automationcloud/routing-proxy';
+import { RoutingProxy } from '@automationcloud/uniproxy';
 import { injectable, inject } from 'inversify';
 import { Configuration, numberConfig, Logger } from '@automationcloud/cdp';
 import { SessionHandler } from '../session';
@@ -26,13 +26,10 @@ export class ProxyService extends RoutingProxy {
         @inject(Configuration)
         protected config: Configuration,
         @inject(Logger)
-        protected logger: Logger,
+        logger: Logger,
     ) {
-        super();
-        this.on('error', error => {
-            if (error.code !== 'EPIPE' && error.code !== 'ECONNRESET') {
-                logger.warn('Proxy error', { error });
-            }
+        super({
+            logger
         });
     }
 
@@ -41,10 +38,7 @@ export class ProxyService extends RoutingProxy {
     }
 
     async onSessionFinish() {
-        if (!this.isRunning()) {
-            await this.init();
-        }
-        this.closeAllSockets();
+        await this.shutdown(true);
     }
 
     getProxyPort() {

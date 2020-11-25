@@ -18,7 +18,6 @@ import {
     ReporterService,
     CheckpointService,
     Logger as EngineLogger,
-    createUbioSymlink,
 } from '@automationcloud/engine';
 import {
     Logger as FrameworkLogger, Application, Router
@@ -26,12 +25,13 @@ import {
 import { ApiService } from './services/api';
 import { CacheService } from './services/cache';
 import { ChromeLaunchService } from './services/chrome';
+import { Container } from 'inversify';
 import { ExtensionManager } from './services/extension-manager';
 import { HeartbeatsService } from './services/heartbeats';
 import { InputsService } from './services/inputs';
+import { ProxySetupService } from './services/proxy-setup';
 import { QueueConsumer } from './services/queue-consumer';
 import { RedisProvider } from './services/redis';
-import { RoxiService } from './services/roxi';
 import { Runner } from './services/runner';
 import { ScriptLoaderService } from './services/script-loader';
 import { SignalsService } from './services/signals';
@@ -41,9 +41,6 @@ import { WorkerFlowService } from './overrides/flow';
 import { WorkerLogger } from './overrides/logger';
 import { WorkerReporterService } from './overrides/reporter';
 import { WorkerState } from './services/state';
-import { Container } from 'inversify';
-
-createUbioSymlink(process.cwd());
 
 export class WorkerBaseApp extends Application {
     constructor() {
@@ -75,7 +72,7 @@ export class WorkerBaseApp extends Application {
         this.container.bind(InputsService).toSelf().inSingletonScope();
         this.container.bind(QueueConsumer).toSelf().inSingletonScope();
         this.container.bind(RedisProvider).toSelf().inSingletonScope();
-        this.container.bind(RoxiService).toSelf().inSingletonScope();
+        this.container.bind(ProxySetupService).toSelf().inSingletonScope();
         this.container.bind(Runner).toSelf().inSingletonScope();
         this.container.bind(ScriptLoaderService).toSelf().inSingletonScope();
         this.container.bind(SignalsService).toSelf().inSingletonScope();

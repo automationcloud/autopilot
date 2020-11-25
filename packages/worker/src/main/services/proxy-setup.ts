@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { stringConfig, Configuration, ProxyService, SessionHandler } from '@automationcloud/engine';
+import { Configuration, ProxyService, SessionHandler } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { Execution } from '../types';
 import { ApiService } from './api';
 import { WorkerState } from './state';
 
-const ROXI_HOST = stringConfig('ROXI_HOST');
-const ROXI_SECRET = stringConfig('ROXI_SECRET');
-
 @injectable()
 @SessionHandler()
-export class RoxiService {
+export class ProxySetupService {
     constructor(
         @inject(Configuration)
         protected config: Configuration,
@@ -47,22 +44,14 @@ export class RoxiService {
     }
 
     async setupExecutionRoutes(execution: Execution) {
-        const useRoxiCache = execution.options?.useRoxiCache || false;
         const connection = await this.api.getProxyConnection(execution.proxyId);
-        const username = encodeURIComponent(
-            JSON.stringify({
-                ...connection,
-                cache: useRoxiCache,
-                partition: execution.id,
-            }),
-        );
         this.proxy.clearRoutes();
         this.proxy.addRoute(/.*/, {
-            host: this.config.get(ROXI_HOST),
-            username,
-            password: this.config.get(ROXI_SECRET),
-            useHttps: true,
+            host: `${connection.hostname}:${connection.port}`,
+            username: connection.username,
+            password: connection.password,
+            useHttps: false,
         });
-        this.state.proxyConnection = { ...connection, password: '' };
+        this.state.proxyConnection = { ...connection, password: '·····' };
     }
 }

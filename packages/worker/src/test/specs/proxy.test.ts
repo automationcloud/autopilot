@@ -37,15 +37,10 @@ describe('Proxy', () => {
     it('sets roxi route', async () => {
         const route = await runtime.helpers.getProxyRoute('someRoxiIpAddressId');
         const proxy = runtime.app.container.get(ProxyService);
-        const [proxyRoute] = proxy.getSerializedRoutes();
+        const [proxyRoute] = proxy.getRoutes();
         assert.ok(proxyRoute.upstream);
-        const decoded = JSON.parse(decodeURIComponent(proxyRoute.upstream?.username || ''));
-        assert.equal(decoded.hostname, route.hostname);
-        assert.equal(decoded.port, route.port);
-        assert.equal(decoded.username, route.username);
-        assert.equal(decoded.password, route.password);
-        assert.equal(decoded.authScheme, route.authScheme);
-        assert.equal(decoded.cache, true);
-        assert.equal(decoded.partition, 'happy');
+        assert.strictEqual(proxyRoute.upstream?.host, route.hostname + ':' + route.port);
+        assert.strictEqual(proxyRoute.upstream?.username, route.username);
+        assert.strictEqual(proxyRoute.upstream?.password, route.password);
     });
 });

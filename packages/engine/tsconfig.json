@@ -2,7 +2,6 @@
     "extends": "../../tsconfig.base.json",
     "references": [
         { "path": "../cdp" },
-        { "path": "../routing-proxy" }
     ],
     "compilerOptions": {
         "rootDir": "./src",

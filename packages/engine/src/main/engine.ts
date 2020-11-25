@@ -76,11 +76,11 @@ export class Engine {
         this.container.bind(FetchService).toSelf().inSingletonScope();
         this.container.bind(FlowService).toSelf().inSingletonScope();
         this.container.bind(GlobalsService).toSelf().inSingletonScope();
+        this.container.bind(HttpCallbackService).toSelf().inSingletonScope();
         this.container.bind(ProxyService).toSelf().inSingletonScope();
         this.container.bind(RegistryService).toSelf().inSingletonScope();
         this.container.bind(ReporterService).toSelf().inSingletonScope();
         this.container.bind(ResolverService).toSelf().inSingletonScope();
-        this.container.bind(HttpCallbackService).toSelf().inSingletonScope();
         this.container.bind(StatsService).toSelf().inSingletonScope();
         this.container.bind(UserAgentService).toSelf().inSingletonScope();
     }

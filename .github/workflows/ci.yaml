@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: automationcloud/chrome:83
+      image: automationcloud/chrome:c86-node14
       env:
         CHROME_PATH: /opt/latest/chrome
         CHROME_PORT: "9123"

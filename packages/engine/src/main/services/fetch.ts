@@ -13,20 +13,17 @@
 // limitations under the License.
 
 import http from 'http';
-import https from 'https';
-import net from 'net';
-import tls from 'tls';
 import uuid from 'uuid';
 import * as util from '../util';
 import querystring from 'querystring';
 import FormData from 'form-data';
-import { CA_CERTIFICATES } from '@automationcloud/routing-proxy';
 import { injectable, inject } from 'inversify';
 import nodeFetch, { RequestInit } from 'node-fetch';
-import { CdpHeaders, Exception, Logger } from '@automationcloud/cdp';
+import { CdpHeaders, Logger } from '@automationcloud/cdp';
 import { BlobService } from './blob';
 import { BrowserService } from './browser';
 import { ProxyService } from './proxy';
+import { HttpProxyAgent, HttpsProxyAgent } from '@automationcloud/uniproxy';
 
 export const RETRIABLE_ERRORS = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE', 'ERR_STREAM_DESTROYED'];
 
@@ -285,8 +282,8 @@ export class FetchService {
             const proxyPort = this.proxy.getProxyPort();
             agent =
                 parsedUrl.protocol === 'https:'
-                    ? new HttpsProxyAgent('127.0.0.1', proxyPort)
-                    : new HttpProxyAgent('127.0.0.1', proxyPort);
+                    ? new HttpsProxyAgent({ host: `127.0.0.1:${proxyPort}` })
+                    : new HttpProxyAgent({ host: `127.0.0.1:${proxyPort}` });
             (fetchOptions as any).agent = agent;
         }
         try {
@@ -317,70 +314,4 @@ export class FetchService {
         return util.parseBodyData(buffer, spec.responseBodyFormat);
     }
 
-}
-
-class HttpsProxyAgent extends https.Agent {
-    constructor(readonly hostname: string, readonly port: number) {
-        super({
-            keepAlive: false,
-            ca: CA_CERTIFICATES,
-            timeout: 60000,
-        });
-    }
-
-    createConnection(options: any, cb: (err: Error | null, socket?: net.Socket) => void) {
-        const connectReq = http.request({
-            method: 'connect',
-            hostname: this.hostname,
-            port: this.port,
-            path: [options.host, options.port].join(':'),
-            headers: {
-                host: options.host,
-            },
-        });
-        connectReq.on('connect', (res: http.IncomingMessage, socket: net.Socket) => {
-            if (res.statusCode !== 200) {
-                const err = new Exception({
-                    name: 'ProxyConnectionFailed',
-                    message: `Proxy connection failed: proxy returned ${res.statusCode} ${res.statusMessage}`,
-                });
-                cb(err);
-                return;
-            }
-            const tlsSocket = tls.connect({
-                host: options.host,
-                port: options.port,
-                socket,
-                ALPNProtocols: ['http/1.1'],
-                ca: CA_CERTIFICATES,
-            });
-            cb(null, tlsSocket);
-        });
-        connectReq.on('error', (err: any) => cb(err));
-        connectReq.end();
-    }
-}
-
-class HttpProxyAgent extends http.Agent {
-    constructor(readonly hostname: string, readonly port: number) {
-        super({
-            keepAlive: false,
-            timeout: 60000,
-        });
-    }
-
-    addRequest(req: http.ClientRequest, options: any) {
-        req.shouldKeepAlive = false;
-        (req as any).path = options.href;
-        const socket = this.createConnection(options);
-        req.onSocket(socket);
-    }
-
-    createConnection(_options: any) {
-        const socket = net.createConnection({
-            host: this.hostname,
-            port: this.port,
-        });
-        return socket;
-    }
 }

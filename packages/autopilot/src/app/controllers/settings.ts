@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { UserData } from '../userdata';
-import { PropertyDecl, ConfigValue, Configuration, getConfigDeclarations } from '@automationcloud/engine';
+import { PropertyDecl, ConfigValue, Configuration, getConfigDeclarations, util } from '@automationcloud/engine';
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
@@ -38,8 +38,6 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     ['AC_AUTHORIZATION_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/auth'],
     ['AC_ACCOUNT_INFO_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/userinfo'],
     ['AC_ACCOUNT_INFO_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/userinfo'],
-    ['ROXI_HOST:staging', 'proxy-staging.automationcloud.net:8001'],
-    ['ROXI_HOST:production', 'proxy.automationcloud.net:8001']
 ];
 
 @injectable()
@@ -89,7 +87,6 @@ export class SettingsController {
             this.env = env;
             this.update();
         }
-        console.info('You are on ' + this.env);
     }
 
     get<T extends ConfigValue>(decl: PropertyDecl<T>): T {
@@ -99,6 +96,10 @@ export class SettingsController {
     set<T extends ConfigValue>(decl: PropertyDecl<T>, value: T) {
         this._setSingleValue(decl.key, String(value));
         this.update();
+    }
+
+    getEntries() {
+        return util.sortBy(this.entries, _ => _[0]);
     }
 
     setEntries(entries: Array<[string, string | null]>) {
@@ -111,22 +112,6 @@ export class SettingsController {
         yield* this.entries;
     }
 
-    // TODO this is unused, so kill it if necessary
-    getAllEntries(): SettingsEntry[] {
-        const results: SettingsEntry[] = [];
-        const map: Map<string, string> = new Map(this.entries);
-        for (const [key, decl] of getConfigDeclarations().entries()) {
-            const values = [
-                { env: '', value: map.get(key) },
-                { env: 'staging', value: map.get(key + ':staging') },
-                { env: 'production', value: map.get(key + ':production') },
-            ].filter(_ => _.value != null) as SettingsEntryValue[];
-            const entry = { decl, values };
-            results.push(entry);
-        }
-        return results.sort((a, b) => (a.decl.key > b.decl.key ? 1 : -1));
-    }
-
     getValue(key: string): any {
         const decl = getConfigDeclarations().get(key);
         return decl ? this.config.get(decl) : null;
@@ -136,6 +121,19 @@ export class SettingsController {
         const _key = useEnv ? `${key}:${this.env}` : key;
         this._setSingleValue(_key, value);
         this.update();
+    }
+
+    removeValue(key: string) {
+        this._setSingleValue(key, null);
+        this.update();
+    }
+
+    getDeclaration(key: string): PropertyDecl<any> | null {
+        return getConfigDeclarations().get(key) || null;
+    }
+
+    getAvailableKeys() {
+        return [...getConfigDeclarations().keys()].sort();
     }
 
     protected _addEntries(entries: Array<[string, string | null]>) {
@@ -171,14 +169,4 @@ export class SettingsController {
         }
     }
 
-}
-
-export interface SettingsEntry {
-    decl: PropertyDecl<any>;
-    values: SettingsEntryValue[];
-}
-
-export interface SettingsEntryValue {
-    env: string;
-    value: string;
 }

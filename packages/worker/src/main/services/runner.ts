@@ -32,7 +32,6 @@ import {
 } from '@automationcloud/engine';
 import { SignalsService } from './signals';
 import { ScriptLoaderService } from './script-loader';
-import { RoxiService } from './roxi';
 
 @injectable()
 export class Runner {
@@ -47,8 +46,6 @@ export class Runner {
         protected chrome: ChromeLaunchService,
         @inject(CacheService)
         protected cache: CacheService,
-        @inject(RoxiService)
-        protected roxi: RoxiService,
         @inject(SignalsService)
         protected signals: SignalsService,
         @inject(ScriptLoaderService)

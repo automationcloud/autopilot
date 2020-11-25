@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { UserData } from '../userdata';
-import { Extension, booleanConfig, ApiRequest } from '@automationcloud/engine';
+import { Extension, ApiRequest } from '@automationcloud/engine';
 import chokidar from 'chokidar';
 import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
@@ -27,8 +27,6 @@ import { rimrafAsync } from '../util/helpers';
 import { getAppPath } from '../globals';
 import { debounce } from 'debounce';
 import os from 'os';
-
-const UI_EXTENSIONS_DEV = booleanConfig('UI_EXTENSIONS_DEV', false);
 
 @injectable()
 @controller({ priority: 1001 })
@@ -69,10 +67,6 @@ export class ExtensionDevController {
         this.userData.update({
             localDirs: this.extensions.map(_ => _.dir),
         });
-    }
-
-    isDevEnabled() {
-        return this.settings.get(UI_EXTENSIONS_DEV);
     }
 
     protected async initExtension(dir: string) {
