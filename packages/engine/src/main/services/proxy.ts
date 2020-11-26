@@ -35,9 +35,9 @@ export class ProxyService extends RoutingProxy {
     }
 
     getCACertificates() {
-        const ca = this.config.get(CA_CERTIFICATES).split(',').map(_ => _.trim());
         const defaults = super.getCACertificates();
-        return [ ...defaults, ...ca];
+        const ca = this.config.get(CA_CERTIFICATES);
+        return [ ...defaults, ca];
     }
 
     async onSessionStart() {
