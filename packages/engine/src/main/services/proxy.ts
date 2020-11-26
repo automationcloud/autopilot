@@ -14,10 +14,11 @@
 
 import { RoutingProxy } from '@automationcloud/uniproxy';
 import { injectable, inject } from 'inversify';
-import { Configuration, numberConfig, Logger } from '@automationcloud/cdp';
+import { Configuration, numberConfig, Logger, stringConfig } from '@automationcloud/cdp';
 import { SessionHandler } from '../session';
 
 const PROXY_PORT = numberConfig('PROXY_PORT', 3128);
+const CA_CERTIFICATES = stringConfig('CA_CERTIFICATES', '');
 
 @injectable()
 @SessionHandler()
@@ -31,6 +32,12 @@ export class ProxyService extends RoutingProxy {
         super({
             logger
         });
+    }
+
+    getCACertificates() {
+        const ca = this.config.get(CA_CERTIFICATES).split(',').map(_ => _.trim());
+        const defaults = super.getCACertificates();
+        return [ ...defaults, ...ca];
     }
 
     async onSessionStart() {
