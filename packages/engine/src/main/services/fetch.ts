@@ -280,9 +280,10 @@ export class FetchService {
         let agent: http.Agent | null = null;
         if (useProxy) {
             const proxyPort = this.proxy.getProxyPort();
+            const ca = this.proxy.getCACertificates();
             agent =
                 parsedUrl.protocol === 'https:'
-                    ? new HttpsProxyAgent({ host: `127.0.0.1:${proxyPort}` })
+                    ? new HttpsProxyAgent({ host: `127.0.0.1:${proxyPort}` }, { ca })
                     : new HttpProxyAgent({ host: `127.0.0.1:${proxyPort}` });
             (fetchOptions as any).agent = agent;
         }
