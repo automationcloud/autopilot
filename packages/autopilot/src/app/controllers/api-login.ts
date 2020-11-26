@@ -72,13 +72,8 @@ export class ApiLoginController {
     }
 
     get userInitial() {
-        if (!this.account) {
-            return 'U';
-        }
-        const { firstName, lastName, email } = this.account;
-        const i1 = firstName[0] || null;
-        const i2 = lastName[0] || null;
-        return i1 && i2 ? i1 + i2 : email.substring(0, 2);
+        const { firstName = '', email = '' } = this.account || {};
+        return firstName[0] ?? email[0] ?? 'U';
     }
 
     get accountFullName() {
