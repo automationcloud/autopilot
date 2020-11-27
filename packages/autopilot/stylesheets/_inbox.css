@@ -84,6 +84,7 @@ select option, option {
     letter-spacing: 0;
 
     font-family: var(--font-family--alt);
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 500;
     text-transform: uppercase;
 }

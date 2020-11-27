@@ -32,8 +32,8 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
     /** only for Autopilot */
     ['AC_LOGOUT_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/logout'],
     ['AC_LOGOUT_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/logout'],
-    ['AC_ACCOUNT_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/account'],
-    ['AC_ACCOUNT_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/account'],
+    ['AC_ACCOUNT_URL:staging', 'https://dashboard-staging.automationcloud.net/usage-stats'],
+    ['AC_ACCOUNT_URL:production', 'https://dashboard.automationcloud.net/usage-stats'],
     ['AC_AUTHORIZATION_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/auth'],
     ['AC_AUTHORIZATION_URL:production', 'https://auth.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/auth'],
     ['AC_ACCOUNT_INFO_URL:staging', 'https://auth-staging.automationcloud.net/auth/realms/automationcloud/protocol/openid-connect/userinfo'],
