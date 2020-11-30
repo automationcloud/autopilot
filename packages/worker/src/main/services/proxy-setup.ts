@@ -18,8 +18,8 @@ import { Execution } from '../types';
 import { ApiService } from './api';
 import { WorkerState } from './state';
 
-const ROXI_HOST = stringConfig('ROXI_HOST');
-const ROXI_SECRET = stringConfig('ROXI_SECRET');
+const ROXI_HOST = stringConfig('ROXI_HOST', '');
+const ROXI_SECRET = stringConfig('ROXI_SECRET', '');
 
 @injectable()
 @SessionHandler()
@@ -47,6 +47,22 @@ export class ProxySetupService {
     }
 
     async setupExecutionRoutes(execution: Execution) {
+        if (this.config.get(ROXI_SECRET)) {
+            return await this.setupLegacyExecutionRoutes(execution);
+        }
+        const connection = await this.api.getProxyConnection(execution.proxyId);
+        const { hostname, port, username, password } = connection;
+        this.proxy.clearRoutes();
+        this.proxy.addRoute(/.*/, {
+            host: `${hostname}:${port}`,
+            username,
+            password,
+        });
+        this.state.proxyConnection = connection;
+    }
+
+    // TODO remove when Roxi is dealt with
+    async setupLegacyExecutionRoutes(execution: Execution) {
         const useRoxiCache = execution.options?.useRoxiCache || false;
         const connection = await this.api.getProxyConnection(execution.proxyId);
         const username = encodeURIComponent(
