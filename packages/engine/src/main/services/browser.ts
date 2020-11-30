@@ -22,6 +22,7 @@ import {
     Configuration,
     Logger,
     numberConfig,
+    stringConfig,
 } from '@automationcloud/cdp';
 import { injectable, inject } from 'inversify';
 import { util } from '..';
@@ -30,6 +31,7 @@ import { SessionHandler } from '../session';
 const CDP_TIMEOUT = numberConfig('CDP_TIMEOUT', 120000);
 const NAVIGATION_TIMEOUT = numberConfig('NAVIGATION_TIMEOUT', 30000);
 const CHROME_PORT = numberConfig('CHROME_PORT', 9123);
+const CHROME_ADDRESS = stringConfig('CHROME_ADDRESS', '127.0.0.1');
 
 @injectable()
 @SessionHandler()
@@ -60,6 +62,7 @@ export class BrowserService extends Browser {
 
     syncConfig() {
         this.applyConfig({
+            chromeAddress: this._config.get(CHROME_ADDRESS),
             chromePort: this._config.get(CHROME_PORT),
             cdpTimeout: this._config.get(CDP_TIMEOUT),
             navigationTimeout: this._config.get(NAVIGATION_TIMEOUT),
