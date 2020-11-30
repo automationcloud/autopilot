@@ -23,6 +23,7 @@ import { ConsoleLogger, Logger } from './logger';
 import { Interceptor, InterceptorHandler } from './interceptor';
 
 export interface BrowserConfig {
+    chromeAddress: string;
     chromePort: number;
     cdpTimeout: number;
     navigationTimeout: number;
@@ -52,6 +53,7 @@ export class Browser extends EventEmitter {
     constructor(config: Partial<BrowserConfig> = {}) {
         super();
         this.config = {
+            chromeAddress: '127.0.0.1',
             chromePort: 9222,
             cdpTimeout: 60000,
             navigationTimeout: 30000,
