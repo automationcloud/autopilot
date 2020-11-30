@@ -44,7 +44,7 @@ describe('Proxy', () => {
         assert.strictEqual(proxyRoute.upstream?.password, route.password);
     });
 
-    it('(legacy) sets roxi route', async () => {
+    it.skip('(legacy) sets roxi route', async () => {
         const route = await runtime.helpers.getProxyRoute('someRoxiIpAddressId');
         const proxy = runtime.app.container.get(ProxyService);
         const [proxyRoute] = proxy.getRoutes();
