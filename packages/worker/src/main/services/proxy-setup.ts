@@ -57,7 +57,7 @@ export class ProxySetupService {
             host: `${hostname}:${port}`,
             username,
             password,
-        });
+        }, 'default');
         this.state.proxyConnection = connection;
     }
 
