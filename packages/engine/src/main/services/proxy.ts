@@ -16,6 +16,8 @@ import { RoutingProxy } from '@automationcloud/uniproxy';
 import { injectable, inject } from 'inversify';
 import { Configuration, numberConfig, Logger, stringConfig } from '@automationcloud/cdp';
 import { SessionHandler } from '../session';
+import http from 'http';
+import net from 'net';
 
 const PROXY_PORT = numberConfig('PROXY_PORT', 3128);
 const CA_CERTIFICATES = stringConfig('CA_CERTIFICATES', '');
@@ -23,6 +25,8 @@ const CA_CERTIFICATES = stringConfig('CA_CERTIFICATES', '');
 @injectable()
 @SessionHandler()
 export class ProxyService extends RoutingProxy {
+    visitedHosts = new Set<string>();
+
     constructor(
         @inject(Configuration)
         protected config: Configuration,
@@ -53,6 +57,7 @@ export class ProxyService extends RoutingProxy {
     }
 
     async init() {
+        this.visitedHosts.clear();
         if (this.isRunning()) {
             return;
         }
@@ -67,5 +72,21 @@ export class ProxyService extends RoutingProxy {
             }
             throw err;
         }
+    }
+
+    /**
+     * Tracks visited hosts for HTTPS requests.
+     */
+    async onConnect(req: http.IncomingMessage, clientSocket: net.Socket) {
+        this.visitedHosts.add(req.url!);
+        return await super.onConnect(req, clientSocket);
+    }
+
+    /**
+     * Tracks visited hosts for HTTP requests.
+     */
+    async onRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+        this.visitedHosts.add(req.headers.host!);
+        return await super.onRequest(req, res);
     }
 }
