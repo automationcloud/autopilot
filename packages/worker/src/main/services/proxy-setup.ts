@@ -53,11 +53,11 @@ export class ProxySetupService {
         const connection = await this.api.getProxyConnection(execution.proxyId);
         const { hostname, port, username, password } = connection;
         this.proxy.clearRoutes();
-        this.proxy.addRoute(/.*/, {
+        this.proxy.setDefaultUpstream({
             host: `${hostname}:${port}`,
             username,
             password,
-        }, 'default');
+        });
         this.state.proxyConnection = connection;
     }
 

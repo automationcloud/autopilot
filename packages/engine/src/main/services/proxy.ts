@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RoutingProxy } from '@automationcloud/uniproxy';
+import { ProxyUpstream, RoutingProxy } from '@automationcloud/uniproxy';
 import { injectable, inject } from 'inversify';
 import { Configuration, numberConfig, Logger, stringConfig } from '@automationcloud/cdp';
 import { SessionHandler } from '../session';
@@ -72,6 +72,15 @@ export class ProxyService extends RoutingProxy {
             }
             throw err;
         }
+    }
+
+    getDefaultUpstream(): ProxyUpstream | null {
+        const defaultRoute = this.getRoutes().find(_ => _.label === 'default');
+        return defaultRoute?.upstream ?? null;
+    }
+
+    setDefaultUpstream(upstream: ProxyUpstream) {
+        this.addRoute(/.*/, upstream, 'default');
     }
 
     /**
