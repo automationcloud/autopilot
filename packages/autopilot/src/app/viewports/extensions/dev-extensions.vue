@@ -21,6 +21,16 @@
                     </div>
                     <div class="ext-dir">
                         {{ ext.dir }}
+                        <i class="fas fa-eye color--primary clickable"
+                            v-if="extDev.isWatching(ext)"
+                            @click="extDev.unwatch(ext, true)"
+                            title="Watching FS changes — click to stop watching">
+                        </i>
+                        <i class="fas fa-eye color--muted clickable"
+                            v-if="!extDev.isWatching(ext)"
+                            @click="extDev.watch(ext, true)"
+                            title="Not watching FS changes — click to start watching">
+                        </i>
                     </div>
                 </section>
                 <div class="ext-controls">

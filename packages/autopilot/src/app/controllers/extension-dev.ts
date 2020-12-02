@@ -35,6 +35,8 @@ export class ExtensionDevController {
     extensions: Extension[] = [];
     processing: Extension | null = null;
 
+    watchIgnoreList: string[] = [];
+
     fsWatcher: chokidar.FSWatcher;
 
     constructor(
@@ -56,8 +58,12 @@ export class ExtensionDevController {
     }
 
     async init() {
-        const { localDirs = [] } = await this.userData.loadData();
+        const {
+            localDirs = [],
+            watchIgnoreList = [],
+        } = await this.userData.loadData();
         this.extensions = [];
+        this.watchIgnoreList = watchIgnoreList;
         for (const dir of localDirs) {
             await this.initExtension(dir);
         }
@@ -66,6 +72,7 @@ export class ExtensionDevController {
     update() {
         this.userData.update({
             localDirs: this.extensions.map(_ => _.dir),
+            watchIgnoreList: this.watchIgnoreList,
         });
     }
 
@@ -73,8 +80,9 @@ export class ExtensionDevController {
         const ext = await Extension.load(dir);
         await this.symlinkDependencies(dir);
         this.extensions.push(ext);
-        this.fsWatcher.add(dir);
-        console.info(`🧐 Watching for file changes at ${dir}`);
+        if (!this.watchIgnoreList.includes(dir)) {
+            this.watch(ext, false);
+        }
         return ext;
     }
 
@@ -112,8 +120,32 @@ export class ExtensionDevController {
         return this.extensions.some(r => r.dir === dir);
     }
 
-    async removeExtension(ext: Extension) {
+    isWatching(ext: Extension) {
+        return !this.watchIgnoreList.includes(ext.dir);
+    }
+
+    watch(ext: Extension, remember: boolean = false) {
+        this.fsWatcher.add(ext.dir);
+        console.info(`🧐 Watching for FS changes at ${ext.dir}`);
+        if (remember) {
+            this.watchIgnoreList = this.watchIgnoreList.filter(_ => _ !== ext.dir);
+            this.update();
+        }
+    }
+
+    unwatch(ext: Extension, remember: boolean = false) {
         this.fsWatcher.unwatch(ext.dir);
+        console.info(`🧐 Stopped watching ${ext.dir}`);
+        if (remember) {
+            if (!this.watchIgnoreList.includes(ext.dir)) {
+                this.watchIgnoreList.push(ext.dir);
+            }
+            this.update();
+        }
+    }
+
+    async removeExtension(ext: Extension) {
+        this.unwatch(ext, false);
         this.extensions = this.extensions.filter(_ => _.dir !== ext.dir);
         this.update();
         this.events.emit('extensionsUpdated');
