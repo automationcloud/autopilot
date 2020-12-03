@@ -153,7 +153,7 @@ export class Browser extends EventEmitter {
 
     async http(pathname: string, readJson: boolean = true) {
         const port = this.config.chromePort;
-        const url = `http://localhost:${port}${pathname}`;
+        const url = `http://${this.config.chromeAddress}:${port}${pathname}`;
         const res = await fetch(url);
         return readJson ? await res.json() : await res.text();
     }
