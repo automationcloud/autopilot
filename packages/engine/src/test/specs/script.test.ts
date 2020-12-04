@@ -312,4 +312,53 @@ describe('Script', () => {
             assert(unknown == null);
         });
     });
+
+    describe('waitForOutputs', () => {
+
+        it('resolves when all outputs are emitted', async () => {
+            const script = runtime.createScriptWithActions([
+                {
+                    type: 'Flow.output',
+                    outputKey: 'foo',
+                    pipeline: [
+                        { type: 'Value.getJson', value: JSON.stringify({ data: 1 })}
+                    ]
+                },
+                {
+                    type: 'Flow.output',
+                    outputKey: 'bar',
+                    pipeline: [
+                        { type: 'Value.getJson', value: JSON.stringify({ data: 2 }) }
+                    ]
+                },
+            ]);
+            const runPromise = script.runAll();
+            const [foo, bar] = await script.waitForOutputs('foo', 'bar');
+            await runPromise;
+            assert.deepStrictEqual(foo, { data: 1 });
+            assert.deepStrictEqual(bar, { data: 2 });
+        });
+
+        it('rejects if script succeeds but not all outputs are emitted', async () => {
+            const script = runtime.createScriptWithActions([
+                {
+                    type: 'Flow.output',
+                    outputKey: 'foo',
+                    pipeline: [
+                        { type: 'Value.getJson', value: JSON.stringify({ data: 1 }) }
+                    ]
+                },
+            ]);
+            const runPromise = script.runAll();
+            try {
+                await script.waitForOutputs('foo', 'bar');
+                throw new Error('UnexpectedSuccess');
+            } catch (err) {
+                assert.strictEqual(err.name, 'MissingOutputs');
+            } finally {
+                await runPromise;
+            }
+        });
+
+    });
 });

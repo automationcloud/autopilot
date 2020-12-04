@@ -1,22 +1,18 @@
 # Welcome to Autopilot!
 
-This repository hosts a codebase for several tightly coupled projects:
+This repository hosts the codebase for several tightly coupled projects:
 
-- Autopilot — a GUI application for authoring automation Scripts
-- Worker — a bot that runs in cloud and executes Jobs
-- Engine — a shared library between Autopilot and Worker
-- and some other related modules
+- [Engine](packages/engine) — a library which defines core Automation model, shared between Autopilot and Worker
+- [CDP](packages/cdp) — a library for managing Chrome via [Chrome DevTools Protocol](https://chromedevtools.github.io)
+- [Autopilot](packages/autopilot) — an Electron-based GUI application for creating, editing and debugging scripts
+- [Worker](packages/worker) — a process which coordinates execution of the Ubio Automation Jobs by means of communicating with APIs and delegating the work to the Engine.
 
-## Overview
+## Usage
 
-Workers perform web automation jobs by means of running a Chromium process, connecting to it via [Chrome DevTools Protocol](https://chromedevtools.github.io), and performing a series of scripted actions on some websites.
+This repository can be used in several ways:
 
-Technically this is facilitated by following layers:
-
-- [Chrome DevTools Protocol driver](packages/cdp) responsible for running and controlling Chrome.
-- [Scripting Engine](packages/engine) facilitating Ubio Automation Scripts model.
-- [Worker](packages/worker) a process which coordinates execution of the Ubio Automation Jobs by means of communicating with APIs and delegating the work to Scripting Engine.
-- [Autopilot](packages/autopilot) — an Electron-based GUI application for editing and debuggin scripts, which uses Scripting Engine to do the actual work (executing actions, evaluating pipelines, etc).
+- Running Autopilot (or any of its components) from source code — useful for development, contributing new features, or if you prefer forking it and build your own Automation engine. Please see [Development](#development).
+- Running a script created with Autopilot locally using Engine. Please see [Engine](packages/engine) for more information.
 
 ## Development
 
@@ -33,16 +29,16 @@ npm i -g lerna
 After checking out the project, run:
 
 ```
-npm run bootstrap
-npm run compile
+npm run init
 ```
 
-This will install dependencies in sub-packages and link local dependencies together.
-The second command will perform initial compilation of sub-packages.
+This will install dependencies in sub-packages, link local dependencies together and perform the initial compilation.
+(Note: it may take a while!)
 
 ### Compiling TypeScript
 
-In development you'd probably be insterested in running TypeScript incremental compiler in background. To do this run the following command in your separate terminal tab:
+In development you'd probably be insterested in running TypeScript incremental compiler in background.
+To do this run the following command in your separate terminal tab:
 
 ```
 npm run dev
@@ -50,7 +46,7 @@ npm run dev
 
 Initial compilation can take considerable time, but all subsequent compilations will be faster.
 
-Note: sometimes removing or renaming source files causes issues with TypeScript compiler (e.g. module not found or, conversely, module is found but doesn't actually exist). If you run into such problems, stop the compiler, remove `.tmp` directory where compilation articats are stored, run `npm run clean` and try again.
+Note: sometimes removing or renaming source files causes issues with TypeScript compiler (e.g. module not found or, conversely, module is found but doesn't actually exist). If you run into such problems, stop the compiler, run `npm run clean` and try again.
 
 ### Running Autopilot
 
@@ -143,7 +139,7 @@ The `BREAKING CHANGE:` footer must be added if functionality which is not direct
 
 To contribute to changelog:
 
-- after the branch is merged to `master`, prior to releasing, add your entries to the top of the [CHANGELOG.md](CHANGELOG.md)
+- after the branch is merged to `main`, prior to releasing, add your entries to the top of the [CHANGELOG.md](CHANGELOG.md)
 - the `npm run release` script will automatically add the version number you're releasing if there are unversioned entries at the top
 
 ## Troubleshooting

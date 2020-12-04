@@ -22,6 +22,7 @@ export * from './other';
 export * from './parse';
 export * from './price';
 export * from './currencies';
+export * from './events';
 
 import Json5 from 'json5';
 import ajv from 'ajv';
