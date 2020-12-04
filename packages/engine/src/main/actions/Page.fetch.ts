@@ -20,7 +20,7 @@ import { FetchService, FetchRequestSpec, FetchResponseSpec } from '../services';
 
 export const RETRIABLE_ERRORS = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE', 'ERR_STREAM_DESTROYED'];
 
-export class SendNetworkRequestAction extends Action {
+export class PageFetchAction extends Action {
     static $type = 'Page.fetch';
     static $icon = 'fas fa-wifi';
     static $help = `

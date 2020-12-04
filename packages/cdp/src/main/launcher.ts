@@ -72,6 +72,7 @@ export class ChromeLauncher {
     constructor(options?: ChromeLauncherOptions) {
         this.options = {
             chromePath: STANDARD_PATHS[os.platform()],
+            chromeAddress: '127.0.0.1',
             chromePort: 9222,
             userDataDir: `${os.tmpdir()}/${Math.random().toString(36)}`,
             stdio: 'ignore',
@@ -92,6 +93,9 @@ export class ChromeLauncher {
         }
         if (!result.some(a => /^--remote-debugging-port=/.test(a))) {
             result.push(`--remote-debugging-port=${this.options.chromePort}`);
+        }
+        if (!result.some(a => /^--remote-debugging-address=/.test(a))) {
+            result.push(`--remote-debugging-address=${this.options.chromeAddress}`);
         }
         return result;
     }
@@ -195,6 +199,7 @@ export class ChromeLauncher {
 
 interface ChromeLauncherOptions {
     chromePath?: string;
+    chromeAddress?: string;
     chromePort?: number;
     userDataDir?: string;
     env?: object;

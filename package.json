@@ -14,6 +14,7 @@
         "compile:packages": "lerna run compile",
         "lint": "eslint ./packages --ext=.js,.ts --cache",
         "prettier": "prettier --write '**/*.{ts,js,json}'",
+        "typedoc": "typedoc --tsconfig ./tsconfig.base.json ./packages/{cdp,engine}/src/main && git add docs/",
         "prettier-staged": "pretty-quick --staged --pattern '**/*.{ts,js,json}' --verbose",
         "test": "lerna run test --stream --concurrency 1",
         "build": "lerna run build",
@@ -28,6 +29,7 @@
         "lint"
     ],
     "devDependencies": {
+        "@automationcloud/typedoc-theme": "^1.0.0",
         "@types/node": "^13.9.1",
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
@@ -38,6 +40,7 @@
         "lerna": "^3.22.1",
         "npm-run-all": "^4.1.5",
         "pre-commit": "^1.2.2",
+        "typedoc": "^0.19.2",
         "typescript": "^3.8.3"
     }
 }

@@ -21,7 +21,7 @@ import * as model from './model';
 import { ScriptSearchQuery, ScriptSearchResult, ScriptSearch, ScriptSearchOptions } from './search';
 import { ContextMatchTimer } from './context-match-timer';
 import jsonPointer from 'jsonpointer';
-import { numberConfig, Configuration, Logger } from '@automationcloud/cdp';
+import { numberConfig, Configuration, Logger, Exception } from '@automationcloud/cdp';
 import { Engine } from './engine';
 import {
     ReporterService,
@@ -385,9 +385,9 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      */
     async sendOutput(key: string, data: any) {
         key = this.hashInputOutputKey(key);
-        this.$events.emit('output', { key, data });
         this.$outputs.push({ key, data });
         await this.$flow.sendOutputData(key, data);
+        this.$events.emit('output', { key, data });
     }
 
     /**
@@ -395,6 +395,56 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      */
     wasOutputEmitted(key: string): boolean {
         return this.$outputs.some(_ => _.key === key);
+    }
+
+    /**
+     * Resolves when all outputs with specified `keys` are available.
+     * The output data is returned as an array in the same order as specified keys.
+     *
+     * ProTip™ Use destructuring to access the data:
+     *
+     * ```
+     * const [products, deliveryOptions] = await job.waitForOutputs('products', 'deliveryOptions');
+     * ```
+     *
+     * @param keys output keys
+     * @public
+     */
+    async waitForOutputs(...keys: string[]): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            const onOutput = () => {
+                const outputs = keys.map(key => this.$outputs.find(_ => _.key === key)).filter(Boolean);
+                if (outputs.length === keys.length) {
+                    cleanup();
+                    resolve(outputs.map(_ => _?.data));
+                }
+            };
+            const onSuccess = () => {
+                cleanup();
+                reject(new Exception({
+                    name: 'MissingOutputs',
+                    message: `Script succeded, but specified outputs were not emitted`,
+                    details: { keys },
+                }));
+            };
+            const onFail = () => {
+                cleanup();
+                reject(new Exception({
+                    name: 'MissingOutputs',
+                    message: `Script failed, and specified outputs were not emitted`,
+                    details: { keys },
+                }));
+            };
+            const cleanup = () => {
+                this.$events.removeListener('output', onOutput);
+                this.$events.removeListener('success', onSuccess);
+                this.$events.removeListener('fail', onFail);
+            };
+            this.$events.addListener('output', onOutput);
+            this.$events.addListener('success', onSuccess);
+            this.$events.addListener('fail', onFail);
+            onOutput();
+        });
     }
 
     // Globals
