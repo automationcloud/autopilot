@@ -53,6 +53,7 @@ export class ChromeLaunchService {
         this.config = config;
         this.launcher = new ChromeLauncher({
             chromePort: browser.getChromePort(),
+            chromeAddress: browser.getChromeAddress(),
             chromePath: this.getPath(),
             userDataDir: this.getUserDir(),
             additionalArgs: [

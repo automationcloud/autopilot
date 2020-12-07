@@ -73,6 +73,10 @@ export class BrowserService extends Browser {
         return this._config.get(CHROME_PORT);
     }
 
+    getChromeAddress() {
+        return this._config.get(CHROME_ADDRESS);
+    }
+
     async attach(targetId: string): Promise<void> {
         this.detach();
         this._currentPage = await this.getPageForTarget(targetId);
