@@ -23,6 +23,7 @@ import {
     numberConfig,
 } from '@automationcloud/engine';
 
+const CHROME_ADDITIONAL_ARGS = stringConfig('CHROME_ADDITIONAL_ARGS', '');
 const CHROME_PATH = stringConfig('CHROME_PATH');
 const CHROME_USER_DIR = stringConfig('CHROME_USER_DIR', `${process.cwd()}/.tmp/chrome/user`);
 const CHROME_CACHE_DIR = stringConfig('CHROME_CACHE_DIR', `${process.cwd()}/.tmp/chrome/cache`);
@@ -71,6 +72,7 @@ export class ChromeLaunchService {
                 `--ignore-certificate-errors-spki-list=${config.get(CHROME_CA_SPKI)}`,
                 'about:blank',
                 config.get(CHROME_HEADLESS) ? '--headless' : null,
+                ...this.getAdditionalArgs(),
             ].filter(Boolean),
             terminateProcessOnExit: true,
             stdio: config.get(CHROME_STDIO),
@@ -87,6 +89,10 @@ export class ChromeLaunchService {
 
     getUserDir() {
         return this.config.get(CHROME_USER_DIR);
+    }
+
+    getAdditionalArgs() {
+        return this.config.get(CHROME_ADDITIONAL_ARGS).split(/\s+/);
     }
 
     async launch() {
