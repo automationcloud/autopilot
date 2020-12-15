@@ -196,6 +196,8 @@ export class Frame extends EventEmitter {
     async document(): Promise<RemoteElement> {
         if (!this._documentPromise) {
             this._documentPromise = (this.evaluateElement(() => document) as Promise<RemoteElement>).catch(err => {
+                // eslint-disable-next-line no-console
+                console.error(err);
                 throw new Exception({
                     name: 'PageLoadingFailed',
                     message: 'Failed to obtain top frame document',
