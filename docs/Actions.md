@@ -508,6 +508,7 @@ The exact algorithm is as follows:
 - clear input: if checked, the text of the element is selected and cleared prior to typing text
 - press Enter: if checked, an Enter keystroke is sent to the webpage after typing text
 - use blur: if checked, a synthetic `blur` event is triggered on the element after typing
+- mask input: if checked, the text of the element is masked so that the data is not shown in screenshot
 
 ### Use For
 

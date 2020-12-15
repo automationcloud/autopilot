@@ -123,9 +123,7 @@ The exact algorithm is as follows:
         await el.tooltip('input');
         if (this.maskInput) {
             await el.evaluateJson(el => {
-                const style = el.getAttribute('style') ?? '';
-                const mask = '-webkit-text-security: disc;';
-                el.setAttribute('style', style.replace(mask, '') + mask);
+                el.style.webkitTextSecurity = 'disc';
             }, this);
         }
         await el.remote.typeText(value, {
