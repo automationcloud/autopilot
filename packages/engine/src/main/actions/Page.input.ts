@@ -65,6 +65,7 @@ The exact algorithm is as follows:
 - clear input: if checked, the text of the element is selected and cleared prior to typing text
 - press Enter: if checked, an Enter keystroke is sent to the webpage after typing text
 - use blur: if checked, a synthetic \`blur\` event is triggered on the element after typing
+- mask input: if checked, the text of the element is masked so that the data is not shown in screenshot
 
 ### Use For
 
@@ -87,6 +88,8 @@ The exact algorithm is as follows:
     useBlur: boolean = true;
     @params.Boolean()
     useEnter: boolean = false;
+    @params.Boolean()
+    maskInput: boolean = false;
     @params.Number({
         min: 0,
         max: 600000
@@ -118,6 +121,11 @@ The exact algorithm is as follows:
         }
         await el.remote.getStablePoint();
         await el.tooltip('input');
+        if (this.maskInput) {
+            await el.evaluateJson(el => {
+                el.style.webkitTextSecurity = 'disc';
+            }, this);
+        }
         await el.remote.typeText(value, {
             click: this.useClick,
             clear: this.useClear,
