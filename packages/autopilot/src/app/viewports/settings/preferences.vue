@@ -68,6 +68,15 @@
                         @input="setValue('CHROME_USE_HOMEPAGE', $event)"/>
                 </div>
             </div>
+            <div class="pane__item">
+                <div class="pane__main">
+                    Notify me when a new version of Chromium is available
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('CHROME_CHECK_VERSION')"
+                        @input="setValue('CHROME_CHECK_VERSION', $event)"/>
+                </div>
+            </div>
         </div>
 
         <div class="section__title">

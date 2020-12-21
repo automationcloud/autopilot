@@ -71,7 +71,23 @@
                         Chromium will be installed with the Autopilot application.
                         We’ll then use that version of the browser for your automations with Autopilot.
                     </p>
-
+                    <div>
+                        <label
+                            v-if="!installed"
+                            class="color--secondary"
+                            for="skip"
+                            style="display: flex;">
+                            <input id="skip" type="checkbox" v-model="skip">
+                            Skip and install later
+                        </label>
+                        <div v-show="skip" class="box box--yellow" style="display: flex; align-items: center;">
+                            <span> <i class="fas fa-exclamation-circle"></i></span>
+                            <p>Autopilot won't be working as expected when Chrome is not configured correctly.
+                            We highly recommend you to download Chromium from this page for the best experience. <br>
+                            If you still want to skip this step, You can configure it from `Preference` tab > Chrome Connection > Chrome path.
+                            </p>
+                        </div>
+                    </div>
                     <hr class="section-divider"/>
 
                     <h6>
@@ -81,10 +97,10 @@
                         <button
                             class="button button--cta"
                             :class="{
-                                'button--primary': installed,
-                                'button--disabled': !installed,
+                                'button--primary': canContinue,
+                                'button--disabled': !canContinue,
                             }"
-                            :disabled="!installed"
+                            :disabled="!canContinue"
                             @click="continueToAutopilot()">
                             Continue to Autopilot
                         </button>
@@ -114,10 +130,16 @@ export default {
         'firstRun',
     ],
 
+    data: () => {
+        return {
+            skip: false,
+        };
+    },
+
     computed: {
 
         canInstall() {
-            return !this.installed && this.chromeDownload.status === 'idle';
+            return !this.canContinue && this.chromeDownload.status === 'idle';
         },
 
         installed() {
@@ -127,6 +149,10 @@ export default {
         registerUrl() {
             return this.acUrls.get('register');
         },
+
+        canContinue() {
+            return this.installed || this.skip;
+        }
 
     },
 
