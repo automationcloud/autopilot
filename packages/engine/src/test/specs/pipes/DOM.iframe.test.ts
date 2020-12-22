@@ -16,8 +16,11 @@ import { runtime } from'../../runtime';
 import assert from 'assert';
 
 describe('Pipes: dom/iframe', () => {
+
     it('returns iframe document', async () => {
         await runtime.goto('/iframes/top.html');
+        // Note: we run the pipeline without retry, so let's wait for the page to load
+        await runtime.page.waitForLoad();
         const results = await runtime.runPipes([
             {
                 type: 'DOM.queryOne',
