@@ -104,7 +104,7 @@ export class Frame extends EventEmitter {
         if (eventsHappened) {
             return;
         }
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             const noun = this.isMainFrame() ? 'Page' : 'Frame';
             const cleanup = () => {
                 clearTimeout(timer!);
@@ -195,20 +195,21 @@ export class Frame extends EventEmitter {
 
     async document(): Promise<RemoteElement> {
         if (!this._documentPromise) {
-            this._documentPromise = (this.evaluateElement(() => document) as Promise<RemoteElement>).catch(err => {
-                throw new Exception({
-                    name: 'PageLoadingFailed',
-                    message: 'Failed to obtain top frame document',
-                    retry: true,
-                    details: {
-                        cause: {
-                            message: err.message,
-                            code: err.code,
-                            details: err.details,
+            this._documentPromise = (this.evaluateElement(() => document) as Promise<RemoteElement>)
+                .catch(err => {
+                    throw new Exception({
+                        name: 'PageLoadingFailed',
+                        message: 'Failed to obtain top frame document',
+                        retry: true,
+                        details: {
+                            cause: {
+                                message: err.message,
+                                code: err.code,
+                                details: err.details,
+                            },
                         },
-                    },
+                    });
                 });
-            });
         }
         return await this._documentPromise;
     }
