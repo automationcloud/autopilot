@@ -60,8 +60,6 @@ export class BlobService {
         await fs.mkdir(this.getBlobsPath(), { recursive: true });
     }
 
-    async onSessionFinish() {}
-
     getBlobsPath() {
         const blobsDir = this.config.get(BLOBS_DIR);
         return path.resolve(process.cwd(), blobsDir);

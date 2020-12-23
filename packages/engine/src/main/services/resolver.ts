@@ -124,6 +124,7 @@ export class ResolverService {
         this.pipeTypeMap = null;
         this.actionCategories = null;
         this.pipeCategories = null;
+        this.engine.cleanupUnusedSessionHandlers();
     }
 
     protected reindex() {

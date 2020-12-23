@@ -27,8 +27,6 @@ export class ExtensionManager {
         protected resolver: ResolverService,
     ) {}
 
-    async onSessionStart() {}
-
     async onSessionFinish() {
         // When execution finishes, we refresh the latest versions of extensions,
         // thus keeping latest one in cache for fast access.

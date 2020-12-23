@@ -708,6 +708,7 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
         await this.$page.send('Network.setBypassServiceWorker', {
             bypass: true,
         });
+        await this.executeOnScriptRunHandlers();
     }
 
     /**
@@ -837,10 +838,11 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      * @internal
      */
     protected async _enterNextContext() {
-        const nextContext = await this.matchNextContext();
-        nextContext.enter();
-        this.$playback.lastContext = nextContext;
-        const label = nextContext.name;
+        const context = await this.matchNextContext();
+        context.enter();
+        this.$playback.lastContext = context;
+        await this.executeOnContextEnterHandlers(context);
+        const label = context.name;
         await this.$reporter.sendScreenshot('debug', { label });
         await this.$reporter.sendHtmlSnapshot('debug');
     }
@@ -1055,6 +1057,38 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
                 }
             }
         }
+    }
+
+    protected async executeOnScriptRunHandlers() {
+        const promises = this.$engine.resolveSessionHandlers().map(async service => {
+            try {
+                if (service.onScriptRun) {
+                    await service.onScriptRun(this);
+                }
+            } catch (error) {
+                this.$logger.error('onScriptRun handler failed', {
+                    serviceName: service.constructor.name,
+                    error,
+                });
+            }
+        });
+        await Promise.all(promises);
+    }
+
+    protected async executeOnContextEnterHandlers(context: Context) {
+        const promises = this.$engine.resolveSessionHandlers().map(async service => {
+            try {
+                if (service.onContextEnter) {
+                    await service.onContextEnter(context);
+                }
+            } catch (error) {
+                this.$logger.error('onContextEnter handler failed', {
+                    serviceName: service.constructor.name,
+                    error,
+                });
+            }
+        });
+        await Promise.all(promises);
     }
 
 }
