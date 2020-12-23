@@ -37,11 +37,10 @@ describe('Proxy', () => {
     it('sets default proxy route', async () => {
         const route = await runtime.helpers.getProxyRoute('someRoxiIpAddressId');
         const proxy = runtime.app.container.get(ProxyService);
-        const [proxyRoute] = proxy.getRoutes();
-        assert.ok(proxyRoute.upstream);
-        assert.strictEqual(proxyRoute.upstream?.host, route.hostname + ':' + route.port);
-        assert.strictEqual(proxyRoute.upstream?.username, route.username);
-        assert.strictEqual(proxyRoute.upstream?.password, route.password);
+        assert.ok(proxy.defaultUpstream);
+        assert.strictEqual(proxy.defaultUpstream?.host, route.hostname + ':' + route.port);
+        assert.strictEqual(proxy.defaultUpstream?.username, route.username);
+        assert.strictEqual(proxy.defaultUpstream?.password, route.password);
     });
 
     it.skip('(legacy) sets roxi route', async () => {

@@ -14,7 +14,7 @@
 
 import { Configuration, ProxyService, SessionHandler, stringConfig } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
-import { Execution } from '../types';
+import { Execution, ProxyConnection } from '../types';
 import { ApiService } from './api';
 import { WorkerState } from './state';
 
@@ -47,24 +47,24 @@ export class ProxySetupService {
     }
 
     async setupExecutionRoutes(execution: Execution) {
-        if (this.config.get(ROXI_SECRET)) {
-            return await this.setupLegacyExecutionRoutes(execution);
-        }
         const connection = await this.api.getProxyConnection(execution.proxyId);
         const { hostname, port, username, password } = connection;
         this.proxy.clearRoutes();
-        this.proxy.setDefaultUpstream({
+        const upstream = {
             host: `${hostname}:${port}`,
             username,
             password,
-        });
-        this.state.proxyConnection = connection;
+        };
+        this.proxy.defaultUpstream = upstream;
+        this.state.proxyUpstream = upstream;
+        if (this.config.get(ROXI_SECRET)) {
+            this.setupLegacyExecutionRoutes(execution, connection);
+        }
     }
 
     // TODO remove when Roxi is dealt with
-    async setupLegacyExecutionRoutes(execution: Execution) {
+    async setupLegacyExecutionRoutes(execution: Execution, connection: ProxyConnection) {
         const useRoxiCache = execution.options?.useRoxiCache || false;
-        const connection = await this.api.getProxyConnection(execution.proxyId);
         const username = encodeURIComponent(
             JSON.stringify({
                 ...connection,
@@ -72,13 +72,11 @@ export class ProxySetupService {
                 partition: execution.id,
             }),
         );
-        this.proxy.clearRoutes();
         this.proxy.addRoute(/.*/, {
             host: this.config.get(ROXI_HOST),
             username,
             password: this.config.get(ROXI_SECRET),
             useHttps: true,
-        });
-        this.state.proxyConnection = { ...connection, password: '' };
+        }, 'roxi');
     }
 }
