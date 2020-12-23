@@ -51,8 +51,6 @@ export class EmulationService {
         await this.applyToAllTargets();
     }
 
-    async onSessionFinish() {}
-
     isEnabled(): boolean {
         return this.mode !== 'disabled';
     }

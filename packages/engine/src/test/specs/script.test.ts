@@ -14,7 +14,8 @@
 
 import { runtime } from '../runtime';
 import assert from 'assert';
-import { Extension, Action, Script } from '../../main';
+import { Extension, Action, Script, SessionHandler } from '../../main';
+import { injectable } from 'inversify';
 
 describe('Script', () => {
     describe('matchNextContext', () => {
@@ -358,6 +359,32 @@ describe('Script', () => {
             } finally {
                 await runPromise;
             }
+        });
+    });
+
+    describe('onScriptRun handlers', () => {
+
+        @injectable()
+        @SessionHandler()
+        class OnScriptRunHandler {
+            called = false;
+
+            async onScriptRun(_script: Script) {
+                this.called = true;
+            }
+        }
+
+        beforeEach(() => {
+            runtime.engine.container.bind(OnScriptRunHandler).toSelf().inSingletonScope();
+        });
+
+        it('invokes the handler on script run', async () => {
+            const handler = runtime.engine.container.get(OnScriptRunHandler);
+            assert.strictEqual(handler.called, false);
+            await runtime.runActions([
+                { type: 'Flow.group' },
+            ]);
+            assert.strictEqual(handler.called, true);
         });
 
     });
