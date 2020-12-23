@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { injectable, inject } from 'inversify';
-import { Execution, ProxyConnection } from '../types';
-import { Script, util, Configuration, stringConfig } from '@automationcloud/engine';
+import { Execution } from '../types';
+import { Script, util, Configuration, stringConfig, uniproxy } from '@automationcloud/engine';
 import uuid from 'uuid';
 const pkg = (require as any)('../../../package.json');
 
@@ -35,7 +35,7 @@ export class WorkerState {
     domainId: string | null = null;
     jobStartedAt: number = 0;
     executionsProcessed: number = 0;
-    proxyConnection: ProxyConnection | null = null;
+    proxyUpstream: uniproxy.ProxyUpstream | null = null;
 
     constructor(
         @inject(Configuration)
@@ -90,7 +90,7 @@ export class WorkerState {
         this.jobId = null;
         this.serviceId = null;
         this.domainId = null;
-        this.proxyConnection = null;
+        this.proxyUpstream = null;
     }
 
     getInfo(): WorkerInfo {
