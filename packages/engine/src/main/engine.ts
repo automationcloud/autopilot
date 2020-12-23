@@ -30,7 +30,7 @@ import {
     HttpCallbackService,
 } from './services';
 import { decorate, injectable, interfaces, Container } from 'inversify';
-import { sessionHandlers } from './session';
+import { sessionHandlers, SessionLifecycleHandler } from './session';
 import { Logger, ConsoleLogger, Configuration, EnvConfiguration } from '@automationcloud/cdp';
 import { Extension } from './extension';
 
@@ -94,46 +94,6 @@ export class Engine {
         return this.container.get(serviceIdentifier);
     }
 
-    /**
-     * Resolves all session lifecycle services and invokes `onSessionStart` callbacks on them.
-     *
-     * @public
-     */
-    async startSession() {
-        for (const handler of sessionHandlers) {
-            try {
-                const service = this.findBinding(handler);
-                if (!service) {
-                    sessionHandlers.delete(handler);
-                    continue;
-                }
-                await service.onSessionStart();
-            } catch (error) {
-                this.$logger.error('Session start handler failed', { error });
-            }
-        }
-    }
-
-    /**
-     * Resolves all session lifecycle services and invokes `onSessionFinish` callbacks on them.
-     *
-     * @public
-     */
-    async finishSession() {
-        for (const handler of sessionHandlers) {
-            try {
-                const service = this.findBinding(handler);
-                if (!service) {
-                    sessionHandlers.delete(handler);
-                    continue;
-                }
-                await service.onSessionFinish();
-            } catch (error) {
-                this.$logger.error('Session finish handler failed', { error });
-            }
-        }
-    }
-
     get $logger() {
         return this.container.get(Logger);
     }
@@ -157,6 +117,59 @@ export class Engine {
     }
 
     /**
+     * Invokes `onSessionStart` callbacks on all session handlers.
+     *
+     * @public
+     */
+    async startSession() {
+        const promises = this.resolveSessionHandlers().map(async service => {
+            try {
+                if (service.onSessionStart) {
+                    await service.onSessionStart();
+                }
+            } catch (error) {
+                this.$logger.error('onSessionStart handler failed', {
+                    serviceName: service.constructor.name,
+                    error,
+                });
+            }
+        });
+        await Promise.all(promises);
+    }
+
+    /**
+     * Invokes `onSessionFinish` callbacks on all session handlers.
+     *
+     * @public
+     */
+    async finishSession() {
+        const promises = this.resolveSessionHandlers().map(async service => {
+            try {
+                if (service.onSessionFinish) {
+                    await service.onSessionFinish();
+                }
+            } catch (error) {
+                this.$logger.error('onSessionFinish handler failed', {
+                    serviceName: service.constructor.name,
+                    error,
+                });
+            }
+        });
+        await Promise.all(promises);
+    }
+
+    resolveSessionHandlers(): SessionLifecycleHandler[] {
+        const services: SessionLifecycleHandler[] = [];
+        for (const handler of sessionHandlers) {
+            const service = this.findBinding(handler);
+            if (service) {
+                services.push(service);
+            }
+        }
+        return services;
+    }
+
+    /**
      * Search for binding in enigne containers and in all extensions.
      * @private
      */
@@ -173,6 +186,21 @@ export class Engine {
             }
         }
         return null;
+    }
+
+    /**
+     * Releases references to SessionHandler classes which are no longer bound by Engine.
+     * This is invoked when extensions are unloaded to prevent memory leaks.
+     *
+     * @internal
+     */
+    cleanupUnusedSessionHandlers() {
+        for (const handler of sessionHandlers) {
+            const service = this.findBinding(handler);
+            if (!service) {
+                sessionHandlers.delete(handler);
+            }
+        }
     }
 
 }

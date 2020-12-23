@@ -49,8 +49,6 @@ export class UserAgentService {
         await this.applyToAllTargets();
     }
 
-    async onSessionFinish() {}
-
     set(userAgent: string, platform: string) {
         this.userAgent = userAgent;
         this.platform = platform;
