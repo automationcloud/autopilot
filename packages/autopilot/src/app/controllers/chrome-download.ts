@@ -29,7 +29,7 @@ import { EventBus } from '../event-bus';
 import { FirstRunController } from './first-run';
 
 const rimRafAsync = promisify(rimRaf);
-
+export const CHROME_VERSION_HUMAN_READABLE = '86.0.4240.0';
 export const CHROME_REVISIONS = {
     darwin: '800250',
     win32: '800229',
@@ -89,6 +89,10 @@ export class ChromeDownloadController {
 
     getRevision(): string {
         return CHROME_REVISIONS[this.platform];
+    }
+
+    getHumanReadableVersion(): string {
+        return CHROME_VERSION_HUMAN_READABLE;
     }
 
     getDownloadUrl(): string {

@@ -7,7 +7,7 @@
                     class="button button--tertiary button--cta"
                     style="padding-left: var(--gap--small); font-size: 15px;"
                     @click="updateChromium">
-                    <span>Install Chromium</span>
+                    Install Chromium {{ latestVersion }}
                 </button>
             </div>
         </div>
@@ -67,6 +67,10 @@ export default {
 
         showUpdate() {
             return this.chromeDownload.shouldUpdate();
+        },
+
+        latestVersion() {
+            return this.chromeDownload.getHumanReadableVersion();
         }
     },
 
