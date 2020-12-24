@@ -85,6 +85,10 @@ export class ChromeManagerController {
         return this.settings.get(CHROME_HOMEPAGE);
     }
 
+    getChromePath() {
+        return this.settings.get(CHROME_PATH);
+    }
+
     protected async _connect() {
         try {
             await this._tryConnectBrowser();
@@ -166,7 +170,7 @@ export class ChromeManagerController {
         if (this.chromeProcess) {
             return;
         }
-        const chromePath = this.settings.get(CHROME_PATH);
+        const chromePath = this.getChromePath();
         if (!chromePath) {
             console.warn('CHROME_PATH not set, Chrome will not run');
             return;

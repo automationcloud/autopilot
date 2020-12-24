@@ -14,7 +14,7 @@
 
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
-import { Exception, booleanConfig } from '@automationcloud/engine';
+import { Exception } from '@automationcloud/engine';
 import os from 'os';
 import path from 'path';
 import { promises as fs, createWriteStream } from 'fs';
@@ -28,7 +28,6 @@ import { SettingsController } from './settings';
 import { EventBus } from '../event-bus';
 import { FirstRunController } from './first-run';
 
-const CHROME_CHECK_VERSION = booleanConfig('CHROME_CHECK_VERSION', true);
 const rimRafAsync = promisify(rimRaf);
 
 export const CHROME_REVISIONS = {
@@ -72,18 +71,16 @@ export class ChromeDownloadController {
 
     async init() {
         await this.checkInstalled();
-        this.events.on('initialized', () => {
-            if (this.shouldCheckInstalled() && !this.isInstalled()) {
-                const update = confirm('New version of Chromium is available. do you want to install it now?');
-                if (update) {
-                    this.firstRun.setFirstRun(true);
-                }
-            }
-        });
     }
 
-    shouldCheckInstalled() {
-        return this.settings.get(CHROME_CHECK_VERSION);
+    shouldUpdate() {
+        const currentChromePath = this.chromeManager.getChromePath();
+        const useSupportedChrome = currentChromePath.includes(this.getChromeBaseDir());
+        if (currentChromePath && useSupportedChrome) {
+            const latestInstalled = this.isInstalled();
+            return !latestInstalled;
+        }
+        return false;
     }
 
     isInstalled() {

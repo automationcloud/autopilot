@@ -1,5 +1,16 @@
 <template>
     <div class="browser">
+        <div v-if="showUpdate" class="automation-cloud">
+            <div  class="box box--primary">
+                <p style="font-size: 20px; margin: 0px;">A newer version of Chromium is available</p>
+                <button
+                    class="button button--tertiary button--cta"
+                    style="padding-left: var(--gap--small); font-size: 15px;"
+                    @click="updateChromium">
+                    <span>Install Chromium</span>
+                </button>
+            </div>
+        </div>
 
         <div class="section__title">
             Active connection
@@ -45,12 +56,18 @@ export default {
     inject: [
         'browser',
         'chromeManager',
+        'chromeDownload',
+        'firstRun',
     ],
 
     computed: {
         targets() {
             return this.chromeManager.targets;
         },
+
+        showUpdate() {
+            return this.chromeDownload.shouldUpdate();
+        }
     },
 
     methods: {
@@ -62,6 +79,10 @@ export default {
         attach(target) {
             this.browser.attach(target.targetId);
         },
+
+        updateChromium() {
+            this.firstRun.setFirstRun(true);
+        }
 
     },
 
@@ -101,5 +122,12 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.chromium-update {
+    background: var(--color-yellow--300);
+    border-radius: var(--border-radius);
+    font-family: var(--font-family--alt);
+    padding: var(--gap);
 }
 </style>
