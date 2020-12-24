@@ -6,7 +6,7 @@
                 <button
                     class="button button--tertiary button--cta"
                     style="padding-left: var(--gap--small); font-size: 15px;"
-                    @click="updateChromium">
+                    @click="onUpdateClick">
                     Install Chromium {{ latestVersion }}
                 </button>
             </div>
@@ -66,11 +66,11 @@ export default {
         },
 
         showUpdate() {
-            return this.chromeDownload.shouldUpdate();
+            return this.chromeDownload.canUpdate();
         },
 
         latestVersion() {
-            return this.chromeDownload.getHumanReadableVersion();
+            return this.chromeDownload.getVersion();
         }
     },
 
@@ -84,7 +84,7 @@ export default {
             this.browser.attach(target.targetId);
         },
 
-        updateChromium() {
+        onUpdateClick() {
             this.firstRun.setFirstRun(true);
         }
 
@@ -126,12 +126,5 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.chromium-update {
-    background: var(--color-yellow--300);
-    border-radius: var(--border-radius);
-    font-family: var(--font-family--alt);
-    padding: var(--gap);
 }
 </style>

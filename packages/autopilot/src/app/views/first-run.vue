@@ -127,6 +127,7 @@ export default {
         registerUrl() {
             return this.acUrls.get('register');
         },
+
     },
 
     methods: {

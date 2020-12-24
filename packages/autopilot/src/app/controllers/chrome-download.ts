@@ -24,12 +24,9 @@ import http from 'http';
 import https from 'https';
 import extractZip from 'extract-zip';
 import { ChromeManagerController } from './chrome-manager';
-import { SettingsController } from './settings';
-import { EventBus } from '../event-bus';
-import { FirstRunController } from './first-run';
 
 const rimRafAsync = promisify(rimRaf);
-export const CHROME_VERSION_HUMAN_READABLE = '86.0.4240.0';
+export const CHROME_VERSION = '86.0.4240.0';
 export const CHROME_REVISIONS = {
     darwin: '800250',
     win32: '800229',
@@ -61,24 +58,17 @@ export class ChromeDownloadController {
     constructor(
         @inject(ChromeManagerController)
         protected chromeManager: ChromeManagerController,
-        @inject(SettingsController)
-        protected settings: SettingsController,
-        @inject(EventBus)
-        protected events: EventBus,
-        @inject(FirstRunController)
-        protected firstRun: FirstRunController
     ) {}
 
     async init() {
         await this.checkInstalled();
     }
 
-    shouldUpdate() {
+    canUpdate() {
         const currentChromePath = this.chromeManager.getChromePath();
-        const useSupportedChrome = currentChromePath.includes(this.getChromeBaseDir());
-        if (currentChromePath && useSupportedChrome) {
-            const latestInstalled = this.isInstalled();
-            return !latestInstalled;
+        const canCheckVersion = currentChromePath.includes(this.getChromeBaseDir());
+        if (canCheckVersion) {
+            return !this.isInstalled();
         }
         return false;
     }
@@ -91,8 +81,8 @@ export class ChromeDownloadController {
         return CHROME_REVISIONS[this.platform];
     }
 
-    getHumanReadableVersion(): string {
-        return CHROME_VERSION_HUMAN_READABLE;
+    getVersion(): string {
+        return CHROME_VERSION;
     }
 
     getDownloadUrl(): string {
