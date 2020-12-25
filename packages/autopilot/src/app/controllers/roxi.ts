@@ -80,7 +80,7 @@ export class RoxiController {
                 return;
             }
             const upstream = this.getProxyUpstreamConfig(this.proxyConfig);
-            this.proxy.addRoute(/.*/, upstream);
+            this.proxy.defaultUpstream = upstream;
             this.proxy.closeAllSockets();
         } catch (error) {
             console.warn('Could not configure proxy', { error });

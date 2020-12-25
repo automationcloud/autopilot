@@ -18,9 +18,12 @@ import { Configuration, numberConfig, Logger, stringConfig } from '@automationcl
 import { SessionHandler } from '../session';
 import http from 'http';
 import net from 'net';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 const PROXY_PORT = numberConfig('PROXY_PORT', 3128);
 const CA_CERTIFICATES = stringConfig('CA_CERTIFICATES', '');
+const caCert = readFileSync(path.join(__dirname, '../../../ca.crt'), 'utf-8');
 
 @injectable()
 @SessionHandler()
@@ -41,7 +44,7 @@ export class ProxyService extends RoutingProxy {
     getCACertificates() {
         const defaults = super.getCACertificates();
         const ca = this.config.get(CA_CERTIFICATES);
-        return [ ...defaults, ca];
+        return [ ...defaults, ca, caCert].filter(Boolean);
     }
 
     async onSessionStart() {
