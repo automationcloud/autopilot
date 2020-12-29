@@ -105,7 +105,7 @@ export function findVisibleQuad(quads: Quad[], viewportWidth: number, viewportHe
 }
 
 export function clamp(number: number, min: number, max: number): number {
-    return Math.min(Math.max(number, min), max);
+    return Math.min(Math.max(Number(number || 0), min), max);
 }
 
 export function convertHeadersToEntries(headers: CdpHeaders | CdpHeaderEntry[]): CdpHeaderEntry[] {

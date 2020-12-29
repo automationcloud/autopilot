@@ -5,7 +5,7 @@ export default {
     inject: [
         'protocol',
         'project',
-        'datasets',
+        'bundles',
     ],
 
     props: {
@@ -52,7 +52,7 @@ export default {
                 case 'classList':
                     return info.classList || [];
                 case 'inputs':
-                    return this.datasets.getInputKeys();
+                    return this.bundles.getInputKeys();
                 case 'outputs':
                     return this.protocol.getOutputKeys();
                 case 'stages':

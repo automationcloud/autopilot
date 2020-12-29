@@ -28,6 +28,7 @@ import { controller } from '../controller';
 import { ProtocolController } from './protocol';
 import { LayoutController } from './layout';
 import { PlaybackController } from './playback';
+import { AutosaveController } from './autosave';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 
@@ -57,6 +58,8 @@ export class AppMenuController {
         protected tools: ToolsController,
         @inject(ProtocolController)
         protected protocol: ProtocolController,
+        @inject(AutosaveController)
+        protected autosave: AutosaveController,
         @inject(ProxyService)
         protected proxy: ProxyService,
     ) {
@@ -152,25 +155,25 @@ export class AppMenuController {
         yield {
             label: 'New Project',
             accelerator: 'CmdOrCtrl+Shift+N',
-            click: () => this.project.newProject(),
+            // click: () => this.project.newProject(),
         };
         yield {
             label: 'Open Project...',
             accelerator: 'CmdOrCtrl+O',
-            click: () => this.project.openProject(),
+            // click: () => this.project.openProject(),
         };
         yield {
             label: 'Save Project',
             accelerator: 'CmdOrCtrl+S',
-            click: () => this.project.saveProject(),
+            // click: () => this.project.saveProject(),
         };
         yield {
             label: 'Save Project As...',
             accelerator: 'CmdOrCtrl+Shift+S',
-            click: () => this.project.saveProjectAs(),
+            // click: () => this.project.saveProjectAs(),
         };
-        if (this.project.autosaveFiles.length > 0) {
-            const groups = helpers.groupBy(this.project.autosaveFiles, file => file.split('_')[0]);
+        if (this.autosave.files.length > 0) {
+            const groups = helpers.groupBy(this.autosave.files, file => file.split('_')[0]);
             yield {
                 label: 'Restore Autosave',
                 submenu: groups.map(([date, files]) => {
@@ -182,7 +185,7 @@ export class AppMenuController {
                                     .substring(date.length + 1)
                                     .replace(/_/, ' ')
                                     .replace(/\.json$/, ''),
-                                click: () => this.project.restoreAutosave(f),
+                                click: () => this.autosave.restore(f),
                             };
                         }),
                     };

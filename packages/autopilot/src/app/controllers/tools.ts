@@ -23,9 +23,9 @@ import { EventBus } from '../event-bus';
 import { ProjectController } from './project';
 import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
-import { DatasetsController } from './datasets';
 import { PlaybackController } from './playback';
 import { version } from '../globals';
+import { BundlesController } from './bundles';
 
 @injectable()
 @controller()
@@ -43,8 +43,8 @@ export class ToolsController {
         protected api: ApiController,
         @inject(BrowserService)
         protected browser: BrowserService,
-        @inject(DatasetsController)
-        protected datasets: DatasetsController,
+        @inject(BundlesController)
+        protected bundles: BundlesController,
         @inject(PlaybackController)
         protected playback: PlaybackController,
         @inject(CheckpointService)
@@ -64,11 +64,14 @@ export class ToolsController {
     async loadScriptService(scriptId: string, serviceId: string) {
         const service = await this.api.getService(serviceId);
         const scriptData = await this.api.getScriptData(scriptId);
-        await this.project.loadFromJson(scriptData);
-        this.project.metadata.domainId = service.domain;
-        this.project.metadata.scriptId = scriptId;
-        this.project.metadata.serviceId = serviceId;
-        this.events.emit('serviceUpdated');
+        await this.project.loadAutomationJson({
+            script: scriptData.script,
+            metadata: {
+                domainId: service.domain,
+                serviceId,
+                ...scriptData.metadata,
+            }
+        });
     }
 
     async loadScriptAsDiffBase(scriptId: string) {
@@ -93,13 +96,11 @@ export class ToolsController {
                 data: d.data,
             };
         });
-        this.datasets.createDataset({
+        this.bundles.createBundle({
             name: 'Job #' + jobId.substring(0, 7),
             inputs,
             excluded: true,
         });
-        this.datasets.selectDataset();
-        this.datasets.update();
     }
 
     async loadCheckpoint(checkpointId: string) {

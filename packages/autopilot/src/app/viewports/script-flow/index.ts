@@ -50,6 +50,8 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.menus = new ScriptFlowMenusController(this);
         this.recorder = new ActionRecorderController(this);
         this.dndActions = new DragAndDropActionsController(this);
+        this.app.events.on('automationLoaded', () => this.commandBuffer.reset());
+        this.search.performSearch();
     }
 
     get playback() {

@@ -3,20 +3,20 @@
         <modal :shown="editing"
             @close="editing = false">
             <div class="section__title">
-                Edit dataset
+                Edit bundle
             </div>
             <div class="form-row">
                 <div class="form-row__label">Name</div>
                 <div class="form-row__controls">
                     <input class="input stretch"
-                        v-model="datasetProxy.name"/>
+                        v-model="bundleProxy.name"/>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-row__label">Private</div>
                 <div class="form-row__controls">
                     <input type="checkbox"
-                        v-model="datasetProxy.excluded"/>
+                        v-model="bundleProxy.excluded"/>
                 </div>
             </div>
             <div class="group group--gap" slot="buttons">
@@ -27,8 +27,8 @@
             </div>
         </modal>
         <select class="input input--inverse stretch"
-            v-model="currentIndex">
-            <option v-for="(ds, i) of allDatasets"
+            v-model="bundles.bundleIndex">
+            <option v-for="(ds, i) of bundles.bundles"
                 :value="i">
                 {{ ds.excluded ? '[private]' : '' }} {{ ds.name }}
             </option>
@@ -46,7 +46,7 @@ import { menu } from '../../util';
 export default {
 
     inject: [
-        'datasets'
+        'bundles'
     ],
 
     data() {
@@ -56,23 +56,8 @@ export default {
     },
 
     computed: {
-        viewport() { return this.app.viewports.datasets; },
-
-        currentIndex: {
-            get() {
-                return this.datasets.currentIndex;
-            },
-            set(index) {
-                this.datasets.selectDataset(index);
-            }
-        },
-
-        allDatasets() {
-            return this.datasets.datasets;
-        },
-
-        datasetProxy() {
-            return this.viewport.createCurrentDatasetProxy();
+        bundleProxy() {
+            return this.bundles.createCurrentBundleProxy();
         },
     },
 
@@ -81,19 +66,19 @@ export default {
         popupMenu() {
             return menu.popupMenu([
                 {
-                    label: 'Create dataset',
+                    label: 'Create bundle',
                     click: () => {
-                        this.datasets.createDataset();
+                        this.bundles.createBundle();
                         this.editing = true;
                     },
                 },
                 {
-                    label: 'Edit dataset',
+                    label: 'Edit bundle',
                     click: () => this.editing = true,
                 },
                 {
-                    label: 'Delete dataset',
-                    click: () => this.datasets.deleteCurrentDataset(),
+                    label: 'Delete bundle',
+                    click: () => this.bundles.deleteBundle(),
                 }
             ]);
         },

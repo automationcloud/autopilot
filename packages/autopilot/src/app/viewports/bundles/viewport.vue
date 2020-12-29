@@ -1,16 +1,16 @@
 <template>
-    <div class="datasets"
+    <div class="bundles"
         @contextmenu.stop.prevent="popupMenu">
 
-        <div class="datasets__inputs">
-            <dataset-input v-for="(input, index) of dataset.inputs"
-                :key="dataset.name + index"
+        <div class="bundles__inputs">
+            <bundle-input v-for="(input, index) of bundle.inputs"
+                :key="bundle.name + index"
                 :input="input"
                 :index="index"
-                :dataset="dataset"/>
+                :bundle="bundle"/>
         </div>
 
-        <div class="datasets__add">
+        <div style="padding: var(--gap)">
             <button class="button button--primary"
                 @click="addInput">
                 <i class="button__icon fas fa-plus"></i>
@@ -22,38 +22,37 @@
 </template>
 
 <script>
-import DatasetInput from './dataset-input.vue';
+import BundleInput from './bundle-input.vue';
 import { menu } from '../../util';
 
 export default {
 
     components: {
-        DatasetInput,
+        BundleInput,
     },
 
     inject: [
-        'datasets',
+        'bundles',
     ],
 
     computed: {
-        viewport() { return this.app.viewports.datasets; },
-        dataset() {
-            return this.datasets.getCurrentDataset();
+        bundle() {
+            return this.bundles.getCurrentBundle();
         },
     },
 
     methods: {
 
         addInput() {
-            this.viewport.addInput({ key: '', stage: '', data: {} });
+            this.bundles.addInput({ key: '', data: {} });
         },
 
         popupMenu() {
             menu.popupMenu([
                 {
                     label: 'Paste inputs',
-                    click: () => this.viewport.pasteInputs(),
-                    enabled: this.viewport.canPasteInputs(),
+                    click: () => this.bundles.pasteInputs(),
+                    enabled: this.bundles.canPasteInputs(),
                 },
             ]);
         },
@@ -62,9 +61,3 @@ export default {
 
 };
 </script>
-
-<style>
-.datasets__add {
-    padding: var(--gap);
-}
-</style>

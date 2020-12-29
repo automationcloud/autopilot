@@ -20,7 +20,7 @@ export class EditMetadataCommand extends ScriptEditorCommand {
     oldValue: any;
     newValue: any;
 
-    static title = 'Edit Service';
+    static title = 'Edit Automation Metadata';
 
     constructor(viewport: ScriptEditorViewport, key: string, value: any) {
         super(viewport);
@@ -28,8 +28,8 @@ export class EditMetadataCommand extends ScriptEditorCommand {
         this.newValue = value;
     }
 
-    get service() {
-        return this.app.project.metadata;
+    get metadata() {
+        return this.app.project.automation.metadata;
     }
 
     isUndoable() {
@@ -49,15 +49,15 @@ export class EditMetadataCommand extends ScriptEditorCommand {
     }
 
     protected async apply() {
-        this.oldValue = (this.service as any)[this.key];
-        (this.service as any)[this.key] = this.newValue;
+        this.oldValue = (this.metadata as any)[this.key];
+        (this.metadata as any)[this.key] = this.newValue;
         this.app.project.update();
-        this.app.events.emit('serviceUpdated');
+        this.app.events.emit('automationMetadataUpdated');
     }
 
     protected async unapply() {
-        (this.service as any)[this.key] = this.oldValue;
+        (this.metadata as any)[this.key] = this.oldValue;
         this.app.project.update();
-        this.app.events.emit('serviceUpdated');
+        this.app.events.emit('automationMetadataUpdated');
     }
 }
