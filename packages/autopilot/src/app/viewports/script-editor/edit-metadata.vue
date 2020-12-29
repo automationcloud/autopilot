@@ -42,10 +42,6 @@ export default {
             return this.app.viewports.scriptEditor;
         },
 
-        metadata() {
-            return this.project.metadata;
-        },
-
         metadataProxy() {
             return this.viewport.getMetadataProxy();
         },

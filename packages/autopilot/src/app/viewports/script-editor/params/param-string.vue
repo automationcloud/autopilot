@@ -45,7 +45,7 @@ export default {
     computed: {
 
         isDraft() {
-            return this.project.metadata.draft || false;
+            return this.project.automation.metadata.draft || false;
         },
 
         domain() {

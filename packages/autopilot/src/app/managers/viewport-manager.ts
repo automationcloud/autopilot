@@ -14,9 +14,7 @@
 
 import { App } from '../app';
 import {
-    ApiViewport,
     BrowserViewport,
-    DatasetsViewport,
     ExtensionsViewport,
     InspectionsViewport,
     PlaybackEventsViewport,
@@ -27,15 +25,15 @@ import {
     ScreencastViewport,
     SettingsViewport,
     HelpResourcesViewport,
+    BundlesViewport,
 } from '../viewports';
 import { Viewport } from '../viewport';
 import { LayoutDirection } from '../util/layout-item';
 
 export class ViewportManager {
     app: App;
-    api: ApiViewport;
     browserViewport: BrowserViewport;
-    datasets: DatasetsViewport;
+    bundles: BundlesViewport;
     extensions: ExtensionsViewport;
     helpResources: HelpResourcesViewport;
     inspections: InspectionsViewport;
@@ -58,8 +56,7 @@ export class ViewportManager {
         // TODO do it better next time we touch this (i.e. when viewport controllers no longer exist)
         this.scriptFlow = new ScriptFlowViewport(app);
         this.scriptEditor = new ScriptEditorViewport(app);
-        this.datasets = new DatasetsViewport(app);
-        this.api = new ApiViewport(app);
+        this.bundles = new BundlesViewport(app);
         this.extensions = new ExtensionsViewport(app);
         this.inspections = new InspectionsViewport(app);
         this.playbackEvents = new PlaybackEventsViewport(app);

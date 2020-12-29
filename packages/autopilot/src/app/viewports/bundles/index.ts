@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export * from './browser';
-export * from './bundles';
-export * from './extensions';
-export * from './help-resources';
-export * from './inspections';
-export * from './playback-events';
-export * from './recipes';
-export * from './script-editor';
-export * from './script-flow';
-export * from './search-scripts';
-export * from './screencast';
-export * from './settings';
+import { StatelessViewport } from '../../viewport';
+
+export class BundlesViewport extends StatelessViewport {
+
+    getViewportId(): string {
+        return 'bundles';
+    }
+
+    getViewportName(): string {
+        return 'Input';
+    }
+
+    getViewportIcon(): string {
+        return 'fas fa-sign-in-alt';
+    }
+
+}

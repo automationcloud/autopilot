@@ -15,7 +15,7 @@
 import { injectable } from 'inversify';
 import { controller } from '../controller';
 
-
+// TODO this should probably be a static module, not a controller
 @injectable()
 @controller()
 export class AcUrlsController {

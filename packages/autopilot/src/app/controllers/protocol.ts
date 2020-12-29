@@ -41,7 +41,7 @@ export class ProtocolController {
             url: 'https://protocol.automationcloud.net/schema.json',
         });
         this.protocolProvider.latest = null;
-        this.events.on('serviceUpdated', () => this.refreshExecutionErrors());
+        this.events.on('automationMetadataUpdated', () => this.refreshExecutionErrors());
     }
 
     async init() {
@@ -65,11 +65,11 @@ export class ProtocolController {
 
     getDomain(): Domain | null {
         const { latest } = this.protocolProvider;
-        const { draft } = this.project.metadata;
+        const { draft } = this.project.automation.metadata;
         if (!latest || draft) {
             return null;
         }
-        return latest.getDomain(this.project.metadata.domainId) ?? null;
+        return latest.getDomain(this.project.automation.metadata.domainId) ?? null;
     }
 
     getInputKeys(): string[] {

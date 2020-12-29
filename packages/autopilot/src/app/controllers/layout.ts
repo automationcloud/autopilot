@@ -181,12 +181,8 @@ const DEFAULT_WORKSPACES: LayoutWorkspace[] = [
         },
     },
     {
-        name: 'Input',
-        layout: { type: 'viewport', viewportId: 'datasets' },
-    },
-    {
-        name: 'Automation Cloud',
-        layout: { type: 'viewport', viewportId: 'api' },
+        name: 'Inputs',
+        layout: { type: 'viewport', viewportId: 'bundles' },
     },
     {
         name: '❔',

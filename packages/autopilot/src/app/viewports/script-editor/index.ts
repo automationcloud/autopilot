@@ -38,6 +38,7 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
         super(app);
         this.commands = new ScriptEditorCommandsController(this);
         this.menus = new ScriptEditorMenusController(this);
+        this.app.events.on('automationLoaded', () => this.commandBuffer.reset());
     }
 
     get feedback() {
@@ -119,7 +120,7 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
     }
 
     getMetadataProxy(): any {
-        return helpers.createEditProxy(this.app.project.metadata, (k, v) => this.commands.editMetadata(k, v));
+        return helpers.createEditProxy(this.app.project.automation.metadata, (k, v) => this.commands.editMetadata(k, v));
     }
 
     createContextProxy(context: Context): any {

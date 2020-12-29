@@ -54,7 +54,7 @@ export class ExtensionLoaderController {
         for (const ext of extensions) {
             this.resolver.addExtension(ext);
         }
-        this.events.emit('projectInvalidated');
+        this.events.emit('scriptInvalidated');
     }
 
 }

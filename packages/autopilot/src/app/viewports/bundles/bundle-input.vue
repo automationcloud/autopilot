@@ -1,8 +1,8 @@
 <template>
-    <div class="dataset-input"
+    <div class="bundle-input"
         @contextmenu.stop.prevent="popupMenu">
 
-        <div class="dataset-input__header group group--gap--small">
+        <div class="bundle-input__header group group--gap--small">
             <expand :id="expandId"/>
             <i class="color--yellow fa fa-exclamation-triangle"
                 v-if="!isValid">
@@ -25,9 +25,9 @@
             </button>
         </div>
 
-        <div class="dataset-input__content"
+        <div class="bundle-input__content"
             v-if="isExpanded">
-        <div class="dataset-input__validation-errors"
+        <div class="bundle-input__validation-errors"
             v-if="validationErrors.length">
             <validation-error
                 v-for="(e, index) of validationErrors"
@@ -35,7 +35,7 @@
                 :key="index"/>
         </div>
         <edit-json
-            class="dataset-input__editor"
+            class="bundle-input__editor"
             v-model="input.data"
             @change="onValueChange"/>
         </div>
@@ -44,15 +44,15 @@
 </template>
 
 <script>
-import throttle from 'promise-smart-throttle';
+import debounce from 'debounce';
 import { helpers, menu, clipboard } from '../../util';
-import { ExpandableController } from '~/controllers';
 
 export default {
 
     inject: [
+        'expandable',
         'protocol',
-        'datasets',
+        'bundles',
     ],
 
     props: {
@@ -68,7 +68,7 @@ export default {
     },
 
     created() {
-        this.validateThrottled = throttle(this.validate, 100);
+        this.validateDebounced = debounce(this.validate, 100);
     },
 
     mounted() {
@@ -77,7 +77,7 @@ export default {
 
     watch: {
         domain() {
-            this.validateThrottled();
+            this.validateDebounced();
         },
         input: {
             deep: true,
@@ -88,15 +88,14 @@ export default {
     },
 
     computed: {
-        viewport() { return this.app.viewports.datasets; },
-        dataset() { return this.datasets.getCurrentDataset(); },
+        bundle() { return this.bundles.getCurrentBundle(); },
 
         expandId() {
-            return this.viewport.getInputExpandId(this.input);
+            return this.bundles.getInputExpandId(this.input);
         },
 
         isExpanded() {
-            return this.get(ExpandableController).isExpanded(this.expandId);
+            return this.expandable.isExpanded(this.expandId);
         },
 
         inputKeys() {
@@ -123,12 +122,12 @@ export default {
     methods: {
 
         removeInput() {
-            this.viewport.removeInput(this.index);
+            this.bundles.removeInput(this.index);
         },
 
         init() {
             this.key = this.input.key;
-            this.validateThrottled();
+            this.validateDebounced();
         },
 
         async validate() {
@@ -140,45 +139,37 @@ export default {
         },
 
         onKeyChange() {
-            const otherKeys = this.dataset.inputs
+            const otherKeys = this.bundle.inputs
                 .filter(i => i !== this.input)
                 .map(i => i.key);
             const newKey = helpers.makeSafeString(this.key, otherKeys);
             this.input.key = newKey;
             this.key = this.input.key;
-            this.viewport.save();
+            this.bundles.save();
         },
 
         onValueChange() {
-            this.viewport.save();
+            this.bundles.save();
         },
 
         popupMenu() {
             menu.popupMenu([
                 {
                     label: 'Copy input',
-                    click: () => clipboard.writeObject({
-                        type: 'dataset-inputs',
-                        data: [
-                            this.input
-                        ]
-                    }),
+                    click: () => this.bundles.copyInput(this.input),
                 },
                 {
                     label: 'Copy all inputs',
-                    click: () => clipboard.writeObject({
-                        type: 'dataset-inputs',
-                        data: this.dataset.inputs,
-                    }),
+                    click: () => this.bundles.copyAllInputs(),
                 },
                 {
                     label: 'Copy all inputs as JSON',
-                    click: () => clipboard.writeObject(this.viewport.getJsonInputs()),
+                    click: () => clipboard.writeObject(this.bundles.getJsonInputs()),
                 },
                 {
                     label: 'Paste inputs',
-                    click: () => this.viewport.pasteInputs(),
-                    enabled: this.viewport.canPasteInputs(),
+                    click: () => this.bundles.pasteInputs(),
+                    enabled: this.bundles.canPasteInputs(),
                 },
             ]);
         },
@@ -189,8 +180,8 @@ export default {
             }
             const example = this.inputDef.createExample();
             this.input.data = example;
-            this.viewport.save();
-        },
+            this.bundles.save();
+        }
 
     }
 
@@ -198,11 +189,11 @@ export default {
 </script>
 
 <style>
-.dataset-input {
+.bundle-input {
 
 }
 
-.dataset-input__header {
+.bundle-input__header {
     display: flex;
     flex-flow: row nowrap;
     padding: var(--gap--small);
