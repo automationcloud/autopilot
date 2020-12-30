@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import Vue from 'vue';
+
 /**
- * Dynamically resolves the contents of `./controllers` directory.
+ * Dynamically resolves the contents of `./components` directory.
  */
-(function() {
+(function () {
     // https://webpack.js.org/guides/dependency-management/#requirecontext
-    const resolve = (require as any).context('./controllers', true, /\.ts$/);
+    const resolve = (require as any).context('./components', true, /\.vue$/);
     for (const key of resolve.keys()) {
-        resolve(key);
+        const module = resolve(key);
+        const name = key.replace(/\.vue$/, '').replace(/[^a-z0-9_-]/gi, '');
+        Vue.component(name, module.default);
     }
 })();

@@ -14,7 +14,6 @@
 
 import { UserData } from '../userdata';
 import { Script, Engine, ResolverService } from '@automationcloud/engine';
-import { ScriptDiffController } from './script-diff';
 import { inject, injectable } from 'inversify';
 import { StorageController } from './storage';
 import { controller } from '../controller';
@@ -34,8 +33,6 @@ export class ProjectController {
         protected engine: Engine,
         @inject(StorageController)
         protected storage: StorageController,
-        @inject(ScriptDiffController)
-        protected diff: ScriptDiffController,
         @inject(ResolverService)
         protected resolver: ResolverService,
         @inject(EventsController)
@@ -71,6 +68,7 @@ export class ProjectController {
         return this.automation.script;
     }
 
+    // TODO trace those calls and make sure diff bases are accurate in all cases (since we no longer do it here)
     async loadAutomationJson(json: any) {
         this.automation = {
             metadata: {

@@ -21,6 +21,9 @@ import { helpers } from '../../util';
 import { ScriptSearchQuery, Script, ScriptSearchResult, Action, Context } from '@automationcloud/engine';
 import { ApiService } from '../../controllers/api';
 import csvStringify from 'csv-stringify/lib/sync';
+import { remote } from 'electron';
+
+const { dialog } = remote;
 
 export interface SearchScriptsState {
     queries: ScriptSearchQuery[];
@@ -158,7 +161,7 @@ export class SearchScriptsViewport extends Viewport<SearchScriptsState> {
     }
 
     async exportCsv() {
-        const filePath = await helpers.showSaveDialog({
+        const { filePath } = await dialog.showSaveDialog({
             title: 'Save results as CSV',
             filters: [
                 { name: 'CSV Files', extensions: ['csv'] },

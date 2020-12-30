@@ -26,6 +26,9 @@ import { ScriptDiffController } from './script-diff';
 import { PlaybackController } from './playback';
 import { version } from '../globals';
 import { BundlesController } from './bundles';
+import { remote } from 'electron';
+
+const { dialog } = remote;
 
 @injectable()
 @controller({ alias: 'tools' })
@@ -121,7 +124,7 @@ export class ToolsController {
     }
 
     async saveHtmlSnapshot() {
-        const filePath = await helpers.showSaveDialog({
+        const { filePath } = await dialog.showSaveDialog({
             title: 'Save HTML Snapshot',
             filters: [
                 { name: 'HTML File', extensions: ['html'] },
