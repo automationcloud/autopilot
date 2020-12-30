@@ -29,39 +29,30 @@ import { ProtocolController } from './protocol';
 import { LayoutController } from './layout';
 import { PlaybackController } from './playback';
 import { AutosaveController } from './autosave';
+import { SaveLoadController } from './saveload';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 
 const { Menu } = remote;
 
 @injectable()
-@controller()
+@controller({ alias: 'appMenu' })
 export class AppMenuController {
     profiles: Array<{ id: string; name: string }> = [];
 
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
-        @inject(SettingsController)
-        protected settings: SettingsController,
-        @inject(ViewportManager)
-        protected viewports: ViewportManager,
-        @inject(LayoutController)
-        protected layout: LayoutController,
-        @inject(ProjectController)
-        protected project: ProjectController,
-        @inject(PlaybackController)
-        protected playback: PlaybackController,
-        @inject(EmulationController)
-        protected emulation: EmulationController,
-        @inject(ToolsController)
-        protected tools: ToolsController,
-        @inject(ProtocolController)
-        protected protocol: ProtocolController,
-        @inject(AutosaveController)
-        protected autosave: AutosaveController,
-        @inject(ProxyService)
-        protected proxy: ProxyService,
+        @inject(EventBus) protected events: EventBus,
+        @inject(SettingsController) protected settings: SettingsController,
+        @inject(ViewportManager) protected viewports: ViewportManager,
+        @inject(LayoutController) protected layout: LayoutController,
+        @inject(ProjectController) protected project: ProjectController,
+        @inject(PlaybackController) protected playback: PlaybackController,
+        @inject(EmulationController) protected emulation: EmulationController,
+        @inject(ToolsController) protected tools: ToolsController,
+        @inject(ProtocolController) protected protocol: ProtocolController,
+        @inject(AutosaveController) protected autosave: AutosaveController,
+        @inject(ProxyService) protected proxy: ProxyService,
+        @inject(SaveLoadController) protected saveload: SaveLoadController,
     ) {
         this.events.on('initialized', () => this.renderMenu());
         this.events.on('windowFocused', () => this.renderMenu());
@@ -155,7 +146,7 @@ export class AppMenuController {
         yield {
             label: 'New Project',
             accelerator: 'CmdOrCtrl+Shift+N',
-            // click: () => this.project.newProject(),
+            click: () => this.saveload.newProject(),
         };
         yield {
             label: 'Open Project...',

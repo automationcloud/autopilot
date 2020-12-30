@@ -10,18 +10,17 @@
 </template>
 
 <script>
-import { ExtensionRegistryController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'extReg',
+    ],
+
     computed: {
 
-        extRegistry() {
-            return this.get(ExtensionRegistryController);
-        },
-
         loading() {
-            return this.extRegistry.loading;
+            return this.extReg.loading;
         },
 
     },
@@ -29,7 +28,7 @@ export default {
     methods: {
 
         refresh() {
-            this.extRegistry.refresh();
+            this.extReg.refresh();
         },
 
     }

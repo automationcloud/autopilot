@@ -41,9 +41,12 @@
 <script>
 import { menu } from '../../util';
 import PipeRecipe from './pipe-recipe.vue';
-import { ExpandableController } from '~/controllers';
 
 export default {
+
+    inject: [
+        'expandable'
+    ],
 
     components: {
         PipeRecipe
@@ -61,9 +64,6 @@ export default {
     },
 
     computed: {
-        expandable() {
-            return this.get(ExpandableController);
-        },
         viewport() { return this.app.viewports.recipes; },
         groupId() { return this.viewport.getPipeGroupId(this.group); },
         isExpanded() {

@@ -21,6 +21,7 @@ import { getAppPath } from './globals';
 import { createControllerProvider } from './provider';
 
 import './components';
+import './resolve-controllers';
 import './directives';
 
 process.env.ENGINE_ENV = 'autopilot';

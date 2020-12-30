@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import { ExpandableController } from '~/controllers';
-
 export default {
 
     inject: [
@@ -24,7 +22,7 @@ export default {
         },
 
         isExpanded() {
-            return this.get(ExpandableController).isExpanded(this.expandKey);
+            return this.expandable.isExpanded(this.expandKey);
         },
 
         allOutputKeys() {

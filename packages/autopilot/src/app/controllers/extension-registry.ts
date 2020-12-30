@@ -26,7 +26,7 @@ const EXTENSIONS_AUTO_REFRESH_INTERVAL = numberConfig('EXTENSIONS_AUTO_REFRESH_I
  * Manages installing extensions from registry and associated operations.
  */
 @injectable()
-@controller({ priority: 1001 })
+@controller({ alias: 'extReg', priority: 1001 })
 export class ExtensionRegistryController {
     userData: UserData;
 

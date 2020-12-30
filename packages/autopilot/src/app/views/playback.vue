@@ -84,12 +84,12 @@
 
 <script>
 import PlaybackStatus from './playback-status.vue';
-import { EmulationController } from '~/controllers';
 
 export default {
 
     inject: [
         'playback',
+        'emulation',
     ],
 
     components: {
@@ -97,7 +97,7 @@ export default {
     },
 
     computed: {
-        throttlingMode() { return this.get(EmulationController).throttlingMode; },
+        throttlingMode() { return this.emulation.throttlingMode; },
         script() { return this.app.project.script; },
         isPaused() { return this.playback.isPaused(); },
         isRunning() { return this.playback.isRunning(); },

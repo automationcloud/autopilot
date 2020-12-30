@@ -21,7 +21,7 @@ import { Bundle } from '../entities/bundle';
 import { ExpandableController } from './expandable';
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'bundles' })
 export class BundlesController {
 
     constructor(

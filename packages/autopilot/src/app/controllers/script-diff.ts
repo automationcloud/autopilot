@@ -23,7 +23,7 @@ import { controller } from '../controller';
 const UI_DIFF_ENABLED = booleanConfig('UI_DIFF_ENABLED', true);
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'diff', backgroundInit: true })
 export class ScriptDiffController {
     userData: UserData;
 

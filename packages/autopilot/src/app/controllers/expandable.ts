@@ -18,7 +18,7 @@ import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'expandable', backgroundInit: true })
 export class ExpandableController {
     userData: UserData;
 

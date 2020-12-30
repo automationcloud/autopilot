@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import { ExpandableController } from '~/controllers';
-
 export default {
+    inject: [
+        'expandable',
+    ],
 
     props: {
         id: { type: String },
@@ -20,12 +21,8 @@ export default {
 
     computed: {
 
-        ctl() {
-            return this.get(ExpandableController);
-        },
-
         expanded() {
-            return this.ctl.isExpanded(this.id);
+            return this.expandable.isExpanded(this.id);
         }
 
     },
@@ -36,7 +33,7 @@ export default {
             if (this.stopPropagation) {
                 ev.stopPropagation();
             }
-            this.ctl.toggleExpand(this.id);
+            this.expandable.toggleExpand(this.id);
         }
 
     }

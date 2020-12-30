@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { controller } from '../controller';
 
 @injectable()
-@controller()
+@controller({ alias: 'modals' })
 export class ModalsController {
     currentModalName: string = '';
 

@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import { ScriptDiffController, ExpandableController } from '~/controllers';
 
 export default {
 

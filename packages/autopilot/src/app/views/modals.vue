@@ -19,11 +19,14 @@
 </template>
 
 <script>
-import ModalCreatePipeRecipe from '../modals/create-pipe-recipe.vue';
-import ModalEditActionNotes from '../modals/edit-action-notes.vue';
-import ModalEditBundle from '../modals/edit-bundle.vue';
-import ModalEditPipeNotes from '../modals/edit-pipe-notes.vue';
-import ModalHelp from '../modals/help.vue';
+// https://webpack.js.org/guides/dependency-management/#requirecontext
+const ctx = require.context('../modals', true, /\.vue$/);
+const modalComponents = {};
+for (const key of ctx.keys()) {
+    const name = 'modal-' + key.replace(/\.vue$/, '').replace(/[^a-z0-9_-]/gi, '');
+    const component = ctx(key).default;
+    modalComponents[name] = component;
+}
 
 export default {
 
@@ -32,11 +35,7 @@ export default {
     ],
 
     components: {
-        ModalCreatePipeRecipe,
-        ModalEditActionNotes,
-        ModalEditBundle,
-        ModalEditPipeNotes,
-        ModalHelp,
+        ...modalComponents
     },
 };
 </script>

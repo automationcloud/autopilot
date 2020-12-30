@@ -40,7 +40,7 @@ export class AutosaveController {
         @inject(EventBus)
         protected events: EventBus,
     ) {
-        this.events.on('writeAutosave', () => this.autosave());
+        this.events.on('writeAutosave', () => this.saveCurrent());
     }
 
     async init() {
@@ -63,7 +63,7 @@ export class AutosaveController {
         return this.storage.getFilename('autosave');
     }
 
-    async autosave() {
+    async saveCurrent() {
         const state = this.project.automation;
         const newFile =
             moment.utc().format('YYYY-MM-DD_HH-mm-ss_SSS_') +
@@ -88,7 +88,7 @@ export class AutosaveController {
             const file = path.join(this.autosaveDir, filename);
             const text = await fs.readFile(file, 'utf-8');
             const json = JSON.parse(text);
-            await this.autosave();
+            await this.saveCurrent();
             await this.project.loadAutomationJson(json);
         } catch (err) {
             alert('Failed to load autosaved project. See Console for more info.');

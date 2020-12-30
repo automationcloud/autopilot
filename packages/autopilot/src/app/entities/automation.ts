@@ -7,12 +7,8 @@ export interface Automation {
     bundles: Bundle[];
 }
 
-export type AutomationLocation = 'file' | 'ac';
-
 export interface AutomationMedatada {
     version: string;
-    location: AutomationLocation;
-    filePath: string | null;
     serviceId: string | null;
     draft: boolean;
     domainId: string;
@@ -21,8 +17,6 @@ export interface AutomationMedatada {
 
 export const DEFAULT_AUTOMATION_METADATA: AutomationMedatada = {
     version: '1.0.0',
-    location: 'file',
-    filePath: null,
     serviceId: null,
     domainId: 'Generic',
     draft: true,

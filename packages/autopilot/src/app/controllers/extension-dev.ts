@@ -29,7 +29,7 @@ import { debounce } from 'debounce';
 import os from 'os';
 
 @injectable()
-@controller({ priority: 1001 })
+@controller({ alias: 'extDev', priority: 1001 })
 export class ExtensionDevController {
     userData: UserData;
     extensions: Extension[] = [];

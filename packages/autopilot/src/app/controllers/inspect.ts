@@ -21,7 +21,7 @@ import assert from 'assert';
 import { EventEmitter } from 'events';
 
 @injectable()
-@controller()
+@controller({ alias: 'inspect' })
 export class InspectController {
 
     scopeEl: RemoteElement | null = null;

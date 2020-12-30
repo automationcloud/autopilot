@@ -18,7 +18,7 @@ import { controller } from '../controller';
 import { EventBus } from '../event-bus';
 
 @injectable()
-@controller()
+@controller({ alias: 'browser' })
 export class AutopilotBrowserService extends BrowserService {
     constructor(
         @inject(Configuration)

@@ -48,13 +48,14 @@
 </template>
 
 <script>
-import {
-    ExtensionRegistryController,
-    ExpandableController,
-} from '~/controllers';
 import ExtItem from './ext-item.vue';
 
 export default {
+    inject: [
+        'project',
+        'expandable',
+        'extReg',
+    ],
 
     components: {
         ExtItem,
@@ -67,9 +68,7 @@ export default {
     },
 
     computed: {
-        script() { return this.app.project.script; },
-        extReg() { return this.get(ExtensionRegistryController); },
-        expandable() { return this.get(ExpandableController); },
+        script() { return this.project.script; },
     },
 
 };

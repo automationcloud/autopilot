@@ -28,7 +28,7 @@ import { version } from '../globals';
 import { BundlesController } from './bundles';
 
 @injectable()
-@controller()
+@controller({ alias: 'tools' })
 export class ToolsController {
 
     // TODO split away!

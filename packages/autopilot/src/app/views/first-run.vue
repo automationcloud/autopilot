@@ -105,11 +105,11 @@
 </template>
 
 <script>
+import { acUrls } from '../util';
 
 export default {
 
     inject: [
-        'acUrls',
         'chromeDownload',
         'firstRun',
     ],
@@ -125,7 +125,7 @@ export default {
         },
 
         registerUrl() {
-            return this.acUrls.get('register');
+            return acUrls.get('register');
         },
 
     },

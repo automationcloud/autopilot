@@ -37,12 +37,12 @@ import AccountMenu from './account-menu.vue';
 import TitlebarControls from './titlebar-controls.vue';
 import { popupMenu } from '../util/menu';
 import os from 'os';
-import { AppMenuController } from '~/controllers';
 
 export default {
 
     inject: [
         'tools',
+        'appMenu',
     ],
 
     data() {
@@ -63,10 +63,6 @@ export default {
 
         osPlatform() {
             return os.platform();
-        },
-
-        appMenu() {
-            return this.get(AppMenuController);
         },
 
         clipboardLoader() {
