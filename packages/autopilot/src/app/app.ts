@@ -30,7 +30,7 @@ import {
     HttpCallbackService,
 } from '@automationcloud/engine';
 
-import { ViewportManager } from './managers/viewport-manager';
+import { ViewportManager } from './viewports/viewport-manager';
 import { StorageController } from './controllers/storage';
 import { AutopilotBrowserService } from './overrides/browser';
 import { AutopilotCheckpointService } from './overrides/checkpoint';
