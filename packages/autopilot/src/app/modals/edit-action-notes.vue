@@ -7,13 +7,14 @@
             <div class="form-block">
                 <textarea
                     rows="12"
-                    v-model.trim="actionProxy.notes">
+                    v-model.trim="actionProxy.notes"
+                    v-focus>
                 </textarea>
             </div>
 
             <div class="modal__buttons">
                 <button class="button button--primary"
-                    @click="$emit('close')">
+                    @click="$emit('hide')">
                     Done
                 </button>
             </div>
