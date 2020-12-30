@@ -19,6 +19,7 @@ import { dom } from '../../util';
 import { MenuItemConstructorOptions } from 'electron';
 import { PipeClass, model } from '@automationcloud/engine';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
+import { HelpController } from '../../controllers/help';
 
 const standardPipeCategories = [
     'Assert',
@@ -154,7 +155,7 @@ export class ScriptEditorMenusController {
                 label: PipeClass.$type,
                 htmlLabel: this.createLabel(PipeClass),
                 click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
-                help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                 deprecated: PipeClass.$deprecated,
             };
         });
@@ -173,7 +174,7 @@ export class ScriptEditorMenusController {
                     label: PipeClass.$type,
                     htmlLabel: this.createLabel(PipeClass),
                     click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
-                    help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                    help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                     deprecated: PipeClass.$deprecated,
                     searchable: false,
                 };
@@ -210,7 +211,7 @@ export class ScriptEditorMenusController {
                         type: PipeClass.$type,
                     });
                 },
-                help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                 deprecated: PipeClass.$deprecated,
             };
         });

@@ -23,6 +23,7 @@ import { ActionRecorderController } from './recorder';
 import { ScriptViewport, InsertLocation } from '../script-viewport';
 import { DragAndDropActionsController } from './dnd-actions';
 import { PlaybackController } from '../../controllers/playback';
+import { HelpController } from '../../controllers/help';
 
 type ScriptFlowItem = Context | Action;
 
@@ -131,7 +132,7 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     }
 
     showActionHelpModal(type: string) {
-        this.app.ui.help.showActionHelpModal(type);
+        this.app.get(HelpController).showActionHelpModal(type);
     }
     // UI Options
 

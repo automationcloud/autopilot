@@ -14,6 +14,7 @@
             <disconnected/>
             <layout/>
             <playback/>
+            <modal-menu/>
             <!-- <inspecting/> -->
         </div>
     </div>
@@ -27,8 +28,8 @@ import Layout from './layout.vue';
 import Modals from './modals.vue';
 import Playback from './playback.vue';
 import Disconnected from './disconnected.vue';
-import Inspecting from './inspecting.vue';
 import FirstRun from './first-run.vue';
+import ModalMenu from './modal-menu.vue';
 
 export default {
 
@@ -38,8 +39,8 @@ export default {
         Modals,
         Playback,
         Disconnected,
-        Inspecting,
         FirstRun,
+        ModalMenu,
     },
 
     inject: [

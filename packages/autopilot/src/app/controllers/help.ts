@@ -12,14 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Controller } from '../controller';
-import { App } from '../app';
+import { controller } from '../controller';
 import { mdToHtml } from '../util/helpers';
+import { inject, injectable } from 'inversify';
+import { ResolverService } from '@automationcloud/engine';
+import { ModalsController } from './modals';
 
-export class HelpController implements Controller {
+@controller()
+@injectable()
+export class HelpController {
     helpItem: HelpItem | null = null;
 
-    constructor(public app: App) {}
+    constructor(
+        @inject(ResolverService)
+        protected resolver: ResolverService,
+        @inject(ModalsController)
+        protected modals: ModalsController,
+    ) {}
 
     async init() {}
 
@@ -34,7 +43,7 @@ export class HelpController implements Controller {
     }
 
     protected getActionHelpItem(type: string): HelpItem {
-        const ActionClass = this.app.resolver.getActionClass(type);
+        const ActionClass = this.resolver.getActionClass(type);
         const text = ActionClass.$help.trim();
         const help = text ? mdToHtml(text) : '';
 
@@ -45,7 +54,7 @@ export class HelpController implements Controller {
     }
 
     protected getPipeHelpItem(type: string): HelpItem {
-        const PipeClass = this.app.resolver.getPipeClass(type);
+        const PipeClass = this.resolver.getPipeClass(type);
         const text = PipeClass.$help.trim();
         const help = text ? mdToHtml(text) : '';
 
@@ -55,22 +64,16 @@ export class HelpController implements Controller {
         };
     }
 
-    // Help Modal
-    modalShown() {
-        return !!this.helpItem;
-    }
-
     showActionHelpModal(type: string) {
         this.helpItem = this.getActionHelpItem(type);
+        this.modals.show('help');
     }
 
     showPipeHelpModal(type: string) {
         this.helpItem = this.getPipeHelpItem(type);
+        this.modals.show('help');
     }
 
-    hideModal() {
-        this.helpItem = null;
-    }
 }
 
 export interface HelpObject {
@@ -83,4 +86,3 @@ export interface HelpItem {
     label: string;
     help: string;
 }
-

@@ -20,6 +20,7 @@ import { ScriptEditorMenusController } from './menus';
 import { ScriptViewport, InsertLocation } from '../script-viewport';
 import { MenuItemConstructorOptions } from 'electron';
 import { toCsv } from '../../util/csv';
+import { HelpController } from '../../controllers/help';
 
 const UI_PIPE_VERBOSE_FEEDBACK = booleanConfig('UI_PIPE_VERBOSE_FEEDBACK', true);
 const UI_PIPE_INSERT_LINES = booleanConfig('UI_PIPE_INSERT_LINES', true);
@@ -108,7 +109,7 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
     }
 
     showPipeHelpModal(type: string) {
-        this.app.ui.help.showPipeHelpModal(type);
+        this.app.get(HelpController).showPipeHelpModal(type);
     }
 
     // Edit Proxies

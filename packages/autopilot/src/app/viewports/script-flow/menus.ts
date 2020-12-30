@@ -27,6 +27,7 @@ import { dom } from '../../util';
 import { MenuItemConstructorOptions } from 'electron';
 import { InputDef, Domain } from '@ubio/protocol';
 import { PlaybackController } from '../../controllers/playback';
+import { HelpController } from '../../controllers/help';
 
 const standardActionCategories = [
     'Page',
@@ -48,6 +49,10 @@ export class ScriptFlowMenusController {
 
     get playback() {
         return this.app.get(PlaybackController);
+    }
+
+    get help() {
+        return this.app.get(HelpController);
     }
 
     showCreateMenu() {
@@ -260,7 +265,7 @@ export class ScriptFlowMenusController {
         yield {
             label: 'Placeholder',
             click: () => this.viewport.recorder.recordAction('placeholder'),
-            help: this.app.ui.help.getActionHelp('placeholder'),
+            help: this.help.getActionHelp('placeholder'),
         };
         yield {
             label: 'Precomposed action',
@@ -275,7 +280,7 @@ export class ScriptFlowMenusController {
                 label: ActionClass.$type,
                 htmlLabel: this.createLabel(ActionClass),
                 click: () => this.viewport.recorder.recordAction(ActionClass.$type),
-                help: this.app.ui.help.getActionHelp(ActionClass.$type),
+                help: this.help.getActionHelp(ActionClass.$type),
                 deprecated: ActionClass.$deprecated,
             };
         });
@@ -296,7 +301,7 @@ export class ScriptFlowMenusController {
                     label: ActionClass.$type,
                     htmlLabel: this.createLabel(ActionClass),
                     click: () => this.viewport.recorder.recordAction(ActionClass.$type),
-                    help: this.app.ui.help.getActionHelp(ActionClass.$type),
+                    help: this.help.getActionHelp(ActionClass.$type),
                     deprecated: ActionClass.$deprecated,
                     searchable: false,
                 };
@@ -311,7 +316,7 @@ export class ScriptFlowMenusController {
                 htmlLabel: this.createLabel(ActionClass),
                 click: () => this.viewport.commands.changeActionType({ type: ActionClass.$type }),
                 enabled: this.viewport.commands.canChangeActionType(),
-                help: this.app.ui.help.getActionHelp(ActionClass.$type),
+                help: this.help.getActionHelp(ActionClass.$type),
                 deprecated: ActionClass.$deprecated,
             };
         });
