@@ -22,7 +22,7 @@ import { ProjectController } from './project';
  * development extensions taking precedence over installed ones.
  */
 @injectable()
-@controller()
+@controller({ alias: 'scriptReport' })
 export class ScriptReportController {
     busy: boolean = false;
     errors: InspectionReport[] = [];

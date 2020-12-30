@@ -21,8 +21,8 @@ import { LayoutDirection, LayoutItem } from '../util/layout-item';
 import { Viewport } from '../viewport';
 import { StorageController } from './storage';
 
-@controller()
 @injectable()
+@controller({ alias: 'layout' })
 export class LayoutController {
     userData: UserData;
 

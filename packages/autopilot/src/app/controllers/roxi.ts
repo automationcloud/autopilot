@@ -26,7 +26,7 @@ export type ProxyConnectionType = 'direct' | 'proxy';
 
 // TODO rename!
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'roxi', backgroundInit: true })
 export class RoxiController {
     userData: UserData;
 

@@ -19,6 +19,7 @@ export interface Controller {
 export interface ControllerConfig {
     priority: number;
     backgroundInit: boolean;
+    alias?: string;
 }
 
 export type ControllerDescriptor = {
@@ -42,6 +43,7 @@ export function controller(options: Partial<ControllerConfig> = {}) {
             class: target,
             priority: options.priority ?? 0,
             backgroundInit: options.backgroundInit ?? false,
+            alias: options.alias ?? undefined,
         });
     };
 }

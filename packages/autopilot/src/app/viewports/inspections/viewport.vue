@@ -39,20 +39,15 @@
 
 <script>
 import InspectionItem from './inspection-item.vue';
-import { ScriptReportController } from '~/controllers';
 
 export default {
 
+    inject: [
+        'scriptReport',
+    ],
+
     components: {
         InspectionItem,
-    },
-
-    computed: {
-
-        scriptReport() {
-            return this.get(ScriptReportController);
-        }
-
     },
 
     mounted() {

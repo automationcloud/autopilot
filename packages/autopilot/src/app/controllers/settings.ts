@@ -41,7 +41,7 @@ const DEFAULT_SETTINGS: Array<[string, string]> = [
 ];
 
 @injectable()
-@controller({ priority: 5000 })
+@controller({ alias: 'settings', priority: 5000 })
 export class SettingsController {
     userData: UserData;
 

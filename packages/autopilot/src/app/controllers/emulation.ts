@@ -30,7 +30,7 @@ export type ThrottlingMode = 'none' | '3g' | '2g';
 const THROTTLING_MODE = stringConfig('THROTTLING_MODE', 'none');
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'emulation', backgroundInit: true })
 export class EmulationController {
 
     constructor(

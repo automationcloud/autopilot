@@ -20,7 +20,7 @@ import { SettingsController } from './settings';
 const IS_FIRST_RUN = booleanConfig('IS_FIRST_RUN', true);
 
 @injectable()
-@controller()
+@controller({ alias: 'firstRun' })
 export class FirstRunController {
 
     constructor(

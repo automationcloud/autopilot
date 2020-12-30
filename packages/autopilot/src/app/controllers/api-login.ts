@@ -40,7 +40,7 @@ const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
 const ajv = new Ajv();
 
 @injectable()
-@controller({ priority: 2000 })
+@controller({ priority: 2000, alias: 'apiLogin' })
 export class ApiLoginController {
     account: AccountInfo | null = null;
 

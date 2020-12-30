@@ -28,7 +28,7 @@ export interface PipeGroup {
 }
 
 @injectable()
-@controller()
+@controller({ alias: 'pipeRecipes' })
 export class PipeRecipesController {
     userData: UserData;
 

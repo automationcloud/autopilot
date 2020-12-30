@@ -25,11 +25,12 @@
 </template>
 
 <script>
+import { acUrls } from '../util';
+
 export default {
 
     inject: [
         'apiLogin',
-        'acUrls'
     ],
 
     props: {
@@ -42,7 +43,7 @@ export default {
                 !this.apiLogin.isAuthenticated();
         },
         registerUrl() {
-            return this.acUrls.get('register');
+            return acUrls.get('register');
         }
     },
 

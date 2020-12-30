@@ -18,9 +18,12 @@
 
 <script>
 import PipeGroup from './pipe-group.vue';
-import { ExpandableController } from '~/controllers';
 
 export default {
+
+    inject: [
+        'expandable',
+    ],
 
     components: {
         PipeGroup,
@@ -39,7 +42,7 @@ export default {
                 recipes: [],
             });
             const groupId = this.viewport.getPipeGroupId(group);
-            this.get(ExpandableController).expand(groupId);
+            this.expandable.expand(groupId);
         },
 
     },

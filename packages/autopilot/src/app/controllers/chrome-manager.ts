@@ -29,8 +29,8 @@ const CHROME_USE_HOMEPAGE = booleanConfig('CHROME_USE_HOMEPAGE', true);
 const CHROME_ADDITIONAL_ARGS = stringConfig('CHROME_ADDITIONAL_ARGS', '');
 const chromeUserDir = path.resolve(os.homedir(), '.autopilot', 'chrome', 'userdir');
 
-@controller()
 @injectable()
+@controller({ alias: 'chromeManager' })
 export class ChromeManagerController {
     chromeProcess: ChildProcess | null = null;
     connected: boolean = false;

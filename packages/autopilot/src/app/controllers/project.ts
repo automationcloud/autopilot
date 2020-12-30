@@ -22,7 +22,7 @@ import { EventBus } from '../event-bus';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
 
 @injectable()
-@controller()
+@controller({ alias: 'project' })
 export class ProjectController {
     userData: UserData;
 

@@ -135,9 +135,13 @@
 
 <script>
 import ActionList from './action-list.vue';
-import { ScriptDiffController, ExpandableController } from '~/controllers';
 
 export default {
+
+    inject: [
+        'expandable',
+        'diff',
+    ],
 
     components: {
         ActionList
@@ -153,16 +157,8 @@ export default {
             return this.app.viewports.scriptFlow;
         },
 
-        diff() {
-            return this.get(ScriptDiffController);
-        },
-
         script() {
             return this.app.project.script;
-        },
-
-        expandable() {
-            return this.get(ExpandableController);
         },
 
         isExpanded() {

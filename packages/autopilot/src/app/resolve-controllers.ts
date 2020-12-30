@@ -12,16 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as clipboard from './clipboard';
-import * as dom from './dom';
-import * as csskit from './csskit';
-import * as keyboard from './keyboard';
-import * as menu from './menu';
-import * as helpers from './helpers';
-import * as vfx from './vfx';
+// This module dynamically resolves the contents of `./controllers` directory.
+// https://webpack.js.org/guides/dependency-management/#requirecontext
+const resolve = (require as any).context('./controllers', true, /\.ts$/);
 
-export { clipboard, csskit, dom, keyboard, menu, helpers, vfx };
-
-export * from './github';
-export * from './dnd';
-export * from './ac-urls';
+for (const key of resolve.keys()) {
+    resolve(key);
+}

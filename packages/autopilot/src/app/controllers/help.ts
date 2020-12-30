@@ -18,8 +18,8 @@ import { inject, injectable } from 'inversify';
 import { ResolverService } from '@automationcloud/engine';
 import { ModalsController } from './modals';
 
-@controller()
 @injectable()
+@controller({ alias: 'help' })
 export class HelpController {
     helpItem: HelpItem | null = null;
 

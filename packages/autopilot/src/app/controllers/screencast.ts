@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS: ScreencastOptions = {
 };
 
 @injectable()
-@controller()
+@controller({ alias: 'screencast' })
 export class ScreencastController {
     userData: UserData;
 

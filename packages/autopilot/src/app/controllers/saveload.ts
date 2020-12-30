@@ -14,8 +14,10 @@
 
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
+import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
 import { ProjectController } from './project';
+import { StorageController } from './storage';
 
 const DIALOG_FILTERS = [
     { name: 'UB Automation', extensions: ['ubscript', 'json', 'json5'] },
@@ -23,32 +25,47 @@ const DIALOG_FILTERS = [
 ];
 
 @injectable()
-@controller()
+@controller({ alias: 'saveload' })
 export class SaveLoadController {
+    userData: UserData;
+    location: 'file' | 'ac' = 'file';
+    filePath: string | null = null;
 
     constructor(
+        @inject(StorageController)
+        protected storage: StorageController,
         @inject(ProjectController)
         protected project: ProjectController,
         @inject(AutosaveController)
         protected autosave: AutosaveController,
     ) {
+        this.userData = storage.createUserData('saveload');
     }
 
     async init() {
-
+        const {
+            filePath = null,
+            location = 'file',
+        } = await this.userData.loadData();
+        this.filePath = filePath;
+        this.location = location;
     }
 
-    /*
+    update() {
+        this.userData.saveData({
+            location: this.location,
+            filePath: this.filePath,
+        });
+    }
+
     async newProject() {
         this.filePath = null;
-        this.loadFromJson({
-            script: {},
-            datasets: [],
-            metadata: DEFAULT_METADATA,
-        });
+        await this.autosave.saveCurrent();
+        this.project.loadAutomationJson({});
         this.update();
     }
 
+    /*
     async openProject() {
         const filePaths = await helpers.showOpenDialog({
             title: 'Open Project',

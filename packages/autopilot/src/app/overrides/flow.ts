@@ -14,7 +14,9 @@
 
 import { FlowService, util } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
-import { ProtocolController, ProjectController, BundlesController } from '../controllers';
+import { BundlesController } from '../controllers/bundles';
+import { ProjectController } from '../controllers/project';
+import { ProtocolController } from '../controllers/protocol';
 
 @injectable()
 export class AutopilotFlowService extends FlowService {
