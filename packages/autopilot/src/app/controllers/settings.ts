@@ -17,7 +17,7 @@ import { PropertyDecl, ConfigValue, Configuration, getConfigDeclarations, util }
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 export type SettingsEnv = 'staging' | 'production';
 
@@ -51,8 +51,8 @@ export class SettingsController {
     constructor(
         @inject(StorageController)
         storage: StorageController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(Configuration)
         protected config: Configuration,
     ) {

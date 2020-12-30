@@ -19,7 +19,7 @@ import { helpers } from '../util';
 import { BrowserService, CheckpointService } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { ProjectController } from './project';
 import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
@@ -33,8 +33,8 @@ export class ToolsController {
 
     // TODO split away!
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ProjectController)
         protected project: ProjectController,
         @inject(ScriptDiffController)

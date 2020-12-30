@@ -16,7 +16,7 @@ import { UserData } from '../userdata';
 import { RegistryService, ExtensionManifest, Extension, ExtensionSpec, ExtensionVersion, Configuration, numberConfig } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
 import { StorageController } from './storage';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { controller } from '../controller';
 import semver from 'semver';
 
@@ -45,8 +45,8 @@ export class ExtensionRegistryController {
     constructor(
         @inject(StorageController)
         protected storage: StorageController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(RegistryService)
         protected registry: RegistryService,
         @inject(Configuration)

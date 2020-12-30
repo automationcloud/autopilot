@@ -17,7 +17,7 @@ import { inject, injectable } from 'inversify';
 import { instanceId } from '../globals';
 import os from 'os';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 // eslint-disable-next-line import/no-commonjs
 const pkg = require('../../../package.json');
@@ -31,8 +31,8 @@ export class AutopilotStatsController {
     constructor(
         @inject(ApiRequest)
         protected apiRequest: ApiRequest,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(BrowserService)
         protected browser: BrowserService,
     ) {}

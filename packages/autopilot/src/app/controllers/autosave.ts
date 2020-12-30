@@ -21,7 +21,7 @@ import moment from 'moment';
 import rimraf from 'rimraf';
 import { promisify } from 'util';
 import { ProjectController } from './project';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 const rimrafAsync = promisify(rimraf);
 
@@ -37,8 +37,8 @@ export class AutosaveController {
         protected storage: StorageController,
         @inject(ProjectController)
         protected project: ProjectController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         this.events.on('writeAutosave', () => this.saveCurrent());
     }

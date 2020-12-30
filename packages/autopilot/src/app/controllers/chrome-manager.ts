@@ -19,7 +19,7 @@ import { Target, stringConfig, BrowserService, ProxyService, booleanConfig } fro
 import { controller } from '../controller';
 import { injectable, inject } from 'inversify';
 import { SettingsController } from './settings';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 const CHROME_PATH = stringConfig('CHROME_PATH', '');
 const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
@@ -46,8 +46,8 @@ export class ChromeManagerController {
         protected proxy: ProxyService,
         @inject(SettingsController)
         protected settings: SettingsController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         this.browser.on('targetAttached', target => this.onTargetAttached(target));
         this.browser.on('targetDetached', target => this.onTargetDetached(target));

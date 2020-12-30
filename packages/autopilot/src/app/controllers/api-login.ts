@@ -27,7 +27,7 @@ import {
     Exception,
 } from '@automationcloud/engine';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { StorageController } from './storage';
 import { SettingsController } from './settings';
 import { controlServerPort, profile } from '../globals';
@@ -45,8 +45,8 @@ export class ApiLoginController {
     account: AccountInfo | null = null;
 
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(StorageController)
         protected storage: StorageController,
         @inject(SettingsController)
