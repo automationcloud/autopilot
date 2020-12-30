@@ -87,8 +87,8 @@ export function getSelectableSibling(
     return els[i];
 }
 
-export function isInputElement(el: HTMLElement) {
-    return ['input', 'textarea'].includes(el.nodeName.toLowerCase());
+export function isInputElement(el: Element | null): boolean {
+    return !!el && ['input', 'textarea'].includes(el.nodeName.toLowerCase());
 }
 
 export function isInsideCodeMirror(el: HTMLElement) {

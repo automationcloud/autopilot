@@ -17,49 +17,22 @@
         <div class="header-action__aside">
             <button class="button button--icon frameless button--inverse"
                 title="Edit action notes"
-                @click="editingNotes = true"
-                @uiactivate="editingNotes = true"
+                @click="editNotes()"
+                @uiactivate="editNotes()"
                 tabindex="0">
                 <i class="fas fa-edit">
                 </i>
             </button>
         </div>
-
-        <modal class="section"
-            content-class="modal__content--wide"
-            :shown="editingNotes"
-            @close="editingNotes = false">
-
-            <div class="section__title">
-                Edit action notes
-            </div>
-
-            <div class="form-block">
-                <textarea
-                    rows="12"
-                    v-model.trim="actionProxy.notes"
-                    v-focus></textarea>
-            </div>
-
-            <div class="group group--gap" slot="buttons">
-                <button class="button button--primary"
-                    @click="editingNotes = false">
-                    Done
-                </button>
-            </div>
-
-        </modal>
     </div>
 </template>
 
 <script>
 export default {
 
-    data() {
-        return {
-            editingNotes: false,
-        };
-    },
+    inject: [
+        'modals',
+    ],
 
     computed: {
 
@@ -79,7 +52,15 @@ export default {
             return this.app.ui.objects.getActionIcon(this.action.type);
         }
 
-    }
+    },
+
+    methods: {
+
+        editNotes() {
+            this.modals.show('edit-action-notes');
+        }
+
+    },
 
 };
 </script>
