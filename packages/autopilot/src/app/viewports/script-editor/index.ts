@@ -31,10 +31,6 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
     commands: ScriptEditorCommandsController;
     menus: ScriptEditorMenusController;
 
-    showCreateRecipeModal: boolean = false;
-    showEditNotes: boolean = false;
-    showEditLabel: boolean = false;
-
     constructor(app: App) {
         super(app);
         this.commands = new ScriptEditorCommandsController(this);

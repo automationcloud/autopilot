@@ -8,7 +8,6 @@
             </div>
             <div class="modals__container">
                 <component :is="'modal-' + modals.currentModalName"
-                    @close="modals.hide()"
                     @hide="modals.hide()"/>
                 <span class="modals__hide"
                     @click="modals.hide()">
@@ -20,8 +19,10 @@
 </template>
 
 <script>
+import ModalCreatePipeRecipe from '../modals/create-pipe-recipe.vue';
 import ModalEditActionNotes from '../modals/edit-action-notes.vue';
 import ModalEditBundle from '../modals/edit-bundle.vue';
+import ModalEditPipeNotes from '../modals/edit-pipe-notes.vue';
 import ModalHelp from '../modals/help.vue';
 
 export default {
@@ -31,8 +32,10 @@ export default {
     ],
 
     components: {
+        ModalCreatePipeRecipe,
         ModalEditActionNotes,
         ModalEditBundle,
+        ModalEditPipeNotes,
         ModalHelp,
     },
 };

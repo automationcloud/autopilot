@@ -20,6 +20,7 @@ import { MenuItemConstructorOptions } from 'electron';
 import { PipeClass, model } from '@automationcloud/engine';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
 import { HelpController } from '../../controllers/help';
+import { ModalsController } from '../../controllers/modals';
 
 const standardPipeCategories = [
     'Assert',
@@ -45,6 +46,10 @@ export class ScriptEditorMenusController {
 
     get app() {
         return this.viewport.app;
+    }
+
+    get modals() {
+        return this.app.get(ModalsController);
     }
 
     get pipeRecipes() {
@@ -91,7 +96,7 @@ export class ScriptEditorMenusController {
         yield {
             label: `Edit label/notes`,
             enabled: items.length === 1,
-            click: () => (this.viewport.showEditNotes = true),
+            click: () => this.modals.show('edit-pipe-notes'),
         };
         yield {
             label: `Change type...`,
@@ -100,7 +105,7 @@ export class ScriptEditorMenusController {
         };
         yield {
             label: `Save pipe${items.length > 1 ? 's' : ''} as recipe...`,
-            click: () => (this.viewport.showCreateRecipeModal = true),
+            click: () => this.modals.show('create-pipe-recipe'),
         };
     }
 
