@@ -17,6 +17,7 @@ import { UserData } from './userdata';
 import { util } from '@automationcloud/engine';
 import { CommandBuffer } from './command-buffer';
 import { MenuItemConstructorOptions } from 'electron';
+import { dom } from './util';
 
 export abstract class Viewport<State> {
     private state: any = {};
@@ -137,6 +138,10 @@ export abstract class SelectionViewport<T, State> extends Viewport<State> {
     focus(force: boolean = false) {
         const viewportEl = this.getViewportDomElement();
         if (!viewportEl) {
+            return;
+        }
+        // Don't move focus if it's an input field
+        if (dom.isInputElement(document.activeElement)) {
             return;
         }
         // If the focus already there, don't move it

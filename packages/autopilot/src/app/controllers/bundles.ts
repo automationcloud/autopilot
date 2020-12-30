@@ -19,7 +19,6 @@ import { clamp, ScriptInput } from '@automationcloud/engine';
 import { ProjectController } from './project';
 import { Bundle } from '../entities/bundle';
 import { ExpandableController } from './expandable';
-import { InputDef } from '@ubio/protocol';
 
 @injectable()
 @controller({ backgroundInit: true })

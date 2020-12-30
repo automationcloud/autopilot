@@ -7,7 +7,9 @@
                 @click="modals.hide()">
             </div>
             <div class="modals__container">
-                <component :is="'modal-' + modals.currentModalName"/>
+                <component :is="'modal-' + modals.currentModalName"
+                    @close="modals.hide()"
+                    @hide="modals.hide()"/>
                 <span class="modals__hide"
                     @click="modals.hide()">
                     <i class="fa fa-times"></i>
@@ -18,16 +20,18 @@
 </template>
 
 <script>
+import ModalEditActionNotes from '../modals/edit-action-notes.vue';
 import ModalEditBundle from '../modals/edit-bundle.vue';
 import ModalHelp from '../modals/help.vue';
 
 export default {
 
     inject: [
-        'modals'
+        'modals',
     ],
 
     components: {
+        ModalEditActionNotes,
         ModalEditBundle,
         ModalHelp,
     },
