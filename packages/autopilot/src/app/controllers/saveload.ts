@@ -16,6 +16,7 @@ import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
+import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
 
@@ -38,6 +39,8 @@ export class SaveLoadController {
         protected project: ProjectController,
         @inject(AutosaveController)
         protected autosave: AutosaveController,
+        @inject(ModalsController)
+        protected modals: ModalsController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -65,6 +68,25 @@ export class SaveLoadController {
         this.update();
     }
 
+    async openProject() {
+        this.modals.show('open-automation');
+    }
+
+    async saveProject() {
+        if (this.location === 'file' && this.filePath) {
+            // TODO save automatically to FS
+        } else if (this.location === 'ac' && this.project.automation.metadata.serviceId) {
+            // TODO save automatially to AC
+        } else {
+            await this.saveProjectAs();
+        }
+    }
+
+    async saveProjectAs() {
+        this.modals.show('save-automation');
+    }
+
+    // TODO remove those (kept for reference atm)
     /*
     async openProject() {
         const filePaths = await helpers.showOpenDialog({

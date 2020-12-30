@@ -151,17 +151,17 @@ export class AppMenuController {
         yield {
             label: 'Open Project...',
             accelerator: 'CmdOrCtrl+O',
-            // click: () => this.project.openProject(),
+            click: () => this.saveload.openProject(),
         };
         yield {
             label: 'Save Project',
             accelerator: 'CmdOrCtrl+S',
-            // click: () => this.project.saveProject(),
+            click: () => this.saveload.saveProject(),
         };
         yield {
             label: 'Save Project As...',
             accelerator: 'CmdOrCtrl+Shift+S',
-            // click: () => this.project.saveProjectAs(),
+            click: () => this.saveload.saveProjectAs(),
         };
         if (this.autosave.files.length > 0) {
             const groups = helpers.groupBy(this.autosave.files, file => file.split('_')[0]);
