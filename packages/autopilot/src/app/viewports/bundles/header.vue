@@ -1,31 +1,5 @@
 <template>
     <div class="header">
-        <modal :shown="editing"
-            @close="editing = false">
-            <div class="section__title">
-                Edit bundle
-            </div>
-            <div class="form-row">
-                <div class="form-row__label">Name</div>
-                <div class="form-row__controls">
-                    <input class="input stretch"
-                        v-model="bundleProxy.name"/>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-row__label">Private</div>
-                <div class="form-row__controls">
-                    <input type="checkbox"
-                        v-model="bundleProxy.excluded"/>
-                </div>
-            </div>
-            <div class="group group--gap" slot="buttons">
-                <button class="button button--primary"
-                    @click="editing = false">
-                    Done
-                </button>
-            </div>
-        </modal>
         <select class="input input--inverse stretch"
             v-model="bundles.bundleIndex">
             <option v-for="(ds, i) of bundles.bundles"
@@ -34,8 +8,9 @@
             </option>
         </select>
         <button class="button button--inverse button--icon frameless"
+            style="margin-left: var(--gap)"
             @click="popupMenu">
-            <i class="fas fa-pencil-alt"></i>
+            <i class="fas fa-ellipsis-v"></i>
         </button>
     </div>
 </template>
@@ -46,20 +21,9 @@ import { menu } from '../../util';
 export default {
 
     inject: [
-        'bundles'
+        'bundles',
+        'modals',
     ],
-
-    data() {
-        return {
-            editing: false,
-        };
-    },
-
-    computed: {
-        bundleProxy() {
-            return this.bundles.createCurrentBundleProxy();
-        },
-    },
 
     methods: {
 
@@ -69,12 +33,12 @@ export default {
                     label: 'Create bundle',
                     click: () => {
                         this.bundles.createBundle();
-                        this.editing = true;
+                        this.modals.show('edit-bundle');
                     },
                 },
                 {
                     label: 'Edit bundle',
-                    click: () => this.editing = true,
+                    click: () => this.modals.show('edit-bundle'),
                 },
                 {
                     label: 'Delete bundle',

@@ -252,6 +252,6 @@ export function isUuid(str: string) {
 export function mdToHtml(text: string) {
     const html = marked(text);
     return sanitize(html, {
-        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
+        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
     });
 }

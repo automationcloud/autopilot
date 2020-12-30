@@ -1,33 +1,51 @@
 <template>
-    <div class="help" v-if="helpItem">
-        <div class="help-header group group--separated">
-            <div class="help-header-label">
-                <i class="help-header-icon far fa-question-circle">
-                </i>
-                {{ helpItem.label }}
-            </div>
-            <div class="help-header-close"
-                @click="$emit('close')">
-                <i class="fas fa-times"></i>
-            </div>
+    <div class="modal" v-if="helpItem">
+        <div class="modal__header">
+            <i class="far fa-question-circle">
+            </i>
+            {{ helpItem.label }}
         </div>
-
-        <article class="help-content"
-            v-html="helpItem.help">
-        </article>
-
+        <div class="modal__body">
+            <article v-html="helpItem.help">
+            </article>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-    props: {
-        helpItem: { type: Object }
-    }
+
+    inject: [
+        'help'
+    ],
+
+    computed: {
+        helpItem() {
+            return this.help.helpItem;
+        },
+    },
+
 };
 </script>
 
 <style scoped>
+.modal {
+    padding: 0;
+    max-width: 450px;
+}
+
+.modal-help >>> .modal__buttons {
+    padding: 0;
+}
+
+.modal-help >>> .help-header  {
+    padding-left: var(--gap);
+}
+
+.modal-help >>> .help-content {
+    padding-left: var(--gap--large);
+}
+
 .help {
     flex: 1 1 auto;
     display: flex;
@@ -58,13 +76,6 @@ DOM content created with v-html are not affected by scoped styles,
 but you can still style them using deep selectors.
 https://vue-loader.vuejs.org/guide/scoped-css.html#deep-selectors
 */
-.help-content >>> h3 {
-    color: var(--color-blue--600);
-    font-weight: 400;
-    font-size: var(--font-size);
-    text-transform: uppercase;
-    margin-top: var(--gap--large);
-}
 
 .help-header-icon {
     margin-right: var(--gap--small);
