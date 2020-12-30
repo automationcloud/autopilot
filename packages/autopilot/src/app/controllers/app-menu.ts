@@ -18,7 +18,7 @@ import { EventBus } from '../event-bus';
 import debounce from 'debounce';
 import { booleanConfig, ProxyService } from '@automationcloud/engine';
 import { SettingsController } from './settings';
-import { ViewportManager } from '../managers/viewport-manager';
+import { ViewportManager } from '../viewports/viewport-manager';
 import { ProjectController } from './project';
 import { dom, helpers } from '../util';
 import { Viewport } from '../viewport';
