@@ -14,7 +14,7 @@
 
 import { ResolverService } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { controller } from '../controller';
 import { ExtensionDevController } from './extension-dev';
 import { ExtensionRegistryController } from './extension-registry';
@@ -28,8 +28,8 @@ import { ExtensionRegistryController } from './extension-registry';
 export class ExtensionLoaderController {
 
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ResolverService)
         protected resolver: ResolverService,
         @inject(ExtensionDevController)

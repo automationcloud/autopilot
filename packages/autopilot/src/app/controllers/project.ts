@@ -18,7 +18,7 @@ import { ScriptDiffController } from './script-diff';
 import { inject, injectable } from 'inversify';
 import { StorageController } from './storage';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
 
 @injectable()
@@ -38,8 +38,8 @@ export class ProjectController {
         protected diff: ScriptDiffController,
         @inject(ResolverService)
         protected resolver: ResolverService,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         this.userData = storage.createUserData('project', 300);
         this.automation = {

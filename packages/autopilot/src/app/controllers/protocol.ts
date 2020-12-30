@@ -16,7 +16,7 @@ import { ProtocolProvider, Domain } from '@ubio/protocol';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { ProjectController } from './project';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { ExecutionError, ApiController } from './api';
 
 @injectable()
@@ -28,8 +28,8 @@ export class ProtocolController {
     constructor(
         @inject(ProjectController)
         protected project: ProjectController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ApiController)
         protected api: ApiController,
     ) {

@@ -14,7 +14,7 @@
 
 import { remote, MenuItemConstructorOptions, ipcRenderer } from 'electron';
 import { injectable, inject } from 'inversify';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import debounce from 'debounce';
 import { booleanConfig, ProxyService } from '@automationcloud/engine';
 import { SettingsController } from './settings';
@@ -41,7 +41,7 @@ export class AppMenuController {
     profiles: Array<{ id: string; name: string }> = [];
 
     constructor(
-        @inject(EventBus) protected events: EventBus,
+        @inject(EventsController) protected events: EventsController,
         @inject(SettingsController) protected settings: SettingsController,
         @inject(ViewportManager) protected viewports: ViewportManager,
         @inject(LayoutController) protected layout: LayoutController,

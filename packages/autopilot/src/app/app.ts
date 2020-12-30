@@ -30,6 +30,7 @@ import {
     HttpCallbackService,
 } from '@automationcloud/engine';
 
+import ms from 'ms';
 import { ViewportManager } from './viewports/viewport-manager';
 import { StorageController } from './controllers/storage';
 import { AutopilotBrowserService } from './overrides/browser';
@@ -37,8 +38,7 @@ import { AutopilotCheckpointService } from './overrides/checkpoint';
 import { AutopilotConfiguration } from './overrides/config';
 import { AutopilotFlowService } from './overrides/flow';
 import { AutopilotReporterService } from './overrides/reporter';
-import { EventBus } from './event-bus';
-import ms from 'ms';
+import { EventsController } from './controllers/events';
 import { ToolsController } from './controllers/tools';
 import { AutopilotApiRequest } from './overrides/api-request';
 import { AutopilotHttpCallbackService } from './overrides/http-callback';
@@ -103,7 +103,7 @@ export class App extends Engine {
     // Vue components should use this.get(MyController) and import { MyController } from ~/controllers
     get browser() { return this.get(BrowserService); }
     get storage() { return this.get(StorageController); }
-    get events() { return this.get(EventBus); }
+    get events() { return this.get(EventsController); }
     get resolver() { return this.get(ResolverService); }
     get proxy() { return this.get(ProxyService); }
     get settings() { return this.get(SettingsController); }

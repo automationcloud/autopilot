@@ -15,7 +15,7 @@
 import { BrowserService, Configuration, Logger } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 @injectable()
 @controller({ alias: 'browser' })
@@ -25,8 +25,8 @@ export class AutopilotBrowserService extends BrowserService {
         config: Configuration,
         @inject(Logger)
         logger: Logger,
-        @inject(EventBus)
-        events: EventBus,
+        @inject(EventsController)
+        events: EventsController,
     ) {
         super(logger, config);
         this.on('attached', () => this.page.domManager.enable());
