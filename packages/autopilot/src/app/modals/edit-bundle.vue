@@ -20,7 +20,7 @@
             </div>
             <div class="modal__buttons">
                 <button class="button button--primary"
-                    @click="editing = false">
+                    @click="$emit('hide')">
                     Done
                 </button>
             </div>
