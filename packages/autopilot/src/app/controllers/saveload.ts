@@ -19,6 +19,8 @@ import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
+import { ApiController } from './api';
+import { AcAutomationController } from './automation';
 
 const DIALOG_FILTERS = [
     { name: 'UB Automation', extensions: ['ubscript', 'json', 'json5'] },
@@ -41,6 +43,8 @@ export class SaveLoadController {
         protected autosave: AutosaveController,
         @inject(ModalsController)
         protected modals: ModalsController,
+        @inject(AcAutomationController)
+        protected automation: AcAutomationController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
