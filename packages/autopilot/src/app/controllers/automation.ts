@@ -33,7 +33,7 @@ export class AcAutomationController {
         return await this.api.getServices();
     }
 
-    async saveAutomation(): Promise<Automation> {
+    async saveAutomation(): Promise<any> {
 
     }
 }

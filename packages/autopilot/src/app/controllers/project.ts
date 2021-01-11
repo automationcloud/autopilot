@@ -103,4 +103,10 @@ export class ProjectController {
         return script;
     }
 
+    updateMetadata(json: any) {
+        this.automation.metadata = {
+            ...DEFAULT_AUTOMATION_METADATA,
+            ...json,
+        };
+    }
 }

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 import { inject, injectable } from 'inversify';
+import path from 'path';
+import { promises as fs } from 'fs';
 import { controller } from '../controller';
 import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
@@ -20,10 +22,11 @@ import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
 import { ApiController } from './api';
-import { AcAutomationController } from './automation';
+import { AutomationMetadata } from '../entities/automation';
+import { ScriptDiffController } from './script-diff';
 
 const DIALOG_FILTERS = [
-    { name: 'UB Automation', extensions: ['ubscript', 'json', 'json5'] },
+    { name: 'UB Automation', extensions: ['ubscript', 'automation', 'json', 'json5'] },
     { name: 'All Files', extensions: ['*'] },
 ];
 
@@ -43,8 +46,10 @@ export class SaveLoadController {
         protected autosave: AutosaveController,
         @inject(ModalsController)
         protected modals: ModalsController,
-        @inject(AcAutomationController)
-        protected automation: AcAutomationController,
+        @inject(ApiController)
+        protected api: ApiController,
+        @inject(ScriptDiffController)
+        protected diff: ScriptDiffController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -78,9 +83,7 @@ export class SaveLoadController {
 
     async saveProject() {
         if (this.location === 'file' && this.filePath) {
-            // TODO save automatically to FS
-        } else if (this.location === 'ac' && this.project.automation.metadata.serviceId) {
-            // TODO save automatially to AC
+            await this.saveProjectToFs(this.filePath);
         } else {
             await this.saveProjectAs();
         }
@@ -88,6 +91,64 @@ export class SaveLoadController {
 
     async saveProjectAs() {
         this.modals.show('save-automation');
+    }
+
+    async saveProjectToAc(serviceId: string, version: string) {
+        // fetch service with serviceId.
+        const service = await this.api.getService(serviceId);
+        // update metadata -> serviceId, domainId, draft..
+        const automation = { ...this.project.automation };
+        const metadata: AutomationMetadata = {
+            serviceId: service.id,
+            serviceName: service.name,
+            domainId: service.domain,
+            draft: service.draft,
+            version,
+            bundleIndex: automation.metadata.bundleIndex,
+        };
+
+        await this.api.createScript({
+            serviceId: service.id,
+            fullVersion: version,
+            note: '',
+            workerTag: 'stable', // to be removed, property of service.
+            content: { ...automation, metadata },
+        });
+
+        // update this.location
+        this.location = 'ac';
+        this.project.updateMetadata(metadata);
+        this.diff.setNewBase(this.project.automation.script);
+        this.update();
+    }
+
+    // TODO: move it to somewhere else more relevant
+    async createService(name: string) {
+        const { domainId: domain, draft } = this.project.automation.metadata;
+        const spec = {
+            name,
+            domain,
+            draft,
+            note: ''
+        };
+        return await this.api.createService(spec);
+    }
+
+    async saveProjectToFs(filePath: string) {
+        if (!filePath) {
+            return;
+        }
+        const ext = path.extname(filePath).toLowerCase();
+        if (ext !== '.automation') {
+            filePath = filePath.replace(ext, '.automation');
+        }
+
+        const serialized = JSON.stringify(this.project.automation);
+        await fs.writeFile(filePath, serialized, 'utf-8');
+        this.location = 'file';
+        this.filePath = filePath;
+        this.diff.setNewBase(this.project.automation.script);
+        this.update();
     }
 
     // TODO remove those (kept for reference atm)

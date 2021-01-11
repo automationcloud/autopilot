@@ -55,6 +55,17 @@ export class ApiController {
         return await this.api.get(`/private/services/${serviceId}`);
     }
 
+    async createService(spec: {
+        name: string;
+        domain: string;
+        draft: boolean;
+        note: string;
+    }): Promise<ApiService> {
+        return await this.api.post('/private/services', {
+            body: spec,
+        });
+    }
+
     async updateServiceAttributes(serviceId: string, attributes: object): Promise<ApiService> {
         return await this.api.put(`/private/services/${serviceId}`, {
             body: { attributes },
