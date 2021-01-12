@@ -15,7 +15,7 @@
 import { runtime } from'../../runtime';
 import assert from 'assert';
 
-describe('Pipes: value/get-input', () => {
+describe('Value.getInput', () => {
     it('returns input value', async () => {
         runtime.flow.inputs.push({
             key: 'foo',

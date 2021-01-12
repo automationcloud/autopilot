@@ -102,8 +102,7 @@ export abstract class InputsService {
     async peekInputData(key: string): Promise<any> {
         const execution = this.state.getExecution();
         this.logger.info(`Peeking input ${key}`, { key });
-        const jobInput = await this.api.getInputData(execution.id, key);
-
-        return jobInput?.data || null;
+        const input = await this.api.getInputData(execution.id, key);
+        return input ? input.data : undefined;
     }
 }

@@ -38,7 +38,7 @@
 
             <template v-if="criteria.length">
                 <span class="script-search__results-count">
-                    {{ currentResultIdx + 1 }}/{{ results.length }}
+                    {{ Math.min(currentResultIdx + 1, results.length) }}/{{ results.length }}
                 </span>
                 <button class="button button--icon button--flat"
                     title="Show previous result"

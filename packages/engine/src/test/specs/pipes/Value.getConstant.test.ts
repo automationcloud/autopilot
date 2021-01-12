@@ -15,7 +15,7 @@
 import { runtime } from'../../runtime';
 import assert from 'assert';
 
-describe('Pipes: value/get-constant', () => {
+describe('Value.getConstant', () => {
     it('returns a string', async () => {
         const results = await runtime.runPipes([
             {
