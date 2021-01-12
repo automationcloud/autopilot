@@ -116,6 +116,7 @@
   - [Value.getInput](#Value.getInput)
   - [Value.getJson](#Value.getJson)
   - [Value.getOutcome](#Value.getOutcome)
+  - [Value.hasInput](#Value.hasInput)
   - [Value.isEmpty](#Value.isEmpty)
   - [Value.peekInput](#Value.peekInput)
 
@@ -1440,6 +1441,12 @@ Returns the specified JSON object.
 
 
 Returns an outcome of another action.
+
+
+<h2 id="Value.hasInput">Value.hasInput</h2>
+
+
+Returns `true` if an Input with specified name exists, without requesting it.
 
 
 <h2 id="Value.isEmpty">Value.isEmpty</h2>
