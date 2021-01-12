@@ -23,7 +23,7 @@ import jsonPointer from 'jsonpointer';
 import moment from 'moment';
 import fetch from 'node-fetch';
 import { Pipeline } from './pipeline';
-import { ApiRequest, ProxyService, ReporterService } from './services';
+import { ApiRequest, FetchService, ProxyService, ReporterService } from './services';
 
 /**
  * Runtime context object for carrying state within a single action execution.
@@ -68,6 +68,7 @@ export class RuntimeCtx {
     get $logger() { return this.action.$logger; }
     get $proxy() { return this.$engine.get(ProxyService); }
     get $api() { return this.$engine.get(ApiRequest); }
+    get $fetch() { return this.$engine.get(FetchService); }
 
     async createDocument(value: any = {}): Promise<Element> {
         const document = await this.page.document();
