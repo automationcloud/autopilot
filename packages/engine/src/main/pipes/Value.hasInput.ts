@@ -17,14 +17,10 @@ import { Pipe } from '../pipe';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
 
-export class ValuePeekInput extends Pipe {
-    static $type = 'Value.peekInput';
+export class ValueHasInput extends Pipe {
+    static $type = 'Value.hasInput';
     static $help = `
-Gets the input without requesting it, i.e. doesn't set job.state = 'awaitingInput' if the input not exists yet.
-
-### Use For
-
-- checking if the Job Input is supplied by the time of playback
+Returns \`true\` if an Input with specified name exists, without requesting it.
 `;
 
     @params.String({
@@ -34,9 +30,10 @@ Gets the input without requesting it, i.e. doesn't set job.state = 'awaitingInpu
     inputKey: string = '';
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {
-        const data = await this.$script.peekInput(this.inputKey);
+        const inputKey = this.inputKey;
+        const data = await this.$script.peekInput(inputKey);
         return this.map(inputSet, el => {
-            return el.clone(data ?? null);
+            return el.clone(data !== undefined);
         });
     }
 }

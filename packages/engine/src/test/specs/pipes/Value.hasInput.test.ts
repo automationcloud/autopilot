@@ -15,36 +15,54 @@
 import { runtime } from'../../runtime';
 import assert from 'assert';
 
-describe('Value.peekInput', () => {
+describe('Value.hasInput', () => {
     context('input exists', () => {
-        it('returns input value', async () => {
+        it('returns true', async () => {
             runtime.flow.inputs.push({
                 key: 'foo',
                 data: 'hello',
             });
             const results = await runtime.runPipes([
                 {
-                    type: 'Value.peekInput',
+                    type: 'Value.hasInput',
                     inputKey: 'foo',
                 },
             ]);
             assert.equal(results.length, 1);
             assert.equal(results[0].description, '#document');
-            assert.equal(results[0].value, 'hello');
+            assert.equal(results[0].value, true);
+        });
+    });
+
+    context('input exists, but data is null', () => {
+        it('still returns true', async () => {
+            runtime.flow.inputs.push({
+                key: 'foo',
+                data: null,
+            });
+            const results = await runtime.runPipes([
+                {
+                    type: 'Value.hasInput',
+                    inputKey: 'foo',
+                },
+            ]);
+            assert.equal(results.length, 1);
+            assert.equal(results[0].description, '#document');
+            assert.equal(results[0].value, true);
         });
     });
 
     context('input does not exist', () => {
-        it('returns null', async () => {
+        it('returns false', async () => {
             const results = await runtime.runPipes([
                 {
-                    type: 'Value.peekInput',
+                    type: 'Value.hasInput',
                     inputKey: 'foo',
                 },
             ]);
             assert.equal(results.length, 1);
             assert.equal(results[0].description, '#document');
-            assert.equal(results[0].value, null);
+            assert.equal(results[0].value, false);
         });
     });
 });

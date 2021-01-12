@@ -30,7 +30,7 @@ export class FlowServiceMock extends FlowService {
 
     async peekInputData(key: string) {
         const input = this.inputs.find(_ => _.key === key);
-        return input?.data || null;
+        return input ? input.data : undefined;
     }
 
     async sendOutputData(key: string, data: any) {

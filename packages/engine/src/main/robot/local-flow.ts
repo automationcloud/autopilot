@@ -82,7 +82,7 @@ export class LocalFlowService extends FlowService {
 
     async peekInputData(key: string) {
         const input = this.script.$inputs.find(_ => _.key === key);
-        return input?.data;
+        return input ? input.data : undefined;
     }
 
     async sendOutputData(_key: string, _data: any) {

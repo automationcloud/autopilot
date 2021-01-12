@@ -22,9 +22,9 @@ export abstract class FlowService {
         return true;
     }
 
-    abstract async requestInputData(key: string): Promise<any>;
-    abstract async peekInputData(key: string): Promise<any>;
-    abstract async sendOutputData(key: string, data: any): Promise<void>;
+    abstract requestInputData(key: string): Promise<any>;
+    abstract peekInputData(key: string): Promise<any>;
+    abstract sendOutputData(key: string, data: any): Promise<void>;
 
     /**
      * Invoked during script playback (before action, before context match attempt,

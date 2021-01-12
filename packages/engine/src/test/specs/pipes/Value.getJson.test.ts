@@ -15,7 +15,7 @@
 import { runtime } from'../../runtime';
 import assert from 'assert';
 
-describe('Pipes: value/get-json', () => {
+describe('Value.getJson', () => {
     it('returns a parsed json', async () => {
         const results = await runtime.runPipes([
             {
