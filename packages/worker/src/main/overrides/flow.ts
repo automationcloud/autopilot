@@ -63,7 +63,7 @@ export class WorkerFlowService extends FlowService {
 
     async sendOutputData(key: string, data: any): Promise<void> {
         const execution = this.state.getExecution();
-        this.logger.info(`Sending output ${key}`, { key, data });
+        this.logger.info(`Send output ${key}`);
         await this.reporter.sendEvent('info', 'output.emit', {
             details: { key, data },
         });

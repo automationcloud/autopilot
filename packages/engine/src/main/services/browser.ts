@@ -130,7 +130,6 @@ export class BrowserService extends Browser {
     }
 
     protected onRequestWillBeSent(_page: Page, _ev: CdpRequestWillBeSent) {
-        // this.metrics.chromeRequestsTotal.incr();
     }
 
     protected onLoadingFailed(page: Page, ev: CdpLoadingFailed) {
@@ -143,7 +142,6 @@ export class BrowserService extends Browser {
         if (looksLikeAborted && ['Image', 'Font'].includes(rs.type)) {
             return;
         }
-        // this.metrics.chromeRequestsFailed.incr();
         this.logger.warn('Request failed to load', {
             details: rs,
         });
@@ -161,11 +159,6 @@ export class BrowserService extends Browser {
         }
     }
 
-    protected onTargetAttached(_target: Target) {
-        // this.metrics.chromeAttachedTargets.set([...this.attachedTargets()].length);
-    }
-
-    protected onTargetDetached(_target: Target) {
-        // this.metrics.chromeAttachedTargets.set([...this.attachedTargets()].length);
-    }
+    protected onTargetAttached(_target: Target) {}
+    protected onTargetDetached(_target: Target) {}
 }

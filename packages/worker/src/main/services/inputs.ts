@@ -55,9 +55,8 @@ export abstract class InputsService {
             this.signals.addListener('input', onInput);
             this.signals.addListener('terminated', onTerminated);
 
-            this.logger.info(`Requesting input ${key}`, { key });
+            this.logger.debug(`Request input ${key}`, { key });
             this.api.requestInputData(execution.id, key).then(jobInput => {
-                this.logger.debug(`Request input: API responded`, { jobInput });
                 if (jobInput) {
                     const { key, data } = jobInput;
                     onInput(key, data);
@@ -101,7 +100,7 @@ export abstract class InputsService {
 
     async peekInputData(key: string): Promise<any> {
         const execution = this.state.getExecution();
-        this.logger.info(`Peeking input ${key}`, { key });
+        this.logger.debug(`Peek input ${key}`, { key });
         const input = await this.api.getInputData(execution.id, key);
         return input ? input.data : undefined;
     }

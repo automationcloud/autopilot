@@ -94,8 +94,7 @@ export class WorkerReporterService extends ReporterService {
             const { width, height, imageData } = options.fullPage
                 ? await page.screenshotManager.captureFullPage(options)
                 : await page.screenshotManager.captureViewport(options);
-
-            const { id } = await this.api.createScreenshot(execution.id, this.state.getInfo(), {
+            await this.api.createScreenshot(execution.id, this.state.getInfo(), {
                 title: options.label,
                 imageData,
                 mimeType: 'image/png',
@@ -105,9 +104,6 @@ export class WorkerReporterService extends ReporterService {
                 isPublic: options.isPublic,
                 width,
                 height,
-            });
-            this.logger.info(`Sent screenshot`, {
-                screenshotId: id,
             });
         } catch (error) {
             this.logger.warn('Screenshot error', { error });
@@ -144,14 +140,13 @@ export class WorkerReporterService extends ReporterService {
             await page.target.refreshInfo();
             const { url, title } = page.target;
             const html = await page.captureHtmlSnapshot();
-            const { id } = await this.api.createHtmlSnapshot(execution.id, this.state.getInfo(), {
+            await this.api.createHtmlSnapshot(execution.id, this.state.getInfo(), {
                 title,
                 url,
                 html,
                 action,
                 context,
             });
-            this.logger.info('Sent HTML snapshot', { htmlSnapshotId: id });
         } catch (error) {
             this.logger.warn('HTML snapshot failed', { error });
         }
