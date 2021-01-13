@@ -24,6 +24,7 @@ import './components';
 import './directives';
 
 process.env.ENGINE_ENV = 'autopilot';
+process.env.LOG_LEVEL = 'debug';
 
 const app = new App();
 (global as any).app = app;

@@ -37,7 +37,13 @@ export class ProxyService extends RoutingProxy {
         logger: Logger,
     ) {
         super({
-            logger
+            logger,
+            // TODO these are enabled for debugging purposes, mute them afterwards
+            muteErrorCodes: [],
+            warnErrorCodes: [
+                'EPIPE', 'ERR_STREAM_PREMATURE_CLOSE', 'ERR_STREAM_DESTROYED',
+                'ECONNRESET', 'EINVAL', 'ENOTCONN', 'ERR_STREAM_WRITE_AFTER_END', 'EPROTO'
+            ],
         });
     }
 

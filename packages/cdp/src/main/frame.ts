@@ -65,7 +65,7 @@ export class Frame extends EventEmitter {
 
     get logger() {
         return this.page.logger.child({
-            frame: this.collectInfo(),
+            frame: this.collectLogInfo(),
         });
     }
 
@@ -119,7 +119,7 @@ export class Frame extends EventEmitter {
                         name: 'NavigationTimeout',
                         message: `${noun} did not resolve to one of following states: ${events.join(', ')}`,
                         retry: false,
-                        details: this.collectInfo(),
+                        details: this.collectLogInfo(),
                     });
                     err.stack = stack;
                     reject(err);
@@ -135,7 +135,7 @@ export class Frame extends EventEmitter {
                         name: 'NavigationFailed',
                         message: `${noun} navigation failed with HTTP status ${status}`,
                         retry: false,
-                        details: this.collectInfo(),
+                        details: this.collectLogInfo(),
                     });
                     return reject(err);
                 }
@@ -144,7 +144,7 @@ export class Frame extends EventEmitter {
                         name: 'NavigationFailed',
                         message: `${noun} failed to load: ${this.errorText || '<reason unknown>'}`,
                         retry: false,
-                        details: this.collectInfo(),
+                        details: this.collectLogInfo(),
                     });
                     return reject(err);
                 }
@@ -223,7 +223,6 @@ export class Frame extends EventEmitter {
     }
 
     onNavigated(cdpFrame: CdpFrame) {
-        // this.logger.debug('Frame.onNavigated');
         this.loaded = false;
         this.ready = false;
         this.failed = !!cdpFrame.unreachableUrl;
@@ -231,6 +230,9 @@ export class Frame extends EventEmitter {
         this.securityOrigin = cdpFrame.securityOrigin;
         this.mimeType = cdpFrame.mimeType;
         this.emit('navigate');
+        if (['iframe', 'page'].includes(this.page.target.type)) {
+            this.logger.debug(`Navigate (${this.page.target.type}) ${this.url}`);
+        }
     }
 
     onLifecycleEvent(lifecycleEvent: string) {
@@ -253,7 +255,6 @@ export class Frame extends EventEmitter {
     }
 
     onRequestWillBeSent(requestId: string, request: CdpRequest) {
-        // this.logger.debug('Frame.onRequestWillBeSent', { request });
         this.requestId = requestId;
         this.errorText = null;
         this.response = null;
@@ -264,7 +265,6 @@ export class Frame extends EventEmitter {
         if (this.requestId !== requestId) {
             return;
         }
-        // this.logger.debug('Frame.onResponseReceived', { response });
         this.response = response;
     }
 
@@ -272,7 +272,6 @@ export class Frame extends EventEmitter {
         if (this.requestId !== requestId) {
             return;
         }
-        // this.logger.debug('Frame.onLoadingFailed', { errorText });
         this.errorText = errorText;
     }
 
@@ -304,7 +303,7 @@ export class Frame extends EventEmitter {
         this.clearDefaultExecutionContext();
     }
 
-    collectInfo() {
+    collectLogInfo() {
         return {
             frameId: this.frameId,
             loaded: this.loaded,
