@@ -2,7 +2,7 @@
     "name": "@automationcloud/autopilot-tools",
     "description": "Internal tools",
     "private": true,
-    "version": "33.10.2",
+    "version": "33.10.3",
     "author": "UBIO Limited <hello@ub.io>",
     "license": "Apache-2.0",
     "repository": {
@@ -19,7 +19,7 @@
         "out/bin/**/*"
     ],
     "dependencies": {
-        "@automationcloud/engine": "^33.10.2",
+        "@automationcloud/engine": "^33.10.3",
         "@types/diff": "^4.0.2",
         "@types/inquirer": "^6.5.0",
         "@types/marked": "^0.7.3",
