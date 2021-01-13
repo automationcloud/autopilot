@@ -77,18 +77,14 @@ export class ProxyService extends RoutingProxy {
         }
     }
 
-    /**
-     * Tracks visited hosts for HTTPS requests.
-     */
     async onConnect(req: http.IncomingMessage, clientSocket: net.Socket) {
         this.visitedHosts.add(req.url!);
+        this.logger.debug(`Proxy: ${req.method} ${req.url}`);
         return await super.onConnect(req, clientSocket);
     }
 
-    /**
-     * Tracks visited hosts for HTTP requests.
-     */
     async onRequest(req: http.IncomingMessage, res: http.ServerResponse) {
+        this.logger.debug(`Proxy: ${req.method} ${req.url}`);
         this.visitedHosts.add(req.headers.host!);
         return await super.onRequest(req, res);
     }
