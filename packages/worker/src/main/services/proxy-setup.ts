@@ -58,7 +58,7 @@ export class ProxySetupService {
         this.proxy.defaultUpstream = upstream;
         this.state.proxyUpstream = upstream;
         if (this.config.get(ROXI_SECRET)) {
-            this.setupLegacyExecutionRoutes(execution, connection);
+            await this.setupLegacyExecutionRoutes(execution, connection);
         }
     }
 
