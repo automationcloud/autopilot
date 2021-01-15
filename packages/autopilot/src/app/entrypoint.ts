@@ -30,9 +30,12 @@ const app = new App();
 (global as any).app = app;
 
 // Modify Node.js require path to allow loading extensions
-const localNodeModules = path.join(getAppPath(), 'node_modules');
+const localNodeModules = [
+    path.join(getAppPath(), 'node_modules'),
+    path.join(getAppPath(), 'node_modules', '@automationcloud', 'engine', 'node_modules'),
+];
 // eslint-disable-next-line import/no-commonjs
-(require('module') as any).globalPaths.push(localNodeModules);
+(require('module') as any).globalPaths.push(...localNodeModules);
 
 Vue.mixin({
     beforeCreate() {
