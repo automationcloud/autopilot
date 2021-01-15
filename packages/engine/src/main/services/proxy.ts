@@ -16,8 +16,6 @@ import { ProxyUpstream, RoutingProxy } from '@automationcloud/uniproxy';
 import { injectable, inject } from 'inversify';
 import { Configuration, numberConfig, Logger, stringConfig } from '@automationcloud/cdp';
 import { SessionHandler } from '../session';
-import http from 'http';
-import net from 'net';
 import { readFileSync } from 'fs';
 import path from 'path';
 
@@ -58,6 +56,20 @@ export class ProxyService extends RoutingProxy {
         return this.config.get(PROXY_PORT);
     }
 
+    /**
+     * Kept for backwards compatibility with scripts.
+     *
+     * @deprecated Use `insertRoute` instead.
+     * @internal
+     */
+    addRoute(hostRegexp: RegExp, upstream: ProxyUpstream | null, label: string = 'default') {
+        this.insertRoute({
+            hostPattern: hostRegexp.source,
+            upstream,
+            label,
+        }, 0);
+    }
+
     async init() {
         if (this.isRunning()) {
             return;
@@ -75,49 +87,4 @@ export class ProxyService extends RoutingProxy {
         }
     }
 
-    // Debugging
-
-    async onConnect(req: http.IncomingMessage, clientSocket: net.Socket) {
-        this.logger.debug(`Proxy: ${req.method} ${req.url}`);
-        return await super.onConnect(req, clientSocket);
-    }
-
-    async onRequest(req: http.IncomingMessage, res: http.ServerResponse) {
-        this.logger.debug(`Proxy: ${req.method} ${req.url}`);
-        return await super.onRequest(req, res);
-    }
-
-    protected createConnectRequest(inboundReq: http.IncomingMessage, upstream: ProxyUpstream): http.ClientRequest {
-        const outboundReq = super.createConnectRequest(inboundReq, upstream);
-        this.logger.debug(`Proxy: outbound ${inboundReq.method} request`, {
-            url: inboundReq.url,
-            headers: outboundReq.getHeaders(),
-            upstream: { ...upstream, password: '***' },
-        });
-        outboundReq.on('upgrade', (res, socket, upgradeHead) => {
-            this.logger.debug(`Proxy: outbound ${inboundReq.method} upgrade`, {
-                statusCode: res.statusCode,
-                statusMessage: res.statusMessage,
-                head: upgradeHead.toString(),
-            });
-        });
-        return outboundReq;
-    }
-
-    protected createProxyHttpRequest(inboundReq: http.IncomingMessage, upstream: ProxyUpstream): http.ClientRequest {
-        const outboundReq = super.createProxyHttpRequest(inboundReq, upstream);
-        this.logger.debug(`Proxy: outbound ${inboundReq.method} request`, {
-            url: inboundReq.url,
-            headers: outboundReq.getHeaders(),
-            upstream: { ...upstream, password: '***' },
-        });
-        outboundReq.on('upgrade', (res, socket, upgradeHead) => {
-            this.logger.debug(`Proxy: outbound ${inboundReq.method} upgrade`, {
-                statusCode: res.statusCode,
-                statusMessage: res.statusMessage,
-                head: upgradeHead.toString(),
-            });
-        });
-        return outboundReq;
-    }
 }
