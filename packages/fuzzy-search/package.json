@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/fuzzy-search",
-    "version": "33.10.7",
+    "version": "33.10.8",
     "description": "Fuzzy search",
     "main": "out/main/index.js",
     "types": "out/main/index.d.ts",
