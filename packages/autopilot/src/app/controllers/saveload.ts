@@ -25,11 +25,6 @@ import { ApiController } from './api';
 import { AutomationMetadata } from '../entities/automation';
 import { ScriptDiffController } from './script-diff';
 
-const DIALOG_FILTERS = [
-    { name: 'UB Automation', extensions: ['ubscript', 'automation', 'json', 'json5'] },
-    { name: 'All Files', extensions: ['*'] },
-];
-
 @injectable()
 @controller({ alias: 'saveload' })
 export class SaveLoadController {
@@ -139,8 +134,8 @@ export class SaveLoadController {
             return;
         }
         const ext = path.extname(filePath).toLowerCase();
-        if (ext !== '.automation') {
-            filePath = filePath.replace(ext, '.automation');
+        if (ext !== '.ubscript') {
+            filePath = filePath.replace(ext, '.ubscript');
         }
 
         const serialized = JSON.stringify(this.project.automation);
