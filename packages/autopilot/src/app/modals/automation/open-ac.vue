@@ -60,8 +60,6 @@
 
 <script>
 export default {
-    name: 'open-ac',
-
     inject: [
         'saveload',
         'project',
@@ -75,24 +73,22 @@ export default {
             serviceId,
             openActive: true,
             scriptId: null,
-            services: [],
-            scripts: [],
         };
     },
 
     created() {
-        this.fetchServices();
+        this.acAutomation.getServices();
     },
 
     watch: {
         serviceId() {
-            if (!this.openActive) {
-                this.fetchScripts();
+            if (!this.openActive && this.serviceId) {
+                this.acAutomation.getScripts(this.serviceId);
             }
         },
         openActive(val) {
-            if (!val) {
-                this.fetchScripts();
+            if (!val && this.serviceId) {
+                this.acAutomation.getScripts(this.serviceId);
             }
         }
     },
@@ -109,6 +105,12 @@ export default {
         },
         canOpen() {
             return this.serviceId &&  this.scriptId || this.openActive;
+        },
+        services() {
+            return this.acAutomation.services;
+        },
+        scripts() {
+            return this.acAutomation.scripts;
         }
     },
 
@@ -130,16 +132,6 @@ export default {
             }
         },
 
-        async fetchServices() {
-            this.services = await this.acAutomation.getServices();
-        },
-
-        async fetchScripts() {
-            if (!this.serviceId) {
-                return;
-            }
-            this.scripts = await this.acAutomation.getScripts(this.serviceId);
-        }
     },
 };
 </script>

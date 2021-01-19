@@ -14,13 +14,14 @@
 
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
-import { ApiController } from './api';
+import { ApiController, ApiScript, ApiService } from './api';
 import { EventsController } from './events';
 
 @injectable()
 @controller({ alias: 'acAutomation' })
 export class AcAutomationController {
-
+    services: ApiService[] = [];
+    scripts: ApiScript[] = [];
     constructor(
         @inject(ApiController)
         protected api: ApiController,
@@ -37,7 +38,8 @@ export class AcAutomationController {
     }
 
     async getServices() {
-        return await this.api.getServices();
+        this.services = await this.api.getServices();
+        return this.services;
     }
 
     async getService(id: string) {
@@ -45,7 +47,8 @@ export class AcAutomationController {
     }
 
     async getScripts(serviceId: string): Promise<any> {
-        return await this.api.getScripts({ serviceId, limit: 20, offset: 0 });
+        this.scripts = await this.api.getScripts({ serviceId, limit: 20, offset: 0 });
+        return this.scripts;
     }
 
     async getScript(id: string) {
