@@ -40,7 +40,7 @@ export default {
             if (filePath == null) {
                 return;
             }
-            await this.saveload.saveProjectToFs(filePath);
+            await this.saveload.saveProjectToFile(filePath);
             this.$emit('hide');
         }
     },

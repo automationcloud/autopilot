@@ -4,34 +4,9 @@
             Save as
         </div>
         <div class="modal__body">
-            Location
-            <div class="form-row">
-                <div class="form-row__controls">
-                    <input class="input"
-                        type="radio"
-                        id="location-ac"
-                        v-model="location"
-                        value="ac"/>
-
-                    <label class="form-row__label"
-                        for="location-ac">
-                        Automation Cloud
-                    </label>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-row__controls">
-                    <input class="input"
-                        type="radio"
-                        id="location-file"
-                        v-model="location"
-                        value="file"/>
-                    <label class="form-row__label"
-                        for="location-file">
-                        Your computer
-                    </label>
-                </div>
-            </div>
+            <location
+                :lastLocation="location"
+                @update="setLocation" />
 
             <component :is="'save-' + location"
                 :key="location"
@@ -41,8 +16,9 @@
 </template>
 
 <script>
-import SaveAc from './save-automation/save-ac.vue';
-import SaveFile from './save-automation/save-file.vue';
+import Location from './automation/location.vue';
+import SaveAc from './automation/save-ac.vue';
+import SaveFile from './automation/save-file.vue';
 
 export default {
     inject: [
@@ -50,6 +26,7 @@ export default {
     ],
 
     components: {
+        Location,
         SaveAc,
         SaveFile,
     },
@@ -60,5 +37,12 @@ export default {
         };
     },
 
+    methods: {
+        setLocation(val) {
+            if (val === 'file' || val === 'ac') {
+                this.location = val;
+            }
+        }
+    },
 };
 </script>

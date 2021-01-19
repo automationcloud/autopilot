@@ -78,7 +78,7 @@ export class SaveLoadController {
 
     async saveProject() {
         if (this.location === 'file' && this.filePath) {
-            await this.saveProjectToFs(this.filePath);
+            await this.saveProjectToFile(this.filePath);
         } else {
             await this.saveProjectAs();
         }
@@ -129,7 +129,7 @@ export class SaveLoadController {
         return await this.api.createService(spec);
     }
 
-    async saveProjectToFs(filePath: string) {
+    async saveProjectToFile(filePath: string) {
         if (!filePath) {
             return;
         }
@@ -144,6 +144,17 @@ export class SaveLoadController {
         this.filePath = filePath;
         this.diff.setNewBase(this.project.automation.script);
         this.update();
+    }
+
+    async openProjectFromFile(filePath: string) {
+        try {
+            const text = await fs.readFile(filePath, 'utf-8');
+            const json = JSON.parse(text);
+            await this.project.loadAutomationJson(json);
+        } catch (e) {
+            console.error('Load failed', e);
+            alert('Load failed. Please check console for details.');
+        }
     }
 
     // TODO remove those (kept for reference atm)
