@@ -7,7 +7,7 @@
             </button>
             <button class="button button--primary"
                 @click="save()">
-                Save
+                Save file
             </button>
         </div>
     </div>

@@ -35,7 +35,11 @@ export default {
             if (filepath == null) {
                 return;
             }
-            await this.saveload.openProjectFromFile(filepath);
+            try {
+                await this.saveload.openProjectFromFile(filepath);
+            } catch (error) {
+                console.error('failed to load project', error);
+            }
             this.$emit('hide');
         }
     },

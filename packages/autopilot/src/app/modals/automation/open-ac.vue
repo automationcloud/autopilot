@@ -114,11 +114,14 @@ export default {
 
     methods: {
         async open() {
+            const scriptId = this.openActive ?
+                await this.acAutomation.getActiveScriptId(this.serviceId) :
+                this.scriptId;
+            if (!scriptId) {
+                return;
+            }
             try {
-                const automation = await this.acAutomation.getAutomation(this.serviceId, this.scriptId);
-                await this.project.loadAutomationJson(automation);
-                // set diff base
-                // saveload filepath empty?
+                await this.saveload.openProjectFromAc(scriptId);
                 this.$emit('hide');
             } catch (error) {
                 console.error(error);

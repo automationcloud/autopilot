@@ -91,7 +91,8 @@ export class SaveLoadController {
     async saveProjectToAc(serviceId: string, version: string) {
         // fetch service with serviceId.
         const service = await this.api.getService(serviceId);
-        // update metadata -> serviceId, domainId, draft..
+        // Q: should update automation according the latest serevice -> serviceId, domainId, draft..?
+        // or should update the service according to current automation in local machine
         const automation = { ...this.project.automation };
         const metadata: AutomationMetadata = {
             serviceId: service.id,
@@ -109,7 +110,15 @@ export class SaveLoadController {
             workerTag: 'stable', // to be removed, property of service.
             content: { ...automation, metadata },
         });
-
+        // TODO: if metadata is updated (e.g. strict validation), update service here?
+        /*
+        if (service.domain !== automation.metadata.domainId || service.draft !== automation.metadata.draft) {
+            this.api.updateServiceAttributes(service.id, {
+                draft: metadata.draft,
+                domain: metadata.domainId,
+            });
+        }
+        */
         // update this.location
         this.location = 'ac';
         this.project.updateMetadata(metadata);
@@ -146,15 +155,19 @@ export class SaveLoadController {
         this.update();
     }
 
+    async openProjectFromAc(scriptId: string) {
+        const automation = await this.api.getScriptData(scriptId);
+        await this.project.loadAutomationJson(automation);
+        this.diff.setNewBase(automation);
+        this.update();
+    }
+
     async openProjectFromFile(filePath: string) {
-        try {
-            const text = await fs.readFile(filePath, 'utf-8');
-            const json = JSON.parse(text);
-            await this.project.loadAutomationJson(json);
-        } catch (e) {
-            console.error('Load failed', e);
-            alert('Load failed. Please check console for details.');
-        }
+        const text = await fs.readFile(filePath, 'utf-8');
+        const automation = JSON.parse(text);
+        await this.project.loadAutomationJson(automation);
+        this.diff.setNewBase(automation);
+        this.update();
     }
 
     // TODO remove those (kept for reference atm)

@@ -19,7 +19,7 @@ export default {
         },
 
         scriptName() {
-            return this.app.project.script.name || 'New script';
+            return this.app.project.automation.metadata.serviceName || 'New script';
         },
 
         profileCount() {
