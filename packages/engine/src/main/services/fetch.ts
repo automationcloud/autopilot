@@ -112,7 +112,7 @@ export class FetchService {
     protected prepareRequestUrl(spec: Partial<FetchRequestSpec>): string {
         // Legacy behaviour parsed URL from spec components (e.g. hostname, pathname, etc)
         // if `url` is not specified.
-        return typeof spec.url === 'string' ? spec.url : util.formatUrl(spec);
+        return util.formatUrl(spec);
     }
 
     protected prepareRequestHeaders(spec: Partial<FetchRequestSpec>): CdpHeaders {
