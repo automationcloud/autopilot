@@ -16,7 +16,6 @@ import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { ApiController } from './api';
 import { EventsController } from './events';
-import { ScriptDiffController } from './script-diff';
 
 @injectable()
 @controller({ alias: 'acAutomation' })
@@ -27,25 +26,14 @@ export class AcAutomationController {
         protected api: ApiController,
         @inject(EventsController)
         protected event: EventsController,
-        @inject(ScriptDiffController)
-        protected diff: ScriptDiffController,
     ) {
     }
 
     async init() {}
 
-    async getAutomation(serviceId: string, scriptId?: string) {
-        if (!scriptId) {
-            const service = await this.getService(serviceId);
-            if (!service.scriptId) {
-                // no published script
-                alert('no published script.');
-                return;
-            }
-            scriptId = service.scriptId;
-        }
-
-        return await this.api.getScriptData(scriptId);
+    async getActiveScriptId(serviceId: string) {
+        const service = await this.getService(serviceId);
+        return service.scriptId || null;
     }
 
     async getServices() {

@@ -50,6 +50,10 @@ export class ProjectController {
                 this.reloadScript();
             }
         });
+
+        events.on('scriptLoaded', () => {
+            this.update();
+        });
     }
 
     async init() {

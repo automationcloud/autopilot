@@ -62,6 +62,15 @@
                         @input="setValue('CHROME_USE_HOMEPAGE', $event)"/>
                 </div>
             </div>
+            <div class="pane__item">
+                <div class="pane__main">
+                    Automatically make scripts active on Save
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('AC_PUBLISH_SCRIPT_ON_SAVE')"
+                        @input="setValue('AC_PUBLISH_SCRIPT_ON_SAVE', $event)"/>
+                </div>
+            </div>
         </div>
 
         <div class="section__title">
