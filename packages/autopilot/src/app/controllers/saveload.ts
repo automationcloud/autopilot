@@ -13,17 +13,20 @@
 // limitations under the License.
 
 import { inject, injectable } from 'inversify';
+import path from 'path';
+import { promises as fs } from 'fs';
 import { controller } from '../controller';
 import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
-
-const DIALOG_FILTERS = [
-    { name: 'UB Automation', extensions: ['ubscript', 'json', 'json5'] },
-    { name: 'All Files', extensions: ['*'] },
-];
+import { ApiController } from './api';
+import { AutomationMetadata } from '../entities/automation';
+import { ScriptDiffController } from './script-diff';
+import { booleanConfig } from '@automationcloud/engine';
+import { SettingsController } from './settings';
+const AC_PUBLISH_SCRIPT_ON_SAVE = booleanConfig('AC_PUBLISH_SCRIPT_ON_SAVE', false);
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -41,6 +44,12 @@ export class SaveLoadController {
         protected autosave: AutosaveController,
         @inject(ModalsController)
         protected modals: ModalsController,
+        @inject(ApiController)
+        protected api: ApiController,
+        @inject(ScriptDiffController)
+        protected diff: ScriptDiffController,
+        @inject(SettingsController)
+        protected settings: SettingsController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -61,6 +70,10 @@ export class SaveLoadController {
         });
     }
 
+    get publishScriptOnSave() {
+        return this.settings.get(AC_PUBLISH_SCRIPT_ON_SAVE);
+    }
+
     async newProject() {
         this.filePath = null;
         await this.autosave.saveCurrent();
@@ -74,9 +87,7 @@ export class SaveLoadController {
 
     async saveProject() {
         if (this.location === 'file' && this.filePath) {
-            // TODO save automatically to FS
-        } else if (this.location === 'ac' && this.project.automation.metadata.serviceId) {
-            // TODO save automatially to AC
+            await this.saveProjectToFile(this.filePath);
         } else {
             await this.saveProjectAs();
         }
@@ -86,85 +97,64 @@ export class SaveLoadController {
         this.modals.show('save-automation');
     }
 
-    // TODO remove those (kept for reference atm)
-    /*
-    async openProject() {
-        const filePaths = await helpers.showOpenDialog({
-            title: 'Open Project',
-            filters: DIALOG_FILTERS,
-            properties: ['openFile'],
+    async saveProjectToAc(serviceId: string, version: string) {
+        const service = await this.api.getService(serviceId);
+        const automation = { ...this.project.automation };
+        const metadata = {
+            ...automation.metadata,
+            version,
+            serviceId: service.id,
+            serviceName: service.name,
+        };
+        const script = await this.api.createScript({
+            serviceId: service.id,
+            fullVersion: version,
+            note: '',
+            workerTag: 'stable', // to be removed, property of service.
+            content: { ...automation, metadata },
         });
-        if (filePaths.length === 0) {
+
+        this.api.updateService(service.id, metadata.domainId, metadata.draft);
+        if (this.publishScriptOnSave) {
+            this.api.publishScript(script.id);
+        }
+        this.location = 'ac';
+        this.project.updateMetadata(metadata);
+        this.diff.setNewBase(this.project.automation.script);
+        this.update();
+    }
+
+    async saveProjectToFile(filePath: string) {
+        if (!filePath) {
             return;
         }
-        const file = filePaths[0];
-        await this.loadFromFile(file, { filePath: file });
-    }
-
-    async saveProject() {
-        return this.filePath ? await this.saveToFile(this.filePath) : await this.saveProjectAs();
-    }
-
-    async saveProjectAs() {
-        const filePath = await helpers.showSaveDialog({
-            title: 'Save Project',
-            filters: DIALOG_FILTERS,
-        });
-        if (filePath == null) {
-            return;
-        }
-        await this.saveToFile(filePath);
-    }
-
-    async loadFromFile(filePath: string, options: ProjectLoadOptions = {}) {
-        try {
-            const text = await fs.readFile(filePath, 'utf-8');
-            const json = JSON.parse(text);
-            await this.loadFromJson(json, options);
-        } catch (e) {
-            console.error('Load failed', e);
-            alert('Load failed. Please check console for details.');
-        }
-    }
-
-    async loadFromJson(json: any, options: ProjectLoadOptions = {}) {
-        const { setDiffBase = true, autosave = true, filePath = null } = options;
-        try {
-            if (autosave) {
-                await this.autosave();
-            }
-            this.initScript(json.script);
-            if (setDiffBase) {
-                this.diff.setNewBase(json.script);
-            }
-            if (json.datasets) {
-                this.datasets.loadDatasets(json.datasets);
-            }
-            Object.assign(this.metadata, json.metadata);
-            this.filePath = filePath;
-            this.update();
-        } catch (e) {
-            console.error('Load failed', e);
-            alert('Load failed. Please check console for details.');
-        }
-    }
-
-    async saveToFile(filePath: string) {
         const ext = path.extname(filePath).toLowerCase();
         if (ext !== '.ubscript') {
-            filePath = filePath + '.ubscript';
+            filePath = filePath.replace(ext, '.ubscript');
         }
-        try {
-            const serialized = JSON.stringify(this.serializeProjectState());
-            await fs.writeFile(filePath, serialized, 'utf-8');
-            this.filePath = filePath;
-            this.diff.setNewBase(this.script);
-        } catch (e) {
-            console.error('Save failed', e);
-            alert('Save failed. Please check console for details.');
-        }
+
+        const serialized = JSON.stringify(this.project.automation);
+        await fs.writeFile(filePath, serialized, 'utf-8');
+        this.location = 'file';
+        this.filePath = filePath;
+        this.diff.setNewBase(this.project.automation.script);
+        this.update();
     }
-    */
+
+    async openProjectFromAc(scriptId: string) {
+        const automation = await this.api.getScriptData(scriptId);
+        await this.project.loadAutomationJson(automation);
+        this.diff.setNewBase(automation);
+        this.update();
+    }
+
+    async openProjectFromFile(filePath: string) {
+        const text = await fs.readFile(filePath, 'utf-8');
+        const automation = JSON.parse(text);
+        await this.project.loadAutomationJson(automation);
+        this.diff.setNewBase(automation);
+        this.update();
+    }
 
 }
 

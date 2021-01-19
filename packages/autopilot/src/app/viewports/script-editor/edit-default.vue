@@ -2,12 +2,9 @@
     <div class="edit-default section">
 
         <div class="form-row">
-            <div class="form-row__label">Script name</div>
+            <div class="form-row__label">Automation</div>
             <div class="form-row__controls">
-                <input
-                    class="input"
-                    type="text"
-                    v-model="scriptProxy.name"/>
+                {{ automation.serviceName }}
             </div>
         </div>
 
@@ -61,8 +58,8 @@ export default {
             return this.app.viewports.scriptEditor;
         },
 
-        script() {
-            return this.app.project.script;
+        automation() {
+            return this.app.project.automation.metadata;
         },
 
         scriptProxy() {

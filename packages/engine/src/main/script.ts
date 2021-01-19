@@ -97,13 +97,6 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
     id: string;
 
     /**
-     * User-specified script name.
-     *
-     * @public
-     */
-    name: string;
-
-    /**
      * List of contexts.
      *
      * @public
@@ -201,9 +194,8 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
     constructor($engine: Engine, spec: any = {}) {
         super(null);
         this.$engine = $engine;
-        const { id = uuid.v4(), name = 'New Script', contexts = [], blockedUrlPatterns = [], dependencies = [] } = spec;
+        const { id = uuid.v4(), contexts = [], blockedUrlPatterns = [], dependencies = [] } = spec;
         this.id = id;
-        this.name = name;
         this.contexts = new ContextList(this, 'contexts', contexts);
         this.dependencies = dependencies;
         this.blockedUrlPatterns = blockedUrlPatterns;

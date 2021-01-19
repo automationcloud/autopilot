@@ -50,6 +50,10 @@ export class ProjectController {
                 this.reloadScript();
             }
         });
+
+        events.on('scriptLoaded', () => {
+            this.update();
+        });
     }
 
     async init() {
@@ -103,4 +107,10 @@ export class ProjectController {
         return script;
     }
 
+    updateMetadata(json: any) {
+        this.automation.metadata = {
+            ...DEFAULT_AUTOMATION_METADATA,
+            ...json,
+        };
+    }
 }
