@@ -15,18 +15,19 @@
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { ApiController, ApiScript, ApiService } from './api';
-import { EventsController } from './events';
+import { ProjectController } from './project';
 
 @injectable()
 @controller({ alias: 'acAutomation' })
 export class AcAutomationController {
     services: ApiService[] = [];
     scripts: ApiScript[] = [];
+
     constructor(
         @inject(ApiController)
         protected api: ApiController,
-        @inject(EventsController)
-        protected event: EventsController,
+        @inject(ProjectController)
+        protected project: ProjectController,
     ) {
     }
 
@@ -35,6 +36,17 @@ export class AcAutomationController {
     async getActiveScriptId(serviceId: string) {
         const service = await this.getService(serviceId);
         return service.scriptId || null;
+    }
+
+    async createService(name: string) {
+        const { domainId: domain, draft } = this.project.automation.metadata;
+        const spec = {
+            name,
+            domain,
+            draft,
+            note: ''
+        };
+        return await this.api.createService(spec);
     }
 
     async getServices() {

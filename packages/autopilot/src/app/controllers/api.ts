@@ -72,6 +72,12 @@ export class ApiController {
         });
     }
 
+    async updateService(serviceId: string, domain: string, draft: boolean): Promise<ApiService> {
+        return await this.api.put(`/private/services/${serviceId}`, {
+            body: { domain, draft },
+        });
+    }
+
     async getScript(id: string): Promise<ApiScript> {
         return await this.api.get(`/private/scripts/${id}`);
     }

@@ -98,20 +98,14 @@ export class SaveLoadController {
     }
 
     async saveProjectToAc(serviceId: string, version: string) {
-        // fetch service with serviceId.
         const service = await this.api.getService(serviceId);
-        // Q: should update automation according the latest serevice -> serviceId, domainId, draft..?
-        // or should update the service according to current automation in local machine
         const automation = { ...this.project.automation };
-        const metadata: AutomationMetadata = {
+        const metadata = {
+            ...automation.metadata,
+            version,
             serviceId: service.id,
             serviceName: service.name,
-            domainId: service.domain,
-            draft: service.draft,
-            version,
-            bundleIndex: automation.metadata.bundleIndex,
         };
-
         const script = await this.api.createScript({
             serviceId: service.id,
             fullVersion: version,
@@ -119,16 +113,8 @@ export class SaveLoadController {
             workerTag: 'stable', // to be removed, property of service.
             content: { ...automation, metadata },
         });
-        // TODO: if metadata is updated (e.g. strict validation), update service here?
-        /*
-        if (service.domain !== automation.metadata.domainId || service.draft !== automation.metadata.draft) {
-            this.api.updateServiceAttributes(service.id, {
-                draft: metadata.draft,
-                domain: metadata.domainId,
-            });
-        }
-        */
-        // update this.location
+
+        this.api.updateService(service.id, metadata.domainId, metadata.draft);
         if (this.publishScriptOnSave) {
             this.api.publishScript(script.id);
         }
@@ -136,18 +122,6 @@ export class SaveLoadController {
         this.project.updateMetadata(metadata);
         this.diff.setNewBase(this.project.automation.script);
         this.update();
-    }
-
-    // TODO: move it to somewhere else more relevant
-    async createService(name: string) {
-        const { domainId: domain, draft } = this.project.automation.metadata;
-        const spec = {
-            name,
-            domain,
-            draft,
-            note: ''
-        };
-        return await this.api.createService(spec);
     }
 
     async saveProjectToFile(filePath: string) {

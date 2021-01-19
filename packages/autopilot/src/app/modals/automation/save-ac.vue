@@ -121,7 +121,7 @@ export default {
     methods: {
         async save() {
             if (this.createNew) {
-                const { id } = await this.saveload.createService(this.automationName);
+                const { id } = await this.acAutomation.createService(this.automationName);
                 this.serviceId = id;
             }
             try {
