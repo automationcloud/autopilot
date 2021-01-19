@@ -93,7 +93,7 @@ export class FetchService {
         const retries = typeof spec.retries === 'number' ? spec.retries : 3;
         const timeout = typeof spec.timeout === 'number' ? spec.timeout : 120000;
         const method = String(spec.method || 'GET').toUpperCase();
-        const url = this.prepareRequestUrl(spec);
+        const url = util.formatUrl(spec);
         const { body, headers: bodyHeaders } = await this.prepareRequestBody(spec);
         const headers = Object.assign({}, bodyHeaders, this.prepareRequestHeaders(spec));
         return {
@@ -107,12 +107,6 @@ export class FetchService {
             headers,
             body,
         };
-    }
-
-    protected prepareRequestUrl(spec: Partial<FetchRequestSpec>): string {
-        // Legacy behaviour parsed URL from spec components (e.g. hostname, pathname, etc)
-        // if `url` is not specified.
-        return util.formatUrl(spec);
     }
 
     protected prepareRequestHeaders(spec: Partial<FetchRequestSpec>): CdpHeaders {
