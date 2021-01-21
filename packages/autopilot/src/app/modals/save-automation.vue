@@ -1,8 +1,6 @@
 <template>
     <save-load @hide="$emit('hide')">
-        <template v-slot:title>
-            <span>Save As</span>
-        </template>
+        <template v-slot:title> Save As </template>
         <template v-slot:main="mainProps">
             <div v-if="mainProps.location === 'ac'">
                 <signin-warning
@@ -68,7 +66,6 @@
                 </div>
             </div>
         </template>
-
         <template v-slot:action="actionProps">
             <button
                 v-if="actionProps.location === 'ac'"
@@ -77,7 +74,6 @@
                 :disabled="!canSavetoAc">
                 Save
             </button>
-
             <button
                 v-if="actionProps.location === 'file'"
                 class="button button--primary"
@@ -124,16 +120,16 @@ export default {
     },
 
     watch: {
-        serviceId() {
-            if (this.serviceId) {
+        serviceId(newVal) {
+            if (newVal) {
                 this.acAutomation.getScripts(this.serviceId);
             } else {
                 this.acAutomation.scripts = [];
             }
         },
 
-        release(val) {
-            if (['major', 'minor', 'patch'].includes(val)) {
+        release(newVal) {
+            if (['major', 'minor', 'patch'].includes(newVal)) {
                 this.version = this.getVersion();
             }
         },
@@ -157,8 +153,7 @@ export default {
             return semver.valid(this.version);
         },
         canSavetoAc() {
-            return this.isAuthenticated &&
-                this.isVersionValid && (this.createNew ? this.automationName : this.serviceId);
+            return this.isAuthenticated && this.isVersionValid && (this.createNew ? this.automationName : this.serviceId);
         },
         latestVersion() {
             return this.acAutomation.scripts[0] ? this.acAutomation.scripts[0].fullVersion : null;
@@ -175,7 +170,7 @@ export default {
                 await this.saveload.saveProjectToAc(this.serviceId, this.version);
                 this.$emit('hide');
             } catch (error) {
-                console.error(error);
+                console.warn(error);
                 alert('Failed to save your Automation');
             }
         },
@@ -191,8 +186,13 @@ export default {
             if (filePath == null) {
                 return;
             }
-            await this.saveload.saveProjectToFile(filePath);
-            this.$emit('hide');
+            try {
+                await this.saveload.saveProjectToFile(filePath);
+                this.$emit('hide');
+            } catch (error) {
+                console.warn(error);
+                alert('Failed to save your Automation');
+            }
         },
 
         getVersion() {

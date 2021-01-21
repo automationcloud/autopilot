@@ -45,7 +45,7 @@ export class AppMenuController {
         @inject(SettingsController) protected settings: SettingsController,
         @inject(ViewportManager) protected viewports: ViewportManager,
         @inject(LayoutController) protected layout: LayoutController,
-        @inject(ProjectController) protected Automation: ProjectController,
+        @inject(ProjectController) protected project: ProjectController,
         @inject(PlaybackController) protected playback: PlaybackController,
         @inject(EmulationController) protected emulation: EmulationController,
         @inject(ToolsController) protected tools: ToolsController,

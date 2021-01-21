@@ -1,12 +1,9 @@
 <template>
     <save-load @hide="$emit('hide')">
-        <template v-slot:title>
-            <span>Open</span>
-        </template>
-
+        <template v-slot:title> Open </template>
         <template v-slot:main="mainProps">
             <div v-if="mainProps.location === 'ac'">
-                <signin-warning message="to save and run automations in the Automation Cloud" />
+                <signin-warning message="to open automation from the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div
                         class="box font-family--alt"
@@ -53,7 +50,6 @@
                 </div>
             </div>
         </template>
-
         <template v-slot:action="actionProps">
             <button
                 v-if="actionProps.location === 'ac'"
@@ -93,8 +89,8 @@ export default {
         const { serviceId } = this.project.automation.metadata;
         return {
             serviceId,
-            openActive: true,
             scriptId: null,
+            openActive: true,
         };
     },
 
@@ -119,14 +115,11 @@ export default {
         userName() {
             return this.apiLogin.accountFullName;
         },
-        automation() {
-            return this.project.automation;
-        },
         isAuthenticated() {
             return this.apiLogin.isAuthenticated();
         },
         canOpenFromAc() {
-            return this.serviceId &&  this.scriptId || this.openActive;
+            return this.serviceId && (this.scriptId || this.openActive);
         },
         services() {
             return this.acAutomation.services;
@@ -148,9 +141,9 @@ export default {
                 await this.saveload.openProjectFromAc(scriptId);
                 this.$emit('hide');
             } catch (error) {
-                console.error(error);
-                // display error;
-                alert('Failed to open your Automation');
+                console.warn('failed to load automation', error);
+                // TODO: use newe spec for error
+                alert('Failed to open Automation');
             }
         },
 
@@ -170,7 +163,9 @@ export default {
                 await this.saveload.openProjectFromFile(filepath);
                 this.$emit('hide');
             } catch (error) {
-                console.error('failed to load project', error);
+                console.warn('failed to load automation', error);
+                // TODO: use newe spec for error
+                alert('Failed to open Automation');
             }
         }
 
