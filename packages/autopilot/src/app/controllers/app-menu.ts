@@ -144,22 +144,22 @@ export class AppMenuController {
 
     *buildFileMenu(): Iterable<MenuItemConstructorOptions> {
         yield {
-            label: 'New Project',
+            label: 'New Automation',
             accelerator: 'CmdOrCtrl+Shift+N',
             click: () => this.saveload.newProject(),
         };
         yield {
-            label: 'Open Project...',
+            label: 'Open Automation...',
             accelerator: 'CmdOrCtrl+O',
             click: () => this.saveload.openProject(),
         };
         yield {
-            label: 'Save Project',
+            label: 'Save Automation',
             accelerator: 'CmdOrCtrl+S',
             click: () => this.saveload.saveProject(),
         };
         yield {
-            label: 'Save Project As...',
+            label: 'Save Automation As...',
             accelerator: 'CmdOrCtrl+Shift+S',
             click: () => this.saveload.saveProjectAs(),
         };

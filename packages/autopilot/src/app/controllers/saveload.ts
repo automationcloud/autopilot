@@ -22,7 +22,6 @@ import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
 import { ApiController } from './api';
-import { AutomationMetadata } from '../entities/automation';
 import { ScriptDiffController } from './script-diff';
 import { booleanConfig } from '@automationcloud/engine';
 import { SettingsController } from './settings';
@@ -129,8 +128,8 @@ export class SaveLoadController {
             return;
         }
         const ext = path.extname(filePath).toLowerCase();
-        if (ext !== '.ubscript') {
-            filePath = filePath.replace(ext, '.ubscript');
+        if (ext !== '.automation') {
+            filePath = filePath.replace(ext, '.automation');
         }
 
         const serialized = JSON.stringify(this.project.automation);

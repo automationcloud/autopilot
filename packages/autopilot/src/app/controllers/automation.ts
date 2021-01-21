@@ -15,6 +15,7 @@
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { ApiController, ApiScript, ApiService } from './api';
+import { EventsController } from './events';
 import { ProjectController } from './project';
 
 @injectable()
@@ -28,7 +29,10 @@ export class AcAutomationController {
         protected api: ApiController,
         @inject(ProjectController)
         protected project: ProjectController,
+        @inject(EventsController)
+        protected events: EventsController
     ) {
+        this.events.addListener('apiAuthUpdated', () => this.getServices());
     }
 
     async init() {}
@@ -46,11 +50,18 @@ export class AcAutomationController {
             draft,
             note: ''
         };
-        return await this.api.createService(spec);
+        const service = await this.api.createService(spec);
+        this.getServices();
+
+        return service;
     }
 
     async getServices() {
-        this.services = await this.api.getServices();
+        try {
+            this.services = await this.api.getServices();
+        } catch (error) {
+            this.services = [];
+        }
         return this.services;
     }
 
@@ -67,5 +78,4 @@ export class AcAutomationController {
         return await this.api.getScript(id);
     }
 
-    // fs dialogs
 }

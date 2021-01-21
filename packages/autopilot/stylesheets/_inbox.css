@@ -92,3 +92,8 @@ select option, option {
 .clickable {
     cursor: pointer;
 }
+
+.font-family--alt {
+    font-family: var(--font-family--alt);
+    font-size: 1.2em;
+}
