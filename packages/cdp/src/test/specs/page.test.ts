@@ -71,16 +71,5 @@ describe('Page', () => {
             const document = await runtime.page.document();
             assert.equal(document.description, '#document');
         });
-
-        it('retrieves lots of documents in parallel, fast', async () => {
-            await runtime.goto('/index.html');
-            const promises: Array<Promise<any>> = [];
-            const startedAt = Date.now();
-            for (let i = 0; i < 10000; i++) {
-                promises.push(runtime.page.document());
-            }
-            await Promise.all(promises);
-            assert(Date.now() - startedAt < 1000);
-        });
     });
 });
