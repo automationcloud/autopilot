@@ -46,7 +46,6 @@ export class Frame extends EventEmitter {
     postData?: string;
 
     _defaultExecCtx: ExecutionContext | null = null;
-    _documentPromise: Promise<RemoteElement> | null = null;
 
     constructor(
         public page: Page,
@@ -59,8 +58,6 @@ export class Frame extends EventEmitter {
         }
 
         this.clearDefaultExecutionContext();
-        // Theoretically, some evaluate errors can be caused by our stale document cache
-        this.on('evaluateError', () => (this._documentPromise = null));
     }
 
     get logger() {
@@ -170,12 +167,10 @@ export class Frame extends EventEmitter {
 
     updateDefaultExecutionContext(exCtx: ExecutionContext) {
         this._defaultExecCtx = exCtx;
-        this._documentPromise = null;
     }
 
     clearDefaultExecutionContext() {
         this._defaultExecCtx = null;
-        this._documentPromise = null;
     }
 
     async evaluate(pageFn: RemoteExpression, ...args: any[]): Promise<RemoteObject> {
@@ -194,24 +189,22 @@ export class Frame extends EventEmitter {
     }
 
     async document(): Promise<RemoteElement> {
-        if (!this._documentPromise) {
-            this._documentPromise = (this.evaluateElement(() => document) as Promise<RemoteElement>)
-                .catch(err => {
-                    throw new Exception({
-                        name: 'PageLoadingFailed',
-                        message: 'Failed to obtain top frame document',
-                        retry: true,
-                        details: {
-                            cause: {
-                                message: err.message,
-                                code: err.code,
-                                details: err.details,
-                            },
-                        },
-                    });
-                });
+        try {
+            return (await this.evaluateElement(() => document))!;
+        } catch (err) {
+            throw new Exception({
+                name: 'PageLoadingFailed',
+                message: 'Failed to obtain top frame document',
+                retry: true,
+                details: {
+                    cause: {
+                        message: err.message,
+                        code: err.code,
+                        details: err.details,
+                    },
+                },
+            });
         }
-        return await this._documentPromise;
     }
 
     async querySelectorAll(selector: string): Promise<RemoteElement[]> {
