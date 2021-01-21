@@ -45,7 +45,7 @@ export class AppMenuController {
         @inject(SettingsController) protected settings: SettingsController,
         @inject(ViewportManager) protected viewports: ViewportManager,
         @inject(LayoutController) protected layout: LayoutController,
-        @inject(ProjectController) protected project: ProjectController,
+        @inject(ProjectController) protected Automation: ProjectController,
         @inject(PlaybackController) protected playback: PlaybackController,
         @inject(EmulationController) protected emulation: EmulationController,
         @inject(ToolsController) protected tools: ToolsController,
@@ -144,22 +144,22 @@ export class AppMenuController {
 
     *buildFileMenu(): Iterable<MenuItemConstructorOptions> {
         yield {
-            label: 'New Project',
+            label: 'New Automation',
             accelerator: 'CmdOrCtrl+Shift+N',
             click: () => this.saveload.newProject(),
         };
         yield {
-            label: 'Open Project...',
+            label: 'Open Automation...',
             accelerator: 'CmdOrCtrl+O',
             click: () => this.saveload.openProject(),
         };
         yield {
-            label: 'Save Project',
+            label: 'Save Automation',
             accelerator: 'CmdOrCtrl+S',
             click: () => this.saveload.saveProject(),
         };
         yield {
-            label: 'Save Project As...',
+            label: 'Save Automation As...',
             accelerator: 'CmdOrCtrl+Shift+S',
             click: () => this.saveload.saveProjectAs(),
         };

@@ -3,8 +3,8 @@
     display: flex;
     flex-flow: column nowrap;
     max-height: 90vh;
-    min-width: 320px;
     max-width: 480px;
+    width: 90vw;
     box-shadow: 0 3px 8px rgba(0,0,0,.25);
     border-radius: var(--border-radius);
     background: #fff;
@@ -15,7 +15,7 @@
     display: flex;
     flex-flow: row nowrap;
     padding: var(--gap);
-    background: var(--color-blue--600);
+    background: var(--color-cool--700);
     color: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
