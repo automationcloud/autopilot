@@ -45,7 +45,9 @@
                         </div>
                         <div class="form-row__controls">
                             <select v-model="serviceId" class="input stretch">
-                                <option :value="null"> Select Automation </option>
+                                <option v-if="services.length === 0"> No Automation found </option>
+                                <option v-else
+                                    :value="null"> Select Automation </option>
                                 <option
                                     v-for="service of services"
                                     :key="service.id"
@@ -67,7 +69,10 @@
                         </div>
                         <div class="form-row__controls">
                             <select v-model="scriptId" class="input stretch">
-                                <option :value="null"> Select version </option>
+                                <option v-if="scripts.length === 0"
+                                    :value="null"> No script found </option>
+                                <option v-else
+                                    :value="null"> Select version </option>
                                 <option
                                     v-for="script of scripts"
                                     :key="script.id"
@@ -112,7 +117,6 @@ export default {
         'saveload',
         'project',
         'apiLogin',
-        'acAutomation',
     ],
     data() {
         const { serviceId } = this.project.automation.metadata;
@@ -121,22 +125,29 @@ export default {
             serviceId,
             scriptId: null,
             openActive: true,
+            services: [],
+            scripts: [],
         };
     },
 
     created() {
-        this.acAutomation.getServices();
+        this.loadServices();
     },
 
     watch: {
-        serviceId() {
-            if (!this.openActive && this.serviceId) {
-                this.acAutomation.getScripts(this.serviceId);
+        serviceId(val) {
+            this.scriptId = null;
+            if (!this.openActive && val) {
+                this.loadScripts(this.serviceId);
+            } else {
+                this.scripts = [];
             }
         },
         openActive(val) {
             if (!val && this.serviceId) {
-                this.acAutomation.getScripts(this.serviceId);
+                this.loadScripts(this.serviceId);
+            } else {
+                this.scripts = [];
             }
         }
     },
@@ -151,24 +162,18 @@ export default {
         canOpenFromAc() {
             return this.serviceId && (this.scriptId || this.openActive);
         },
-        services() {
-            return this.acAutomation.services;
-        },
-        scripts() {
-            return this.acAutomation.scripts;
-        }
     },
 
     methods: {
         async openFromAc() {
             const scriptId = this.openActive ?
-                await this.acAutomation.getActiveScriptId(this.serviceId) :
+                await this.saveload.getActiveScriptId(this.serviceId) :
                 this.scriptId;
             if (!scriptId) {
                 return;
             }
             try {
-                await this.saveload.openProjectFromAc(scriptId);
+                await this.saveload.openAutomationFromAc(this.serviceId, scriptId);
                 this.$emit('hide');
             } catch (error) {
                 console.warn('failed to load automation', error);
@@ -190,12 +195,29 @@ export default {
                 return;
             }
             try {
-                await this.saveload.openProjectFromFile(filepath);
+                await this.saveload.openAutomationFromFile(filepath);
                 this.$emit('hide');
             } catch (error) {
                 console.warn('failed to load automation', error);
                 // TODO: use newe spec for error
                 alert('Failed to open Automation');
+            }
+        },
+
+        async loadServices() {
+            try {
+                this.services = await this.saveload.getServices();
+            } catch (error) {
+                this.services = [];
+            }
+        },
+
+        async loadScripts(serviceId) {
+            try {
+                this.scripts = await this.saveload.getScripts(serviceId);
+            } catch (error) {
+                console.warn('failed to load scripts');
+                this.scripts = [];
             }
         }
     },

@@ -129,7 +129,6 @@ export default {
         'saveload',
         'project',
         'apiLogin',
-        'acAutomation',
     ],
 
     data() {
@@ -141,22 +140,35 @@ export default {
             automationName: null,
             createNew: serviceId == null,
             release: 'patch',
+            services: [],
+            scripts: [],
+            lading: false,
         };
     },
 
     created() {
-        this.acAutomation.getServices();
+        if (this.isAuthenticated && this.location === 'ac') {
+            this.loadServices();
+        }
         if (this.serviceId) {
-            this.acAutomation.getScripts(this.serviceId);
+            this.loadScripts(this.serviceId);
         }
     },
 
     watch: {
         serviceId(newVal) {
             if (newVal) {
-                this.acAutomation.getScripts(this.serviceId);
+                this.loadScripts(this.serviceId);
             } else {
-                this.acAutomation.scripts = [];
+                this.scripts = [];
+            }
+        },
+
+        location(newVal) {
+            if (newVal === 'ac') {
+                this.loadServices();
+            } else {
+                this.services = [];
             }
         },
 
@@ -178,9 +190,6 @@ export default {
         isAuthenticated() {
             return this.apiLogin.isAuthenticated();
         },
-        services() {
-            return this.acAutomation.services;
-        },
         isVersionValid() {
             return semver.valid(this.version);
         },
@@ -188,18 +197,18 @@ export default {
             return this.isAuthenticated && this.isVersionValid && (this.createNew ? this.automationName : this.serviceId);
         },
         latestVersion() {
-            return this.acAutomation.scripts[0] ? this.acAutomation.scripts[0].fullVersion : null;
+            return this.scripts[0] ? this.scripts[0].fullVersion : null;
         },
     },
 
     methods: {
         async saveToAc() {
             if (this.createNew) {
-                const { id } = await this.acAutomation.createService(this.automationName);
+                const { id } = await this.saveload.createService(this.automationName);
                 this.serviceId = id;
             }
             try {
-                await this.saveload.saveProjectToAc(this.serviceId, this.version);
+                await this.saveload.saveAutomationToAc(this.serviceId, this.version);
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
@@ -219,7 +228,7 @@ export default {
                 return;
             }
             try {
-                await this.saveload.saveProjectToFile(filePath);
+                await this.saveload.saveAutomationToFile(filePath);
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
@@ -232,6 +241,23 @@ export default {
                 return semver.inc(this.latestVersion, this.release);
             }
             return '1.0.0';
+        },
+
+        async loadServices() {
+            try {
+                this.services = await this.saveload.getServices();
+            } catch (error) {
+                this.services = [];
+            }
+        },
+
+        async loadScripts(serviceId) {
+            try {
+                this.scripts = await this.saveload.getScripts(serviceId);
+            } catch (error) {
+                console.warn('failed to load scripts');
+                this.scripts = [];
+            }
         }
     },
 };

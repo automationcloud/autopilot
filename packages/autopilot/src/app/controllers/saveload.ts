@@ -21,10 +21,12 @@ import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
-import { ApiController } from './api';
+import { ApiController, ApiService, ApiScript } from './api';
 import { ScriptDiffController } from './script-diff';
 import { booleanConfig } from '@automationcloud/engine';
 import { SettingsController } from './settings';
+import { EventsController } from './events';
+import { AutomationMetadata } from '../entities/automation';
 const AC_PUBLISH_SCRIPT_ON_SAVE = booleanConfig('AC_PUBLISH_SCRIPT_ON_SAVE', false);
 
 @injectable()
@@ -33,6 +35,8 @@ export class SaveLoadController {
     userData: UserData;
     location: 'file' | 'ac' = 'file';
     filePath: string | null = null;
+    services: ApiService[] = [];
+    scripts: ApiScript[] = [];
 
     constructor(
         @inject(StorageController)
@@ -49,8 +53,11 @@ export class SaveLoadController {
         protected diff: ScriptDiffController,
         @inject(SettingsController)
         protected settings: SettingsController,
+        @inject(EventsController)
+        protected events: EventsController
     ) {
         this.userData = storage.createUserData('saveload');
+        this.events.on('apiAuthUpdated', () => this.loadServices());
     }
 
     async init() {
@@ -73,30 +80,30 @@ export class SaveLoadController {
         return this.settings.get(AC_PUBLISH_SCRIPT_ON_SAVE);
     }
 
-    async newProject() {
+    async newAutomation() {
         this.filePath = null;
         await this.autosave.saveCurrent();
         this.project.loadAutomationJson({});
         this.update();
     }
 
-    async openProject() {
+    async openAutomation() {
         this.modals.show('open-automation');
     }
 
-    async saveProject() {
+    async saveAutomation() {
         if (this.location === 'file' && this.filePath) {
-            await this.saveProjectToFile(this.filePath);
+            await this.saveAutomationToFile(this.filePath);
         } else {
-            await this.saveProjectAs();
+            await this.saveAutomationAs();
         }
     }
 
-    async saveProjectAs() {
+    async saveAutomationAs() {
         this.modals.show('save-automation');
     }
 
-    async saveProjectToAc(serviceId: string, version: string) {
+    async saveAutomationToAc(serviceId: string, version: string) {
         const service = await this.api.getService(serviceId);
         const automation = { ...this.project.automation };
         const metadata = {
@@ -117,13 +124,13 @@ export class SaveLoadController {
         if (this.publishScriptOnSave) {
             this.api.publishScript(script.id);
         }
-        this.location = 'ac';
         this.project.updateMetadata(metadata);
+        this.location = 'ac';
         this.diff.setNewBase(this.project.automation.script);
         this.update();
     }
 
-    async saveProjectToFile(filePath: string) {
+    async saveAutomationToFile(filePath: string) {
         if (!filePath) {
             return;
         }
@@ -140,21 +147,88 @@ export class SaveLoadController {
         this.update();
     }
 
-    async openProjectFromAc(scriptId: string) {
-        const automation = await this.api.getScriptData(scriptId);
-        await this.project.loadAutomationJson(automation);
-        this.diff.setNewBase(automation);
+    async openAutomationFromAc(serviceId: string, scriptId: string) {
+        const service = await this.api.getService(serviceId);
+        const script = await this.api.getScript(scriptId);
+        const content = await this.api.getScriptData(scriptId);
+        const metadata: AutomationMetadata = {
+            serviceId: service.id,
+            serviceName: service.name,
+            draft: service.draft,
+            domainId: service.domain,
+            version: script.version,
+            bundleIndex: 0,
+        };
+        await this.project.loadAutomationJson({
+            ...content,
+            metadata,
+        });
+        this.diff.setNewBase(content.script);
+        this.location = 'ac';
         this.update();
     }
 
-    async openProjectFromFile(filePath: string) {
+    async openAutomationFromFile(filePath: string) {
         const text = await fs.readFile(filePath, 'utf-8');
         const automation = JSON.parse(text);
         await this.project.loadAutomationJson(automation);
-        this.diff.setNewBase(automation);
+        this.location = 'file';
+        this.filePath = filePath;
+        this.diff.setNewBase(automation.script);
         this.update();
     }
 
+    // apis
+    async getActiveScriptId(serviceId: string) {
+        const service = await this.getService(serviceId);
+        return service.scriptId || null;
+    }
+
+    async createService(name: string) {
+        const { domainId: domain, draft } = this.project.automation.metadata;
+        const spec = {
+            name,
+            domain,
+            draft,
+            note: ''
+        };
+        const service = await this.api.createService(spec);
+        this.getServices();
+
+        return service;
+    }
+
+    async loadServices() {
+        try {
+            this.services = await this.api.getServices();
+        } catch (error) {
+            this.services = [];
+        }
+    }
+
+    async getServices() {
+        return await this.api.getServices();
+    }
+
+    async getService(id: string) {
+        return await this.api.getService(id);
+    }
+
+    async loadScripts(serviceId: string) {
+        try {
+            this.scripts = await this.getScripts(serviceId);
+        } catch (error) {
+            this.scripts = [];
+        }
+    }
+
+    async getScripts(serviceId: string, limit: number = 20, offset: number = 0): Promise<any> {
+        return await this.api.getScripts({ serviceId, limit, offset });
+    }
+
+    async getScript(id: string) {
+        return await this.api.getScript(id);
+    }
 }
 
 export interface ProjectLoadOptions {

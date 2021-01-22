@@ -146,22 +146,22 @@ export class AppMenuController {
         yield {
             label: 'New Automation',
             accelerator: 'CmdOrCtrl+Shift+N',
-            click: () => this.saveload.newProject(),
+            click: () => this.saveload.newAutomation(),
         };
         yield {
             label: 'Open Automation...',
             accelerator: 'CmdOrCtrl+O',
-            click: () => this.saveload.openProject(),
+            click: () => this.saveload.openAutomation(),
         };
         yield {
             label: 'Save Automation',
             accelerator: 'CmdOrCtrl+S',
-            click: () => this.saveload.saveProject(),
+            click: () => this.saveload.saveAutomation(),
         };
         yield {
             label: 'Save Automation As...',
             accelerator: 'CmdOrCtrl+Shift+S',
-            click: () => this.saveload.saveProjectAs(),
+            click: () => this.saveload.saveAutomationAs(),
         };
         if (this.autosave.files.length > 0) {
             const groups = helpers.groupBy(this.autosave.files, file => file.split('_')[0]);
