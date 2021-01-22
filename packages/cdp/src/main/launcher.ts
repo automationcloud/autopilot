@@ -31,7 +31,7 @@ const DEFAULT_ARGS = [
     '--disable-client-side-phishing-detection',
     '--disable-cloud-import',
     '--disable-default-apps',
-    // '--disable-dev-shm-usage',
+    '--disable-dev-shm-usage',
     '--disable-extensions-http-throttling',
     '--disable-extensions',
     '--disable-features=site-per-process',
