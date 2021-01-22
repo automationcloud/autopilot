@@ -17,7 +17,6 @@ import { WorkerState } from './state';
 import { ApiService } from './api';
 import { Execution } from '../types';
 import { ChromeLaunchService } from './chrome';
-import { CacheService } from './cache';
 import {
     Script,
     util,
@@ -44,8 +43,6 @@ export class Runner {
         protected logger: Logger,
         @inject(ChromeLaunchService)
         protected chrome: ChromeLaunchService,
-        @inject(CacheService)
-        protected cache: CacheService,
         @inject(SignalsService)
         protected signals: SignalsService,
         @inject(ScriptLoaderService)

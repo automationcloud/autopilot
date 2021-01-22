@@ -23,7 +23,6 @@ import {
     Logger as FrameworkLogger, Application, Router
 } from '@ubio/framework';
 import { ApiService } from './services/api';
-import { CacheService } from './services/cache';
 import { ChromeLaunchService } from './services/chrome';
 import { Container } from 'inversify';
 import { ExtensionManager } from './services/extension-manager';
@@ -65,7 +64,6 @@ export class WorkerBaseApp extends Application {
         // Worker Services
 
         this.container.bind(ApiService).toSelf().inSingletonScope();
-        this.container.bind(CacheService).toSelf().inSingletonScope();
         this.container.bind(ChromeLaunchService).toSelf().inSingletonScope();
         this.container.bind(ExtensionManager).toSelf().inSingletonScope();
         this.container.bind(HeartbeatsService).toSelf().inSingletonScope();
@@ -100,7 +98,6 @@ export class WorkerProductionApp extends WorkerBaseApp {
         const queueConsumer = this.container.get(QueueConsumer);
         const heartbeats = this.container.get(HeartbeatsService);
         const state = this.container.get(WorkerState);
-        const cache = this.container.get(CacheService);
         const chrome = this.container.get(ChromeLaunchService);
         const extMgr = this.container.get(ExtensionManager);
 
@@ -119,7 +116,6 @@ export class WorkerProductionApp extends WorkerBaseApp {
             heartbeats.start();
             await this.httpServer.startServer();
             await extMgr.loadAllLatestExtensions();
-            await cache.retrieveCache('global');
             await chrome.launch();
             await queueConsumer.startConsuming();
             // Exit, when consumption is interrupted
@@ -141,7 +137,6 @@ export class WorkerProductionApp extends WorkerBaseApp {
     }
 
     async shutdown() {
-        const cache = this.container.get(CacheService);
         const api = this.container.get(ApiService);
         const state = this.container.get(WorkerState);
         const queueConsumer = this.container.get(QueueConsumer);
@@ -152,8 +147,6 @@ export class WorkerProductionApp extends WorkerBaseApp {
             heartbeats.stop();
             this.logger.info('Shutdown: wait for executions to finish');
             await queueConsumer.stopConsuming();
-            this.logger.info('Shutdown: storing global cache');
-            await cache.storeCache('global');
             this.logger.info('Shutdown: unregistering the worker');
             await api.deleteWorker(state.workerId);
             await this.httpServer.stopServer();
