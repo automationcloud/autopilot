@@ -2,7 +2,7 @@
     "packages": [
         "packages/*"
     ],
-    "version": "33.10.10",
+    "version": "33.10.11",
     "command": {
         "version": {
             "tagVersionPrefix": ""
