@@ -135,6 +135,11 @@ export default {
     },
 
     watch: {
+        isAuthenticated(val) {
+            if (val) {
+                this.loadServices();
+            }
+        },
         serviceId(val) {
             this.scriptId = null;
             if (!this.openActive && val) {
@@ -213,16 +218,19 @@ export default {
         },
 
         async loadScripts(serviceId) {
-            try {
-                this.scripts = await this.saveload.getScripts(serviceId);
-            } catch (error) {
-                console.warn('failed to load scripts');
-                this.scripts = [];
+            if (serviceId) {
+                try {
+                    this.scripts = await this.saveload.getScripts(serviceId);
+                } catch (error) {
+                    console.warn('failed to load scripts');
+                    this.scripts = [];
+                }
             }
         }
     },
 };
 </script>
+
 <style scoped>
 .location-header {
     font-family: var(--font-family--alt);

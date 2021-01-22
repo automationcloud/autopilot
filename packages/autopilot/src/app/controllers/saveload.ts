@@ -21,7 +21,7 @@ import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
-import { ApiController, ApiService, ApiScript } from './api';
+import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
 import { booleanConfig } from '@automationcloud/engine';
 import { SettingsController } from './settings';
@@ -35,8 +35,6 @@ export class SaveLoadController {
     userData: UserData;
     location: 'file' | 'ac' = 'file';
     filePath: string | null = null;
-    services: ApiService[] = [];
-    scripts: ApiScript[] = [];
 
     constructor(
         @inject(StorageController)
@@ -57,7 +55,6 @@ export class SaveLoadController {
         protected events: EventsController
     ) {
         this.userData = storage.createUserData('saveload');
-        this.events.on('apiAuthUpdated', () => this.loadServices());
     }
 
     async init() {
@@ -198,28 +195,12 @@ export class SaveLoadController {
         return service;
     }
 
-    async loadServices() {
-        try {
-            this.services = await this.api.getServices();
-        } catch (error) {
-            this.services = [];
-        }
-    }
-
     async getServices() {
         return await this.api.getServices();
     }
 
     async getService(id: string) {
         return await this.api.getService(id);
-    }
-
-    async loadScripts(serviceId: string) {
-        try {
-            this.scripts = await this.getScripts(serviceId);
-        } catch (error) {
-            this.scripts = [];
-        }
     }
 
     async getScripts(serviceId: string, limit: number = 20, offset: number = 0): Promise<any> {

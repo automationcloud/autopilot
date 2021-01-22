@@ -142,33 +142,30 @@ export default {
             release: 'patch',
             services: [],
             scripts: [],
-            lading: false,
         };
     },
 
     created() {
-        if (this.isAuthenticated && this.location === 'ac') {
+        if (this.isAuthenticated) {
             this.loadServices();
-        }
-        if (this.serviceId) {
             this.loadScripts(this.serviceId);
         }
+
     },
 
     watch: {
+        isAuthenticated(val) {
+            if (val) {
+                this.loadServices();
+                this.loadScripts(this.serviceId);
+            }
+        },
+
         serviceId(newVal) {
             if (newVal) {
                 this.loadScripts(this.serviceId);
             } else {
                 this.scripts = [];
-            }
-        },
-
-        location(newVal) {
-            if (newVal === 'ac') {
-                this.loadServices();
-            } else {
-                this.services = [];
             }
         },
 
@@ -252,16 +249,19 @@ export default {
         },
 
         async loadScripts(serviceId) {
-            try {
-                this.scripts = await this.saveload.getScripts(serviceId);
-            } catch (error) {
-                console.warn('failed to load scripts');
-                this.scripts = [];
+            if (serviceId) {
+                try {
+                    this.scripts = await this.saveload.getScripts(serviceId);
+                } catch (error) {
+                    console.warn('failed to load scripts');
+                    this.scripts = [];
+                }
             }
         }
     },
 };
 </script>
+
 <style scoped>
 .inline-message {
     font-style: italic;
