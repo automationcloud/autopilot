@@ -1,8 +1,38 @@
 <template>
-    <save-load @hide="$emit('hide')">
-        <template v-slot:title> Open </template>
-        <template v-slot:main="mainProps">
-            <div v-if="mainProps.location === 'ac'">
+    <div class="modal">
+        <div class="modal__header font-family--alt"> Open </div>
+        <div class="modal__body">
+            <div>
+                <div class="location-header">Location</div>
+                <div class="form-row">
+                    <div class="form-row__controls">
+                        <input class="input"
+                            type="radio"
+                            id="location-ac"
+                            v-model="location"
+                            value="ac"/>
+
+                        <label class="form-row__label"
+                            for="location-ac">
+                            Automation Cloud
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-row__controls">
+                        <input class="input"
+                            type="radio"
+                            id="location-file"
+                            v-model="location"
+                            value="file"/>
+                        <label class="form-row__label"
+                            for="location-file">
+                            Your computer
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div v-if="location === 'ac'">
                 <signin-warning message="to open automation from the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div
@@ -49,28 +79,31 @@
                     </div>
                 </div>
             </div>
-        </template>
-        <template v-slot:action="actionProps">
+        </div>
+        <div class="actions automation-cloud">
+            <button class="button button--tertiary"
+                @click="$emit('hide')">
+                Cancel
+            </button>
             <button
-                v-if="actionProps.location === 'ac'"
+                v-if="location === 'ac'"
                 class="button button--primary"
-                @click="openFromAc(actionProps.location)"
+                @click="openFromAc()"
                 :disabled="!canOpenFromAc">
                 Open
             </button>
 
             <button
-                v-if="actionProps.location === 'file'"
+                v-if="location === 'file'"
                 class="button button--primary"
                 @click="openFromFile()">
                 Select file
             </button>
-        </template>
-    </save-load>
+        </div>
+    </div>
 </template>
 
 <script>
-import SaveLoad from './automation/saveload.vue';
 import { remote } from 'electron';
 const { dialog } = remote;
 
@@ -81,13 +114,10 @@ export default {
         'apiLogin',
         'acAutomation',
     ],
-    components: {
-        SaveLoad
-    },
-
     data() {
         const { serviceId } = this.project.automation.metadata;
         return {
+            location: this.saveload.location || 'ac',
             serviceId,
             scriptId: null,
             openActive: true,
@@ -168,7 +198,25 @@ export default {
                 alert('Failed to open Automation');
             }
         }
-
     },
 };
 </script>
+<style scoped>
+.location-header {
+    font-family: var(--font-family--alt);
+    font-size: 1.6em;
+    margin-bottom: var(--gap--large);
+}
+
+.actions {
+    background: var(--color-cool--100);
+    padding: var(--gap) 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.actions .button {
+    font-weight: 500;
+    font-size: 1.4em;
+}
+</style>

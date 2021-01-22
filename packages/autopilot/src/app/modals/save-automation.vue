@@ -1,10 +1,41 @@
 <template>
-    <save-load @hide="$emit('hide')">
-        <template v-slot:title> Save As </template>
-        <template v-slot:main="mainProps">
-            <div v-if="mainProps.location === 'ac'">
-                <signin-warning
-                    message="to save and run automations in the Automation Cloud" />
+    <div class="modal">
+        <div class="modal__header font-family--alt">
+            Save As
+        </div>
+        <div class="modal__body">
+            <div>
+                <div class="location-header">Location</div>
+                <div class="form-row">
+                    <div class="form-row__controls">
+                        <input class="input"
+                            type="radio"
+                            id="location-ac"
+                            v-model="location"
+                            value="ac"/>
+
+                        <label class="form-row__label"
+                            for="location-ac">
+                            Automation Cloud
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-row__controls">
+                        <input class="input"
+                            type="radio"
+                            id="location-file"
+                            v-model="location"
+                            value="file"/>
+                        <label class="form-row__label"
+                            for="location-file">
+                            Your computer
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div v-if="location === 'ac'">
+                <signin-warning message="to save and run automations in the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div
                         class="box font-family--alt"
@@ -65,30 +96,33 @@
                     </div>
                 </div>
             </div>
-        </template>
-        <template v-slot:action="actionProps">
+        </div>
+        <div class="actions automation-cloud">
+            <button class="button button--tertiary"
+                @click="$emit('hide')">
+                Cancel
+            </button>
             <button
-                v-if="actionProps.location === 'ac'"
+                v-if="location === 'ac'"
                 class="button button--primary"
                 @click="saveToAc()"
-                :disabled="!canSavetoAc">
+                :disabled="!canSaveToAc">
                 Save
             </button>
             <button
-                v-if="actionProps.location === 'file'"
+                v-if="location === 'file'"
                 class="button button--primary"
                 @click="saveToFile()">
                 Save File
             </button>
-        </template>
-    </save-load>
+        </div>
+    </div>
 </template>
 
 <script>
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
-import SaveLoad from './automation/saveload.vue';
 
 export default {
     inject: [
@@ -97,13 +131,11 @@ export default {
         'apiLogin',
         'acAutomation',
     ],
-    components: {
-        SaveLoad,
-    },
 
     data() {
         const { serviceId } = this.project.automation.metadata;
         return {
+            location: this.saveload.location || 'ac',
             serviceId,
             version: this.getVersion(),
             automationName: null,
@@ -152,7 +184,7 @@ export default {
         isVersionValid() {
             return semver.valid(this.version);
         },
-        canSavetoAc() {
+        canSaveToAc() {
             return this.isAuthenticated && this.isVersionValid && (this.createNew ? this.automationName : this.serviceId);
         },
         latestVersion() {
@@ -213,5 +245,23 @@ export default {
     display: grid;
     grid-template-columns: auto auto;
     grid-gap: 2px;
+}
+
+.location-header {
+    font-family: var(--font-family--alt);
+    font-size: 1.6em;
+    margin-bottom: var(--gap--large);
+}
+
+.actions {
+    background: var(--color-cool--100);
+    padding: var(--gap) 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.actions .button {
+    font-weight: 500;
+    font-size: 1.4em;
 }
 </style>
