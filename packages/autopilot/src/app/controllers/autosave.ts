@@ -63,7 +63,7 @@ export class AutosaveController {
     async save(automation: Automation) {
         const newFile =
             moment.utc().format('YYYY-MM-DD_HH-mm-ss_SSS_') +
-            automation.script.name.toLowerCase().replace(/[^a-z0-9]/g, '-') +
+            automation.metadata.serviceName.toLowerCase().replace(/[^a-z0-9]/g, '-') +
             '.json';
         await fs.mkdir(this.autosaveDir, { recursive: true });
         await fs.writeFile(path.join(this.autosaveDir, newFile), JSON.stringify(automation), 'utf-8');

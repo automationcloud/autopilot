@@ -111,7 +111,11 @@ export class SaveLoadController {
             fullVersion,
             note: '',
             workerTag,
-            content: { ...automation, metadata },
+            content: {
+                ...automation,
+                metadata,
+                datasets: automation.bundles // for backward compat.
+            },
         });
 
         this.api.updateService({
@@ -125,7 +129,7 @@ export class SaveLoadController {
         }
         this.project.updateMetadata(metadata);
         this.location = 'ac';
-        this.diff.setNewBase(this.project.automation.script);
+        this.diff.setNewBase(automation.script);
         this.update();
     }
 

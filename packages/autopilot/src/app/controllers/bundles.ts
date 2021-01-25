@@ -19,6 +19,8 @@ import { clamp, ScriptInput } from '@automationcloud/engine';
 import { ProjectController } from './project';
 import { Bundle } from '../entities/bundle';
 import { ExpandableController } from './expandable';
+import { StorageController } from './storage';
+import { promises as fs } from 'fs';
 
 @injectable()
 @controller({ alias: 'bundles' })
@@ -29,10 +31,28 @@ export class BundlesController {
         protected project: ProjectController,
         @inject(ExpandableController)
         protected expandable: ExpandableController,
+        @inject(StorageController)
+        protected storage: StorageController,
     ) {
     }
 
-    async init() {}
+    async init() {
+        // migrate datasets to bundles.
+        try {
+            const file = this.storage.getFilename('datasets.json');
+            const text = await fs.readFile(file, 'utf-8');
+            const { datasets = [], currentIndex = 0 } = JSON.parse(text);
+            if (this.bundles.length === 0) {
+                this.bundles.push(...datasets);
+                this.bundleIndex = Number(currentIndex) || 0;
+                this.save();
+            }
+            await fs.unlink(file);
+            console.info('migrated dataset to bundles');
+        } catch(err) {
+            // do nothing.
+        }
+    }
 
     save() {
         this.project.update();

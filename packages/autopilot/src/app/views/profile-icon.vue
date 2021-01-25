@@ -1,7 +1,7 @@
 <template>
     <div v-if="profileCount > 1">
         <span class="profile-icon"
-            :aria-label="scriptName">
+            :aria-label="serviceName">
             <i class="fas fa-window-maximize"></i>
             <b>{{ profileShortName }}</b>
         </span>
@@ -18,8 +18,8 @@ export default {
             return name.includes('Profile') ? name.replace('Profile', '').trim() : 'D';
         },
 
-        scriptName() {
-            return this.app.project.automation.metadata.serviceName || 'New script';
+        serviceName() {
+            return this.app.project.automation.metadata.serviceName || 'New Automation';
         },
 
         profileCount() {

@@ -260,7 +260,7 @@ export default {
                 filters: [
                     { name: 'Automation', extensions: ['automation'] },
                 ],
-                defaultPath: this.saveload.filePath || 'my-awesome-automation.automation',
+                defaultPath: this.saveload.filePath || `${this.metadata.serviceName}.automation`,
             });
             if (filePath == null) {
                 return;
