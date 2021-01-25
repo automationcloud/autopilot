@@ -70,6 +70,7 @@ export class ChromeLaunchService {
                 '--ignore-certificate-errors',
                 '--window-size=1280,800',
                 `--ignore-certificate-errors-spki-list=${config.get(CHROME_CA_SPKI)}`,
+                '--disable-blink-features=AutomationControlled',
                 'about:blank',
                 config.get(CHROME_HEADLESS) ? '--headless' : null,
                 ...this.getAdditionalArgs(),

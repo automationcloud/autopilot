@@ -180,6 +180,7 @@ export class ChromeManagerController {
             // `--proxy-server=http://localhost:${proxyPort}`,
             `--proxy-server=http://127.0.0.1:${proxyPort}`,
             `--user-data-dir=${chromeUserDir}`,
+            '--disable-blink-features=AutomationControlled',
             headless ? '--headless' : '',
             ...this.settings.get(CHROME_ADDITIONAL_ARGS).split(/\s+/),
         ].filter(Boolean);
