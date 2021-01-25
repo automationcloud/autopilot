@@ -20,8 +20,8 @@ import { StorageController } from './storage';
 import moment from 'moment';
 import rimraf from 'rimraf';
 import { promisify } from 'util';
-import { ProjectController } from './project';
 import { EventsController } from '../controllers/events';
+import { Automation } from '../entities/automation';
 
 const rimrafAsync = promisify(rimraf);
 
@@ -35,12 +35,9 @@ export class AutosaveController {
     constructor(
         @inject(StorageController)
         protected storage: StorageController,
-        @inject(ProjectController)
-        protected project: ProjectController,
         @inject(EventsController)
         protected events: EventsController,
     ) {
-        this.events.on('writeAutosave', () => this.saveCurrent());
     }
 
     async init() {
@@ -63,14 +60,13 @@ export class AutosaveController {
         return this.storage.getFilename('autosave');
     }
 
-    async saveCurrent() {
-        const state = this.project.automation;
+    async save(automation: Automation) {
         const newFile =
             moment.utc().format('YYYY-MM-DD_HH-mm-ss_SSS_') +
-            state.script.name.toLowerCase().replace(/[^a-z0-9]/g, '-') +
+            automation.script.name.toLowerCase().replace(/[^a-z0-9]/g, '-') +
             '.json';
         await fs.mkdir(this.autosaveDir, { recursive: true });
-        await fs.writeFile(path.join(this.autosaveDir, newFile), JSON.stringify(state), 'utf-8');
+        await fs.writeFile(path.join(this.autosaveDir, newFile), JSON.stringify(automation), 'utf-8');
         await this.pruneAutosave();
     }
 
@@ -80,19 +76,6 @@ export class AutosaveController {
         for (const file of toRemove) {
             console.info('Removing old autosave file', file);
             await rimrafAsync(path.join(this.autosaveDir, file));
-        }
-    }
-
-    async restore(filename: string) {
-        try {
-            const file = path.join(this.autosaveDir, filename);
-            const text = await fs.readFile(file, 'utf-8');
-            const json = JSON.parse(text);
-            await this.saveCurrent();
-            await this.project.loadAutomationJson(json);
-        } catch (err) {
-            alert('Failed to load autosaved project. See Console for more info.');
-            console.error(err);
         }
     }
 

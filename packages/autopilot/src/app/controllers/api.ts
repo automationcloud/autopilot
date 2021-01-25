@@ -72,9 +72,15 @@ export class ApiController {
         });
     }
 
-    async updateService(serviceId: string, domain: string, draft: boolean): Promise<ApiService> {
-        return await this.api.put(`/private/services/${serviceId}`, {
-            body: { domain, draft },
+    async updateService(spec: {
+        id: string;
+        name: string;
+        domain: string;
+        draft: boolean;
+    }): Promise<ApiService> {
+        const { id, name, domain,  draft } = spec;
+        return await this.api.put(`/private/services/${id}`, {
+            body: { domain, draft, name },
         });
     }
 

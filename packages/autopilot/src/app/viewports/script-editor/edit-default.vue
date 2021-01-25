@@ -4,7 +4,10 @@
         <div class="form-row">
             <div class="form-row__label">Automation</div>
             <div class="form-row__controls">
-                {{ automation.serviceName }}
+                <input
+                    class="input"
+                    type="text"
+                    v-model="metadataProxy.serviceName"/>
             </div>
         </div>
 
@@ -58,8 +61,8 @@ export default {
             return this.app.viewports.scriptEditor;
         },
 
-        automation() {
-            return this.app.project.automation.metadata;
+        metadataProxy() {
+            return this.viewport.getMetadataProxy();
         },
 
         scriptProxy() {

@@ -23,11 +23,9 @@ import { ProjectController } from './project';
 import { StorageController } from './storage';
 import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
-import { booleanConfig } from '@automationcloud/engine';
 import { SettingsController } from './settings';
 import { EventsController } from './events';
 import { AutomationMetadata } from '../entities/automation';
-const AC_PUBLISH_SCRIPT_ON_SAVE = booleanConfig('AC_PUBLISH_SCRIPT_ON_SAVE', false);
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -73,13 +71,8 @@ export class SaveLoadController {
         });
     }
 
-    get publishScriptOnSave() {
-        return this.settings.get(AC_PUBLISH_SCRIPT_ON_SAVE);
-    }
-
     async newAutomation() {
         this.filePath = null;
-        await this.autosave.saveCurrent();
         this.project.loadAutomationJson({});
         this.update();
     }
@@ -100,25 +93,34 @@ export class SaveLoadController {
         this.modals.show('save-automation');
     }
 
-    async saveAutomationToAc(serviceId: string, version: string) {
-        const service = await this.api.getService(serviceId);
+    async saveAutomationToAc(spec: {
+        serviceId: string;
+        fullVersion: string;
+        workerTag: string;
+        activate: boolean;
+    }) {
+        const { serviceId, fullVersion, workerTag, activate } = spec;
         const automation = { ...this.project.automation };
         const metadata = {
             ...automation.metadata,
-            version,
-            serviceId: service.id,
-            serviceName: service.name,
+            version: fullVersion,
+            serviceId,
         };
         const script = await this.api.createScript({
-            serviceId: service.id,
-            fullVersion: version,
+            serviceId,
+            fullVersion,
             note: '',
-            workerTag: 'stable', // to be removed, property of service.
+            workerTag,
             content: { ...automation, metadata },
         });
 
-        this.api.updateService(service.id, metadata.domainId, metadata.draft);
-        if (this.publishScriptOnSave) {
+        this.api.updateService({
+            id: metadata.serviceId,
+            name: metadata.serviceName,
+            domain: metadata.domainId,
+            draft: metadata.draft
+        });
+        if (activate) {
             this.api.publishScript(script.id);
         }
         this.project.updateMetadata(metadata);

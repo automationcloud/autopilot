@@ -19,6 +19,9 @@ import { StorageController } from './storage';
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
+import { AutosaveController } from './autosave';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 @injectable()
 @controller({ alias: 'project' })
@@ -37,6 +40,8 @@ export class ProjectController {
         protected resolver: ResolverService,
         @inject(EventsController)
         protected events: EventsController,
+        @inject(AutosaveController)
+        protected autosave: AutosaveController,
     ) {
         this.userData = storage.createUserData('project', 300);
         this.automation = {
@@ -74,6 +79,7 @@ export class ProjectController {
 
     // TODO trace those calls and make sure diff bases are accurate in all cases (since we no longer do it here)
     async loadAutomationJson(json: any) {
+        await this.autosave.save(this.automation);
         this.automation = {
             metadata: {
                 ...DEFAULT_AUTOMATION_METADATA,
@@ -112,5 +118,17 @@ export class ProjectController {
             ...DEFAULT_AUTOMATION_METADATA,
             ...json,
         };
+    }
+
+    async loadFromAutosave(filename: string) {
+        try {
+            const file = path.join(this.autosave.autosaveDir, filename);
+            const text = await fs.readFile(file, 'utf-8');
+            const json = JSON.parse(text);
+            await this.loadAutomationJson(json);
+        } catch (err) {
+            alert('Failed to load autosaved project. See Console for more info.');
+            console.error(err);
+        }
     }
 }

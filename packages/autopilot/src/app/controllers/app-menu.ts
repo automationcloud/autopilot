@@ -176,7 +176,7 @@ export class AppMenuController {
                                     .substring(date.length + 1)
                                     .replace(/_/, ' ')
                                     .replace(/\.json$/, ''),
-                                click: () => this.autosave.restore(f),
+                                click: () => this.project.loadFromAutosave(f),
                             };
                         }),
                     };
