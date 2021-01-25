@@ -64,13 +64,22 @@
                         </div>
                     </div>
 
+                    <div class="box box--yellow box--small"
+                            v-if="namesMismatch">
+                        <strong>Warning!</strong>
+                        Selected automation name <strong>{{ serviceName }}</strong> does not match
+                        current automation name <strong>{{ metadata.serviceName }}</strong>.
+                        it will update the service name to {{ metadata.serviceName }}.
+                        Proceed at your own risk.
+                    </div>
+
                     <div v-if="!serviceId"
                         class="form-row">
                         <div class="form-row__label">
                             Name
                         </div>
                         <div class="form-row__controls">
-                            <input class="input" type="text" v-model="automationName" />
+                            <input class="input" type="text" v-model="serviceName" />
                         </div>
                     </div>
 
@@ -83,7 +92,7 @@
                                 class="input input--inline"
                                 style="justify-self: stretch;"
                                 type="text"
-                                v-model="version"
+                                v-model="fullVersion"
                                 :readonly="release !== 'custom'" />
                             <select class="input input--inline" v-model="release">
                                 <option value="major">major</option>
@@ -91,9 +100,26 @@
                                 <option value="patch">patch</option>
                                 <option value="custom">custom</option>
                             </select>
-                            <div v-if="latestVersion" class="inline-message">latest version: {{ latestVersion }} </div>
                         </div>
                     </div>
+
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Worker tag
+                        </div>
+                        <div class="form-row__controls group group--gap">
+                            <input class="input"
+                                v-model="workerTag"/>
+                        </div>
+                    </div>
+                    <label class="form-row">
+                        <div class="form-row__label">
+                            Make script active
+                        </div>
+                        <div class="form-row__controls">
+                            <input type="checkbox" v-model="activate">
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -123,7 +149,6 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
-
 export default {
     inject: [
         'saveload',
@@ -132,14 +157,15 @@ export default {
     ],
 
     data() {
-        const { serviceId } = this.project.automation.metadata;
+        const { serviceId, serviceName, version } = this.project.automation.metadata;
         return {
             location: this.saveload.location || 'ac',
             serviceId,
-            version: this.getVersion(),
-            automationName: null,
-            createNew: serviceId == null,
+            serviceName,
+            customVersion: version,
+            workerTag: 'stable',
             release: 'patch',
+            activate: false,
             services: [],
             scripts: [],
         };
@@ -164,23 +190,19 @@ export default {
         serviceId(newVal) {
             if (newVal) {
                 this.loadScripts(this.serviceId);
+                const service = this.services.find(_ => _.id === newVal);
+                this.serviceName = service.name;
             } else {
                 this.scripts = [];
+                this.serviceName = this.metadata.serviceName;
             }
         },
-
-        release(newVal) {
-            if (['major', 'minor', 'patch'].includes(newVal)) {
-                this.version = this.getVersion();
-            }
-        },
-
-        latestVersion() {
-            this.version = this.getVersion();
-        }
     },
 
     computed: {
+        metadata() {
+            return this.project.automation.metadata;
+        },
         userName() {
             return this.apiLogin.accountFullName;
         },
@@ -188,24 +210,43 @@ export default {
             return this.apiLogin.isAuthenticated();
         },
         isVersionValid() {
-            return semver.valid(this.version);
+            return semver.valid(this.fullVersion);
         },
         canSaveToAc() {
-            return this.isAuthenticated && this.isVersionValid && (this.createNew ? this.automationName : this.serviceId);
+            return this.isAuthenticated && this.isVersionValid;
         },
         latestVersion() {
-            return this.scripts[0] ? this.scripts[0].fullVersion : null;
+            return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
         },
+        namesMismatch() {
+            return this.serviceId && this.serviceName !== this.metadata.serviceName;
+        },
+        fullVersion: {
+            get() {
+                if (this.release === 'custom') {
+                    return this.customVersion;
+                }
+                return semver.inc(this.latestVersion, this.release);
+            },
+            set(val) {
+                this.customVersion = val;
+            }
+        }
     },
 
     methods: {
         async saveToAc() {
-            if (this.createNew) {
-                const { id } = await this.saveload.createService(this.automationName);
+            if (!this.serviceId) {
+                const { id } = await this.saveload.createService(this.serviceName);
                 this.serviceId = id;
             }
             try {
-                await this.saveload.saveAutomationToAc(this.serviceId, this.version);
+                await this.saveload.saveAutomationToAc({
+                    serviceId: this.serviceId,
+                    fullVersion: this.fullVersion,
+                    workerTag: this.workerTag,
+                    activate: this.activate,
+                });
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
@@ -234,10 +275,10 @@ export default {
         },
 
         getVersion() {
-            if (['major', 'minor', 'patch'].includes(this.release) && this.latestVersion) {
-                return semver.inc(this.latestVersion, this.release);
+            if (this.release === 'custom') {
+                return this.latestVersion;
             }
-            return '1.0.0';
+            return semver.inc(this.latestVersion, this.release);
         },
 
         async loadServices() {
