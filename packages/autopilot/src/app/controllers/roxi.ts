@@ -15,7 +15,7 @@
 import { ProxyConfig, ApiController } from './api';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { ProxyService, ApiRequest, Configuration, uniproxy } from '@automationcloud/engine';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
@@ -26,7 +26,7 @@ export type ProxyConnectionType = 'direct' | 'proxy';
 
 // TODO rename!
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'roxi', backgroundInit: true })
 export class RoxiController {
     userData: UserData;
 
@@ -38,8 +38,8 @@ export class RoxiController {
     constructor(
         @inject(ProxyService)
         protected proxy: ProxyService,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ApiController)
         protected api: ApiController,
         @inject(ApiRequest)

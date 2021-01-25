@@ -7,8 +7,8 @@ const CLICKS_TO_ACTIVATE = 10;
 
 const DEV_MODE = booleanConfig('DEV_MODE', false);
 
-@controller()
 @injectable()
+@controller({ alias: 'devMode' })
 export class DevModeController {
     clicks: number = 0;
 

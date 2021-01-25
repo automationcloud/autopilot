@@ -151,7 +151,7 @@ export class ClipboardLoaderController implements Controller {
                 default:
                     return;
             }
-            this.app.viewports.datasets.activateViewport();
+            this.app.viewports.bundles.activateViewport();
         } catch (err) {
             alert('Could not load Job Data. Please see Console for details.');
             console.error(err);

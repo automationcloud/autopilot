@@ -14,14 +14,16 @@
 
 import { FlowService, util } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
-import { ProtocolController, ProjectController, DatasetsController } from '../controllers';
+import { BundlesController } from '../controllers/bundles';
+import { ProjectController } from '../controllers/project';
+import { ProtocolController } from '../controllers/protocol';
 
 @injectable()
 export class AutopilotFlowService extends FlowService {
 
     constructor(
-        @inject(DatasetsController)
-        protected datasets: DatasetsController,
+        @inject(BundlesController)
+        protected bundles: BundlesController,
         @inject(ProtocolController)
         protected protocol: ProtocolController,
         @inject(ProjectController)
@@ -35,17 +37,17 @@ export class AutopilotFlowService extends FlowService {
     }
 
     async requestInputData(key: string) {
-        const data = this.datasets.getInputData(key, '');
+        const data = this.bundles.getInputData(key);
         return util.deepClone(data);
     }
 
     async peekInputData(key: string) {
-        const data = this.datasets.getInputData(key, '', false);
+        const data = this.bundles.getInputData(key, false);
         return util.deepClone(data);
     }
 
     async sendOutputData(key: string, data: any) {
-        const { draft } = this.project.metadata;
+        const { draft } = this.project.automation.metadata;
         if (draft) {
             return;
         }

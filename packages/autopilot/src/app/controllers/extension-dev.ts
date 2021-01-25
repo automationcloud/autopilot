@@ -20,7 +20,7 @@ import { StorageController } from './storage';
 import { remote } from 'electron';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { controller } from '../controller';
 import { SettingsController } from './settings';
 import { rimrafAsync } from '../util/helpers';
@@ -29,7 +29,7 @@ import { debounce } from 'debounce';
 import os from 'os';
 
 @injectable()
-@controller({ priority: 1001 })
+@controller({ alias: 'extDev', priority: 1001 })
 export class ExtensionDevController {
     userData: UserData;
     extensions: Extension[] = [];
@@ -44,8 +44,8 @@ export class ExtensionDevController {
         protected storage: StorageController,
         @inject(SettingsController)
         protected settings: SettingsController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ApiRequest)
         protected api: ApiRequest,
     ) {

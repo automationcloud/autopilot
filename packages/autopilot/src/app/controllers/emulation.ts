@@ -23,14 +23,14 @@ import {
     EMULATION_MODE
 } from '@automationcloud/engine';
 import { SettingsController } from './settings';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 export type ThrottlingMode = 'none' | '3g' | '2g';
 
 const THROTTLING_MODE = stringConfig('THROTTLING_MODE', 'none');
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'emulation', backgroundInit: true })
 export class EmulationController {
 
     constructor(
@@ -40,8 +40,8 @@ export class EmulationController {
         protected browser: BrowserService,
         @inject(EmulationService)
         protected emulation: EmulationService,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(SettingsController)
         protected settings: SettingsController,
     ) {

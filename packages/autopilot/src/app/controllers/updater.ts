@@ -4,8 +4,8 @@ import { controller } from '../controller';
 import { version } from '../globals';
 import semver from 'semver';
 
-@controller()
 @injectable()
+@controller({ alias: 'updater' })
 export class UpdaterController {
     checkResult: CheckResults | null = null;
 

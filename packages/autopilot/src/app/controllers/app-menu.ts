@@ -14,11 +14,11 @@
 
 import { remote, MenuItemConstructorOptions, ipcRenderer } from 'electron';
 import { injectable, inject } from 'inversify';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import debounce from 'debounce';
 import { booleanConfig, ProxyService } from '@automationcloud/engine';
 import { SettingsController } from './settings';
-import { ViewportManager } from '../managers/viewport-manager';
+import { ViewportManager } from '../viewports/viewport-manager';
 import { ProjectController } from './project';
 import { dom, helpers } from '../util';
 import { Viewport } from '../viewport';
@@ -28,37 +28,31 @@ import { controller } from '../controller';
 import { ProtocolController } from './protocol';
 import { LayoutController } from './layout';
 import { PlaybackController } from './playback';
+import { AutosaveController } from './autosave';
+import { SaveLoadController } from './saveload';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 
 const { Menu } = remote;
 
 @injectable()
-@controller()
+@controller({ alias: 'appMenu' })
 export class AppMenuController {
     profiles: Array<{ id: string; name: string }> = [];
 
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
-        @inject(SettingsController)
-        protected settings: SettingsController,
-        @inject(ViewportManager)
-        protected viewports: ViewportManager,
-        @inject(LayoutController)
-        protected layout: LayoutController,
-        @inject(ProjectController)
-        protected project: ProjectController,
-        @inject(PlaybackController)
-        protected playback: PlaybackController,
-        @inject(EmulationController)
-        protected emulation: EmulationController,
-        @inject(ToolsController)
-        protected tools: ToolsController,
-        @inject(ProtocolController)
-        protected protocol: ProtocolController,
-        @inject(ProxyService)
-        protected proxy: ProxyService,
+        @inject(EventsController) protected events: EventsController,
+        @inject(SettingsController) protected settings: SettingsController,
+        @inject(ViewportManager) protected viewports: ViewportManager,
+        @inject(LayoutController) protected layout: LayoutController,
+        @inject(ProjectController) protected project: ProjectController,
+        @inject(PlaybackController) protected playback: PlaybackController,
+        @inject(EmulationController) protected emulation: EmulationController,
+        @inject(ToolsController) protected tools: ToolsController,
+        @inject(ProtocolController) protected protocol: ProtocolController,
+        @inject(AutosaveController) protected autosave: AutosaveController,
+        @inject(ProxyService) protected proxy: ProxyService,
+        @inject(SaveLoadController) protected saveload: SaveLoadController,
     ) {
         this.events.on('initialized', () => this.renderMenu());
         this.events.on('windowFocused', () => this.renderMenu());
@@ -150,27 +144,27 @@ export class AppMenuController {
 
     *buildFileMenu(): Iterable<MenuItemConstructorOptions> {
         yield {
-            label: 'New Project',
+            label: 'New Automation',
             accelerator: 'CmdOrCtrl+Shift+N',
-            click: () => this.project.newProject(),
+            click: () => this.saveload.newAutomation(),
         };
         yield {
-            label: 'Open Project...',
+            label: 'Open Automation...',
             accelerator: 'CmdOrCtrl+O',
-            click: () => this.project.openProject(),
+            click: () => this.saveload.openAutomation(),
         };
         yield {
-            label: 'Save Project',
+            label: 'Save Automation',
             accelerator: 'CmdOrCtrl+S',
-            click: () => this.project.saveProject(),
+            click: () => this.saveload.saveAutomation(),
         };
         yield {
-            label: 'Save Project As...',
+            label: 'Save Automation As...',
             accelerator: 'CmdOrCtrl+Shift+S',
-            click: () => this.project.saveProjectAs(),
+            click: () => this.saveload.saveAutomationAs(),
         };
-        if (this.project.autosaveFiles.length > 0) {
-            const groups = helpers.groupBy(this.project.autosaveFiles, file => file.split('_')[0]);
+        if (this.autosave.files.length > 0) {
+            const groups = helpers.groupBy(this.autosave.files, file => file.split('_')[0]);
             yield {
                 label: 'Restore Autosave',
                 submenu: groups.map(([date, files]) => {
@@ -182,7 +176,7 @@ export class AppMenuController {
                                     .substring(date.length + 1)
                                     .replace(/_/, ' ')
                                     .replace(/\.json$/, ''),
-                                click: () => this.project.restoreAutosave(f),
+                                click: () => this.project.loadFromAutosave(f),
                             };
                         }),
                     };

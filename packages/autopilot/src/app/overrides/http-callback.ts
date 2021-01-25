@@ -23,8 +23,8 @@ import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { ipcRenderer, shell } from 'electron';
 import { controlServerPort } from '../globals';
-import { StorageController } from '../controllers';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
+import { StorageController } from '../controllers/storage';
 
 const HTTP_CALLBACK_TIMEOUT = numberConfig('HTTP_CALLBACK_TIMEOUT', 60000);
 
@@ -37,8 +37,8 @@ export class AutopilotHttpCallbackService extends HttpCallbackService {
         protected config: Configuration,
         @inject(StorageController)
         protected storage: StorageController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         super();
     }

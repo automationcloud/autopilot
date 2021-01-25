@@ -24,17 +24,11 @@
 </template>
 
 <script>
-import { ScriptReportController } from '~/controllers';
-
 export default {
 
-    computed: {
-
-        scriptReport() {
-            return this.get(ScriptReportController);
-        }
-
-    },
+    inject: [
+        'scriptReport'
+    ],
 
 };
 </script>

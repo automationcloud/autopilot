@@ -141,7 +141,6 @@
 </template>
 
 <script>
-import { ScriptDiffController, ExpandableController } from '~/controllers';
 import ms from 'ms';
 import Elem from './elem.vue';
 import Err from './err.vue';
@@ -150,6 +149,11 @@ import Sampler from './sampler.vue';
 import PipeNotes from './pipe-notes.vue';
 
 export default {
+
+    inject: [
+        'diff',
+        'expandable',
+    ],
 
     components: {
         Elem,
@@ -173,16 +177,8 @@ export default {
 
     computed: {
 
-        diff() {
-            return this.get(ScriptDiffController);
-        },
-
         viewport() {
             return this.app.viewports.scriptEditor;
-        },
-
-        expandable() {
-            return this.get(ExpandableController);
         },
 
         pipeProxy() {

@@ -53,12 +53,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-        <div class="section__title">
-            On Startup
-        </div>
-        <div class="pane">
             <div class="pane__item">
                 <div class="pane__main">
                     Load Robot School in browser on startup
@@ -66,39 +60,6 @@
                 <div class="pane__aside">
                     <toggle :value="getValue('CHROME_USE_HOMEPAGE')"
                         @input="setValue('CHROME_USE_HOMEPAGE', $event)"/>
-                </div>
-            </div>
-        </div>
-
-        <div class="section__title">
-            Appearance
-        </div>
-        <div class="pane">
-            <div class="pane__item">
-                <div class="pane__main">
-                    Show diff markers in Script panel
-                </div>
-                <div class="pane__aside">
-                    <toggle :value="getValue('UI_DIFF_ENABLED')"
-                        @input="setValue('UI_DIFF_ENABLED', $event)"/>
-                </div>
-            </div>
-            <div class="pane__item">
-                <div class="pane__main">
-                    Show verbose feedback in Pipelines
-                </div>
-                <div class="pane__aside">
-                    <toggle :value="getValue('UI_PIPE_VERBOSE_FEEDBACK')"
-                        @input="setValue('UI_PIPE_VERBOSE_FEEDBACK', $event)"/>
-                </div>
-            </div>
-            <div class="pane__item">
-                <div class="pane__main">
-                    Show frequently used items in menus
-                </div>
-                <div class="pane__aside">
-                    <toggle :value="getValue('UI_SHOW_FREQUENT_ITEMS')"
-                        @input="setValue('UI_SHOW_FREQUENT_ITEMS', $event)"/>
                 </div>
             </div>
         </div>
@@ -147,6 +108,39 @@
                         max="65535"
                         :value="getValue('CHROME_PORT')"
                         @input="updateChromePort($event)"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="section__title">
+            Appearance
+        </div>
+        <div class="pane">
+            <div class="pane__item">
+                <div class="pane__main">
+                    Show diff markers in Script panel
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('UI_DIFF_ENABLED')"
+                        @input="setValue('UI_DIFF_ENABLED', $event)"/>
+                </div>
+            </div>
+            <div class="pane__item">
+                <div class="pane__main">
+                    Show verbose feedback in Pipelines
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('UI_PIPE_VERBOSE_FEEDBACK')"
+                        @input="setValue('UI_PIPE_VERBOSE_FEEDBACK', $event)"/>
+                </div>
+            </div>
+            <div class="pane__item">
+                <div class="pane__main">
+                    Show frequently used items in menus
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('UI_SHOW_FREQUENT_ITEMS')"
+                        @input="setValue('UI_SHOW_FREQUENT_ITEMS', $event)"/>
                 </div>
             </div>
         </div>

@@ -19,22 +19,25 @@ import { helpers } from '../util';
 import { BrowserService, CheckpointService } from '@automationcloud/engine';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { ProjectController } from './project';
 import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
-import { DatasetsController } from './datasets';
 import { PlaybackController } from './playback';
 import { version } from '../globals';
+import { BundlesController } from './bundles';
+import { remote } from 'electron';
+
+const { dialog } = remote;
 
 @injectable()
-@controller()
+@controller({ alias: 'tools' })
 export class ToolsController {
 
     // TODO split away!
     constructor(
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ProjectController)
         protected project: ProjectController,
         @inject(ScriptDiffController)
@@ -43,8 +46,8 @@ export class ToolsController {
         protected api: ApiController,
         @inject(BrowserService)
         protected browser: BrowserService,
-        @inject(DatasetsController)
-        protected datasets: DatasetsController,
+        @inject(BundlesController)
+        protected bundles: BundlesController,
         @inject(PlaybackController)
         protected playback: PlaybackController,
         @inject(CheckpointService)
@@ -64,11 +67,14 @@ export class ToolsController {
     async loadScriptService(scriptId: string, serviceId: string) {
         const service = await this.api.getService(serviceId);
         const scriptData = await this.api.getScriptData(scriptId);
-        await this.project.loadFromJson(scriptData);
-        this.project.metadata.domainId = service.domain;
-        this.project.metadata.scriptId = scriptId;
-        this.project.metadata.serviceId = serviceId;
-        this.events.emit('serviceUpdated');
+        await this.project.loadAutomationJson({
+            script: scriptData.script,
+            metadata: {
+                domainId: service.domain,
+                serviceId,
+                ...scriptData.metadata,
+            }
+        });
     }
 
     async loadScriptAsDiffBase(scriptId: string) {
@@ -93,13 +99,11 @@ export class ToolsController {
                 data: d.data,
             };
         });
-        this.datasets.createDataset({
+        this.bundles.createBundle({
             name: 'Job #' + jobId.substring(0, 7),
             inputs,
             excluded: true,
         });
-        this.datasets.selectDataset();
-        this.datasets.update();
     }
 
     async loadCheckpoint(checkpointId: string) {
@@ -120,7 +124,7 @@ export class ToolsController {
     }
 
     async saveHtmlSnapshot() {
-        const filePath = await helpers.showSaveDialog({
+        const { filePath } = await dialog.showSaveDialog({
             title: 'Save HTML Snapshot',
             filters: [
                 { name: 'HTML File', extensions: ['html'] },

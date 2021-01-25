@@ -79,20 +79,21 @@
 </template>
 
 <script>
+import { acUrls } from '../../util';
+
 export default {
 
     inject: [
         'apiLogin',
-        'acUrls',
     ],
 
     computed: {
         isAuthenticated() { return this.apiLogin.isAuthenticated(); },
-        communityUrl() { return this.acUrls.get('community'); },
-        robotSchoolUrl() { return this.acUrls.get('robotSchool'); },
-        homeUrl() { return this.acUrls.get('home'); },
-        registerUrl() { return this.acUrls.get('register'); },
-        dashboardUrl() { return this.acUrls.get('dashboard'); },
+        communityUrl() { return acUrls.get('community'); },
+        robotSchoolUrl() { return acUrls.get('robotSchool'); },
+        homeUrl() { return acUrls.get('home'); },
+        registerUrl() { return acUrls.get('register'); },
+        dashboardUrl() { return acUrls.get('dashboard'); },
     },
 
 };

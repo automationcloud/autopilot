@@ -1,7 +1,7 @@
 import { BrowserService } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';
 
@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS: ScreencastOptions = {
 };
 
 @injectable()
-@controller()
+@controller({ alias: 'screencast' })
 export class ScreencastController {
     userData: UserData;
 
@@ -24,8 +24,8 @@ export class ScreencastController {
         storage: StorageController,
         @inject(BrowserService)
         protected browser: BrowserService,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         this.userData = storage.createUserData('screencast');
         this.onMouseDown = this.onMouseDown.bind(this);

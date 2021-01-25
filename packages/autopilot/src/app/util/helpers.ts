@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import { util } from '@automationcloud/engine';
-import { remote, OpenDialogOptions, SaveDialogOptions } from 'electron';
 import fs from 'fs';
 import rimraf from 'rimraf';
 import { promisify } from 'util';
@@ -27,8 +26,6 @@ export const mkdirpAsync = promisify(mkdirp);
 export const writeFileAsync = promisify(fs.writeFile);
 export const readFileAsync = promisify(fs.readFile);
 export const readdirAsync = promisify(fs.readdir);
-
-const { dialog } = remote;
 
 export function parseJson(str: string): any {
     return Json5.parse(str);
@@ -198,16 +195,6 @@ export function collectPointers(
     }
 }
 
-export async function showOpenDialog(options: OpenDialogOptions): Promise<string[]> {
-    const { filePaths } = await dialog.showOpenDialog(options);
-    return filePaths;
-}
-
-export async function showSaveDialog(options: SaveDialogOptions): Promise<string | null> {
-    const { filePath } = await dialog.showSaveDialog(options);
-    return filePath || null;
-}
-
 export function commonStringPrefix(s1: string, s2: string) {
     const l = Math.min(s1.length, s2.length);
     for (let i = 0; i < l; i++) {
@@ -252,6 +239,6 @@ export function isUuid(str: string) {
 export function mdToHtml(text: string) {
     const html = marked(text);
     return sanitize(html, {
-        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
+        allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
     });
 }

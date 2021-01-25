@@ -19,13 +19,11 @@
 </template>
 
 <script>
-export default {
-    inject: [
-        'acUrls',
-    ],
+import { acUrls } from '../util';
 
+export default {
     computed: {
-        robotSchoolUrl() { return this.acUrls.get('robotSchool'); }
+        robotSchoolUrl() { return acUrls.get('robotSchool'); }
     },
 };
 </script>

@@ -13,7 +13,7 @@
                 @uiactivate="onUiActivate"
                 @contextmenu.prevent.stop="onUiActivate">
                 <span class="script">
-                    {{ script.name }}
+                    {{ metadata.serviceName }}
                 </span>
                 <span class="domain"
                     v-if="domain">
@@ -48,6 +48,10 @@ export default {
 
         script() {
             return this.project.script;
+        },
+
+        metadata() {
+            return this.project.automation.metadata;
         },
 
         domain() {

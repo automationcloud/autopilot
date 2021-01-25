@@ -1,0 +1,38 @@
+.modal {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    max-height: 90vh;
+    max-width: 480px;
+    width: 90vw;
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+    border-radius: var(--border-radius);
+    background: #fff;
+}
+
+.modal__header {
+    flex: 0 0 auto;
+    display: flex;
+    flex-flow: row nowrap;
+    padding: var(--gap);
+    background: var(--color-cool--700);
+    color: #fff;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.modal__header > i {
+    margin-right: var(--gap);
+}
+
+.modal__body {
+    min-height: 0;
+    flex: 1;
+    padding: var(--gap);
+    overflow-y: auto;
+}
+
+.modal__buttons {
+    margin-top: var(--gap);
+    display: flex;
+    justify-content: flex-end;
+}

@@ -48,7 +48,7 @@ export type DownloadStatus = 'idle' | 'downloading' | 'extracting';
 export type ChromeSupportedPlatform = 'darwin' | 'win32' | 'linux';
 
 @injectable()
-@controller({ backgroundInit: true })
+@controller({ alias: 'chromeDownload', backgroundInit: true })
 export class ChromeDownloadController {
     installed: boolean = false;
     platform: ChromeSupportedPlatform = os.platform() as ChromeSupportedPlatform;

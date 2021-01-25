@@ -19,6 +19,8 @@ import { dom } from '../../util';
 import { MenuItemConstructorOptions } from 'electron';
 import { PipeClass, model } from '@automationcloud/engine';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
+import { HelpController } from '../../controllers/help';
+import { ModalsController } from '../../controllers/modals';
 
 const standardPipeCategories = [
     'Assert',
@@ -44,6 +46,10 @@ export class ScriptEditorMenusController {
 
     get app() {
         return this.viewport.app;
+    }
+
+    get modals() {
+        return this.app.get(ModalsController);
     }
 
     get pipeRecipes() {
@@ -90,7 +96,7 @@ export class ScriptEditorMenusController {
         yield {
             label: `Edit label/notes`,
             enabled: items.length === 1,
-            click: () => (this.viewport.showEditNotes = true),
+            click: () => this.modals.show('edit-pipe-notes'),
         };
         yield {
             label: `Change type...`,
@@ -99,7 +105,7 @@ export class ScriptEditorMenusController {
         };
         yield {
             label: `Save pipe${items.length > 1 ? 's' : ''} as recipe...`,
-            click: () => (this.viewport.showCreateRecipeModal = true),
+            click: () => this.modals.show('create-pipe-recipe'),
         };
     }
 
@@ -154,7 +160,7 @@ export class ScriptEditorMenusController {
                 label: PipeClass.$type,
                 htmlLabel: this.createLabel(PipeClass),
                 click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
-                help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                 deprecated: PipeClass.$deprecated,
             };
         });
@@ -173,7 +179,7 @@ export class ScriptEditorMenusController {
                     label: PipeClass.$type,
                     htmlLabel: this.createLabel(PipeClass),
                     click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
-                    help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                    help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                     deprecated: PipeClass.$deprecated,
                     searchable: false,
                 };
@@ -210,7 +216,7 @@ export class ScriptEditorMenusController {
                         type: PipeClass.$type,
                     });
                 },
-                help: this.app.ui.help.getPipeHelp(PipeClass.$type),
+                help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                 deprecated: PipeClass.$deprecated,
             };
         });

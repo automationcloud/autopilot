@@ -14,15 +14,15 @@
 
 import { ApiRequest, Configuration } from '@automationcloud/engine';
 import { inject } from 'inversify';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 
 export class AutopilotApiRequest extends ApiRequest {
 
     constructor(
         @inject(Configuration)
         protected config: Configuration,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         super(config);
         this.events.on('settingsReady', () => this.setup());

@@ -23,6 +23,7 @@ import { ActionRecorderController } from './recorder';
 import { ScriptViewport, InsertLocation } from '../script-viewport';
 import { DragAndDropActionsController } from './dnd-actions';
 import { PlaybackController } from '../../controllers/playback';
+import { HelpController } from '../../controllers/help';
 
 type ScriptFlowItem = Context | Action;
 
@@ -50,6 +51,8 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.menus = new ScriptFlowMenusController(this);
         this.recorder = new ActionRecorderController(this);
         this.dndActions = new DragAndDropActionsController(this);
+        this.app.events.on('automationLoaded', () => this.commandBuffer.reset());
+        this.search.performSearch();
     }
 
     get playback() {
@@ -129,7 +132,7 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     }
 
     showActionHelpModal(type: string) {
-        this.app.ui.help.showActionHelpModal(type);
+        this.app.get(HelpController).showActionHelpModal(type);
     }
     // UI Options
 

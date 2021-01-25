@@ -16,13 +16,11 @@ import { ProtocolProvider, Domain } from '@ubio/protocol';
 import { injectable, inject } from 'inversify';
 import { controller } from '../controller';
 import { ProjectController } from './project';
-import { EventBus } from '../event-bus';
+import { EventsController } from '../controllers/events';
 import { ExecutionError, ApiController } from './api';
 
 @injectable()
-@controller({
-    backgroundInit: true
-})
+@controller({ alias: 'protocol', backgroundInit: true })
 export class ProtocolController {
     protocolProvider: ProtocolProvider;
     executionErrors: ExecutionError[] = [];
@@ -30,8 +28,8 @@ export class ProtocolController {
     constructor(
         @inject(ProjectController)
         protected project: ProjectController,
-        @inject(EventBus)
-        protected events: EventBus,
+        @inject(EventsController)
+        protected events: EventsController,
         @inject(ApiController)
         protected api: ApiController,
     ) {
@@ -41,7 +39,7 @@ export class ProtocolController {
             url: 'https://protocol.automationcloud.net/schema.json',
         });
         this.protocolProvider.latest = null;
-        this.events.on('serviceUpdated', () => this.refreshExecutionErrors());
+        this.events.on('automationMetadataUpdated', () => this.refreshExecutionErrors());
     }
 
     async init() {
@@ -65,11 +63,11 @@ export class ProtocolController {
 
     getDomain(): Domain | null {
         const { latest } = this.protocolProvider;
-        const { draft } = this.project.metadata;
+        const { draft } = this.project.automation.metadata;
         if (!latest || draft) {
             return null;
         }
-        return latest.getDomain(this.project.metadata.domainId) ?? null;
+        return latest.getDomain(this.project.automation.metadata.domainId) ?? null;
     }
 
     getInputKeys(): string[] {

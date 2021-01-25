@@ -20,7 +20,7 @@ import { ExpandableController } from './expandable';
 import { ProjectController } from './project';
 
 @injectable()
-@controller()
+@controller({ alias: 'playback' })
 export class PlaybackController {
     timer!: PlaybackTimer;
     logs: PlaybackLog[] = [];

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export * from './api';
 export * from './browser';
-export * from './datasets';
+export * from './bundles';
 export * from './extensions';
 export * from './help-resources';
 export * from './inspections';
@@ -25,4 +24,3 @@ export * from './script-flow';
 export * from './search-scripts';
 export * from './screencast';
 export * from './settings';
-// export * from './speed';

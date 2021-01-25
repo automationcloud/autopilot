@@ -30,19 +30,24 @@ import {
     HttpCallbackService,
 } from '@automationcloud/engine';
 
-import { ViewportManager } from './managers/viewport-manager';
+import ms from 'ms';
+import { ViewportManager } from './viewports/viewport-manager';
 import { StorageController } from './controllers/storage';
 import { AutopilotBrowserService } from './overrides/browser';
 import { AutopilotCheckpointService } from './overrides/checkpoint';
 import { AutopilotConfiguration } from './overrides/config';
 import { AutopilotFlowService } from './overrides/flow';
 import { AutopilotReporterService } from './overrides/reporter';
-import { EventBus } from './event-bus';
-import * as ct from './controllers';
+import { EventsController } from './controllers/events';
 import { ToolsController } from './controllers/tools';
-import ms from 'ms';
 import { AutopilotApiRequest } from './overrides/api-request';
 import { AutopilotHttpCallbackService } from './overrides/http-callback';
+import { SettingsController } from './controllers/settings';
+import { ProjectController } from './controllers/project';
+import { ApiController } from './controllers/api';
+import { ExpandableController } from './controllers/expandable';
+import { ProtocolController } from './controllers/protocol';
+import { LayoutController } from './controllers/layout';
 
 export class App extends Engine {
     // Deprecated
@@ -57,9 +62,8 @@ export class App extends Engine {
     constructor() {
         super();
 
-        // App globals
-        this.container.bind('App').toConstantValue(this); // for compat
-        this.container.bind(EventBus).toSelf().inSingletonScope();
+        // TODO remove this binding, left for compatibility with viewports
+        this.container.bind('App').toConstantValue(this);
 
         // Controllers are always singletons identified by their class
         for (const ctrl of controllers) {
@@ -99,17 +103,17 @@ export class App extends Engine {
     // Vue components should use this.get(MyController) and import { MyController } from ~/controllers
     get browser() { return this.get(BrowserService); }
     get storage() { return this.get(StorageController); }
-    get events() { return this.get(EventBus); }
+    get events() { return this.get(EventsController); }
     get resolver() { return this.get(ResolverService); }
     get proxy() { return this.get(ProxyService); }
-    get settings() { return this.get(ct.SettingsController); }
-    get project() { return this.get(ct.ProjectController); }
-    get api() { return this.get(ct.ApiController); }
+    get settings() { return this.get(SettingsController); }
+    get project() { return this.get(ProjectController); }
+    get api() { return this.get(ApiController); }
     get config() { return this.get(Configuration); }
     get tools() { return this.get(ToolsController); }
-    get expandable() { return this.get(ct.ExpandableController); }
-    get protocol() { return this.get(ct.ProtocolController); }
-    get layout() { return this.get(ct.LayoutController); }
+    get expandable() { return this.get(ExpandableController); }
+    get protocol() { return this.get(ProtocolController); }
+    get layout() { return this.get(LayoutController); }
 
     async init() {
         for (const { descriptor, instance } of this.getControllerInstances()) {

@@ -92,6 +92,9 @@
                                         </div>
                                     </div>
                                     <div class="item-help"
+                                        :class="{
+                                            'item-help--shown': helpItem === item
+                                        }"
                                         v-if="item.help"
                                         @click.stop="toggleHelp(i)">
                                         <i class="far fa-question-circle">
@@ -112,9 +115,13 @@
                         </div>
                     </div>
 
-                    <help
-                        :helpItem="helpItem"
-                        @close="hideHelp" />
+                    <div class="help-panel"
+                        v-if="isHelpVisible">
+                        <div class="help-panel-header">
+                        </div>
+                        <article v-html="helpItem.help">
+                        </article>
+                    </div>
                 </div>
 
             </div>
@@ -130,7 +137,7 @@ export default {
         return {
             search: '',
             focusIndex: -1,
-            helpIndex: -1
+            helpItem: null
         };
     },
 
@@ -160,12 +167,8 @@ export default {
             return this.modalMenu.breadcrumbs.slice(-1)[0];
         },
 
-        helpItem() {
-            return this.displayedItems[this.helpIndex] || null;
-        },
-
         isHelpVisible() {
-            return !!this.helpItem;
+            return this.helpItem && this.displayedItems.includes(this.helpItem);
         },
 
     },
@@ -174,8 +177,8 @@ export default {
 
         'isShown'() {
             this.search = '';
-            this.helpIndex = -1;
             this.focusIndex = -1;
+            this.helpItem = null;
         }
 
     },
@@ -183,11 +186,12 @@ export default {
     methods: {
 
         toggleHelp(idx) {
-            this.helpIndex = this.helpIndex === idx ? -1 : idx;
+            const item = this.displayedItems[idx];
+            this.helpItem = this.helpItem === item ? null : item;
         },
 
         hideHelp() {
-            this.helpIndex = -1;
+            this.helpItem = -1;
         },
 
         onItemHover(item, index) {
@@ -381,7 +385,7 @@ export default {
 }
 
 .main {
-    flex: 1 1 auto;
+    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -446,6 +450,10 @@ export default {
     opacity: .5;
 }
 
+.item-help--shown {
+    opacity: 1;
+}
+
 .item-submenu {
     opacity: .7;
 }
@@ -484,6 +492,13 @@ export default {
 
 .item-label {
     line-height: 1.5;
+}
+
+.help-panel {
+    flex: 1;
+    background: var(--color-cool--100);
+    padding: var(--gap);
+    overflow-y: auto;
 }
 
 @media screen and (min-width: 670px) {

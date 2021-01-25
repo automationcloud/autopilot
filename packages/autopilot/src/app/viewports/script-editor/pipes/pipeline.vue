@@ -1,7 +1,5 @@
 <template>
     <div class="pipeline">
-        <modal-create-recipe/>
-        <modal-pipe-notes/>
         <pipeline-input :input-set="inputSet"/>
         <pipe-list
             :pipeline-controller="this"
@@ -16,8 +14,6 @@ import debouncePromise from 'debounce-promise';
 import PipelineInput from './pipeline-input.vue';
 import PipelineOutcomes from './pipeline-outcomes.vue';
 import PipeList from './pipe-list.vue';
-import ModalCreateRecipe from './modal-create-recipe.vue';
-import ModalPipeNotes from './modal-pipe-notes.vue';
 
 const DEFAULT_STATE = {
     spotlight: {
@@ -36,8 +32,6 @@ export default {
         PipelineInput,
         PipelineOutcomes,
         PipeList,
-        ModalCreateRecipe,
-        ModalPipeNotes,
     },
 
     props: {
