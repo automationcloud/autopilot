@@ -43,7 +43,7 @@ export class AutopilotFlowService extends FlowService {
 
     async peekInputData(key: string) {
         const data = this.bundles.getInputData(key, false);
-        return util.deepClone(data);
+        return data ? util.deepClone(data) : data;
     }
 
     async sendOutputData(key: string, data: any) {

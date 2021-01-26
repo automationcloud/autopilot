@@ -121,7 +121,7 @@ export class BundlesController {
         if (!input && required) {
             throw new Error(`Input ${key} not found. Use "Data" tab to define test input data.`);
         }
-        return input?.data ?? null;
+        return input ? input.data : undefined;
     }
 
     collectInputPaths() {
