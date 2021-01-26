@@ -45,17 +45,17 @@
                 </div>
             </div>
 
-            <div class="modal__buttons">
-                <button class="button button--outlined-primary"
-                    @click="$emit('hide')">
-                    Cancel
-                </button>
-                <button class="button button--primary"
-                    @click="createRecipe()"
-                    :disabled="!canCreateRecipe">
-                    Create recipe
-                </button>
-            </div>
+        </div>
+        <div class="modal__buttons group group--gap">
+            <button class="button button--tertiary"
+                @click="$emit('hide')">
+                Cancel
+            </button>
+            <button class="button button--primary"
+                @click="createRecipe()"
+                :disabled="!canCreateRecipe">
+                Create recipe
+            </button>
         </div>
     </div>
 </template>

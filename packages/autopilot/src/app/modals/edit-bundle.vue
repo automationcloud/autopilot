@@ -18,12 +18,12 @@
                         v-model="bundleProxy.excluded"/>
                 </div>
             </div>
-            <div class="modal__buttons">
-                <button class="button button--primary"
-                    @click="$emit('hide')">
-                    Done
-                </button>
-            </div>
+        </div>
+        <div class="modal__buttons">
+            <button class="button button--primary"
+                @click="$emit('hide')">
+                Done
+            </button>
         </div>
     </div>
 </template>

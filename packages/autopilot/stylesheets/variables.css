@@ -3,9 +3,9 @@
     --gap--small: 6px;
 
     --font-size: 12px;
+    --font-size--alt: 14px;
     --font-size--small: 10px;
     --font-family--alt: 'Barlow Semi Condensed', sans-serif;
-    /* --font-family: var(--font-family--alt); */
 
     --tree-bar-size: 28px;
     --tree-icon-size: 28px;

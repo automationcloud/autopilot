@@ -15,9 +15,12 @@
     display: flex;
     flex-flow: row nowrap;
     padding: var(--gap);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+
     background: var(--color-cool--700);
     color: #fff;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-family: var(--font-family--alt);
+    font-size: var(--font-size--alt);
 }
 
 .modal__header > i {
@@ -32,7 +35,10 @@
 }
 
 .modal__buttons {
-    margin-top: var(--gap);
     display: flex;
     justify-content: flex-end;
+    padding: var(--gap);
+
+    background: var(--color-cool--200);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
