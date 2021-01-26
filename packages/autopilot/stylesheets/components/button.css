@@ -15,8 +15,8 @@
     background: var(--color-yellow--400);
 }
 
-.button--alt {
-    padding: 0 var(--gap);
+.button.button--alt {
+    padding: var(--gap--small) var(--gap);
     font-family: var(--font-family--alt);
     font-size:  var(--font-size--alt);
     border: 1px solid var(--color-mono--600);
@@ -27,7 +27,6 @@
 .button--alt.button--cta::before {
     font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
     font-size: 1.1em;
-    margin-left: -.4em;
     margin-right: .4em;
 }
 

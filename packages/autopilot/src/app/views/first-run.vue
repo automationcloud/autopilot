@@ -1,5 +1,5 @@
 <template>
-    <div class="first-run automation-cloud">
+    <div class="first-run">
         <div class="topbar">
             <img src="resources/ubio-robot-white.svg"
                 class="topbar-logo" />
@@ -7,7 +7,7 @@
         </div>
 
         <div class="main">
-            <div class="hero--grad section">
+            <div class="section section-bg--hero--grad">
                 <img class="app-image"
                     src="resources/product-logos/autopilot.svg"
                     width="150"/>
@@ -37,7 +37,7 @@
                     </h6>
                     <div class="section-controls">
                         <button
-                            class="button button--cta"
+                            class="button button--alt button--cta"
                             :class="{
                                 'button--secondary': canInstall,
                                 'button--disabled': !canInstall,
@@ -79,7 +79,7 @@
                     </h6>
                     <div class="section-controls">
                         <button
-                            class="button button--cta"
+                            class="button button--alt button--cta"
                             :class="{
                                 'button--primary': installed,
                                 'button--disabled': !installed,
@@ -97,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="section section--tray tray-bg--transparent-mid">
+            <div class="section section-bg--tray">
                 <promo-robot-school style="align-self: end;"/>
             </div>
         </div>
@@ -156,6 +156,7 @@ export default {
 
 <style scoped>
 .first-run {
+    font-family: var(--font-family--alt);
     display: flex;
     flex-flow: column nowrap;
     overflow: hidden;
@@ -194,10 +195,15 @@ export default {
 .section {
     display: flex;
     flex-flow: column wrap;
+    padding: var(--gap);
 }
 
-.section--tray {
-    padding: var(--gap);
+.section-bg--tray {
+    background: linear-gradient(to bottom, transparent 50%, var(--color-cool--400) 50%);
+}
+
+.section-bg--hero--grad {
+    background: linear-gradient(329.78deg, var(--color-yellow--200) 0, var(--color-blue--500) 63.83%);
 }
 
 .section-content {

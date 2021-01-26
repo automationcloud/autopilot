@@ -10,7 +10,7 @@
                 Robot School will tutor you.
                 Beware: You may turn a little bit 'robot'.
             </p>
-            <a class="button--alt button--cta"
+            <a class="button button--alt button--cta"
                 :href="robotSchoolUrl">
                 <span>Robot School</span>
             </a>

@@ -39,7 +39,7 @@
             <div v-if="location === 'ac'">
                 <signin-warning message="to open automation from the Automation Cloud" />
                 <div v-if="isAuthenticated">
-                    <div class="signed-in-box">
+                    <div class="box box--light">
                         Signed-in as {{ userName }}
                     </div>
                     <div class="form-row">
@@ -60,12 +60,14 @@
                             </select>
                         </div>
                     </div>
-
-                    <label class="form-row">
-                        <input type="checkbox" v-model="openActive">
-                        Open active version
-                    </label>
-
+                    <div class="form-row">
+                        <div class="form-row__label">
+                           Open active version
+                        </div>
+                        <div class="form-row__controls">
+                            <input type="checkbox" v-model="openActive">
+                        </div>
+                    </div>
                     <div class="form-row" v-if="!openActive">
                         <div class="form-row__label">
                             Script version
@@ -88,14 +90,14 @@
                 </div>
             </div>
         </div>
-        <div class="modal__buttons automation-cloud">
-            <button class="button button--tertiary"
+        <div class="modal__buttons group group--gap">
+            <button class="button button--alt button--tertiary"
                 @click="$emit('hide')">
                 Cancel
             </button>
             <button
                 v-if="location === 'ac'"
-                class="button button--primary"
+                class="button button--alt  button--primary"
                 @click="openFromAc()"
                 :disabled="!canOpenFromAc">
                 Open
@@ -103,7 +105,7 @@
 
             <button
                 v-if="location === 'file'"
-                class="button button--primary"
+                class="button button--alt button--primary"
                 @click="openFromFile()">
                 Select file
             </button>
@@ -233,12 +235,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-/* TODO extract */
-.signed-in-box {
-    padding: var(--gap--large);
-    background: var(--color-cool--200);
-    border-radius: var(--border-radius);
-}
-</style>

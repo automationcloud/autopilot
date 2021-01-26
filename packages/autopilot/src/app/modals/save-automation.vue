@@ -37,7 +37,7 @@
             <div v-if="location === 'ac'">
                 <signin-warning message="to save and run automations in the Automation Cloud" />
                 <div v-if="isAuthenticated">
-                    <div class="signed-in-box">
+                    <div class="box box--light">
                         Signed-in as {{ userName }}
                     </div>
                     <div class="form-row">
@@ -124,21 +124,21 @@
                 </div>
             </div>
         </div>
-        <div class="modal__buttons">
-            <button class="button--alt button--tertiary"
+        <div class="modal__buttons group group--gap">
+            <button class="button button--alt button--tertiary"
                 @click="$emit('hide')">
                 Cancel
             </button>
             <button
                 v-if="location === 'ac'"
-                class="button--alt button--primary"
+                class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
                 Save
             </button>
             <button
                 v-if="location === 'file'"
-                class="button--alt button--primary"
+                class="button button--alt button--primary"
                 @click="saveToFile()">
                 Save File
             </button>
@@ -317,10 +317,4 @@ export default {
     grid-gap: 2px;
 }
 
-/* TODO extract */
-.signed-in-box {
-    padding: var(--gap--large);
-    background: var(--color-cool--200);
-    border-radius: var(--border-radius);
-}
 </style>

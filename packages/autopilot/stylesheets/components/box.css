@@ -1,0 +1,19 @@
+.box {
+    font-family: var(--font-family--alt);
+    font-size: var(--font-size--alt);
+    margin: var(--gap--large) 0;
+    vertical-align: middle;
+}
+
+.box.box--primary {
+    background-color: var(--color-yellow--300);
+    color: var(--color-cool--800);
+}
+
+.box.box--light {
+    background: var(--color-cool--200);
+}
+
+.box__icon {
+    margin-right: var(--gap--small);
+}
