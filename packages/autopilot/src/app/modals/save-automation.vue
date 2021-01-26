@@ -1,11 +1,11 @@
 <template>
     <div class="modal">
-        <div class="modal__header font-family--alt">
+        <div class="modal__header">
             Save As
         </div>
         <div class="modal__body">
-            <div>
-                <div class="location-header">Location</div>
+            <div class="section">
+                <div class="section__title">Location</div>
                 <div class="form-row">
                     <div class="form-row__controls">
                         <input class="input"
@@ -37,10 +37,9 @@
             <div v-if="location === 'ac'">
                 <signin-warning message="to save and run automations in the Automation Cloud" />
                 <div v-if="isAuthenticated">
-                    <div
-                        class="box font-family--alt"
-                        style="background: var(--color-cool--200);">
-                        Signed-in as {{ userName }} </div>
+                    <div class="signed-in-box">
+                        Signed-in as {{ userName }}
+                    </div>
 
                     <div class="form-row">
                         <div class="form-row__label">
@@ -123,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <div class="actions automation-cloud">
+        <div class="modal__buttons automation-cloud">
             <button class="button button--tertiary"
                 @click="$emit('hide')">
                 Cancel
@@ -314,21 +313,10 @@ export default {
     grid-gap: 2px;
 }
 
-.location-header {
-    font-family: var(--font-family--alt);
-    font-size: 1.6em;
-    margin-bottom: var(--gap--large);
-}
-
-.actions {
-    background: var(--color-cool--100);
-    padding: var(--gap) 0;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.actions .button {
-    font-weight: 500;
-    font-size: 1.4em;
+/* TODO extract */
+.signed-in-box {
+    padding: var(--gap--large);
+    background: var(--color-cool--200);
+    border-radius: var(--border-radius);
 }
 </style>

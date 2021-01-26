@@ -1,10 +1,8 @@
 <template>
     <div class="modal">
-
         <div class="modal__header">
             Edit pipe notes
         </div>
-
         <div class="modal__body">
             <div class="form-row">
                 <div class="form-row__label">
@@ -16,21 +14,18 @@
                         v-focus/>
                 </div>
             </div>
-
             <div class="form-block">
                 <textarea
                     rows="12"
                     v-model.trim="pipeProxy.notes"></textarea>
             </div>
-
-            <div class="modal__button">
-                <button class="button button--primary"
-                    @click="$emit('hide')">
-                    Done
-                </button>
-            </div>
         </div>
-
+        <div class="modal__buttons">
+            <button class="button button--primary"
+                @click="$emit('hide')">
+                Done
+            </button>
+        </div>
     </div>
 </template>
 
