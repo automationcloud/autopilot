@@ -124,21 +124,21 @@
                 </div>
             </div>
         </div>
-        <div class="modal__buttons automation-cloud">
-            <button class="button button--tertiary"
+        <div class="modal__buttons">
+            <button class="button--alt button--tertiary"
                 @click="$emit('hide')">
                 Cancel
             </button>
             <button
                 v-if="location === 'ac'"
-                class="button button--primary"
+                class="button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
                 Save
             </button>
             <button
                 v-if="location === 'file'"
-                class="button button--primary"
+                class="button--alt button--primary"
                 @click="saveToFile()">
                 Save File
             </button>
