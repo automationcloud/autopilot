@@ -34,16 +34,14 @@ export class ApiController {
 
     async init() {}
 
-    async getServices(
-        options: {
-            name?: string | null;
-            archived?: boolean | null;
-            domainId?: string | null;
-            limit?: number;
-            offset?: number;
-        } = {},
-    ): Promise<ApiService[]> {
-        const { name, archived, domainId, limit = 100, offset = 0 } = options;
+    async getServices(options: {
+        name?: string | null;
+        archived?: boolean | null;
+        domainId?: string | null;
+        limit?: number;
+        offset?: number;
+    } = {}): Promise<ApiService[]> {
+        const { name, archived, domainId, limit = 1000, offset = 0 } = options;
         const qs = Object.entries({ name, archived, domain: domainId, limit, offset })
             .filter(e => e[1] != null);
         const query = Object.fromEntries(qs);
