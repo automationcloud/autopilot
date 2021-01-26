@@ -82,7 +82,7 @@
                                     v-for="script of scripts"
                                     :key="script.id"
                                     :value="script.id">
-                                    {{ script.fullVersion }} - {{ new Date(script.createdAt) }}
+                                    {{ script.fullVersion }} - {{ formatDate(script.createdAt) || '' }}
                                 </option>
                             </select>
                         </div>
@@ -231,6 +231,19 @@ export default {
                     this.scripts = [];
                 }
             }
+        },
+
+        formatDate(timestamp) {
+            const time = new Date(timestamp);
+            return time.toLocaleString('en-GB', {
+                timeZone: 'UTC',
+                timeZoneName: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+            });
         }
     },
 };
