@@ -1,0 +1,54 @@
+.button.button--inverse {
+    color: var(--ui-color--white);
+}
+
+.button.button--inverse:hover {
+    background-color: rgba(255,255,255,.1);
+}
+
+.button.button--yellow {
+    background: var(--color-yellow--300);
+    border-color: var(--color-yellow--900);
+}
+
+.button.button--yellow:hover {
+    background: var(--color-yellow--400);
+}
+
+.button.button--alt {
+    padding: var(--gap--small) var(--gap);
+    font-family: var(--font-family--alt);
+    font-size:  var(--font-size--alt);
+    border: 1px solid var(--color-mono--600);
+    border-radius: 2px;
+    color: var(--color-cool--800);
+}
+
+.button--alt.button--cta::before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
+    font-size: 1.1em;
+    margin-right: .4em;
+}
+
+.button--alt.button--primary {
+    background: var(--color-yellow--300);
+}
+
+.button--alt.button--secondary {
+    background: var(--color-blue--600);
+    color: #fff;
+}
+
+.button--alt.button--tertiary {
+    background: transparent;
+    border-color: transparent;
+}
+
+.button--alt.button--disabled {
+    background: var(--color-mono--400);
+    color: var(--color-mono--600);
+}
+
+.button--alt__icon {
+    font-size: 1.1em;
+}

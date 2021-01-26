@@ -1,5 +1,5 @@
 <template>
-    <div class="automation-cloud promo promo--blue">
+    <div class="promo promo--blue">
         <img src="resources/ubio-humanoid-blue.svg" alt="robot">
         <article class="promo-content">
             <h2 class="promo-content-title">
@@ -10,7 +10,7 @@
                 Robot School will tutor you.
                 Beware: You may turn a little bit 'robot'.
             </p>
-            <a class="button button--cta"
+            <a class="button button--alt button--cta"
                 :href="robotSchoolUrl">
                 <span>Robot School</span>
             </a>
@@ -33,6 +33,7 @@ export default {
     display: flex;
     align-items: flex-start;
     box-shadow: 0 4px 4px rgba(0,0,0,.25);
+    font-family: var(--font-family--alt);
     border-radius: 4px;
 }
 

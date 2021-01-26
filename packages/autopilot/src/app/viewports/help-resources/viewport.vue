@@ -1,6 +1,6 @@
 <template>
-    <div class="help-resources automation-cloud">
-        <div class="help-resources-item">
+    <div class="help-resource">
+        <div class="help-resource-item">
 
             <article class="content">
                 <div class="content-header">
@@ -12,17 +12,17 @@
                     Expert scripters and the Automation Cloud team monitor all issues and conversations there.
                 </p>
                 <a :href="communityUrl"
-                    class="button button--primary button--cta">
+                    class="button button--alt button--primary button--cta">
                     Community
                 </a>
 
                 <div class="box box--primary">
                     <h2 style="margin-top: 0px; font-size: 20px;">Find out more about the Automation Cloud</h2>
                     <a
-                        class="button button--tertiary button--cta"
+                        class="button button--alt button--tertiary button--cta"
                         style="padding-left: 0px;"
                         :href="homeUrl">
-                        automationcloud.net
+                        automation.cloud
                     </a>
                 </div>
             </article>
@@ -37,7 +37,7 @@
                     Access reference documentation about the Autopilot tool and the Automation Cloud API.
                 </p>
                 <a
-                    class="button button--primary button--cta"
+                    class="button button--alt button--primary button--cta"
                     type="click"
                     :href="robotSchoolUrl">
                     <span>Robot School</span>
@@ -57,22 +57,24 @@
                     Watch jobs while they execute and drill down into the low-level detail.
                 </p>
 
-                <a
-                    class="button button--primary button--cta"
-                    type="click"
-                    :href="dashboardUrl">
-                    {{ isAuthenticated ? 'Dashboard' : 'Sign in to your Dashboard' }}
-                </a>
-                <a
-                    v-show="!isAuthenticated"
-                    class="button button--tertiary button--cta"
-                    :href="registerUrl">
-                    Sign up and get started
-                </a>
+                <div class="group group--gap">
+                    <a
+                        class="button button--alt button--primary button--cta"
+                        type="click"
+                        :href="dashboardUrl">
+                        {{ isAuthenticated ? 'Dashboard' : 'Sign in to your Dashboard' }}
+                    </a>
+                    <a
+                        v-show="!isAuthenticated"
+                        class="button button--alt button--tertiary button--cta"
+                        :href="registerUrl">
+                        Sign up and get started
+                    </a>
+                </div>
             </article>
         </div>
 
-        <div class="help-resources-item tray-bg--transparent-light">
+        <div class="help-resource-item tray-bg">
             <promo-robot-school/>
         </div>
     </div>
@@ -100,16 +102,20 @@ export default {
 </script>
 
 <style scoped>
-.help-resources {
+.help-resource {
     display: flex;
     flex-flow: column;
     justify-content: space-between;
-    font-size: 14px;
-    font-weight: 400;
+    font-family: var(--font-family--alt);
+    font-size:  var(--font-size--alt);
 }
 
-.help-resources-item {
+.help-resource-item {
     padding: var(--gap) var(--gap--large);
+}
+
+.tray-bg {
+    background: linear-gradient(to bottom, transparent 50%, var(--color-mono--100) 50%);
 }
 
 .content {
@@ -133,5 +139,4 @@ export default {
 .content-text {
     max-width: 650px;
 }
-
 </style>

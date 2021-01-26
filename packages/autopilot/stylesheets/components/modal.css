@@ -39,6 +39,6 @@
     justify-content: flex-end;
     padding: var(--gap);
 
-    background: var(--color-cool--200);
+    background: var(--color-cool--100);
     border-radius: 0 0 var(--border-radius) var(--border-radius);
 }

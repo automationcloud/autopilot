@@ -1,26 +1,27 @@
 <template>
-    <div class="signin-warning automation-cloud"
+    <div class="signin-warning"
         v-if="isShown">
 
-        <div class="box box--primary"
-            style="display: flex; align-items: center;">
-            <i class="fas fa-exclamation-circle"></i>
+        <div class="box box--primary group group--gap">
+            <i class="box__icon fas fa-exclamation-circle"></i>
             <span>You need to be signed in {{ message }}.</span>
         </div>
 
-        <button
-            class="button button--primary button--cta"
-            type="click"
-            @click="apiLogin.startLogin()">
-            <span>Sign in</span>
-        </button>
+        <div class="group group--gap">
+            <button
+                class="button button--alt button--primary button--cta"
+                type="click"
+                @click="apiLogin.startLogin()">
+                <span>Sign in</span>
+            </button>
 
-        <a
-            class="button button--tertiary button--cta"
-            type="click"
-            :href="registerUrl">
-            <span>Sign up for an account</span>
-        </a>
+            <button
+                class="button button--alt button--tertiary button--cta"
+                type="click"
+                :href="registerUrl">
+                <span>Sign up for an account</span>
+            </button>
+        </div>
     </div>
 </template>
 
@@ -50,14 +51,3 @@ export default {
 };
 
 </script>
-
-<style scoped>
-.signin-warning {
-    color: var(--color-cool--800);
-    font-size: 1.2em;
-}
-
-.box {
-    margin: var(--gap) 0;
-}
-</style>
