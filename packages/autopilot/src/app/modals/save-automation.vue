@@ -81,14 +81,13 @@
                         <div class="form-row__label">
                             Script Version
                         </div>
-                        <div class="form-row__controls">
+                        <div class="form-row__controls group group--gap">
                             <input
-                                class="input input--inline"
-                                style="justify-self: stretch;"
+                                class="input"
                                 type="text"
                                 v-model="fullVersion"
                                 :readonly="release !== 'custom'" />
-                            <select class="input input--inline" v-model="release">
+                            <select class="input" v-model="release">
                                 <option value="major">major</option>
                                 <option value="minor">minor</option>
                                 <option value="patch">patch</option>
@@ -100,8 +99,8 @@
                         <div class="form-row__label">
                             Worker tag
                         </div>
-                        <div class="form-row__controls group group--gap">
-                            <input class="input"
+                        <div class="form-row__controls">
+                            <input class="input stretch"
                                 v-model="workerTag"/>
                         </div>
                     </div>
@@ -310,6 +309,7 @@ export default {
 .inline-message {
     font-style: italic;
     font-size: 10px;
+    color: var(--color-cool--600);
     line-height: 1.2em;
     padding: var(--gap) 2px;
     display: grid;
