@@ -40,12 +40,10 @@
                     <div class="signed-in-box">
                         Signed-in as {{ userName }}
                     </div>
-
                     <div class="form-row">
                         <div class="form-row__label">
                             Automation
                         </div>
-
                         <div class="form-row__controls">
                             <select v-model="serviceId" class="input stretch" id="select-automation">
                                 <option :value="null"> Create new Automation </option>
@@ -62,7 +60,6 @@
                             </span>
                         </div>
                     </div>
-
                     <div class="box box--yellow box--small"
                             v-if="namesMismatch">
                         <strong>Warning!</strong>
@@ -71,7 +68,6 @@
                         it will update the service name to {{ metadata.serviceName }}.
                         Proceed at your own risk.
                     </div>
-
                     <div v-if="!serviceId"
                         class="form-row">
                         <div class="form-row__label">
@@ -81,7 +77,6 @@
                             <input class="input" type="text" v-model="serviceName" />
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-row__label">
                             Script Version
@@ -101,7 +96,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-row__label">
                             Worker tag
@@ -111,14 +105,22 @@
                                 v-model="workerTag"/>
                         </div>
                     </div>
-                    <label class="form-row">
+                    <div class="form-row">
                         <div class="form-row__label">
                             Make script active
                         </div>
                         <div class="form-row__controls">
                             <input type="checkbox" v-model="activate">
                         </div>
-                    </label>
+                    </div>
+                    <div class="form-block">
+                        <div class="form-block__label">
+                            Note
+                        </div>
+                        <div class="form-block__controls">
+                            <textarea v-model="note" rows="6" placeholder="Describe your changes"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -163,6 +165,7 @@ export default {
             serviceName,
             customVersion: version,
             workerTag: 'stable',
+            note: '',
             release: 'patch',
             activate: false,
             services: [],
@@ -245,6 +248,7 @@ export default {
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
+                    note: this.note,
                 });
                 this.$emit('hide');
             } catch (error) {

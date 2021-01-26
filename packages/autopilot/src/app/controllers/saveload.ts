@@ -98,8 +98,9 @@ export class SaveLoadController {
         fullVersion: string;
         workerTag: string;
         activate: boolean;
+        note: string;
     }) {
-        const { serviceId, fullVersion, workerTag, activate } = spec;
+        const { serviceId, fullVersion, workerTag, activate, note = '' } = spec;
         const automation = { ...this.project.automation };
         const metadata = {
             ...automation.metadata,
@@ -109,7 +110,7 @@ export class SaveLoadController {
         const script = await this.api.createScript({
             serviceId,
             fullVersion,
-            note: '',
+            note,
             workerTag,
             content: {
                 ...automation,
