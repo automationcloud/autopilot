@@ -35,6 +35,8 @@ export class InspectController {
     ) {
         // TODO stop inspect on Escape
         this.browser.on('global:Overlay.inspectNodeRequested', ev => this.onInspectNodeRequested(ev));
+        this.browser.on('global:Page.frameStartedLoading', ev => this.onFrameStartedLoading(ev));
+        this.emitter.on('stop', () => this.onStop());
     }
 
     async init() {}
@@ -50,13 +52,10 @@ export class InspectController {
         try {
             await this.highlightScope(scopeEl);
             const el = await this.grabElement(scopeEl, prompt);
-            if (el) {
-                return {
-                    element: el,
-                    selector: await el.createSelector(scopeEl, unique),
-                };
-            }
-            return null;
+            return el ? {
+                element: el,
+                selector: await el.createSelector(scopeEl, unique),
+            } : null;
         } finally {
             this.hideHighlight(scopeEl);
         }
@@ -66,7 +65,7 @@ export class InspectController {
         return this.scopeEl != null;
     }
 
-    async startInspect(scopeEl: RemoteElement, highlightConfig: any = HIGHLIGHT_CONFIG) {
+    protected async startInspect(scopeEl: RemoteElement, highlightConfig: any = HIGHLIGHT_CONFIG) {
         if (this.isInspecting()) {
             return;
         }
@@ -80,15 +79,6 @@ export class InspectController {
     }
 
     stopInspect() {
-        const { scopeEl } = this;
-        if (!scopeEl) {
-            return;
-        }
-        scopeEl.page.sendAndForget('Overlay.setInspectMode', {
-            mode: 'none',
-            highlightConfig: HIGHLIGHT_CONFIG,
-        });
-        this.scopeEl = null;
         this.emitter.emit('stop');
     }
 
@@ -126,7 +116,7 @@ export class InspectController {
         return result;
     }
 
-    async onInspectNodeRequested(ev: { backendNodeId: string }) {
+    protected async onInspectNodeRequested(ev: { backendNodeId: string }) {
         try {
             const scopeEl = this.scopeEl!;
             assert(scopeEl, 'Invalid state: no element in scope');
@@ -160,10 +150,11 @@ export class InspectController {
             this.emitter.emit('element', el);
         } catch (err) {
             console.error('Inspect element failed', err);
+            this.emitter.emit('stop');
         }
     }
 
-    async resolveRemoteFromNode(scopeRemoteEl: RemoteElement, node: CdpNode): Promise<RemoteElement> {
+    protected async resolveRemoteFromNode(scopeRemoteEl: RemoteElement, node: CdpNode): Promise<RemoteElement> {
         const { object } = await scopeRemoteEl.page.send('DOM.resolveNode', { nodeId: node.nodeId });
         return new RemoteElement(scopeRemoteEl.executionContext, object);
     }
@@ -186,8 +177,25 @@ export class InspectController {
     async hideHighlight(scopeEl: RemoteElement) {
         scopeEl.evaluate(
             (el: HTMLElement, toolkitBinding: string) => (window as any)[toolkitBinding].hideAllRects(),
-            scopeEl.page.toolkitBinding,
-        );
+            scopeEl.page.toolkitBinding);
+    }
+
+    protected onStop() {
+        const { scopeEl } = this;
+        if (!scopeEl) {
+            return;
+        }
+        scopeEl.page.sendAndForget('Overlay.setInspectMode', {
+            mode: 'none',
+            highlightConfig: HIGHLIGHT_CONFIG,
+        });
+        this.scopeEl = null;
+    }
+
+    protected onFrameStartedLoading(params: { frameId: string }) {
+        if (this.scopeEl?.frame.frameId === params.frameId) {
+            this.emitter.emit('stop');
+        }
     }
 
 }

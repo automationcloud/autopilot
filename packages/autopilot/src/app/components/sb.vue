@@ -24,6 +24,9 @@
                 <i class="fa fa-cog"></i>
             </button>
             <button class="button button--primary button--icon button--flat"
+                    :class="{
+                        'button--active': inspecting
+                    }"
                     title="Record selector from webpage"
                     @click="startInspect()"
                     :disabled="!scopeEl">
@@ -106,6 +109,7 @@ export default {
             sb: this,
             scopeNode: null,
             isDomShown: false,
+            inspecting: false,
             inspectedNode: null,
             highlightIds: new Set(),
             relevantIds: new Set(),
@@ -125,6 +129,9 @@ export default {
     },
 
     destroyed() {
+        if (this.inspecting) {
+            this.inspect.stopInspect();
+        }
     },
 
     watch: {
@@ -223,13 +230,18 @@ export default {
             if (!this.scopeEl) {
                 return;
             }
-            const result = await this.inspect.recordElement(this.scopeEl, { unique: this.unique });
-            if (result) {
-                const node = await this.dom.resolveNodeFromEl(result.element);
-                this.isDomShown = true;
-                this.inspectedNode = node;
-                this.setSelector(result.selector, true);
-                this.$once('refresh', () => this.revealInspected());
+            try {
+                this.inspecting = true;
+                const result = await this.inspect.recordElement(this.scopeEl, { unique: this.unique });
+                if (result) {
+                    const node = await this.dom.resolveNodeFromEl(result.element);
+                    this.isDomShown = true;
+                    this.inspectedNode = node;
+                    this.setSelector(result.selector, true);
+                    this.$once('refresh', () => this.revealInspected());
+                }
+            } finally {
+                this.inspecting = false;
             }
         },
 
