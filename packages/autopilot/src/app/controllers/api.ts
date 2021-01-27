@@ -24,7 +24,7 @@ export interface RequestOptions {
 }
 
 @injectable()
-@controller()
+@controller({ alias: 'api' })
 export class ApiController {
     constructor(
         @inject(ApiRequest)

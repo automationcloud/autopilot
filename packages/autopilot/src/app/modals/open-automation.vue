@@ -47,17 +47,10 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="serviceId" class="input stretch">
-                                <option v-if="services.length === 0"> No Automation found </option>
-                                <option v-else
-                                    :value="null"> Select Automation </option>
-                                <option
-                                    v-for="service of services"
-                                    :key="service.id"
-                                    :value="service.id">
-                                    {{ service.name }}
-                                </option>
-                            </select>
+                            <service-select
+                                :serviceId="serviceId"
+                                :serviceName="serviceName"
+                                @change="onServiceChange"></service-select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -116,6 +109,7 @@
 <script>
 import { remote } from 'electron';
 const { dialog } = remote;
+import ServiceSelect from '../components/service-select.vue';
 
 export default {
     inject: [
@@ -124,10 +118,11 @@ export default {
         'apiLogin',
     ],
     data() {
-        const { serviceId } = this.project.automation.metadata;
+        const { serviceId, serviceName } = this.project.automation.metadata;
         return {
             location: this.saveload.location || 'ac',
             serviceId,
+            serviceName,
             scriptId: null,
             openActive: true,
             services: [],
@@ -135,16 +130,11 @@ export default {
         };
     },
 
-    created() {
-        this.loadServices();
+    components: {
+        ServiceSelect,
     },
 
     watch: {
-        isAuthenticated(val) {
-            if (val) {
-                this.loadServices();
-            }
-        },
         serviceId(val) {
             this.scriptId = null;
             if (!this.openActive && val) {
@@ -214,14 +204,6 @@ export default {
             }
         },
 
-        async loadServices() {
-            try {
-                this.services = await this.saveload.getServices();
-            } catch (error) {
-                this.services = [];
-            }
-        },
-
         async loadScripts(serviceId) {
             if (serviceId) {
                 try {
@@ -244,6 +226,11 @@ export default {
                 hour: '2-digit',
                 minute: '2-digit',
             });
+        },
+
+        onServiceChange(service) {
+            this.serviceId = service.id;
+            this.serviceName = service.name;
         }
     },
 };
