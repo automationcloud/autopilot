@@ -69,6 +69,7 @@ export class BundlesController {
 
     set bundleIndex(index: number) {
         this.project.automation.metadata.bundleIndex = clamp(index, 0, this.bundles.length - 1);
+        this.save();
     }
 
     getCurrentBundle(): Bundle {
@@ -83,18 +84,13 @@ export class BundlesController {
         return current;
     }
 
-    selectBundle(index: number = this.bundles.length - 1) {
-        this.bundleIndex = index;
-        this.save();
-    }
-
     createBundle(spec: Bundle = {
         name: 'Input data',
         inputs: [],
         excluded: false,
     }) {
         this.bundles.push(spec);
-        this.selectBundle(this.bundles.length - 1);
+        this.bundleIndex = this.bundles.length - 1;
     }
 
     deleteBundle(index: number = this.bundleIndex) {
