@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { util } from '@automationcloud/engine';
+import { clamp, util } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { controller } from '../controller';
 import { ViewportManager } from '../viewports/viewport-manager';
@@ -42,22 +42,24 @@ export class LayoutController {
     }
 
     async init() {
-        const { root, workspaces = DEFAULT_WORKSPACES, activeWorkspaceIndex = 0 } = await this.userData.loadData();
+        const { workspaces = DEFAULT_WORKSPACES, activeWorkspaceIndex = 0 } = await this.userData.loadData();
         this.workspaces = workspaces;
-        this.activeWorkspaceIndex = activeWorkspaceIndex;
-        this.root = new LayoutItem(null, root || workspaces[activeWorkspaceIndex].layout);
+        this.cleanupWorkspaces();
+        this.activeWorkspaceIndex = clamp(activeWorkspaceIndex, 0, this.workspaces.length - 1);
+        const layout = this.workspaces[this.activeWorkspaceIndex]?.layout ?? DEFAULT_WORKSPACES[0].layout;
+        this.root = new LayoutItem(null, layout);
     }
 
-    update() {
+    protected update() {
+        this.root.repack();
         this.syncActiveWorkspace();
         this.userData.update({
-            root: this.root,
             workspaces: this.workspaces,
             activeWorkspaceIndex: this.activeWorkspaceIndex,
         });
     }
 
-    syncActiveWorkspace() {
+    protected syncActiveWorkspace() {
         const workspace = this.workspaces[this.activeWorkspaceIndex];
         if (workspace) {
             workspace.layout = util.deepClone(this.root);
@@ -146,20 +148,29 @@ export class LayoutController {
 
     split(target: LayoutItem, newItem: LayoutItem, dir: LayoutDirection) {
         target.splitWith(newItem, dir);
-        this.root.repack();
         this.update();
     }
 
     moveOnto(target: LayoutItem, itemToMove: LayoutItem, dir: LayoutDirection) {
         itemToMove.moveOnto(target, dir);
-        this.root.repack();
         this.update();
     }
 
     remove(itemToRemove: LayoutItem) {
         itemToRemove.removeSelf();
-        this.root.repack();
         this.update();
+    }
+
+    /**
+     * Removes the workspaces that don't contain any viewports.
+     */
+    protected cleanupWorkspaces() {
+        this.workspaces = this.workspaces.filter(workspace => {
+            const layout = new LayoutItem(null, workspace.layout);
+            const viewports = [...layout.root().searchByType('viewport')]
+                .filter(_ => this.viewports.get(_.viewportId!) != null);
+            return viewports.length > 0;
+        });
     }
 
 }
