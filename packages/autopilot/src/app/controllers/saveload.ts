@@ -118,12 +118,13 @@ export class SaveLoadController {
                 datasets: automation.bundles // for backward compat.
             },
         });
-
+        const service = await this.api.getService(serviceId);
         this.api.updateService({
             id: metadata.serviceId,
             name: metadata.serviceName,
             domain: metadata.domainId,
-            draft: metadata.draft
+            draft: metadata.draft,
+            attributes: service.attributes,
         });
         if (activate) {
             this.api.publishScript(script.id);
