@@ -75,10 +75,11 @@ export class ApiController {
         name: string;
         domain: string;
         draft: boolean;
+        attributes: object;
     }): Promise<ApiService> {
-        const { id, name, domain,  draft } = spec;
+        const { id, name, domain, draft, attributes } = spec;
         return await this.api.put(`/private/services/${id}`, {
-            body: { domain, draft, name },
+            body: { domain, draft, name, attributes },
         });
     }
 
@@ -184,6 +185,7 @@ export interface ApiService {
     scriptId: string;
     domain: string;
     draft: boolean;
+    attributes: object;
 }
 
 export interface ApiScript {
