@@ -98,16 +98,28 @@ export class SaveLoadController {
 
     async saveAutomationToAc(spec: {
         serviceId: string;
+        serviceName: string;
         fullVersion: string;
         workerTag: string;
         activate: boolean;
         note: string;
     }) {
+<<<<<<< HEAD
         const { serviceId, fullVersion, workerTag, activate, note = '' } = spec;
         const automation = this.project.automation;
         automation.metadata.serviceId = serviceId;
         automation.metadata.version = fullVersion;
         const content = this.prepareScriptContent(automation);
+=======
+        const { serviceId, serviceName, fullVersion, workerTag, activate, note = '' } = spec;
+        const automation = { ...this.project.automation };
+        const metadata = {
+            ...automation.metadata,
+            version: fullVersion,
+            serviceId,
+            serviceName,
+        };
+>>>>>>> feat: use service-select component in save-automation
         const script = await this.api.createScript({
             serviceId,
             fullVersion,

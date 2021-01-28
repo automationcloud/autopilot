@@ -117,6 +117,11 @@ export default {
         'project',
         'apiLogin',
     ],
+
+    components: {
+        ServiceSelect,
+    },
+
     data() {
         const { serviceId, serviceName } = this.project.automation.metadata;
         return {
@@ -125,13 +130,8 @@ export default {
             serviceName,
             scriptId: null,
             openActive: true,
-            services: [],
             scripts: [],
         };
-    },
-
-    components: {
-        ServiceSelect,
     },
 
     watch: {

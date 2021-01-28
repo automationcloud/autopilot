@@ -45,15 +45,11 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="serviceId" class="input stretch" id="select-automation">
-                                <option :value="null"> Create new Automation </option>
-                                <option
-                                    v-for="service of services"
-                                    :key="service.id"
-                                    :value="service.id">
-                                    {{ service.name }}
-                                </option>
-                            </select>
+                            <service-select
+                                :serviceId="serviceId"
+                                :addNullOption="true"
+                                nullPlaceholder="Create New Automation"
+                                @change="onServiceChange"></service-select>
                             <span class="inline-message">
                                 <i class="fas fa-exclamation-circle"></i>
                                 An Automation contains versions and is what you call from the Automation Cloud API.
@@ -149,12 +145,18 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
+import ServiceSelect from '../components/service-select.vue';
+
 export default {
     inject: [
         'saveload',
         'project',
         'apiLogin',
     ],
+
+    components: {
+        ServiceSelect,
+    },
 
     data() {
         const { serviceId, serviceName, version } = this.project.automation.metadata;
@@ -167,35 +169,26 @@ export default {
             note: '',
             release: 'patch',
             activate: false,
-            services: [],
             scripts: [],
         };
     },
 
     created() {
-        if (this.isAuthenticated) {
-            this.loadServices();
-            this.loadScripts(this.serviceId);
-        }
-
+        this.loadScripts(this.serviceId);
     },
 
     watch: {
         isAuthenticated(val) {
             if (val) {
-                this.loadServices();
                 this.loadScripts(this.serviceId);
             }
         },
 
         serviceId(newVal) {
             if (newVal) {
-                this.loadScripts(this.serviceId);
-                const service = this.services.find(_ => _.id === newVal);
-                this.serviceName = service.name;
+                this.loadScripts(newVal);
             } else {
                 this.scripts = [];
-                this.serviceName = this.metadata.serviceName;
             }
         },
     },
@@ -220,7 +213,7 @@ export default {
             return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
         },
         namesMismatch() {
-            return this.serviceId && this.serviceName !== this.metadata.serviceName;
+            return this.serviceId && this.serviceId !== this.metadata.serviceId;
         },
         fullVersion: {
             get() {
@@ -244,6 +237,7 @@ export default {
             try {
                 await this.saveload.saveAutomationToAc({
                     serviceId: this.serviceId,
+                    seerviceName: this.serviceName,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
@@ -262,7 +256,7 @@ export default {
                 filters: [
                     { name: 'Automation', extensions: ['automation'] },
                 ],
-                defaultPath: this.saveload.filePath || `${this.metadata.serviceName}.automation`,
+                defaultPath: this.saveload.filePath || `${this.serviceName}.automation`,
             });
             if (filePath == null) {
                 return;
@@ -283,14 +277,6 @@ export default {
             return semver.inc(this.latestVersion, this.release);
         },
 
-        async loadServices() {
-            try {
-                this.services = await this.saveload.getServices();
-            } catch (error) {
-                this.services = [];
-            }
-        },
-
         async loadScripts(serviceId) {
             if (serviceId) {
                 try {
@@ -299,6 +285,16 @@ export default {
                     console.warn('failed to load scripts');
                     this.scripts = [];
                 }
+            }
+        },
+
+        onServiceChange(service) {
+            if (service) {
+                this.serviceId = service.id;
+                this.serviceName = service.name;
+            } else {
+                this.serviceId = null;
+                this.serviceName = this.metadata.serviceName;
             }
         }
     },
@@ -316,5 +312,4 @@ export default {
     grid-template-columns: auto auto;
     grid-gap: 2px;
 }
-
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="search-select">
         <div class="search-select__select input stretch"
-            @click="onSelctClick"
-            @blur="collapseList">
-            {{ serviceName || 'Select automation' }}
+            @click="toggle"
+            @blur="collapse">
+            {{ serviceName || nullPlaceholder }}
             <span class="icon color--muted">
                 <i class="fas fa-chevron-down"></i>
             </span>
@@ -13,11 +13,16 @@
             <div class="search-select__list">
                 <span v-if="services.length === 0"
                     class="search-select__item"> No Automation found </span>
+                <span v-if="addNullOption"
+                    class="search-select__item"
+                    @click="onItemClick(null)">
+                    {{ nullPlaceholder }}
+                </span>
                 <span
                     class="search-select__item"
                     v-for="service of services"
                     :key="service.id"
-                    @click="selectService(service)">
+                    @click="onItemClick(service)">
                     {{ service.name }}
                 </span>
             </div>
@@ -33,7 +38,12 @@ export default {
 
     props: {
         serviceId: String,
-        serviceName: String,
+        addNullOption: { type: Boolean, default: false },
+        nullPlaceholder: { type: String, default: 'Select automation' },
+    },
+
+    mounted() {
+        this.loadServices();
     },
 
     data() {
@@ -48,6 +58,12 @@ export default {
             this.loadServices(val);
         }
     },
+    computed: {
+        serviceName() {
+            const service = this.services.find(_ => _.id === this.serviceId);
+            return service ? service.name : null;
+        }
+    },
     methods: {
         async loadServices(name = '') {
             try {
@@ -56,28 +72,26 @@ export default {
                 this.services = [];
             }
         },
-
-        onSelctClick() {
+        toggle() {
             if (this.listShown) {
-                this.collapseList();
+                this.collapse();
             } else {
-                this.expandList();
+                this.expand();
             }
         },
-
-        expandList() {
+        expand() {
             this.listShown = true;
             this.loadServices();
         },
 
-        collapseList() {
+        collapse() {
             this.listShown = false;
             this.searchText = '';
         },
 
-        selectService(service) {
+        onItemClick(service) {
             this.$emit('change', service);
-            this.collapseList();
+            this.collapse();
         }
     },
 };
