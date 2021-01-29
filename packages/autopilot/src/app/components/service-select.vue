@@ -1,6 +1,6 @@
 <template>
-    <div class="search-select">
-        <div class="search-select__select input stretch"
+    <div class="service-select">
+        <div class="service-select__dropdown input stretch"
             @click="toggle"
             @blur="collapse">
             {{ serviceName || nullPlaceholder }}
@@ -8,23 +8,25 @@
                 <i class="fas fa-chevron-down"></i>
             </span>
         </div>
-        <div v-show="listShown" class="search-select__pane">
-            <input class="input stretch" type="search" v-model="searchText" placeholder="Search">
-            <div class="search-select__list">
-                <span v-if="services.length === 0"
-                    class="search-select__item"> No Automation found </span>
-                <span v-if="addNullOption"
-                    class="search-select__item"
-                    @click="onItemClick(null)">
-                    {{ nullPlaceholder }}
-                </span>
-                <span
-                    class="search-select__item"
-                    v-for="service of services"
-                    :key="service.id"
-                    @click="onItemClick(service)">
-                    {{ service.name }}
-                </span>
+        <div class="service-select__wrapper">
+            <div v-show="listShown" class="service-select__select">
+                <input class="input stretch" type="search" v-model="searchText" placeholder="Search">
+                <div class="service-select__list">
+                    <span v-if="services.length === 0"
+                        class="service-select__item"> No Automation found </span>
+                    <span v-if="addNullOption"
+                        class="service-select__item"
+                        @click="onItemClick(null)">
+                        {{ nullPlaceholder }}
+                    </span>
+                    <span
+                        class="service-select__item"
+                        v-for="service of services"
+                        :key="service.id"
+                        @click="onItemClick(service)">
+                        {{ service.name }}
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -98,30 +100,34 @@ export default {
 </script>
 
 <style scoped>
-.search-select__select {
+.service-select__dropdown {
     display: flex;
     justify-content: space-between;
     padding: 0 var(--gap--small);
     cursor: pointer;
 }
 
-.search-select__pane {
+.service-select__wrapper {
+    position: relative;
+}
+
+.service-select__select {
     position: absolute;
     z-index: 10;
     border-radius: var(--border-radius);
     border: solid 1px var(--border-color);
     background: var(--color-mono--000);
     padding: var(--gap--small);
-    width: 220px;
+    width: 100%;
 }
 
-.search-select__list {
+.service-select__list {
     margin: var(--gap--small) 0;
     max-height: 200px;
     overflow-y: auto;
 }
 
-.search-select__item {
+.service-select__item {
     display: block;
     cursor: pointer;
     height: var(--control-height);
@@ -129,7 +135,7 @@ export default {
     padding: var(--gap--small);
 }
 
-.search-select__item:hover {
+.service-select__item:hover {
     background: var(--color-cool--200);
 }
 </style>

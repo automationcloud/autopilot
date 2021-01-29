@@ -56,12 +56,11 @@
                             </span>
                         </div>
                     </div>
-                    <div class="box box--yellow box--small"
-                            v-if="namesMismatch">
+                    <div v-if="serviceIdMismatch"
+                        class="box box--yellow box--small">
                         <strong>Warning!</strong>
-                        Selected automation name <strong>{{ serviceName }}</strong> does not match
-                        current automation name <strong>{{ metadata.serviceName }}</strong>.
-                        it will update the service name to {{ metadata.serviceName }}.
+                        You are saving your script to a different automation, <strong>{{ serviceName }}</strong>.
+                        It will update the automation name to {{ metadata.serviceName }}.
                         Proceed at your own risk.
                     </div>
                     <div v-if="!serviceId"
@@ -212,7 +211,7 @@ export default {
         latestVersion() {
             return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
         },
-        namesMismatch() {
+        serviceIdMismatch() {
             return this.serviceId && this.serviceId !== this.metadata.serviceId;
         },
         fullVersion: {
@@ -237,7 +236,7 @@ export default {
             try {
                 await this.saveload.saveAutomationToAc({
                     serviceId: this.serviceId,
-                    seerviceName: this.serviceName,
+                    serviceName: this.serviceName,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
