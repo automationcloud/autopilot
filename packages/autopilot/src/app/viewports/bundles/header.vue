@@ -2,9 +2,9 @@
     <div class="header">
         <select class="input input--inverse stretch"
             v-model="bundles.bundleIndex">
-            <option v-for="(ds, i) of bundles.bundles"
+            <option v-for="(bundle, i) of bundles.bundles"
                 :value="i">
-                {{ ds.excluded ? '[private]' : '' }} {{ ds.name }}
+                {{ bundle.excluded ? '[private]' : '' }} {{ bundle.name }}
             </option>
         </select>
         <button class="button button--inverse button--icon frameless"

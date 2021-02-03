@@ -26,6 +26,7 @@ import { ScriptDiffController } from './script-diff';
 import { SettingsController } from './settings';
 import { EventsController } from './events';
 import { AutomationMetadata } from '../entities/automation';
+import { BundlesController } from './bundles';
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -50,7 +51,9 @@ export class SaveLoadController {
         @inject(SettingsController)
         protected settings: SettingsController,
         @inject(EventsController)
-        protected events: EventsController
+        protected events: EventsController,
+        @inject(BundlesController)
+        protected bundles: BundlesController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -107,18 +110,21 @@ export class SaveLoadController {
             version: fullVersion,
             serviceId,
         };
+        const bundles = this.bundles.getPublicBundles();
+        const content = {
+            script: automation.script,
+            metadata,
+            bundles,
+            datasets: bundles, // for backward compat.
+        };
         const script = await this.api.createScript({
             serviceId,
             fullVersion,
             note,
             workerTag,
-            content: {
-                ...automation,
-                metadata,
-                datasets: automation.bundles // for backward compat.
-            },
+            content,
         });
-        const service = await this.api.getService(serviceId);
+        const service = await this.api.getService(metadata.serviceId);
         this.api.updateService({
             id: metadata.serviceId,
             name: metadata.serviceName,
@@ -197,10 +203,8 @@ export class SaveLoadController {
             draft,
             note: ''
         };
-        const service = await this.api.createService(spec);
-        this.getServices();
 
-        return service;
+        return await this.api.createService(spec);
     }
 
     async getServices() {
