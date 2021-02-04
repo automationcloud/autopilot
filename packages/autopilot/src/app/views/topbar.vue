@@ -156,6 +156,7 @@ export default {
     user-select: none;
 }
 
+/* In Full Screen, traffic lights are not visible; otherwise we offset the logo to right to fit them */
 .topbar--darwin:not(.topbar--fullscreen) .topbar__logo {
     margin-left: 72px;
 }
@@ -188,20 +189,5 @@ export default {
 
     font-family: var(--font-family--alt);
     font-weight: 400;
-}
-
-@media (max-width: 480px) {
-    .topbar {
-        flex-flow: row wrap;
-    }
-
-    .topbar__tools {
-        flex: 1;
-    }
-
-    .topbar__workspaces {
-        order: 3;
-        flex: 0 0 100%;
-    }
 }
 </style>

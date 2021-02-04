@@ -1,12 +1,17 @@
 <template>
     <div class="workspaces"
         ref="container">
-        <div class="workspaces__link"
+        <div class="link link--hamburger"
+            title="Workspaces"
+            @click="popupWorkspacesMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="link link--item workspace__link"
             :class="{
-                'workspaces__link--active': isWorkspaceActive(i),
-                'workspaces__link--dnd--target': dnd.isDragging(),
+                'link--active': isWorkspaceActive(i),
+                'workspace__link--dnd--target': dnd.isDragging(),
             }"
-            v-for="(workspace, i) in visibleWorkspaces"
+            v-for="(workspace, i) in workspaces"
             @click="activateWorkspace(i)"
             @dblclick="editWorkspaceName(i)"
             @contextmenu.prevent.stop="popupWorkspaceItem(i)"
@@ -15,7 +20,7 @@
             :data-index="i">
 
             <span v-if="editingIndex !== i">{{ workspace.name }}</span>
-            <input class="workspaces__edit-name"
+            <input class="edit-name"
                 v-if="editingIndex === i"
                 v-model="workspace.name"
                 v-focus
@@ -23,16 +28,10 @@
                 @keydown="onWorkspaceNameKeydown"
                 @blur="finishWorkspaceEditing"/>
         </div>
-        <div class="workspaces__link workspaces__link--menu"
-            title="Workspaces menu"
-            @click="popupWorkspacesMenu">
-            <i class="fas fa-chevron-down"></i>
-        </div>
-
-        <!-- Iterate all the links once more to evaluate their widths -->
-        <div class="workspaces__link workspaces__link--hidden"
-            v-for="(workspace, i) in workspaces">
-            {{ workspace.name }}
+        <div class="link link--add"
+            title="Add workspace"
+            @click="addWorkspace()">
+            <i class="fas fa-plus"></i>
         </div>
     </div>
 </template>
@@ -42,14 +41,16 @@ import { menu, DragAndDrop } from '../util';
 
 export default {
 
+    inject: [
+        'layout',
+    ],
+
     data() {
-        const dnd = new DragAndDrop({ className: 'workspaces__link' });
+        const dnd = new DragAndDrop({ className: 'workspace__link' });
         dnd.on('dnd', this.onDragAndDrop);
         return {
             editingIndex: -1,
             editingName: '',
-            visibleLinksCount: +Infinity,
-            linkWidths: [],
             dnd,
         };
     },
@@ -57,46 +58,26 @@ export default {
     computed: {
 
         workspaces() {
-            return this.app.layout.workspaces;
-        },
-
-        visibleWorkspaces() {
-            return this.app.layout.workspaces.slice(0, this.visibleLinksCount);
-        },
-
-        otherWorkspaces() {
-            return this.app.layout.workspaces.slice(this.visibleLinksCount);
+            return this.layout.workspaces;
         },
 
     },
 
     mounted() {
         this.dnd.container = this.$refs.container;
-        this.relayoutLinks();
-        window.addEventListener('resize', this.onResize);
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.onResize);
-    },
-
-    watch: {
-        workspaces: {
-            deep: true,
-            handler() {
-                this.$nextTick(() => this.relayoutLinks());
-            }
-        }
     },
 
     methods: {
 
         isWorkspaceActive(i) {
-            return this.app.layout.activeWorkspaceIndex === i;
+            return this.layout.activeWorkspaceIndex === i;
         },
 
         activateWorkspace(i) {
-            this.app.layout.activateWorkspace(i);
+            this.layout.activateWorkspace(i);
         },
 
         editWorkspaceName(i) {
@@ -116,22 +97,30 @@ export default {
 
         finishWorkspaceEditing() {
             this.editingIndex = -1;
-            this.app.layout.update();
+            this.layout.update();
+        },
+
+        addWorkspace() {
+            this.layout.addWorkspace();
+            this.editWorkspaceName(this.layout.activeWorkspaceIndex);
         },
 
         popupWorkspacesMenu() {
-            const others = this.otherWorkspaces.map((w, i) => {
-                return {
+            const items = [];
+            for (const [i, w] of this.workspaces.entries()) {
+                items.push({
                     label: w.name,
-                    click: () => this.activateWorkspace(i + this.visibleLinksCount),
-                };
-            });
+                    click: () => this.activateWorkspace(i),
+                    checked: this.isWorkspaceActive(i),
+                });
+            }
             menu.popupMenu([
-                ...others,
+                ...items,
+                { type: 'separator' },
                 {
                     label: 'Add workspace',
                     click: () => {
-                        this.app.layout.addWorkspace();
+                        this.addWorkspace();
                     }
                 }
             ]);
@@ -148,40 +137,18 @@ export default {
                 {
                     label: 'Remove workspace',
                     click: () => {
-                        this.app.layout.removeWorkspace(i);
+                        this.layout.removeWorkspace(i);
                     }
                 }
             ]);
         },
 
-        relayoutLinks() {
-            const cnt = this.$refs.container;
-            this.linkWidths = [...cnt.querySelectorAll('.workspaces__link--hidden')]
-                .map(l => l.offsetWidth);
-            this.onResize();
-        },
-
-        onResize() {
-            const cnt = this.$refs.container;
-            const menuWidth = cnt.querySelector('.workspaces__link--menu').offsetWidth;
-            let remainingWidth = cnt.offsetWidth - menuWidth;
-            this.visibleLinksCount = this.linkWidths.length;
-            for (let i = 0; i < this.linkWidths.length; i += 1) {
-                const w = this.linkWidths[i];
-                if (remainingWidth < w) {
-                    this.visibleLinksCount = i;
-                    break;
-                }
-                remainingWidth -= w;
-            }
-        },
-
         onDragAndDrop(srcIndex, dstIndex) {
-            const activeWorkspace = this.workspaces[this.app.layout.activeWorkspaceIndex];
+            const activeWorkspace = this.workspaces[this.layout.activeWorkspaceIndex];
             const workspace = this.workspaces[srcIndex];
             this.workspaces.splice(srcIndex, 1);
             this.workspaces.splice(dstIndex, 0, workspace);
-            this.app.layout.activeWorkspaceIndex = this.workspaces.indexOf(activeWorkspace);
+            this.layout.activeWorkspaceIndex = this.workspaces.indexOf(activeWorkspace);
         }
 
     }
@@ -189,7 +156,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .workspaces {
     flex: 1;
     display: flex;
@@ -198,7 +165,7 @@ export default {
     overflow: hidden;
 }
 
-.workspaces__edit-name {
+.edit-name {
     background: transparent;
     color: #fff;
     border: 0;
@@ -207,7 +174,7 @@ export default {
     margin: 0;
 }
 
-.workspaces__link {
+.link {
     position: relative;
     flex: 0 0 auto;
     min-width: 24px;
@@ -218,33 +185,49 @@ export default {
     justify-content: center;
     white-space: nowrap;
 
-    font-family: var(--font-family--alt);
     font-weight: 400;
     -webkit-app-region: no-drag;
+    cursor: pointer;
 }
 
-.workspaces__link--active {
+.link--active {
     box-shadow: 0 -3px 0 var(--color-blue--500) inset;
 }
 
-.workspaces__link--dnd--target {
+.workspace__link--dnd--target {
     box-shadow: none;
 }
 
-.workspaces__link--dnd--target * {
+.workspace__link--dnd--target * {
     pointer-events: none;
 }
 
-.workspaces__link--dnd--before {
+.workspace__link--dnd--before {
     border-left: 2px solid var(--color-blue--500);
 }
 
-.workspaces__link--dnd--after {
+.workspace__link--dnd--after {
     border-right: 2px solid var(--color-blue--500);
 }
 
-.workspaces__link--hidden {
-    visibility: hidden;
-    transform: translate(0, -999999999px);
+.link--add {
+    transition: opacity .3s;
+    opacity: .5;
+}
+
+.link--add:hover {
+    opacity: 1;
+}
+
+@media screen and (min-width: 481px) {
+    .link--hamburger {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .link--item:not(.link--active) {
+        display: none;
+    }
 }
 </style>
