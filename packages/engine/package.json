@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/engine",
-    "version": "34.0.6",
+    "version": "34.0.7",
     "description": "UBIO Scripting Engine",
     "main": "out/main/index.js",
     "types": "out/main/index.d.ts",
@@ -20,7 +20,7 @@
         "ca.crt"
     ],
     "dependencies": {
-        "@automationcloud/cdp": "^34.0.6",
+        "@automationcloud/cdp": "^34.0.7",
         "@automationcloud/request": "^3.0.5",
         "@automationcloud/uniproxy": "^1.8.1",
         "@types/diacritics": "^1.3.1",
