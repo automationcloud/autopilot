@@ -25,7 +25,7 @@ import { ApiController } from './api';
 import { ScriptDiffController } from './script-diff';
 import { SettingsController } from './settings';
 import { EventsController } from './events';
-import { AutomationMetadata } from '../entities/automation';
+import { Automation, AutomationMetadata } from '../entities/automation';
 import { BundlesController } from './bundles';
 
 @injectable()
@@ -104,19 +104,10 @@ export class SaveLoadController {
         note: string;
     }) {
         const { serviceId, fullVersion, workerTag, activate, note = '' } = spec;
-        const automation = { ...this.project.automation };
-        const metadata = {
-            ...automation.metadata,
-            version: fullVersion,
-            serviceId,
-        };
-        const bundles = this.bundles.getPublicBundles();
-        const content = {
-            script: automation.script,
-            metadata,
-            bundles,
-            datasets: bundles, // for backward compat.
-        };
+        const automation = this.project.automation;
+        automation.metadata.serviceId = serviceId;
+        automation.metadata.version = fullVersion;
+        const content = this.prepareScriptContent(automation);
         const script = await this.api.createScript({
             serviceId,
             fullVersion,
@@ -124,18 +115,17 @@ export class SaveLoadController {
             workerTag,
             content,
         });
-        const service = await this.api.getService(metadata.serviceId);
-        this.api.updateService({
-            id: metadata.serviceId,
-            name: metadata.serviceName,
-            domain: metadata.domainId,
-            draft: metadata.draft,
+        const service = await this.api.getService(serviceId);
+        await this.api.updateService({
+            id: serviceId,
+            name: automation.metadata.serviceName,
+            domain: automation.metadata.domainId,
+            draft: automation.metadata.draft,
             attributes: service.attributes,
         });
         if (activate) {
-            this.api.publishScript(script.id);
+            await this.api.publishScript(script.id);
         }
-        this.project.updateMetadata(metadata);
         this.location = 'ac';
         this.diff.setNewBase(automation.script);
         this.update();
@@ -221,6 +211,30 @@ export class SaveLoadController {
 
     async getScript(id: string) {
         return await this.api.getScript(id);
+    }
+
+    protected prepareScriptContent(automation: Automation) {
+        const bundles = automation.bundles.filter(bundle => !bundle.excluded)
+            .map(bundle => {
+                // TODO remove this.backwards compat hack
+                // Note: QA tool expects stage to be present
+                return {
+                    name: bundle.name,
+                    inputs: bundle.inputs.map(input => {
+                        return {
+                            ...input,
+                            stage: '',
+                        };
+                    }),
+                };
+            });
+        return {
+            script: automation.script,
+            metadata: automation.metadata,
+            bundles,
+            // TODO remove this.backwards compat hack
+            datasets: bundles,
+        };
     }
 }
 
