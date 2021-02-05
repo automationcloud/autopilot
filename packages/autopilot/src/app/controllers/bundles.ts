@@ -84,10 +84,6 @@ export class BundlesController {
         return current;
     }
 
-    getPublicBundles(): Bundle[] {
-        return this.bundles.filter(bundle => !bundle.excluded);
-    }
-
     createBundle(spec: Bundle = {
         name: 'Input data',
         inputs: [],

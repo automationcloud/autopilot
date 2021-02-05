@@ -113,13 +113,6 @@ export class ProjectController {
         return script;
     }
 
-    updateMetadata(json: any) {
-        this.automation.metadata = {
-            ...DEFAULT_AUTOMATION_METADATA,
-            ...json,
-        };
-    }
-
     async loadFromAutosave(filename: string) {
         try {
             const file = path.join(this.autosave.autosaveDir, filename);
