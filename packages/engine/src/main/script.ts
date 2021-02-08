@@ -711,7 +711,6 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      */
     async run(mode: ScriptPlaybackMode = 'script', action: Action | null = this.$playback.playhead): Promise<void> {
         util.assertPlayback(!this.isRunning(), 'Cannot run: already running');
-        const startedAt = Date.now();
 
         this.$playback.paused = false;
         this.$playback.running = true;
