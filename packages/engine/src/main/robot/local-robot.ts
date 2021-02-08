@@ -235,7 +235,7 @@ export class LocalRobot {
             this.browser.detach();
             await this.engine.finishSession();
         } catch (error) {
-            this.config.logger.warn(`Finalization failed`, { ...error });
+            this.config.logger.warn(`Finalization failed`, { error });
         }
     }
 

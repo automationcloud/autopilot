@@ -119,7 +119,7 @@ export abstract class Action extends Unit<ActionList> {
      *
      * @public
      */
-    abstract async exec(): Promise<void>;
+    abstract exec(): Promise<void>;
 
     /**
      * Entity type, used for reflection.
@@ -152,11 +152,6 @@ export abstract class Action extends Unit<ActionList> {
      * A reference to either a parent action, or enclosing {@link Context}.
      */
     get $parent(): ActionOwner { return this.$owner.$owner; }
-
-    /**
-     * @internal
-     */
-    get $stats() { return this.$script.$stats; }
 
     /**
      * @internal
@@ -389,9 +384,6 @@ export abstract class Action extends Unit<ActionList> {
         await Promise.resolve();
         this.resetDescendants();
         await this._trackRuntimeStats(() => this.exec());
-        // Only incr stats for actions (not matchers)
-        const duration = this.getDuration();
-        this.$stats.incrActionRunTime(this.type, duration);
         this.$script.setStatus('idle');
         this.$script.$events.emit('action.end', this);
         this.afterRun();
@@ -669,7 +661,6 @@ export abstract class Action extends Unit<ActionList> {
             type: this.type,
             label: this.label,
             contextId: this.$context.id,
-            runtime: this.$runtime,
         };
     }
 }

@@ -192,7 +192,7 @@ export class FetchService {
                 if (!canRetry) {
                     break;
                 }
-                this.logger.warn('send-network-request failed, retrying', { error });
+                this.logger.warn('Fetch failed, retrying', { error });
             }
         }
         throw lastError;

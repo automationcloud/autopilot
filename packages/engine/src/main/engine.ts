@@ -23,7 +23,6 @@ import {
     FlowService,
     ReporterService,
     ResolverService,
-    StatsService,
     RegistryService,
     ApiRequest,
     EmulationService,
@@ -81,7 +80,6 @@ export class Engine {
         this.container.bind(RegistryService).toSelf().inSingletonScope();
         this.container.bind(ReporterService).toSelf().inSingletonScope();
         this.container.bind(ResolverService).toSelf().inSingletonScope();
-        this.container.bind(StatsService).toSelf().inSingletonScope();
         this.container.bind(UserAgentService).toSelf().inSingletonScope();
     }
 
