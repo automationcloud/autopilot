@@ -2,7 +2,7 @@
     "name": "@automationcloud/autopilot",
     "private": true,
     "main": "out/main/index.js",
-    "version": "34.0.7",
+    "version": "34.1.0",
     "productName": "Autopilot",
     "author": "UBIO Limited <hello@ub.io>",
     "license": "Apache-2.0",
@@ -27,8 +27,8 @@
         "slack:public": "node slack.js"
     },
     "dependencies": {
-        "@automationcloud/engine": "^34.0.7",
-        "@automationcloud/fuzzy-search": "^34.0.7",
+        "@automationcloud/engine": "^34.1.0",
+        "@automationcloud/fuzzy-search": "^34.1.0",
         "@types/jsonpointer": "^4.0.0",
         "@types/koa": "^2.11.4",
         "@types/koa-bodyparser": "^4.3.0",
