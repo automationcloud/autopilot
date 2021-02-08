@@ -1,6 +1,6 @@
 {
     "name": "@automationcloud/worker",
-    "version": "34.1.1",
+    "version": "34.1.2",
     "description": "UBIO Automation Worker",
     "author": "UBIO Limited <hello@ub.io>",
     "license": "Apache-2.0",
@@ -22,11 +22,11 @@
         "worker-entrypoint": "out/bin/entrypoint.js"
     },
     "dependencies": {
-        "@automationcloud/engine": "^34.1.1",
+        "@automationcloud/engine": "^34.1.2",
         "@types/koa": "^2.0.52",
         "@types/lru-cache": "^5.1.0",
         "@types/node-fetch": "^2.5.3",
-        "@ubio/framework": "^10.1.2",
+        "@ubio/framework": "^10.1.3",
         "dotenv": "^8.2.0",
         "inversify": "^5.0.1",
         "ioredis": "^4.14.1",
