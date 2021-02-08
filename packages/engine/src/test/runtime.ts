@@ -25,7 +25,6 @@ import {
     TestRig,
     ProxyService,
 } from '../main';
-import { StatsService } from '../main/services/stats';
 import { RegistryServiceMock } from './mocks/registry';
 
 export class TestRuntime extends TestRig {
@@ -58,10 +57,6 @@ export class TestRuntime extends TestRig {
 
     get $checkpoints() {
         return this.engine.get(CheckpointServiceMock);
-    }
-
-    get $stats() {
-        return this.engine.get(StatsService);
     }
 
     get $proxy() {

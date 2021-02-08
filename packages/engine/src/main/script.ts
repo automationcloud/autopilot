@@ -25,7 +25,6 @@ import { numberConfig, Configuration, Logger, Exception } from '@automationcloud
 import { Engine } from './engine';
 import {
     ReporterService,
-    StatsService,
     RegistryService,
     BrowserService,
     FlowService,
@@ -271,11 +270,6 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      * @internal
      */
     get $reporter() { return this.$engine.get(ReporterService); }
-
-    /**
-     * @internal
-     */
-    get $stats() { return this.$engine.get(StatsService); }
 
     /**
      * Resets the runtime state of script instance.
@@ -717,7 +711,6 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      */
     async run(mode: ScriptPlaybackMode = 'script', action: Action | null = this.$playback.playhead): Promise<void> {
         util.assertPlayback(!this.isRunning(), 'Cannot run: already running');
-        const startedAt = Date.now();
 
         this.$playback.paused = false;
         this.$playback.running = true;
@@ -740,7 +733,6 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
             this.$playback.running = false;
             this.$playback.mode = 'action';
             this.$playback.paused = false;
-            this.$stats.scriptRunTime.incr(Date.now() - startedAt);
             this.$events.emit('done');
         }
     }
@@ -867,9 +859,7 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
             for (const ctx of this.contexts) {
                 ctx.resetMatchers();
             }
-            const startedAt = Date.now();
             const ctx = await this._matchNextContext();
-            this.$stats.contextMatchTime.incr(Date.now() - startedAt);
             return ctx;
         } finally {
             this.$playback.status = 'idle';

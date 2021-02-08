@@ -27,7 +27,6 @@ import {
     CheckpointService,
     Engine,
     Logger,
-    StatsService,
 } from '@automationcloud/engine';
 import { SignalsService } from './signals';
 import { ScriptLoaderService } from './script-loader';
@@ -55,8 +54,6 @@ export class Runner {
         protected checkpoints: CheckpointService,
         @inject(Engine)
         protected engine: Engine,
-        @inject(StatsService)
-        protected statsService: StatsService,
     ) {
         browser.on('disconnect', () => {
             state.state = 'disconnected';
@@ -129,15 +126,7 @@ export class Runner {
         const script = this.state.script;
         const playhead = script ? script.$playback.playhead : null;
         const context = playhead ? playhead.$context : null;
-        const stats = {
-            proxyId: this.state.getExecution().proxyId,
-            workerVersion: this.state.workerVersion,
-            sessionTotalTime: Date.now() - this.state.jobStartedAt,
-            visitedOrigins: this.statsService.visitedOrigins,
-            httpRequestsCount: this.statsService.httpRequestsCount,
-            numberOfHttpRequests: this.statsService.httpRequestsCount,
-        };
-        this.logger.info('Execution fail', { error, stats });
+        this.logger.info('Execution fail', { error });
         await this.reporter.sendEvent('error', 'error', {
             action: playhead,
             context,
@@ -149,7 +138,6 @@ export class Runner {
                     details: error.details,
                     stack: error.stack,
                 },
-                stats,
             },
         });
         await this.failExecution(error);

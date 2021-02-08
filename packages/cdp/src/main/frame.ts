@@ -299,14 +299,8 @@ export class Frame extends EventEmitter {
     collectLogInfo() {
         return {
             frameId: this.frameId,
-            loaded: this.loaded,
-            ready: this.ready,
-            failed: this.failed,
             url: this.url,
-            securityOrigin: this.securityOrigin,
-            mimeType: this.mimeType,
             requestId: this.requestId,
-            errorText: this.errorText,
         };
     }
 

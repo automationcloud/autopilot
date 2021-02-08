@@ -144,7 +144,6 @@ export class Target extends EventEmitter {
             sessionId: this.sessionId,
             url: this.url,
             type: this.type,
-            title: this.title,
         };
     }
 }

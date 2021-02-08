@@ -25,5 +25,4 @@ export * from './proxy';
 export * from './registry';
 export * from './reporter';
 export * from './resolver';
-export * from './stats';
 export * from './user-agent';

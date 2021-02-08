@@ -29,8 +29,14 @@ Returns information about current frame and its loading state.
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {
         return await this.map(inputSet, async el => {
             const frame = el.remote.frame;
-            const info = frame.collectLogInfo();
-            return el.clone(info);
+            return el.clone({
+                frameId: frame.frameId,
+                url: frame.url,
+                errorText: frame.errorText,
+                loaded: frame.loaded,
+                ready: frame.ready,
+                failed: frame.failed,
+            });
         });
     }
 }
