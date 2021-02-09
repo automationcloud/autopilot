@@ -29,6 +29,7 @@ process.env.LOG_LEVEL = 'debug';
 
 const app = new App();
 (global as any).app = app;
+const providedControllers = createControllerProvider(app);
 
 // Modify Node.js require path to allow loading extensions
 const localNodeModules = [
@@ -44,7 +45,7 @@ Vue.mixin({
         // Allow components to use `this.app` in their data declarations
         vm.app = app;
     },
-    provide: createControllerProvider(app),
+    provide: providedControllers,
     data() {
         return {
             app,
@@ -76,7 +77,7 @@ app.init().then(() => {
 Object.defineProperties(window, {
     AP: {
         get() {
-            return createControllerProvider(app);
+            return providedControllers;
         }
     },
     util: { value: util },

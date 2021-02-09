@@ -158,6 +158,7 @@ export default {
     display: flex;
     justify-content: space-between;
     background: var(--color-mono--800);
+    height: var(--playback-panel-size);
 }
 
 .playback__group {
@@ -175,8 +176,9 @@ button.playback__btn {
     justify-content: center;
     padding: var(--gap);
     box-sizing: border-box;
+    height: var(--playback-panel-size);
+    width: var(--playback-panel-size);
     border-radius: 0;
-    height: 100%;
 
     border: 0;
     background: transparent;
