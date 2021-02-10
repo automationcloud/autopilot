@@ -22,7 +22,7 @@
     "dependencies": {
         "@automationcloud/cdp": "^34.1.2",
         "@automationcloud/request": "^3.0.5",
-        "@automationcloud/uniproxy": "^1.8.1",
+        "@automationcloud/uniproxy": "^1.8.2",
         "@types/diacritics": "^1.3.1",
         "@types/escape-html": "^1.0.0",
         "@types/fast-levenshtein": "0.0.1",
