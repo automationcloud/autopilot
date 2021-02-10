@@ -411,9 +411,11 @@ export class PlaybackController {
     }
 
     protected showPlaybackError(err: any) {
+        this.notifications.removeByKind('playback.error');
         this.notifications.add({
+            kind: 'playback.error',
             level: 'error',
-            title: err.code || err.name,
+            title: `Script failed: ${err.code || err.name}`,
             message: err.message,
             canClose: true,
         });

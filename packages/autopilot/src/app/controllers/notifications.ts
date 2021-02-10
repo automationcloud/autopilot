@@ -34,7 +34,7 @@ export class NotificationsController {
     }
 
     removeByKind(kind: string) {
-        this.current = this.current.filter(_ => _.kind === kind);
+        this.current = this.current.filter(_ => _.kind !== kind);
     }
 
     removeClosable() {
