@@ -5,6 +5,7 @@
     --font-size: 12px;
     --font-size--alt: 14px;
     --font-size--small: 10px;
+    --font-size--large: 16px;
     --font-family--alt: 'Barlow Semi Condensed', sans-serif;
 
     --tree-bar-size: 28px;
@@ -36,4 +37,5 @@
     --border-color--focus: var(--color-blue--500);
 
     --button-background--frameless: transparent;
+    --playback-panel-size: 40px;
 }

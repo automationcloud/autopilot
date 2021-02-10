@@ -17,6 +17,7 @@ import { inject, injectable } from 'inversify';
 import { App } from '../app';
 import { controller } from '../controller';
 import { ExpandableController } from './expandable';
+import { NotificationsController } from './notifications';
 import { ProjectController } from './project';
 
 @injectable()
@@ -37,6 +38,8 @@ export class PlaybackController {
         protected browser: BrowserService,
         @inject(ExpandableController)
         protected expandable: ExpandableController,
+        @inject(NotificationsController)
+        protected notifications: NotificationsController,
         // Circular dependency cannot be resolved until viewports are
         // decomposed into separate components
         @inject('App')
@@ -202,6 +205,8 @@ export class PlaybackController {
             this.resumeTimer();
             await this.script.run(mode, action);
             await this.syncSelectionWithPlayhead();
+        } catch (err) {
+            this.showPlaybackError(err);
         } finally {
             this.stopTimer();
             for (const [k, fn] of Object.entries(scriptListeners)) {
@@ -335,7 +340,7 @@ export class PlaybackController {
         this.breakpointIds = [];
     }
 
-    onContextEnter(context: Context) {
+    protected onContextEnter(context: Context) {
         this.selectItem(context);
         this.addLog({
             type: 'context.enter',
@@ -343,7 +348,7 @@ export class PlaybackController {
         });
     }
 
-    onContextLeave(context: Context) {
+    protected onContextLeave(context: Context) {
         this.scriptFlow.clearSelection();
         this.addLog({
             type: 'context.leave',
@@ -351,7 +356,7 @@ export class PlaybackController {
         });
     }
 
-    onActionStart(action: Action) {
+    protected onActionStart(action: Action) {
         this.selectItem(action);
         this.addLog({
             type: 'action.start',
@@ -359,41 +364,41 @@ export class PlaybackController {
         });
     }
 
-    onActionEnd(action: Action) {
+    protected onActionEnd(action: Action) {
         this.addLog({
             type: 'action.end',
             action,
         });
     }
 
-    onSuccess() {
+    protected onSuccess() {
         this.addLog({
             type: 'success',
         });
     }
 
-    onFail(error: any) {
+    protected onFail(error: any) {
         this.addLog({
             type: 'fail',
             error,
         });
     }
 
-    onOutput(output: any) {
+    protected onOutput(output: any) {
         this.addLog({
             type: 'output',
             output,
         });
     }
 
-    onInput(input: any) {
+    protected onInput(input: any) {
         this.addLog({
             type: 'input',
             input,
         });
     }
 
-    onBeforeCurrentTask() {
+    protected onBeforeCurrentTask() {
         const { playhead } = this.script.$playback;
         if (playhead && this.breakpointIds.includes(playhead.id)) {
             if (this._lastBreakpointId && this._lastBreakpointId === playhead.id) {
@@ -403,6 +408,17 @@ export class PlaybackController {
             this._lastBreakpointId = playhead.id;
             this.pause();
         }
+    }
+
+    protected showPlaybackError(err: any) {
+        this.notifications.removeByKind('playback.error');
+        this.notifications.add({
+            kind: 'playback.error',
+            level: 'error',
+            title: `Script failed: ${err.code || err.name}`,
+            message: err.message,
+            canClose: true,
+        });
     }
 }
 

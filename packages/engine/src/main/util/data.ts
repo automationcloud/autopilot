@@ -25,6 +25,10 @@ export interface StringComparisonOptions {
     onlyAlphaNumeric?: boolean;
 }
 
+export function shortId() {
+    return Math.random().toString(36).substring(2).padEnd(8, '0').substring(0, 8);
+}
+
 export function getType(data: any): string {
     return data == null ? 'null' : Array.isArray(data) ? 'array' : data instanceof Buffer ? 'buffer' : typeof data;
 }

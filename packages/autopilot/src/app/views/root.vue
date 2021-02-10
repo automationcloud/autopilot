@@ -11,11 +11,11 @@
             </div>
             <modals/>
             <topbar/>
-            <disconnected/>
+            <system-notifications/>
             <layout/>
             <playback/>
             <modal-menu/>
-            <!-- <inspecting/> -->
+            <notifications/>
         </div>
     </div>
 </template>
@@ -27,9 +27,10 @@ import Topbar from './topbar.vue';
 import Layout from './layout.vue';
 import Modals from './modals.vue';
 import Playback from './playback.vue';
-import Disconnected from './disconnected.vue';
+import SystemNotifications from './system-notifications.vue';
 import FirstRun from './first-run.vue';
 import ModalMenu from './modal-menu.vue';
+import Notifications from './notifications.vue';
 
 export default {
 
@@ -38,9 +39,10 @@ export default {
         Layout,
         Modals,
         Playback,
-        Disconnected,
+        SystemNotifications,
         FirstRun,
         ModalMenu,
+        Notifications,
     },
 
     inject: [

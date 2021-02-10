@@ -54,8 +54,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2.2em;
-    height: 2.2em;
+    width: var(--playback-panel-size);
+    height: var(--playback-panel-size);
     cursor: pointer;
 
     font-size: 18px;
