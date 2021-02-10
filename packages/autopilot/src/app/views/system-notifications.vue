@@ -28,8 +28,9 @@ export default {
                     level: 'fatal',
                     isClosable: false,
                     primaryAction: {
-
-                    }
+                        title: 'Connect',
+                        action: () => this.restartChrome(),
+                    },
                 });
             }
             return res;

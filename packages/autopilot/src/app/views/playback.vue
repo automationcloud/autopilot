@@ -1,5 +1,6 @@
 <template>
     <div class="playback">
+        <!--
         <div class="playback__error"
              v-if="error">
              <error :err="error"
@@ -7,6 +8,7 @@
                 :show-error-code="true"
                 @dismiss="dismissError"/>
         </div>
+        -->
         <div class="playback__toolbar">
             <div class="playback__group playback__buttons">
 
