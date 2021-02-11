@@ -24,6 +24,8 @@
 
 .input {
     box-shadow: none;
+    border-radius: 2px;
+    border-color: var(--color-mono--600);
 }
 
 .input.input--inline {
@@ -74,4 +76,9 @@ select option, option {
 
 .clickable {
     cursor: pointer;
+}
+
+.textarea {
+    border-radius: 2px;
+    border-color: var(--color-mono--600);
 }

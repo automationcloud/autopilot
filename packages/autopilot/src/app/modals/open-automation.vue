@@ -48,17 +48,17 @@
                         </div>
                         <div class="form-row__controls">
                             <service-select
-                                :serviceId="serviceId"
-                                :serviceName="serviceName"
-                                @change="onServiceChange"></service-select>
+                                :service="service"
+                                @change="onServiceSelect">
+                            </service-select>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-row__label">
-                           Open active version
-                        </div>
                         <div class="form-row__controls">
-                            <input type="checkbox" v-model="openActive">
+                            <label>
+                                <input type="checkbox" v-model="openActive">
+                                Open active version
+                            </label>
                         </div>
                     </div>
                     <div class="form-row" v-if="!openActive">
@@ -70,7 +70,7 @@
                                 <option v-if="scripts.length === 0"
                                     :value="null"> No script found </option>
                                 <option v-else
-                                    :value="null"> Select version </option>
+                                    :value="null"> Version </option>
                                 <option
                                     v-for="script of scripts"
                                     :key="script.id"
@@ -116,6 +116,7 @@ export default {
         'saveload',
         'project',
         'apiLogin',
+        'api',
     ],
 
     components: {
@@ -123,33 +124,13 @@ export default {
     },
 
     data() {
-        const { serviceId, serviceName } = this.project.automation.metadata;
         return {
             location: this.saveload.location || 'ac',
-            serviceId,
-            serviceName,
+            service: null,
             scriptId: null,
             openActive: true,
             scripts: [],
         };
-    },
-
-    watch: {
-        serviceId(val) {
-            this.scriptId = null;
-            if (!this.openActive && val) {
-                this.loadScripts(this.serviceId);
-            } else {
-                this.scripts = [];
-            }
-        },
-        openActive(val) {
-            if (!val && this.serviceId) {
-                this.loadScripts(this.serviceId);
-            } else {
-                this.scripts = [];
-            }
-        }
     },
 
     computed: {
@@ -160,20 +141,29 @@ export default {
             return this.apiLogin.isAuthenticated();
         },
         canOpenFromAc() {
-            return this.serviceId && (this.scriptId || this.openActive);
+            return this.scriptId;
+        },
+    },
+
+    watch: {
+        async service(val) {
+            if (val) {
+                this.scriptId = val.scriptId;
+                await this.loadScripts(val.id);
+            } else {
+                this.scriptId = null;
+                this.scripts = [];
+            }
         },
     },
 
     methods: {
         async openFromAc() {
-            const scriptId = this.openActive ?
-                await this.saveload.getActiveScriptId(this.serviceId) :
-                this.scriptId;
-            if (!scriptId) {
+            if (!this.service || !this.scriptId) {
                 return;
             }
             try {
-                await this.saveload.openAutomationFromAc(this.serviceId, scriptId);
+                await this.saveload.openAutomationFromAc(this.service.id, this.scriptId);
                 this.$emit('hide');
             } catch (error) {
                 console.warn('failed to load automation', error);
@@ -218,7 +208,6 @@ export default {
         formatDate(timestamp) {
             const time = new Date(timestamp);
             return time.toLocaleString('en-GB', {
-                timeZone: 'UTC',
                 timeZoneName: 'short',
                 year: 'numeric',
                 month: 'short',
@@ -228,9 +217,8 @@ export default {
             });
         },
 
-        onServiceChange(service) {
-            this.serviceId = service.id;
-            this.serviceName = service.name;
+        onServiceSelect(service) {
+            this.service = service;
         }
     },
 };

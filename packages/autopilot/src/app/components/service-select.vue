@@ -1,32 +1,29 @@
 <template>
     <div class="service-select">
-        <div class="service-select__dropdown input stretch"
-            @click="toggle"
-            @blur="collapse">
-            {{ serviceName || nullPlaceholder }}
-            <span class="icon color--muted">
-                <i class="fas fa-chevron-down"></i>
-            </span>
+        <div class="input stretch">
+            <input class="service-select__multi"
+                @focus="expand"
+                @blur="onBlur"
+                v-model="text"
+                :placeholder="placeholder">
+                <span class="icon"
+                    @click="toggle()">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
         </div>
-        <div class="service-select__wrapper">
-            <div v-show="listShown" class="service-select__select">
-                <input class="input stretch" type="search" v-model="searchText" placeholder="Search">
-                <div class="service-select__list">
-                    <span v-if="services.length === 0"
-                        class="service-select__item"> No Automation found </span>
-                    <span v-if="addNullOption"
-                        class="service-select__item"
-                        @click="onItemClick(null)">
-                        {{ nullPlaceholder }}
-                    </span>
-                    <span
-                        class="service-select__item"
-                        v-for="service of services"
-                        :key="service.id"
-                        @click="onItemClick(service)">
-                        {{ service.name }}
-                    </span>
-                </div>
+        <div v-show="listShown" class="service-select__list"
+            @mouseover="hoverOnList = true;"
+            @mouseout="hoverOnList = false;" >
+            <div class="service-select__options">
+                <span v-if="services.length === 0"
+                    class="service-select__item"> No Automation found </span>
+                <span
+                    class="service-select__item"
+                    v-for="service of services"
+                    :key="service.id"
+                    @click="selectService(service)">
+                    {{ service.name }}
+                </span>
             </div>
         </div>
     </div>
@@ -39,9 +36,8 @@ export default {
     ],
 
     props: {
-        serviceId: String,
-        addNullOption: { type: Boolean, default: false },
-        nullPlaceholder: { type: String, default: 'Select automation' },
+        service: { type: Object, default: null },
+        placeholder: { type: String, default: 'Search or select' },
     },
 
     mounted() {
@@ -52,18 +48,18 @@ export default {
         return {
             services: [],
             listShown: false,
-            searchText: '',
+            text: '',
+            hoverOnList: false,
         };
     },
     watch: {
-        searchText(val) {
+        text(val) {
             this.loadServices(val);
-        }
-    },
-    computed: {
-        serviceName() {
-            const service = this.services.find(_ => _.id === this.serviceId);
-            return service ? service.name : null;
+        },
+        service(val) {
+            if (val) {
+                this.text = val.name;
+            }
         }
     },
     methods: {
@@ -74,6 +70,7 @@ export default {
                 this.services = [];
             }
         },
+
         toggle() {
             if (this.listShown) {
                 this.collapse();
@@ -81,17 +78,30 @@ export default {
                 this.expand();
             }
         },
+
         expand() {
             this.listShown = true;
-            this.loadServices();
+            this.loadServices(this.text);
         },
 
         collapse() {
             this.listShown = false;
-            this.searchText = '';
         },
 
-        onItemClick(service) {
+        onBlur() {
+            if(this.hoverOnList) { // when losing focus to click the item, ignore
+                return;
+            }
+            // when service is selected but the text is changed
+            if (this.service && this.service.name !== this.text) {
+                this.$emit('change', null);
+                this.text = '';
+            }
+            this.collapse();
+        },
+
+        selectService(service) {
+            this.text = service.name;
             this.$emit('change', service);
             this.collapse();
         }
@@ -100,28 +110,31 @@ export default {
 </script>
 
 <style scoped>
-.service-select__dropdown {
+.service-select__multi {
     display: flex;
     justify-content: space-between;
     padding: 0 var(--gap--small);
-    cursor: pointer;
+}
+
+.service-select__multi::placeholder {
+    color: var(--color-mono--600);
 }
 
 .service-select__wrapper {
     position: relative;
 }
 
-.service-select__select {
+.service-select__list {
     position: absolute;
     z-index: 10;
     border-radius: var(--border-radius);
     border: solid 1px var(--border-color);
     background: var(--color-mono--000);
     padding: var(--gap--small);
-    width: 100%;
+    width: 70%;
 }
 
-.service-select__list {
+.service-select__options {
     margin: var(--gap--small) 0;
     max-height: 200px;
     overflow-y: auto;
