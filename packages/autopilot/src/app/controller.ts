@@ -28,11 +28,6 @@ export type ControllerDescriptor = {
 
 export const controllers: ControllerDescriptor[] = [];
 
-export interface SessionLifecycleHandler {
-    onSessionStart(): Promise<void>;
-    onSessionFinish(): Promise<void>;
-}
-
 export interface ControllerClass {
     prototype: Controller;
 }
