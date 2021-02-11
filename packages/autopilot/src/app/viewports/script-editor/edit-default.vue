@@ -2,7 +2,7 @@
     <div class="edit-default section">
 
         <div class="form-row">
-            <div class="form-row__label">Automation</div>
+            <div class="form-row__label section__title">Automation</div>
             <div class="form-row__controls">
                 <input
                     class="input"
@@ -13,9 +13,10 @@
 
         <edit-metadata/>
 
+        <hr>
         <div class="edit-default__pattern"
             @contextmenu.stop.prevent="popupMenu">
-            <div class="section__subtitle">
+            <div class="section__title">
                 Request Blocking
             </div>
 
@@ -32,7 +33,7 @@
                 </button>
             </div>
 
-            <button class="button button--primary button--flat"
+            <button class="button button--alt button--primary"
                 @click="popupAddBlockedPattern()">
                 <i class="button__icon fas fa-plus">
                 </i>

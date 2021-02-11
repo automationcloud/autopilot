@@ -1,7 +1,7 @@
 <template>
     <div class="modal">
         <div class="modal__header">
-            Open
+            {{ modalTitle }}
         </div>
         <div class="modal__body">
             <div>
@@ -143,6 +143,10 @@ export default {
         canOpenFromAc() {
             return this.scriptId;
         },
+        modalTitle() {
+            console.log(this.saveload.setDiffBase);
+            return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
+        }
     },
 
     watch: {

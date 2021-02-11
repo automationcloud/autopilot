@@ -27,6 +27,8 @@ import { SettingsController } from './settings';
 import { EventsController } from './events';
 import { Automation, AutomationMetadata } from '../entities/automation';
 import { BundlesController } from './bundles';
+import { shell } from 'electron';
+import { acUrls } from '../util';
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -34,6 +36,7 @@ export class SaveLoadController {
     userData: UserData;
     location: 'file' | 'ac' = 'file';
     filePath: string | null = null;
+    _setDiffBase: boolean = true;
 
     constructor(
         @inject(StorageController)
@@ -67,6 +70,8 @@ export class SaveLoadController {
         this.location = location;
     }
 
+    get setDiffBase() { return this._setDiffBase; }
+
     update() {
         this.userData.saveData({
             location: this.location,
@@ -81,6 +86,12 @@ export class SaveLoadController {
     }
 
     async openAutomation() {
+        this._setDiffBase = true;
+        this.modals.show('open-automation');
+    }
+
+    async loadAsDiff() {
+        this._setDiffBase = false;
         this.modals.show('open-automation');
     }
 
@@ -165,7 +176,9 @@ export class SaveLoadController {
             ...content,
             metadata,
         });
-        this.diff.setNewBase(content.script);
+        if (this.setDiffBase) {
+            this.diff.setNewBase(content.script);
+        }
         this.location = 'ac';
         this.update();
     }
@@ -176,7 +189,9 @@ export class SaveLoadController {
         await this.project.loadAutomationJson(automation);
         this.location = 'file';
         this.filePath = filePath;
-        this.diff.setNewBase(automation.script);
+        if (this.setDiffBase) {
+            this.diff.setNewBase(automation.script);
+        }
         this.update();
     }
 
@@ -236,10 +251,12 @@ export class SaveLoadController {
             datasets: bundles,
         };
     }
-}
 
-export interface ProjectLoadOptions {
-    setDiffBase?: boolean;
-    autosave?: boolean;
-    filePath?: string;
+    async openAutomationManage() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId) {
+            const baseUrl = acUrls.get('dashboard');
+            await shell.openExternal(`${baseUrl}/services/${serviceId}/script-versions`);
+        }
+    }
 }
