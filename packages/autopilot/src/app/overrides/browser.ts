@@ -49,6 +49,11 @@ export class AutopilotBrowserService extends BrowserService {
         this.syncConfig();
     }
 
+    async onSessionStart() {
+        await super.onSessionStart();
+        this.visitedOrigins = [];
+    }
+
     protected monitorPage(page: Page) {
         page.target.on('Network.requestWillBeSent', ev => this.onRequestWillBeSent(page, ev));
     }
