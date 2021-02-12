@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="location === 'ac'">
+            <div v-show="location === 'ac'">
                 <signin-warning message="to open automation from the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
@@ -66,7 +66,7 @@
                             Script version
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="scriptId" class="input stretch">
+                            <select v-model="scriptId" class="select stretch">
                                 <option v-if="scripts.length === 0"
                                     :value="null"> No script found </option>
                                 <option v-else
@@ -144,12 +144,27 @@ export default {
             return this.scriptId;
         },
         modalTitle() {
-            console.log(this.saveload.setDiffBase);
             return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
         }
     },
 
+    created() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId && this.isAuthenticated) {
+            this.loadService(serviceId);
+        }
+    },
+
     watch: {
+        isAuthenticated(val) {
+            if (val) {
+                const { serviceId } = this.project.automation.metadata;
+                this.loadService(serviceId);
+            } else {
+                this.service = null;
+            }
+        },
+
         async service(val) {
             if (val) {
                 this.scriptId = val.scriptId;
@@ -207,6 +222,15 @@ export default {
                     this.scripts = [];
                 }
             }
+        },
+
+        async loadService(serviceId) {
+            try {
+                this.service = await this.api.getService(serviceId);
+            } catch (error) {
+                console.warn('failed to load service', error);
+            }
+
         },
 
         formatDate(timestamp) {

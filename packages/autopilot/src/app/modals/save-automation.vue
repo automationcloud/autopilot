@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="location === 'ac'">
+            <div v-show="location === 'ac'">
                 <signin-warning message="to save and run automations in the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
@@ -77,7 +77,7 @@
                             Version
                         </div>
                         <div class="form-row__controls">
-                            <select class="input stretch" v-model="release">
+                            <select class="select stretch" v-model="release">
                                 <option value="patch"> Increment patch version to {{ getVersion('patch') }} </option>
                                 <option value="minor"> Increment minor version to {{ getVersion('minor') }} </option>
                                 <option value="major"> Increment major version to {{ getVersion('major') }} </option>
