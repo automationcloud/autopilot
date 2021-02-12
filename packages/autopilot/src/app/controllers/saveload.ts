@@ -21,7 +21,7 @@ import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
-import { ApiController } from './api';
+import { ApiController, ApiService } from './api';
 import { ScriptDiffController } from './script-diff';
 import { SettingsController } from './settings';
 import { EventsController } from './events';
@@ -99,42 +99,35 @@ export class SaveLoadController {
         if (this.location === 'file' && this.filePath) {
             await this.saveAutomationToFile(this.filePath);
         } else {
-            await this.saveAutomationAs();
+            this.saveAutomationAs();
         }
     }
 
-    async saveAutomationAs() {
+    saveAutomationAs() {
         this.modals.show('save-automation');
     }
 
     async saveAutomationToAc(spec: {
-        serviceId: string;
-        serviceName: string;
+        service: ApiService;
         fullVersion: string;
         workerTag: string;
         activate: boolean;
         note: string;
     }) {
-        const { serviceId, fullVersion, workerTag, activate, note = '' } = spec;
+        const { service, fullVersion, workerTag, activate, note = '' } = spec;
         const automation = this.project.automation;
-        automation.metadata.serviceId = serviceId;
+        automation.metadata.serviceId = service.id;
+        automation.metadata.serviceName = service.name;
         automation.metadata.version = fullVersion;
         const content = this.prepareScriptContent(automation);
         const script = await this.api.createScript({
-            serviceId,
+            serviceId: service.id,
             fullVersion,
             note,
             workerTag,
             content,
         });
-        const service = await this.api.getService(serviceId);
-        await this.api.updateService({
-            id: serviceId,
-            name: automation.metadata.serviceName,
-            domain: automation.metadata.domainId,
-            draft: automation.metadata.draft,
-            attributes: service.attributes,
-        });
+        await this.syncService();
         if (activate) {
             await this.api.publishScript(script.id);
         }
@@ -210,6 +203,21 @@ export class SaveLoadController {
         };
 
         return await this.api.createService(spec);
+    }
+
+    async syncService() {
+        const { serviceId, serviceName, domainId, draft } = this.project.automation.metadata;
+        if (!serviceId) {
+            return;
+        }
+        const service = await this.api.getService(serviceId);
+        await this.api.updateService({
+            id: serviceId,
+            name: serviceName,
+            domain: domainId,
+            draft,
+            attributes: service.attributes,
+        });
     }
 
     async getServices() {

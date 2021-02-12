@@ -2,20 +2,20 @@
     <div class="edit-metadata">
 
         <div class="form-row">
-            <div class="form-row__label">Strict validation</div>
-            <div class="form-row__controls">
+            <label>
                 <input type="checkbox"
                     v-model="metadataProxy.draft"
                     :true-value="false"
                     :false-value="true"/>
-            </div>
+                    Strict validation
+            </label>
         </div>
 
         <div class="form-row"
             v-if="!metadataProxy.draft">
             <div class="form-row__label">Domain</div>
             <div class="form-row__controls">
-                <select class="input"
+                <select class="select stretch"
                     v-model="metadataProxy.domainId">
                     <option v-for="domain of availableDomains"
                         :value="domain.id">
@@ -55,5 +55,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.edit-metadata {
+    font-size: var(--font-size--small);
+}
 </style>

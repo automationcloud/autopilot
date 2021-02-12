@@ -1,18 +1,34 @@
 <template>
     <div class="edit-default section">
-
-        <div class="form-row">
-            <div class="form-row__label">Automation</div>
-            <div class="form-row__controls">
-                <input
-                    class="input"
-                    type="text"
-                    v-model="metadataProxy.serviceName"/>
+        <div class="edit-default__automation">
+            <div class="section__title">
+                Automation</div>
+            <div class="edit-default__automation-meta">
+                <div class="edit-default__automation-name"
+                    @mouseenter.prevent="editShown = true"
+                    @mouseleave.prevent="editShown = false">
+                    <span v-if="!editing">{{ metadataProxy.serviceName }}
+                        <i v-if="editShown"
+                            class="fas fa-pencil-alt icon--small clickable"
+                            @click.prevent="startEditing"></i>
+                    </span>
+                    <div v-else class="grid grid--gap">
+                        <input class="input" type="text" v-model="metadataProxy.serviceName">
+                        <div class="group">
+                            <button class="button button--small button--primary"
+                                @click.prevent="updateService">save</button>
+                            <button class="button button--small button--secondary"
+                                @click.prevent="cancel">cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <edit-metadata/>
+                <button v-if="!metadataProxy.serviceId"
+                    class="button button--alt button--primary"
+                    type="click"
+                    @click="saveToAc">Save to the Automation Cloud</button>
             </div>
         </div>
-
-        <edit-metadata/>
-
         <hr>
         <div class="edit-default__pattern"
             @contextmenu.stop.prevent="popupMenu">
@@ -57,7 +73,16 @@ export default {
 
     inject: [
         'browser',
+        'saveload',
     ],
+
+    data() {
+        return {
+            editShown: false,
+            editing: false,
+            newName: '',
+        };
+    },
 
     computed: {
 
@@ -189,6 +214,25 @@ export default {
             ]);
         },
 
+        saveToAc() {
+            this.saveload.location = 'ac';
+            this.saveload.saveAutomation();
+        },
+
+        startEditing() {
+            this.oldName = this.metadataProxy.serviceName;
+            this.editing = true;
+        },
+
+        cancel() {
+            this.viewport.commands.editMetadata('serviceName', this.oldName);
+            this.editing = false;
+        },
+
+        async updateService() {
+            await this.saveload.syncService();
+            this.editing = false;
+        }
     },
 };
 </script>
@@ -198,6 +242,22 @@ export default {
     padding: 0 var(--gap--small);
     display: flex;
     flex-flow: column nowrap;
+}
+
+.edit-default__automation {
+    display: flex;
+}
+
+.edit-default__automation-meta {
+    flex: 1;
+    margin: var(--gap--large);
+    margin-right: 0px;
+}
+
+.edit-default__automation-name {
+    margin-bottom: var(--gap--large);
+    font-family: var(--font-family--alt);
+    font-size: var(--font-size--alt);
 }
 
 .edit-default__pattern {

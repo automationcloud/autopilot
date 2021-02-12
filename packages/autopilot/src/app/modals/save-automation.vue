@@ -261,8 +261,7 @@ export default {
             }
             try {
                 await this.saveload.saveAutomationToAc({
-                    serviceId: this.service.id,
-                    serviceName: this.service.name,
+                    service: this.service,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,

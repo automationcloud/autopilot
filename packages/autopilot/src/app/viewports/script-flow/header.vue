@@ -19,8 +19,6 @@
                     v-if="domain">
                     {{ domain.id }}
                 </span>
-                <i class="fas fa-pencil-alt"
-                    style="margin-left: var(--gap--small)"></i>
             </div>
         </div>
         <div class="aside">
