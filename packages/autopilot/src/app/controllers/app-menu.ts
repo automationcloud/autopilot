@@ -154,6 +154,10 @@ export class AppMenuController {
             click: () => this.saveload.openAutomation(),
         };
         yield {
+            label: 'Load as diff base...',
+            click: () => this.saveload.loadAsDiff(),
+        };
+        yield {
             label: 'Save Automation',
             accelerator: 'CmdOrCtrl+S',
             click: () => this.saveload.saveAutomation(),
@@ -162,6 +166,10 @@ export class AppMenuController {
             label: 'Save Automation As...',
             accelerator: 'CmdOrCtrl+Shift+S',
             click: () => this.saveload.saveAutomationAs(),
+        };
+        yield {
+            label: 'Manage Automation versions',
+            click: () => this.saveload.openAutomationManage(),
         };
         if (this.autosave.files.length > 0) {
             const groups = helpers.groupBy(this.autosave.files, file => file.split('_')[0]);

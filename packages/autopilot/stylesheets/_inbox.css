@@ -24,6 +24,8 @@
 
 .input {
     box-shadow: none;
+    border-radius: 2px;
+    border-color: var(--color-mono--600);
 }
 
 .input.input--inline {
@@ -74,4 +76,19 @@ select option, option {
 
 .clickable {
     cursor: pointer;
+}
+
+.textarea {
+    border-radius: 2px;
+    border-color: var(--color-mono--600);
+}
+
+.select {
+    background-color: var(--ui-color--white);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" fill="black"><path d="M480 344.2L268.9 131.9c-15.8-15.9-41.3-15.9-57.1 0 -15.8 15.9-15.8 41.6 0 57.4l237.6 238.9c8.4 8.5 19.6 12.3 30.6 11.7 11 0.6 22.2-3.2 30.6-11.7l237.6-238.9c15.8-15.9 15.8-41.6 0-57.4s-41.3-15.9-57.1 0L480 344.2z"/></svg>');
+    position: relative;
+    box-shadow: none;
+    border-radius: 2px;
+    border: 1px solid var(--color-mono--600);
+    background-position: right 2px center;
 }

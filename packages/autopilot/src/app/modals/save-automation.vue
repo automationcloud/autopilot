@@ -23,10 +23,10 @@
                 <div class="form-row">
                     <div class="form-row__controls">
                         <input class="input"
+                            v-model="location"
                             type="radio"
                             id="location-file"
-                            v-model="location"
-                            value="file"/>
+                            value="file" />
                         <label class="form-row__label"
                             for="location-file">
                             Your computer
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="location === 'ac'">
+            <div v-show="location === 'ac'">
                 <signin-warning message="to save and run automations in the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
@@ -45,79 +45,96 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="serviceId" class="input stretch" id="select-automation">
-                                <option :value="null"> Create new Automation </option>
-                                <option
-                                    v-for="service of services"
-                                    :key="service.id"
-                                    :value="service.id">
-                                    {{ service.name }}
-                                </option>
-                            </select>
+                             <service-select
+                                :service="service"
+                                @change="onServiceSelect"
+                                placeholder="Create new automation">
+                            </service-select>
                             <span class="inline-message">
                                 <i class="fas fa-exclamation-circle"></i>
                                 An Automation contains versions and is what you call from the Automation Cloud API.
                             </span>
                         </div>
                     </div>
-                    <div class="box box--yellow box--small"
-                            v-if="namesMismatch">
+                    <div v-if="serviceIdMismatch"
+                        class="box box--yellow box--small">
                         <strong>Warning!</strong>
-                        Selected automation name <strong>{{ serviceName }}</strong> does not match
-                        current automation name <strong>{{ metadata.serviceName }}</strong>.
-                        it will update the service name to {{ metadata.serviceName }}.
+                        You are saving your script to a different automation, <strong>{{ service && service.name }}</strong>.
+                        It will update the automation name to {{ metadata.serviceName }}.
                         Proceed at your own risk.
                     </div>
-                    <div v-if="!serviceId"
+                    <div v-if="!service"
                         class="form-row">
                         <div class="form-row__label">
                             Name
                         </div>
                         <div class="form-row__controls">
-                            <input class="input" type="text" v-model="serviceName" />
+                            <input class="input" type="text" v-model="newServiceName" />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-row__label">
-                            Script Version
+                            Version
                         </div>
-                        <div class="form-row__controls group group--gap">
-                            <input
-                                class="input"
-                                type="text"
-                                v-model="fullVersion"
-                                :readonly="release !== 'custom'" />
-                            <select class="input" v-model="release">
-                                <option value="major">major</option>
-                                <option value="minor">minor</option>
-                                <option value="patch">patch</option>
-                                <option value="custom">custom</option>
+                        <div class="form-row__controls">
+                            <select class="select stretch"
+                                v-model="release">
+                                <option value="patch"> Increment patch version to {{ getVersion('patch') }} </option>
+                                <option value="minor"> Increment minor version to {{ getVersion('minor') }} </option>
+                                <option value="major"> Increment major version to {{ getVersion('major') }} </option>
+                                <option value="custom"> Manually assign version </option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-row__label">
-                            Worker tag
-                        </div>
-                        <div class="form-row__controls">
-                            <input class="input stretch"
-                                v-model="workerTag"/>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-row__label">
-                            Make script active
-                        </div>
-                        <div class="form-row__controls">
-                            <input type="checkbox" v-model="activate">
+                    <div v-if="release === 'custom'"
+                         class="form-row">
+                        <div class="form-row__label"></div>
+                        <div>
+                            <input class="input"
+                                type="text"
+                                v-model="fullVersion"/>
                         </div>
                     </div>
-                    <div class="form-block">
-                        <div class="form-block__label">
-                            Note
+                    <div class="expand clickable"
+                        @click="expandAdvanced = !expandAdvanced">
+                        <i class="fas"
+                            :class="{
+                                'fa-caret-right': !expandAdvanced,
+                                'fa-caret-down': expandAdvanced
+                            }">
+                        </i>
+                        <span>Advanced</span>
+                    </div>
+                    <div v-if="expandAdvanced">
+                        <div class="form-row">
+                            <div class="form-row__label">
+                                Worker tag
+                            </div>
+                            <div class="form-row__controls">
+                                <input class="input stretch"
+                                    v-model="workerTag"/>
+                            </div>
                         </div>
-                        <div class="form-block__controls">
-                            <textarea v-model="note" rows="6" placeholder="Describe your changes"></textarea>
+                        <div class="form-row">
+                            <div class="form-row__label"
+                                style="align-self: flex-start;">
+                                Note
+                            </div>
+                            <div class="form-row__controls">
+                                <textarea class="textarea"
+                                    v-model="note"
+                                    rows="6">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-row__controls">
+                                <label>
+                                    <input type="checkbox" v-model="activate">
+                                    Make version active
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -128,15 +145,13 @@
                 @click="$emit('hide')">
                 Cancel
             </button>
-            <button
-                v-if="location === 'ac'"
+            <button  v-if="location === 'ac'"
                 class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
                 Save
             </button>
-            <button
-                v-if="location === 'file'"
+            <button v-if="location === 'file'"
                 class="button button--alt button--primary"
                 @click="saveToFile()">
                 Save File
@@ -149,55 +164,33 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
+import ServiceSelect from '../components/service-select.vue';
+
 export default {
+    components: {
+        ServiceSelect,
+    },
+
     inject: [
         'saveload',
         'project',
         'apiLogin',
+        'api',
     ],
 
     data() {
-        const { serviceId, serviceName, version } = this.project.automation.metadata;
         return {
             location: this.saveload.location || 'ac',
-            serviceId,
-            serviceName,
-            customVersion: version,
+            service: null,
+            newServiceName: '',
+            customVersion: '0.0.1',
             workerTag: 'stable',
             note: '',
             release: 'patch',
             activate: false,
-            services: [],
             scripts: [],
+            expandAdvanced: false,
         };
-    },
-
-    created() {
-        if (this.isAuthenticated) {
-            this.loadServices();
-            this.loadScripts(this.serviceId);
-        }
-
-    },
-
-    watch: {
-        isAuthenticated(val) {
-            if (val) {
-                this.loadServices();
-                this.loadScripts(this.serviceId);
-            }
-        },
-
-        serviceId(newVal) {
-            if (newVal) {
-                this.loadScripts(this.serviceId);
-                const service = this.services.find(_ => _.id === newVal);
-                this.serviceName = service.name;
-            } else {
-                this.scripts = [];
-                this.serviceName = this.metadata.serviceName;
-            }
-        },
     },
 
     computed: {
@@ -214,20 +207,20 @@ export default {
             return semver.valid(this.fullVersion);
         },
         canSaveToAc() {
-            return this.isAuthenticated && this.isVersionValid;
+            return this.isAuthenticated && this.isVersionValid && (this.service || this.newServiceName);
         },
         latestVersion() {
             return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
         },
-        namesMismatch() {
-            return this.serviceId && this.serviceName !== this.metadata.serviceName;
+        serviceIdMismatch() {
+            return this.service && this.service.id !== this.metadata.serviceId;
         },
         fullVersion: {
             get() {
                 if (this.release === 'custom') {
                     return this.customVersion;
                 }
-                return semver.inc(this.latestVersion, this.release);
+                return this.getVersion(this.release);
             },
             set(val) {
                 this.customVersion = val;
@@ -235,15 +228,41 @@ export default {
         }
     },
 
+    watch: {
+        isAuthenticated(val) {
+            if (val) {
+                const { serviceId } = this.project.automation.metadata;
+                this.loadService(serviceId);
+            } else {
+                this.service = null;
+            }
+        },
+
+        service(val) {
+            if (val) {
+                this.loadScripts(val.id);
+            } else {
+                this.scripts = [];
+            }
+        },
+    },
+
+    created() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId && this.isAuthenticated) {
+            this.loadService(serviceId);
+        }
+    },
+
     methods: {
         async saveToAc() {
-            if (!this.serviceId) {
-                const { id } = await this.saveload.createService(this.serviceName);
-                this.serviceId = id;
+            if (!this.service) {
+                this.service = await this.saveload.createService(this.newServiceName);
             }
             try {
                 await this.saveload.saveAutomationToAc({
-                    serviceId: this.serviceId,
+                    serviceId: this.service.id,
+                    serviceName: this.service.name,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
@@ -262,7 +281,7 @@ export default {
                 filters: [
                     { name: 'Automation', extensions: ['automation'] },
                 ],
-                defaultPath: this.saveload.filePath || `${this.metadata.serviceName}.automation`,
+                defaultPath: this.saveload.filePath || `${this.serviceName}.automation`,
             });
             if (filePath == null) {
                 return;
@@ -276,19 +295,17 @@ export default {
             }
         },
 
-        getVersion() {
-            if (this.release === 'custom') {
-                return this.latestVersion;
-            }
-            return semver.inc(this.latestVersion, this.release);
+        getVersion(release) {
+            return semver.inc(this.latestVersion, release);
         },
 
-        async loadServices() {
+        async loadService(serviceId) {
             try {
-                this.services = await this.saveload.getServices();
+                this.service = await this.api.getService(serviceId);
             } catch (error) {
-                this.services = [];
+                console.warn('failed to load service', error);
             }
+
         },
 
         async loadScripts(serviceId) {
@@ -300,6 +317,10 @@ export default {
                     this.scripts = [];
                 }
             }
+        },
+
+        onServiceSelect(service) {
+            this.service = service;
         }
     },
 };
@@ -317,4 +338,9 @@ export default {
     grid-gap: 2px;
 }
 
+.expand {
+    margin: var(--gap--large) 0px var(--gap) 0px;
+    padding: var(--gap--large) 0px var(--gap) 0px;
+    font-size: var(--font-size--small);
+}
 </style>

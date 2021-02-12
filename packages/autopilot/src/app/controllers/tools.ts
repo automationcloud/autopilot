@@ -70,9 +70,11 @@ export class ToolsController {
         await this.project.loadAutomationJson({
             script: scriptData.script,
             metadata: {
+                ...scriptData.metadata,
                 domainId: service.domain,
                 serviceId,
-                ...scriptData.metadata,
+                serviceName: service.name,
+                draft: service.draft,
             }
         });
     }

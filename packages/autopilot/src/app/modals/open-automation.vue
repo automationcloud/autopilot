@@ -1,7 +1,7 @@
 <template>
     <div class="modal">
         <div class="modal__header">
-            Open
+            {{ modalTitle }}
         </div>
         <div class="modal__body">
             <div>
@@ -10,13 +10,15 @@
                     </div>
                 <div class="form-row">
                     <div class="form-row__controls">
-                        <input class="input"
+                        <input
+                            class="input"
                             type="radio"
                             id="location-ac"
-                            v-model="location"
-                            value="ac"/>
+                            value="ac"
+                            v-model="location" />
 
-                        <label class="form-row__label"
+                        <label
+                            class="form-row__label"
                             for="location-ac">
                             Automation Cloud
                         </label>
@@ -24,19 +26,21 @@
                 </div>
                 <div class="form-row">
                     <div class="form-row__controls">
-                        <input class="input"
+                        <input
                             type="radio"
+                            class="input"
                             id="location-file"
-                            v-model="location"
-                            value="file"/>
-                        <label class="form-row__label"
+                            value="file"
+                            v-model="location" />
+                        <label
+                            class="form-row__label"
                             for="location-file">
                             Your computer
                         </label>
                     </div>
                 </div>
             </div>
-            <div v-if="location === 'ac'">
+            <div v-show="location === 'ac'">
                 <signin-warning message="to open automation from the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
@@ -47,39 +51,35 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="serviceId" class="input stretch">
-                                <option v-if="services.length === 0"> No Automation found </option>
-                                <option v-else
-                                    :value="null"> Select Automation </option>
-                                <option
-                                    v-for="service of services"
-                                    :key="service.id"
-                                    :value="service.id">
-                                    {{ service.name }}
-                                </option>
-                            </select>
+                            <service-select
+                                @change="onServiceSelect"
+                                :service="service" >
+                            </service-select>
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-row__label">
-                           Open active version
-                        </div>
                         <div class="form-row__controls">
-                            <input type="checkbox" v-model="openActive">
+                            <label>
+                                <input type="checkbox" v-model="openActive">
+                                Open active version
+                            </label>
                         </div>
                     </div>
-                    <div class="form-row" v-if="!openActive">
+                    <div v-if="!openActive"
+                        class="form-row" >
                         <div class="form-row__label">
                             Script version
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="scriptId" class="input stretch">
+                            <select class="select stretch"
+                                v-model="scriptId">
                                 <option v-if="scripts.length === 0"
-                                    :value="null"> No script found </option>
-                                <option v-else
-                                    :value="null"> Select version </option>
-                                <option
-                                    v-for="script of scripts"
+                                    :value="null">
+                                     No script found
+                                </option>
+                                <option  v-else
+                                    :value="null"> Version </option>
+                                <option v-for="script of scripts"
                                     :key="script.id"
                                     :value="script.id">
                                     {{ script.fullVersion }} - {{ formatDate(script.createdAt) || '' }}
@@ -92,19 +92,17 @@
         </div>
         <div class="modal__buttons group group--gap">
             <button class="button button--alt button--tertiary"
-                @click="$emit('hide')">
+                @click="$emit('hide')" >
                 Cancel
             </button>
-            <button
-                v-if="location === 'ac'"
+            <button v-if="location === 'ac'"
                 class="button button--alt  button--primary"
-                @click="openFromAc()"
-                :disabled="!canOpenFromAc">
+                :disabled="!canOpenFromAc"
+                @click="openFromAc()">
                 Open
             </button>
 
-            <button
-                v-if="location === 'file'"
+            <button v-if="location === 'file'"
                 class="button button--alt button--primary"
                 @click="openFromFile()">
                 Select file
@@ -116,50 +114,28 @@
 <script>
 import { remote } from 'electron';
 const { dialog } = remote;
+import ServiceSelect from '../components/service-select.vue';
 
 export default {
+    components: {
+        ServiceSelect,
+    },
+
     inject: [
         'saveload',
         'project',
         'apiLogin',
+        'api',
     ],
+
     data() {
-        const { serviceId } = this.project.automation.metadata;
         return {
             location: this.saveload.location || 'ac',
-            serviceId,
+            service: null,
             scriptId: null,
             openActive: true,
-            services: [],
             scripts: [],
         };
-    },
-
-    created() {
-        this.loadServices();
-    },
-
-    watch: {
-        isAuthenticated(val) {
-            if (val) {
-                this.loadServices();
-            }
-        },
-        serviceId(val) {
-            this.scriptId = null;
-            if (!this.openActive && val) {
-                this.loadScripts(this.serviceId);
-            } else {
-                this.scripts = [];
-            }
-        },
-        openActive(val) {
-            if (!val && this.serviceId) {
-                this.loadScripts(this.serviceId);
-            } else {
-                this.scripts = [];
-            }
-        }
     },
 
     computed: {
@@ -170,20 +146,48 @@ export default {
             return this.apiLogin.isAuthenticated();
         },
         canOpenFromAc() {
-            return this.serviceId && (this.scriptId || this.openActive);
+            return this.scriptId;
         },
+        modalTitle() {
+            return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
+        }
+    },
+
+    watch: {
+        isAuthenticated(val) {
+            if (val) {
+                const { serviceId } = this.project.automation.metadata;
+                this.loadService(serviceId);
+            } else {
+                this.service = null;
+            }
+        },
+
+        async service(val) {
+            if (val) {
+                this.scriptId = val.scriptId;
+                await this.loadScripts(val.id);
+            } else {
+                this.scriptId = null;
+                this.scripts = [];
+            }
+        },
+    },
+
+    created() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId && this.isAuthenticated) {
+            this.loadService(serviceId);
+        }
     },
 
     methods: {
         async openFromAc() {
-            const scriptId = this.openActive ?
-                await this.saveload.getActiveScriptId(this.serviceId) :
-                this.scriptId;
-            if (!scriptId) {
+            if (!this.service || !this.scriptId) {
                 return;
             }
             try {
-                await this.saveload.openAutomationFromAc(this.serviceId, scriptId);
+                await this.saveload.openAutomationFromAc(this.service.id, this.scriptId);
                 this.$emit('hide');
             } catch (error) {
                 console.warn('failed to load automation', error);
@@ -214,14 +218,6 @@ export default {
             }
         },
 
-        async loadServices() {
-            try {
-                this.services = await this.saveload.getServices();
-            } catch (error) {
-                this.services = [];
-            }
-        },
-
         async loadScripts(serviceId) {
             if (serviceId) {
                 try {
@@ -233,10 +229,18 @@ export default {
             }
         },
 
+        async loadService(serviceId) {
+            try {
+                this.service = await this.api.getService(serviceId);
+            } catch (error) {
+                console.warn('failed to load service', error);
+            }
+
+        },
+
         formatDate(timestamp) {
             const time = new Date(timestamp);
             return time.toLocaleString('en-GB', {
-                timeZone: 'UTC',
                 timeZoneName: 'short',
                 year: 'numeric',
                 month: 'short',
@@ -244,6 +248,10 @@ export default {
                 hour: '2-digit',
                 minute: '2-digit',
             });
+        },
+
+        onServiceSelect(service) {
+            this.service = service;
         }
     },
 };
