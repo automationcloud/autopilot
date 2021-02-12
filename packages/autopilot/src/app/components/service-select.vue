@@ -89,7 +89,7 @@ export default {
         },
 
         onBlur() {
-            if(this.hoverOnList) { // when losing focus to click the item, ignore
+            if (this.hoverOnList) { // when losing focus to click the item, ignore
                 return;
             }
             // when service is selected but the text is changed
