@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import { StatsService } from '@automationcloud/engine';
 import { menu, clipboard } from '../../util';
 import EditMetadata from './edit-metadata.vue';
 
@@ -55,6 +54,10 @@ export default {
     components: {
         EditMetadata
     },
+
+    inject: [
+        'browser',
+    ],
 
     computed: {
 
@@ -68,10 +71,6 @@ export default {
 
         scriptProxy() {
             return this.viewport.getScriptProxy();
-        },
-
-        stats() {
-            return this.get(StatsService);
         },
 
     },
@@ -140,7 +139,7 @@ export default {
         },
 
         getOriginPatterns() {
-            const patterns = new Set(this.stats.visitedOrigins
+            const patterns = new Set(this.browser.visitedOrigins
                 .map(origin => {
                     // This is to make url pattern for domain: example.com/
                     // covers following origins:
