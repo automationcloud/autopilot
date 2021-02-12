@@ -23,10 +23,10 @@
                 <div class="form-row">
                     <div class="form-row__controls">
                         <input class="input"
+                            v-model="location"
                             type="radio"
                             id="location-file"
-                            v-model="location"
-                            value="file"/>
+                            value="file" />
                         <label class="form-row__label"
                             for="location-file">
                             Your computer
@@ -47,8 +47,8 @@
                         <div class="form-row__controls">
                              <service-select
                                 :service="service"
-                                placeholder="Create new automation"
-                                @change="onServiceSelect">
+                                @change="onServiceSelect"
+                                placeholder="Create new automation">
                             </service-select>
                             <span class="inline-message">
                                 <i class="fas fa-exclamation-circle"></i>
@@ -77,7 +77,8 @@
                             Version
                         </div>
                         <div class="form-row__controls">
-                            <select class="select stretch" v-model="release">
+                            <select class="select stretch"
+                                v-model="release">
                                 <option value="patch"> Increment patch version to {{ getVersion('patch') }} </option>
                                 <option value="minor"> Increment minor version to {{ getVersion('minor') }} </option>
                                 <option value="major"> Increment major version to {{ getVersion('major') }} </option>
@@ -89,20 +90,19 @@
                          class="form-row">
                         <div class="form-row__label"></div>
                         <div>
-                            <input
-                                class="input"
+                            <input class="input"
                                 type="text"
                                 v-model="fullVersion"/>
                         </div>
                     </div>
                     <div class="expand clickable"
                         @click="expandAdvanced = !expandAdvanced">
-                        <i
-                            class="fas"
+                        <i class="fas"
                             :class="{
                                 'fa-caret-right': !expandAdvanced,
                                 'fa-caret-down': expandAdvanced
-                            }"></i>
+                            }">
+                        </i>
                         <span>Advanced</span>
                     </div>
                     <div v-if="expandAdvanced">
@@ -116,11 +116,15 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-row__label" style="align-self: flex-start;">
+                            <div class="form-row__label"
+                                style="align-self: flex-start;">
                                 Note
                             </div>
                             <div class="form-row__controls">
-                                <textarea class="textarea" v-model="note" rows="6"></textarea>
+                                <textarea class="textarea"
+                                    v-model="note"
+                                    rows="6">
+                                </textarea>
                             </div>
                         </div>
 
@@ -141,15 +145,13 @@
                 @click="$emit('hide')">
                 Cancel
             </button>
-            <button
-                v-if="location === 'ac'"
+            <button  v-if="location === 'ac'"
                 class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
                 Save
             </button>
-            <button
-                v-if="location === 'file'"
+            <button v-if="location === 'file'"
                 class="button button--alt button--primary"
                 @click="saveToFile()">
                 Save File
@@ -165,16 +167,16 @@ const { dialog } = remote;
 import ServiceSelect from '../components/service-select.vue';
 
 export default {
+    components: {
+        ServiceSelect,
+    },
+
     inject: [
         'saveload',
         'project',
         'apiLogin',
         'api',
     ],
-
-    components: {
-        ServiceSelect,
-    },
 
     data() {
         return {
@@ -189,32 +191,6 @@ export default {
             scripts: [],
             expandAdvanced: false,
         };
-    },
-
-    created() {
-        const { serviceId } = this.project.automation.metadata;
-        if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
-        }
-    },
-
-    watch: {
-        isAuthenticated(val) {
-            if (val) {
-                const { serviceId } = this.project.automation.metadata;
-                this.loadService(serviceId);
-            } else {
-                this.service = null;
-            }
-        },
-
-        service(val) {
-            if (val) {
-                this.loadScripts(val.id);
-            } else {
-                this.scripts = [];
-            }
-        },
     },
 
     computed: {
@@ -249,6 +225,32 @@ export default {
             set(val) {
                 this.customVersion = val;
             }
+        }
+    },
+
+    watch: {
+        isAuthenticated(val) {
+            if (val) {
+                const { serviceId } = this.project.automation.metadata;
+                this.loadService(serviceId);
+            } else {
+                this.service = null;
+            }
+        },
+
+        service(val) {
+            if (val) {
+                this.loadScripts(val.id);
+            } else {
+                this.scripts = [];
+            }
+        },
+    },
+
+    created() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId && this.isAuthenticated) {
+            this.loadService(serviceId);
         }
     },
 

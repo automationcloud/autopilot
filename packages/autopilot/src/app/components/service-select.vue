@@ -2,16 +2,19 @@
     <div class="service-select">
         <div class="input stretch">
             <input class="service-select__multi"
+                v-model="text"
                 @focus="expand"
                 @blur="onBlur"
-                v-model="text"
                 :placeholder="placeholder">
-                <span class="icon"
+                <span
+                    class="icon"
                     @click="toggle()">
                     <i class="fas fa-chevron-down"></i>
                 </span>
         </div>
-        <div v-show="listShown" class="service-select__list"
+        <div
+            v-show="listShown"
+            class="service-select__list"
             @mouseover="hoverOnList = true;"
             @mouseout="hoverOnList = false;" >
             <div class="service-select__options">
@@ -40,10 +43,6 @@ export default {
         placeholder: { type: String, default: 'Search or select' },
     },
 
-    mounted() {
-        this.loadServices();
-    },
-
     data() {
         return {
             services: [],
@@ -52,6 +51,7 @@ export default {
             hoverOnList: false,
         };
     },
+
     watch: {
         text(val) {
             this.loadServices(val);
@@ -62,6 +62,11 @@ export default {
             }
         }
     },
+
+    created () {
+        this.loadServices();
+    },
+
     methods: {
         async loadServices(name = '') {
             try {

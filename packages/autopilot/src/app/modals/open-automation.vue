@@ -10,13 +10,15 @@
                     </div>
                 <div class="form-row">
                     <div class="form-row__controls">
-                        <input class="input"
+                        <input
+                            class="input"
                             type="radio"
                             id="location-ac"
-                            v-model="location"
-                            value="ac"/>
+                            value="ac"
+                            v-model="location" />
 
-                        <label class="form-row__label"
+                        <label
+                            class="form-row__label"
                             for="location-ac">
                             Automation Cloud
                         </label>
@@ -24,12 +26,14 @@
                 </div>
                 <div class="form-row">
                     <div class="form-row__controls">
-                        <input class="input"
+                        <input
                             type="radio"
+                            class="input"
                             id="location-file"
-                            v-model="location"
-                            value="file"/>
-                        <label class="form-row__label"
+                            value="file"
+                            v-model="location" />
+                        <label
+                            class="form-row__label"
                             for="location-file">
                             Your computer
                         </label>
@@ -48,8 +52,8 @@
                         </div>
                         <div class="form-row__controls">
                             <service-select
-                                :service="service"
-                                @change="onServiceSelect">
+                                @change="onServiceSelect"
+                                :service="service" >
                             </service-select>
                         </div>
                     </div>
@@ -61,18 +65,21 @@
                             </label>
                         </div>
                     </div>
-                    <div class="form-row" v-if="!openActive">
+                    <div v-if="!openActive"
+                        class="form-row" >
                         <div class="form-row__label">
                             Script version
                         </div>
                         <div class="form-row__controls">
-                            <select v-model="scriptId" class="select stretch">
+                            <select class="select stretch"
+                                v-model="scriptId">
                                 <option v-if="scripts.length === 0"
-                                    :value="null"> No script found </option>
-                                <option v-else
+                                    :value="null">
+                                     No script found
+                                </option>
+                                <option  v-else
                                     :value="null"> Version </option>
-                                <option
-                                    v-for="script of scripts"
+                                <option v-for="script of scripts"
                                     :key="script.id"
                                     :value="script.id">
                                     {{ script.fullVersion }} - {{ formatDate(script.createdAt) || '' }}
@@ -85,19 +92,17 @@
         </div>
         <div class="modal__buttons group group--gap">
             <button class="button button--alt button--tertiary"
-                @click="$emit('hide')">
+                @click="$emit('hide')" >
                 Cancel
             </button>
-            <button
-                v-if="location === 'ac'"
+            <button v-if="location === 'ac'"
                 class="button button--alt  button--primary"
-                @click="openFromAc()"
-                :disabled="!canOpenFromAc">
+                :disabled="!canOpenFromAc"
+                @click="openFromAc()">
                 Open
             </button>
 
-            <button
-                v-if="location === 'file'"
+            <button v-if="location === 'file'"
                 class="button button--alt button--primary"
                 @click="openFromFile()">
                 Select file
@@ -112,16 +117,16 @@ const { dialog } = remote;
 import ServiceSelect from '../components/service-select.vue';
 
 export default {
+    components: {
+        ServiceSelect,
+    },
+
     inject: [
         'saveload',
         'project',
         'apiLogin',
         'api',
     ],
-
-    components: {
-        ServiceSelect,
-    },
 
     data() {
         return {
@@ -148,13 +153,6 @@ export default {
         }
     },
 
-    created() {
-        const { serviceId } = this.project.automation.metadata;
-        if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
-        }
-    },
-
     watch: {
         isAuthenticated(val) {
             if (val) {
@@ -174,6 +172,13 @@ export default {
                 this.scripts = [];
             }
         },
+    },
+
+    created() {
+        const { serviceId } = this.project.automation.metadata;
+        if (serviceId && this.isAuthenticated) {
+            this.loadService(serviceId);
+        }
     },
 
     methods: {

@@ -2,7 +2,7 @@
     <div class="edit-default section">
 
         <div class="form-row">
-            <div class="form-row__label section__title">Automation</div>
+            <div class="form-row__label">Automation</div>
             <div class="form-row__controls">
                 <input
                     class="input"
