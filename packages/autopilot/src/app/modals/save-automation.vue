@@ -57,12 +57,18 @@
                         </div>
                     </div>
                     <div v-if="serviceIdMismatch"
-                        class="box box--yellow box--small">
-                        <strong>Warning!</strong>
-                        You are saving your script to a different automation, <strong>{{ service && service.name }}</strong>.
-                        It will update the automation name to {{ metadata.serviceName }}.
-                        Proceed at your own risk.
+                        class="box box--primary">
+                        <i class="box__icon fas fa-exclamation-circle"></i>
+                        <span>You are saving your Automation to a different Automation, <strong>{{ service && service.name }}</strong>.
+                        Automation will be renamed to {{ metadata.serviceName }}.
+                        Proceed at your own risk.</span>
                     </div>
+                    <div v-else-if="serviceNameMismatch"
+                        class="box box--primary">
+                        <i class="box__icon fas fa-exclamation-circle"></i>
+                        <span> Automation {{ service.name }} will be renamed to <strong>{{ metadata.serviceName }}</strong>.</span>
+                    </div>
+
                     <div v-if="!service"
                         class="form-row">
                         <div class="form-row__label">
@@ -214,6 +220,9 @@ export default {
         },
         serviceIdMismatch() {
             return this.service && this.service.id !== this.metadata.serviceId;
+        },
+        serviceNameMismatch() {
+            return this.service && this.service.name !== this.metadata.serviceName;
         },
         fullVersion: {
             get() {

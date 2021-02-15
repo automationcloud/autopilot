@@ -230,13 +230,6 @@ export default {
         },
 
         async saveServieName() {
-            try {
-                await this.saveload.updateServiceMeta();
-            } catch (error) {
-                this.saveload.showError('Update', error);
-                return;
-            }
-
             this.viewport.commands.editMetadata('serviceName', this.newName);
             this.editing = false;
         }
