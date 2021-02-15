@@ -24,7 +24,11 @@ describe('ResolverService', () => {
                     dependencies: [{ name: '@automationcloud/extension-test', version: '^2.0.0' }],
                 });
                 const unmet = [...runtime.$resolver.unmetDependencies(script.dependencies)];
-                assert.deepEqual(unmet, [{ name: '@automationcloud/extension-test', version: '^2.0.0' }]);
+                assert.deepEqual(unmet, [{
+                    name: '@automationcloud/extension-test',
+                    version: '^2.0.0',
+                    existingVersion: null
+                }]);
             });
         });
 
@@ -56,7 +60,11 @@ describe('ResolverService', () => {
                     dependencies: [{ name: '@automationcloud/extension-test', version: '^2.0.0' }],
                 });
                 const unmet = [...runtime.$resolver.unmetDependencies(script.dependencies)];
-                assert.deepEqual(unmet, [{ name: '@automationcloud/extension-test', version: '^2.0.0' }]);
+                assert.deepEqual(unmet, [{
+                    name: '@automationcloud/extension-test',
+                    version: '^2.0.0',
+                    existingVersion: '3.0.0',
+                }]);
             });
         });
 
@@ -72,7 +80,11 @@ describe('ResolverService', () => {
                     dependencies: [{ name: '@automationcloud/extension-test', version: '^2.0.0' }],
                 });
                 const unmet = [...runtime.$resolver.unmetDependencies(script.dependencies)];
-                assert.deepEqual(unmet, [{ name: '@automationcloud/extension-test', version: '^2.0.0' }]);
+                assert.deepEqual(unmet, [{
+                    name: '@automationcloud/extension-test',
+                    version: '^2.0.0',
+                    existingVersion: '1.0.5',
+                }]);
             });
         });
     });

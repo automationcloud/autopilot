@@ -117,7 +117,7 @@ export class ResolverService {
                 yield {
                     name: required.name,
                     version: required.version,
-                    existingVersion: ext?.spec.version,
+                    existingVersion: ext?.spec.version ?? null,
                 };
             }
         }
@@ -171,5 +171,5 @@ function by<T, K>(fn: (item: T) => K): (a: T, b: T) => number {
 export interface ExtensionUnmetDep {
     name: string;
     version: string;
-    existingVersion?: string;
+    existingVersion: string | null;
 }
