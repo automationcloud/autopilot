@@ -2,6 +2,7 @@
     <div class="notification"
         :class="[
             'notification--' + notification.level,
+            'notification--' + notification.style,
             isInline ? 'notification--inline' : undefined,
         ]">
         <i class="notification__icon"
@@ -154,7 +155,7 @@ export default {
 }
 
 .notification__title {
-    margin-top: var(--gap);
+    margin: var(--gap) 0;
 }
 
 .notification__message {

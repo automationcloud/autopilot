@@ -38,30 +38,24 @@
             <template v-if="installed">
                 <button v-if="extReg.isOutdated(manifest)"
                     class="button button--yellow button--icon"
-                    @click="extReg.updateExtension(manifest)"
+                    @click="extReg.updateExtension(manifest.name, manifest.latestVersion)"
                     title="Update the extension to latest version"
                     :disabled="extReg.loading">
-                    <i v-if="isProcessing"
-                        class="fas fa-spinner fa-spin"></i>
-                    <i v-else class="fas fa-arrow-circle-up"></i>
+                    <i class="fas fa-arrow-circle-up"></i>
                 </button>
                 <button class="button button--secondary button--icon"
-                    @click="extReg.uninstallExtension(manifest)"
+                    @click="extReg.uninstallExtension(manifest.name)"
                     title="Uninstall extension"
                     :disabled="extReg.loading">
-                    <i v-if="isProcessing"
-                        class="fas fa-spinner fa-spin"></i>
-                    <i v-else class="fas fa-times"></i>
+                    <i class="fas fa-times"></i>
                 </button>
             </template>
             <template v-else>
                 <button class="button button--primary button--icon"
-                    @click="extReg.installExtension(manifest)"
+                    @click="extReg.installExtension(manifest.name, manifest.latestVersion)"
                     title="Install extension"
                     :disabled="extReg.loading">
-                    <i v-if="isProcessing"
-                        class="fas fa-spinner fa-spin"></i>
-                    <i v-else class="fas fa-plus"></i>
+                    <i class="fas fa-plus"></i>
                 </button>
             </template>
             <!-- TODO spinner when updating -->
@@ -98,10 +92,6 @@ export default {
 
         description() {
             return this.manifest.description.trim();
-        },
-
-        isProcessing() {
-            return this.extReg.loading && this.extReg.processingManifest === this.manifest;
         },
 
     },

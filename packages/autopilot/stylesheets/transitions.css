@@ -18,3 +18,16 @@
     transform: scale(1.25);
     opacity: 0;
 }
+
+.fade-shove-enter-active, .fade-shove-leave-active {
+    transition: opacity .3s, transform .3s;
+}
+
+.fade-shove-enter {
+    opacity: 0;
+}
+
+.fade-shove-leave-to {
+    transform: translate(16px, -16px) scale(.95);
+    opacity: 0;
+}

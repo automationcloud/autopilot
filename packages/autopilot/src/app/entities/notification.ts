@@ -3,7 +3,6 @@ export type NotificationStyle = 'float' | 'stretch';
 
 export interface Notification {
     id: string;
-    kind: string;
     title: string;
     message: string;
     icon: string;
@@ -17,5 +16,5 @@ export interface Notification {
 
 export interface NotificationAction {
     title: string;
-    action: () => Promise<void>;
+    action: () => void | Promise<void>;
 }

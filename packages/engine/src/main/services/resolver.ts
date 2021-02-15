@@ -109,12 +109,16 @@ export class ResolverService {
         return this.getAllExtensions().flatMap(ext => ext.inspectionClasses);
     }
 
-    *unmetDependencies(requirements: ExtensionVersion[]): Iterable<ExtensionVersion> {
+    *unmetDependencies(requirements: ExtensionVersion[]): Iterable<ExtensionUnmetDep> {
         for (const required of requirements) {
             const ext = this.extensions.find(_ => _.spec.name === required.name);
             const satisfied = ext && ext.isVersionWithinRange(required.version);
             if (!satisfied) {
-                yield required;
+                yield {
+                    name: required.name,
+                    version: required.version,
+                    existingVersion: ext?.spec.version,
+                };
             }
         }
     }
@@ -162,4 +166,10 @@ export class ResolverService {
 
 function by<T, K>(fn: (item: T) => K): (a: T, b: T) => number {
     return (a, b) => (fn(a) > fn(b) ? 1 : -1);
+}
+
+export interface ExtensionUnmetDep {
+    name: string;
+    version: string;
+    existingVersion?: string;
 }
