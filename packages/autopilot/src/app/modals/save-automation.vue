@@ -182,7 +182,7 @@ export default {
         return {
             location: this.saveload.location || 'ac',
             service: null,
-            newServiceName: '',
+            newServiceName: this.project.automation.metadata.serviceName,
             customVersion: '0.0.1',
             workerTag: 'stable',
             note: '',
@@ -270,7 +270,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -290,7 +290,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -320,6 +320,10 @@ export default {
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        showError(error) {
+            this.saveload.showError('Save', error);
         }
     },
 };

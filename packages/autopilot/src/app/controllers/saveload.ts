@@ -29,6 +29,8 @@ import { Automation, AutomationMetadata } from '../entities/automation';
 import { BundlesController } from './bundles';
 import { shell } from 'electron';
 import { acUrls } from '../util';
+import { NotificationsController } from './notifications';
+import { ApiLoginController } from './api-login';
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -47,6 +49,8 @@ export class SaveLoadController {
         protected autosave: AutosaveController,
         @inject(ModalsController)
         protected modals: ModalsController,
+        @inject(ApiLoginController)
+        protected apiLogin: ApiLoginController,
         @inject(ApiController)
         protected api: ApiController,
         @inject(ScriptDiffController)
@@ -57,6 +61,8 @@ export class SaveLoadController {
         protected events: EventsController,
         @inject(BundlesController)
         protected bundles: BundlesController,
+        @inject(NotificationsController)
+        protected notifications: NotificationsController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -71,6 +77,8 @@ export class SaveLoadController {
     }
 
     get setDiffBase() { return this._setDiffBase; }
+
+    get isAuthenticated() { return this.apiLogin.isAuthenticated(); }
 
     update() {
         this.userData.saveData({
@@ -127,7 +135,7 @@ export class SaveLoadController {
             workerTag,
             content,
         });
-        await this.syncService();
+        await this.updateServiceMeta();
         if (activate) {
             await this.api.publishScript(script.id);
         }
@@ -205,9 +213,9 @@ export class SaveLoadController {
         return await this.api.createService(spec);
     }
 
-    async syncService() {
+    async updateServiceMeta() {
         const { serviceId, serviceName, domainId, draft } = this.project.automation.metadata;
-        if (!serviceId) {
+        if (!serviceId || !this.isAuthenticated) {
             return;
         }
         const service = await this.api.getService(serviceId);
@@ -267,4 +275,16 @@ export class SaveLoadController {
             await shell.openExternal(`${baseUrl}/services/${serviceId}/script-versions`);
         }
     }
+
+    protected showError(action: string, err: any) {
+        this.notifications.removeByKind('saveload.error');
+        this.notifications.add({
+            kind: 'saveload.error',
+            level: 'error',
+            title: `${action} Automation failed: ${err.code || err.name}`,
+            message: err.message,
+            canClose: true,
+        });
+    }
+
 }

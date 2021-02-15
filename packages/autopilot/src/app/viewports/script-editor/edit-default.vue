@@ -1,22 +1,21 @@
 <template>
     <div class="edit-default section">
         <div class="edit-default__automation">
-            <div class="section__title">
-                Automation</div>
+            <div class="section__title">Automation</div>
             <div class="edit-default__automation-meta">
                 <div class="edit-default__automation-name"
-                    @mouseenter.prevent="editShown = true"
-                    @mouseleave.prevent="editShown = false">
+                    @mouseenter="editShown = true"
+                    @mouseleave="editShown = false" >
                     <span v-if="!editing">{{ metadataProxy.serviceName }}
                         <i v-if="editShown"
                             class="fas fa-pencil-alt icon--small clickable"
                             @click.prevent="startEditing"></i>
                     </span>
                     <div v-else class="grid grid--gap">
-                        <input class="input" type="text" v-model="metadataProxy.serviceName">
+                        <input class="input" type="text" v-model="newName">
                         <div class="group">
                             <button class="button button--small button--primary"
-                                @click.prevent="updateService">save</button>
+                                @click.prevent="saveServieName">save</button>
                             <button class="button button--small button--secondary"
                                 @click.prevent="cancel">cancel</button>
                         </div>
@@ -220,17 +219,25 @@ export default {
         },
 
         startEditing() {
-            this.oldName = this.metadataProxy.serviceName;
+            this.newName = this.metadataProxy.serviceName;
+            this.editShown = false;
             this.editing = true;
         },
 
         cancel() {
-            this.viewport.commands.editMetadata('serviceName', this.oldName);
+            this.newName = this.metadataProxy.serviceName;
             this.editing = false;
         },
 
-        async updateService() {
-            await this.saveload.syncService();
+        async saveServieName() {
+            try {
+                await this.saveload.updateServiceMeta();
+            } catch (error) {
+                this.saveload.showError('Update', error);
+                return;
+            }
+
+            this.viewport.commands.editMetadata('serviceName', this.newName);
             this.editing = false;
         }
     },

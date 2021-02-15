@@ -143,7 +143,7 @@ export default {
             return this.apiLogin.accountFullName;
         },
         isAuthenticated() {
-            return this.apiLogin.isAuthenticated();
+            return this.saveload.isAuthenticated;
         },
         canOpenFromAc() {
             return this.scriptId;
@@ -190,9 +190,7 @@ export default {
                 await this.saveload.openAutomationFromAc(this.service.id, this.scriptId);
                 this.$emit('hide');
             } catch (error) {
-                console.warn('failed to load automation', error);
-                // TODO: use newe spec for error
-                alert('Failed to open Automation');
+                this.showError(error);
             }
         },
 
@@ -212,9 +210,7 @@ export default {
                 await this.saveload.openAutomationFromFile(filepath);
                 this.$emit('hide');
             } catch (error) {
-                console.warn('failed to load automation', error);
-                // TODO: use newe spec for error
-                alert('Failed to open Automation');
+                this.showError(error);
             }
         },
 
@@ -233,9 +229,8 @@ export default {
             try {
                 this.service = await this.api.getService(serviceId);
             } catch (error) {
-                console.warn('failed to load service', error);
+                this.showError(error);
             }
-
         },
 
         formatDate(timestamp) {
@@ -252,6 +247,10 @@ export default {
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        showError(error) {
+            this.saveload.showError('Open', error);
         }
     },
 };
