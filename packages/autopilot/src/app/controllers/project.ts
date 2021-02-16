@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { UserData } from '../userdata';
-import { Script, Engine, ResolverService, ExtensionVersion } from '@automationcloud/engine';
+import { Script, Engine, ResolverService, ExtensionVersion, ExtensionUnmetDep } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { StorageController } from './storage';
 import { controller } from '../controller';
@@ -59,10 +59,6 @@ export class ProjectController {
                 this.reloadScript();
             }
         });
-
-        events.on('scriptLoaded', () => {
-            this.update();
-        });
     }
 
     async init() {
@@ -89,12 +85,12 @@ export class ProjectController {
                 ...DEFAULT_AUTOMATION_METADATA,
                 ...json.metadata,
             },
-            script: new Script(this.engine, json.script || {}),
+            script: this.initScript(json.script || {}),
             bundles: json.bundles || json.datasets || [],
         };
+        this.update();
         // TODO these events are temporary, we'll revisit them alongside dependency management
         this.events.emit('automationLoaded');
-        this.events.emit('scriptLoaded');
         this.events.emit('automationMetadataUpdated');
         this.events.emit('feedbackInvalidated');
     }
@@ -102,7 +98,6 @@ export class ProjectController {
     reloadScript() {
         const json = JSON.parse(JSON.stringify(this.automation.script));
         this.automation.script = this.initScript(json);
-        this.events.emit('scriptLoaded');
         this.events.emit('feedbackInvalidated');
     }
 
@@ -112,37 +107,53 @@ export class ProjectController {
         const missingDeps = unmetDeps.filter(_ => _.existingVersion == null);
         const unsatisfiedDeps = unmetDeps.filter(_ => _.existingVersion != null);
         if (missingDeps.length) {
-            const title = missingDeps.length === 1 ?
-                `This script requires extension ${missingDeps[0].name}` :
-                `This script needs ${missingDeps.length} missing extensions`;
-            const message = missingDeps.length === 1 ?
-                'Without it the script may not function correctly.' :
-                'Without the extensions it may not function correctly.';
-            this.notifications.add({
-                id: 'script.missingDep',
-                level: 'info',
-                title,
-                message,
-                primaryAction: {
-                    title: 'Install',
-                    action: () => {
-                        this.installDeps(missingDeps);
-                        this.notifications.removeById('script.missingDep');
-                    },
-                },
-                secondaryAction: {
-                    title: 'Cancel',
-                    action: () => this.notifications.removeById('script.missingDep'),
-                }
-            });
+            this.notifyMissingDeps(missingDeps);
         }
+        if (unsatisfiedDeps.length) {
+            this.notifyUnsatisfiedDeps(unsatisfiedDeps);
+        }
+        return script;
+    }
+
+    protected notifyMissingDeps(missingDeps: ExtensionUnmetDep[]) {
+        const title = missingDeps.length === 1 ?
+            `This script requires extension ${missingDeps[0].name}` :
+            `This script needs ${missingDeps.length} missing extensions`;
+        const message = missingDeps.length === 1 ?
+            'Without it the script may not function correctly.' :
+            'Without the extensions it may not function correctly.';
+        this.notifications.add({
+            id: 'script.missingDep',
+            level: 'info',
+            title,
+            message,
+            primaryAction: {
+                title: 'Install',
+                action: () => {
+                    this.installDeps(missingDeps);
+                    this.notifications.removeById('script.missingDep');
+                },
+            },
+            secondaryAction: {
+                title: 'Cancel',
+                action: () => this.notifications.removeById('script.missingDep'),
+            }
+        });
+    }
+
+    protected notifyUnsatisfiedDeps(unsatisfiedDeps: ExtensionUnmetDep[]) {
         for (const dep of unsatisfiedDeps) {
-            const isNewer = semver.gt(dep.version, dep.existingVersion!);
+            const coerced = semver.coerce(dep.version)?.version;
+            if (!coerced) {
+                console.warn(`Could not understand dependency, skipping`, dep);
+                continue;
+            }
+            const isNewer = semver.gt(coerced, dep.existingVersion!);
             const title = isNewer ?
                 `The script uses newer version of ${dep.name}` :
                 `The script uses older version of ${dep.name}`;
             const message = `You have v${dep.existingVersion} installed. ` +
-                `The script was created with v${dep.version.replace(/\^/g, '')}. ` +
+                `The script was created with v${coerced}. ` +
                 `Without it the script may not function correctly or may need editing.`;
             this.notifications.add({
                 id: `script.deps.${dep.name}`,
@@ -162,7 +173,6 @@ export class ProjectController {
                 }
             });
         }
-        return script;
     }
 
     protected installDeps(deps: ExtensionVersion[]) {

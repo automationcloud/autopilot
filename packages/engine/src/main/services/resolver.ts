@@ -112,7 +112,7 @@ export class ResolverService {
     *unmetDependencies(requirements: ExtensionVersion[]): Iterable<ExtensionUnmetDep> {
         for (const required of requirements) {
             const ext = this.extensions.find(_ => _.spec.name === required.name);
-            const satisfied = ext && ext.isVersionWithinRange(required.version);
+            const satisfied = ext?.isVersionWithinRange(required.version);
             if (!satisfied) {
                 yield {
                     name: required.name,

@@ -161,6 +161,7 @@ export default {
 .notification__message {
     margin: var(--gap) 0;
     font-size: .85em;
+    line-height: 1.25;
     /* font-weight: 300; */
     opacity: .8;
     white-space: pre-wrap;
