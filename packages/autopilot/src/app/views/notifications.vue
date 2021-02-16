@@ -1,6 +1,6 @@
 <template>
     <div class="notifications">
-        <transition-group name="fade-scale">
+        <transition-group name="fade-shove">
             <notification v-for="n in notifications.current"
                 :key="n.id"
                 :notification="n"/>

@@ -19,6 +19,7 @@ import { StorageController } from './storage';
 import { EventsController } from '../controllers/events';
 import { controller } from '../controller';
 import semver from 'semver';
+import { NotificationsController } from './notifications';
 
 const EXTENSIONS_AUTO_REFRESH_INTERVAL = numberConfig('EXTENSIONS_AUTO_REFRESH_INTERVAL', 5 * 60 * 1000);
 
@@ -36,8 +37,6 @@ export class ExtensionRegistryController {
     searchQuery: string = '';
     loading: boolean = false;
     error: Error | null = null;
-    // Manifest which is being "worked on" when installing, uninstalling and updating extension
-    processingManifest: ExtensionManifest | null = null;
 
     protected _extMap: Map<string, Extension> = new Map();
     protected _manifestMap: Map<string, ExtensionManifest> = new Map();
@@ -51,6 +50,8 @@ export class ExtensionRegistryController {
         protected registry: RegistryService,
         @inject(Configuration)
         protected config: Configuration,
+        @inject(NotificationsController)
+        protected notifications: NotificationsController,
     ) {
         this.userData = storage.createUserData('extensions');
         this.events.on('apiAuthUpdated', () => this.init());
@@ -168,60 +169,97 @@ export class ExtensionRegistryController {
         this.events.emit('extensionsUpdated');
     }
 
-    async installExtension(manifest: ExtensionManifest) {
+    async installExtension(name: string, version: string) {
         if (this.loading) {
             return;
         }
         try {
             this.loading = true;
-            this.processingManifest = manifest;
-            const ext = await this.registry.loadExtension(manifest.name, manifest.latestVersion);
+            const ext = await this.registry.loadExtension(name, version);
             this._addExtension(ext);
             this.events.emit('extensionsUpdated');
+            this.notifications.add({
+                id: 'extension.install.success',
+                level: 'info',
+                title: `Extension ${ext.spec.name} ${ext.spec.version} installed`,
+                canClose: true,
+                timeout: 5000,
+            });
         } catch (err) {
-            alert('Could not install extension. Please see Console for additional information.');
-            console.warn(`Could not install extension ${manifest.name}`, err);
+            this.notifications.add({
+                id: 'extension.install.failed',
+                level: 'fatal',
+                title: `Could not install extension ${name}:${version}`,
+                message: err.message,
+                canClose: true,
+                timeout: 5000,
+            });
+            console.warn(`Could not install extension ${name}`, err);
         } finally {
             this.loading = false;
-            this.processingManifest = null;
         }
     }
 
-    async uninstallExtension(manifest: ExtensionManifest) {
+    async uninstallExtension(name: string) {
         if (this.loading) {
             return;
         }
         try {
             this.loading = true;
-            this.processingManifest = manifest;
-            this.installedExtensions = this.installedExtensions.filter(e => e.spec.name !== manifest.name);
+            this.installedExtensions = this.installedExtensions.filter(e => e.spec.name !== name);
             this.update();
             this.events.emit('extensionsUpdated');
+            this.notifications.add({
+                id: 'extension.uninstall.success',
+                level: 'info',
+                title: `Extension ${name} uninstalled`,
+                canClose: true,
+                timeout: 5000,
+            });
         } catch (err) {
-            alert('Could not uninstall extension. Please see Console for additional information.');
-            console.warn(`Could not uninstall extension ${manifest.name}`, err);
+            this.notifications.add({
+                id: 'extension.uninstall.failed',
+                level: 'fatal',
+                title: `Could not uninstall extension ${name}`,
+                message: err.message,
+                canClose: true,
+                timeout: 5000,
+            });
+            console.warn(`Could not uninstall extension ${name}`, err);
         } finally {
             this.loading = false;
-            this.processingManifest = null;
         }
     }
 
-    async updateExtension(manifest: ExtensionManifest) {
+    async updateExtension(name: string, version: string) {
         if (this.loading) {
             return;
         }
         try {
             this.loading = true;
-            this.processingManifest = manifest;
-            const ext = await this.registry.loadExtension(manifest.name, manifest.latestVersion);
+            const ext = await this.registry.loadExtension(name, version);
             this._addExtension(ext);
             this.events.emit('extensionsUpdated');
+            this.notifications.removeById('extension.*');
+            this.notifications.add({
+                id: 'extension.update.success',
+                level: 'info',
+                title: `Extension ${ext.spec.name} updated to ${ext.spec.version}`,
+                canClose: true,
+                timeout: 5000,
+            });
         } catch(err) {
-            alert('Could not update extension. Please see Console for additional information.');
-            console.warn(`Extension update failed ${manifest.name}`, err);
+            this.notifications.add({
+                id: 'extension.update.success',
+                level: 'fatal',
+                title: `Could not update extension ${name}`,
+                message: err.message,
+                canClose: true,
+                timeout: 5000,
+            });
+            console.warn(`Extension update failed ${name}`, err);
         } finally {
             this.loading = false;
-            this.processingManifest = null;
         }
     }
 
@@ -249,7 +287,7 @@ export class ExtensionRegistryController {
         }
         console.info(`Auto-updating ${updates.length} extensions`, updates);
         const promises = updates.map(async updateInfo => {
-            const  { name, version } = updateInfo;
+            const { name, version } = updateInfo;
             try {
                 const ext = await this.registry.loadExtension(name, version);
                 this._addExtension(ext);

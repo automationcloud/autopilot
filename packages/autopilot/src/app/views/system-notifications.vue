@@ -23,9 +23,10 @@ export default {
                 res.push({
                     id: 'detached',
                     kind: 'detached',
+                    level: 'fatal',
+                    style: 'stretch',
                     icon: 'fas fa-meh',
                     title: 'Autopilot is not connected to Chrome.',
-                    level: 'fatal',
                     isClosable: false,
                     primaryAction: {
                         title: 'Connect',

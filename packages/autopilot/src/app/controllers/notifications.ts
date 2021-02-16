@@ -30,11 +30,7 @@ export class NotificationsController {
     }
 
     removeById(id: string) {
-        this.current = this.current.filter(_ => _.id !== id);
-    }
-
-    removeByKind(kind: string) {
-        this.current = this.current.filter(_ => _.kind !== kind);
+        this.current = this.current.filter(_ => !this.matchById(_, id));
     }
 
     removeClosable() {
@@ -42,18 +38,26 @@ export class NotificationsController {
     }
 
     protected create(spec: Partial<Notification>): Notification {
+        const level = spec.level ?? 'info';
+        const icon = level === 'info' ? 'fas fa-info-circle' :
+            level === 'warn' ? 'fas fa-exclamation-circle' :
+                'fas fa-meh';
         return {
             id: util.shortId(),
-            kind: '',
             title: '',
             message: '',
-            icon: 'fas fa-info-circle',
-            level: 'info',
+            icon,
+            level,
             style: 'float',
             canClose: true,
             timeout: 0,
             ...spec,
         };
+    }
+
+    protected matchById(notification: Notification, id: string) {
+        const pattern = new RegExp('^' + id.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
+        return pattern.test(notification.id);
     }
 
 }
