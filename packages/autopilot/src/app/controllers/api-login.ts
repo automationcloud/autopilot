@@ -60,6 +60,8 @@ export class ApiLoginController {
     }
 
     async init() {
+        // get accessToken before other api calls
+        await this.api.authAgent.getHeader();
         this.authenticate().catch(() => { });
     }
 
@@ -187,6 +189,7 @@ export class ApiLoginController {
         const request = new Request({
             baseUrl: accountUrl,
             auth: this.api.authAgent,
+            retryAttempts: 1,
         });
         const body = await request.get('');
         const valid = accountInfoValidator(body);
