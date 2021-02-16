@@ -71,19 +71,7 @@ export class WorkerReporterService extends ReporterService {
             return;
         }
         const execution = this.state.getExecution();
-        // For public screenshots only main page is captured
-        const { isPublic } = options;
-        if (isPublic) {
-            await this.sendScreenshotInPage(execution, this.browser.page, options);
-            return;
-        }
-        // Capture all pages for debug screenshots
-        for (const page of this.browser.attachedPages()) {
-            if (page.target.type !== 'page' || page.target.url === 'about:blank') {
-                continue;
-            }
-            await this.sendScreenshotInPage(execution, page, options);
-        }
+        await this.sendScreenshotInPage(execution, this.browser.page, options);
     }
 
     private async sendScreenshotInPage(execution: Execution, page: Page, options: ScreenshotSpec) {
