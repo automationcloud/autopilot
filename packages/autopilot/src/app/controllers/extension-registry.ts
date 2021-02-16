@@ -56,9 +56,6 @@ export class ExtensionRegistryController {
         this.userData = storage.createUserData('extensions');
         this.events.on('apiAuthUpdated', () => this.init());
         this.events.on('extensionPublished', () => this.refresh());
-        this.events.on('extensionRequested', (dep: ExtensionVersion) => {
-            this.installExtension(dep.name, dep.version);
-        });
         this.events.on('extensionsUpdated', () => {
             this._extMap = new Map(this.installedExtensions.map(_ => [_.spec.name, _]));
         });
@@ -181,7 +178,6 @@ export class ExtensionRegistryController {
             const ext = await this.registry.loadExtension(name, version);
             this._addExtension(ext);
             this.events.emit('extensionsUpdated');
-            this.notifications.removeById('extension.*');
             this.notifications.add({
                 id: 'extension.install.success',
                 level: 'info',
@@ -213,7 +209,6 @@ export class ExtensionRegistryController {
             this.installedExtensions = this.installedExtensions.filter(e => e.spec.name !== name);
             this.update();
             this.events.emit('extensionsUpdated');
-            this.notifications.removeById('extension.*');
             this.notifications.add({
                 id: 'extension.uninstall.success',
                 level: 'info',

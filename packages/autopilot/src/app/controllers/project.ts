@@ -13,7 +13,13 @@
 // limitations under the License.
 
 import { UserData } from '../userdata';
-import { Script, Engine, ResolverService, ExtensionVersion, ExtensionUnmetDep } from '@automationcloud/engine';
+import {
+    Script,
+    Engine,
+    ResolverService,
+    ExtensionVersion,
+    ExtensionUnmetDep,
+} from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 import { StorageController } from './storage';
 import { controller } from '../controller';
@@ -24,6 +30,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { NotificationsController } from './notifications';
 import semver from 'semver';
+import { ExtensionRegistryController } from './extension-registry';
 
 @injectable()
 @controller({ alias: 'project' })
@@ -46,6 +53,8 @@ export class ProjectController {
         protected autosave: AutosaveController,
         @inject(NotificationsController)
         protected notifications: NotificationsController,
+        @inject(ExtensionRegistryController)
+        protected registry: ExtensionRegistryController,
     ) {
         this.userData = storage.createUserData('project', 300);
         this.automation = {
@@ -175,9 +184,9 @@ export class ProjectController {
         }
     }
 
-    protected installDeps(deps: ExtensionVersion[]) {
+    protected async installDeps(deps: ExtensionVersion[]) {
         for (const dep of deps) {
-            this.events.emit('extensionRequested', dep);
+            await this.registry.installExtension(dep.name, dep.version);
         }
     }
 
