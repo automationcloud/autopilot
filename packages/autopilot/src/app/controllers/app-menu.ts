@@ -169,6 +169,7 @@ export class AppMenuController {
         };
         yield {
             label: 'Manage Automation versions',
+            enabled: !!this.project.automation.metadata.serviceId,
             click: () => this.saveload.openAutomationManage(),
         };
         if (this.autosave.files.length > 0) {
