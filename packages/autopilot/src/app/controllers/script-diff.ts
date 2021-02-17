@@ -19,6 +19,7 @@ import { inject, injectable } from 'inversify';
 import { SettingsController } from './settings';
 import { StorageController } from './storage';
 import { controller } from '../controller';
+import { EventsController } from './events';
 
 const UI_DIFF_ENABLED = booleanConfig('UI_DIFF_ENABLED', true);
 
@@ -36,6 +37,8 @@ export class ScriptDiffController {
         protected storage: StorageController,
         @inject(SettingsController)
         protected settings: SettingsController,
+        @inject(EventsController)
+        protected events: EventsController,
     ) {
         this.userData = storage.createUserData('diff');
     }
@@ -66,6 +69,7 @@ export class ScriptDiffController {
             script: clone,
         });
         this.buildObjectMap(clone);
+        this.events.emit('diffBaseSet');
     }
 
     hashObject(obj: any) {

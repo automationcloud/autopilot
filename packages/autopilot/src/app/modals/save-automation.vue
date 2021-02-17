@@ -182,7 +182,7 @@ export default {
         return {
             location: this.saveload.location || 'ac',
             service: null,
-            newServiceName: '',
+            newServiceName: this.project.automation.metadata.serviceName,
             customVersion: '0.0.1',
             workerTag: 'stable',
             note: '',
@@ -261,8 +261,7 @@ export default {
             }
             try {
                 await this.saveload.saveAutomationToAc({
-                    serviceId: this.service.id,
-                    serviceName: this.service.name,
+                    service: this.service,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
@@ -271,7 +270,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -281,7 +280,7 @@ export default {
                 filters: [
                     { name: 'Automation', extensions: ['automation'] },
                 ],
-                defaultPath: this.saveload.filePath || `${this.serviceName}.automation`,
+                defaultPath: this.saveload.filePath || `${this.newServiceName}.automation`,
             });
             if (filePath == null) {
                 return;
@@ -291,7 +290,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -321,6 +320,10 @@ export default {
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        showError(error) {
+            this.saveload.showError('Save', error);
         }
     },
 };

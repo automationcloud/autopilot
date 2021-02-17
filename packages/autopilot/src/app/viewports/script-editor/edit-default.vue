@@ -1,20 +1,26 @@
 <template>
-    <div class="edit-default section">
-
-        <div class="form-row">
-            <div class="form-row__label">Automation</div>
-            <div class="form-row__controls">
-                <input
-                    class="input"
-                    type="text"
-                    v-model="metadataProxy.serviceName"/>
+    <div class="edit-default">
+        <div class="edit-default__automation section">
+            <div class="section__title">Automation</div>
+            <div class="edit-default__automation-meta">
+                <div class="edit-default__name">
+                    {{ metadata.serviceName }} {{ metadata.version /* ? 'v' + metadata.version : ''*/ }}
+                </div>
+                <div v-if="!metadata.serviceId">
+                    <p>Saved on your computer</p>
+                    <button class="button button--alt button--primary"
+                        type="click"
+                        @click="saveToAc">Save to the Automation Cloud</button>
+                </div>
             </div>
         </div>
-
-        <edit-metadata/>
-
-        <hr>
-        <div class="edit-default__pattern"
+        <div class="section">
+            <div class="section__title">
+                Advanced
+            </div>
+            <edit-metadata/>
+        </div>
+        <div class="edit-default__pattern section"
             @contextmenu.stop.prevent="popupMenu">
             <div class="section__title">
                 Request Blocking
@@ -57,6 +63,8 @@ export default {
 
     inject: [
         'browser',
+        'project',
+        'saveload',
     ],
 
     computed: {
@@ -65,8 +73,8 @@ export default {
             return this.app.viewports.scriptEditor;
         },
 
-        metadataProxy() {
-            return this.viewport.getMetadataProxy();
+        metadata() {
+            return this.project.automation.metadata;
         },
 
         scriptProxy() {
@@ -189,15 +197,36 @@ export default {
             ]);
         },
 
+        saveToAc() {
+            this.saveload.location = 'ac';
+            this.saveload.saveAutomation();
+        },
+
     },
 };
 </script>
 
-<style>
+<style scoped>
 .edit-default {
     padding: 0 var(--gap--small);
     display: flex;
     flex-flow: column nowrap;
+    font-family: var(--font-family--alt);
+}
+
+.edit-default__automation {
+    display: flex;
+}
+
+.edit-default__automation-meta {
+    flex: 1;
+    margin: var(--gap--large);
+    margin-bottom: var(--gap);
+}
+
+.edit-default__name {
+    font-size: var(--font-size--alt);
+    padding-bottom: var(--gap--small);
 }
 
 .edit-default__pattern {
@@ -206,5 +235,13 @@ export default {
 
 .edit-default__pattern-item {
     margin-bottom: var(--gap--small);
+}
+
+.section {
+    margin: 0 var(--gap);
+}
+
+.section:not(:last-child) {
+    border-bottom: 1px solid var(--ui-color--mono);
 }
 </style>

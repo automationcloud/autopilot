@@ -21,7 +21,7 @@ import { AutosaveController } from './autosave';
 import { ModalsController } from './modals';
 import { ProjectController } from './project';
 import { StorageController } from './storage';
-import { ApiController } from './api';
+import { ApiController, ApiService } from './api';
 import { ScriptDiffController } from './script-diff';
 import { SettingsController } from './settings';
 import { EventsController } from './events';
@@ -29,6 +29,8 @@ import { Automation, AutomationMetadata } from '../entities/automation';
 import { BundlesController } from './bundles';
 import { shell } from 'electron';
 import { acUrls } from '../util';
+import { NotificationsController } from './notifications';
+import { ApiLoginController } from './api-login';
 
 @injectable()
 @controller({ alias: 'saveload' })
@@ -47,6 +49,8 @@ export class SaveLoadController {
         protected autosave: AutosaveController,
         @inject(ModalsController)
         protected modals: ModalsController,
+        @inject(ApiLoginController)
+        protected apiLogin: ApiLoginController,
         @inject(ApiController)
         protected api: ApiController,
         @inject(ScriptDiffController)
@@ -57,6 +61,8 @@ export class SaveLoadController {
         protected events: EventsController,
         @inject(BundlesController)
         protected bundles: BundlesController,
+        @inject(NotificationsController)
+        protected notifications: NotificationsController,
     ) {
         this.userData = storage.createUserData('saveload');
     }
@@ -71,6 +77,8 @@ export class SaveLoadController {
     }
 
     get setDiffBase() { return this._setDiffBase; }
+
+    get metadata() { return this.project.automation.metadata; }
 
     update() {
         this.userData.saveData({
@@ -99,42 +107,35 @@ export class SaveLoadController {
         if (this.location === 'file' && this.filePath) {
             await this.saveAutomationToFile(this.filePath);
         } else {
-            await this.saveAutomationAs();
+            this.saveAutomationAs();
         }
     }
 
-    async saveAutomationAs() {
+    saveAutomationAs() {
         this.modals.show('save-automation');
     }
 
     async saveAutomationToAc(spec: {
-        serviceId: string;
-        serviceName: string;
+        service: ApiService;
         fullVersion: string;
         workerTag: string;
         activate: boolean;
         note: string;
     }) {
-        const { serviceId, fullVersion, workerTag, activate, note = '' } = spec;
+        const { service, fullVersion, workerTag, activate, note = '' } = spec;
         const automation = this.project.automation;
-        automation.metadata.serviceId = serviceId;
+        automation.metadata.serviceId = service.id;
+        automation.metadata.serviceName = service.name;
         automation.metadata.version = fullVersion;
         const content = this.prepareScriptContent(automation);
         const script = await this.api.createScript({
-            serviceId,
+            serviceId: service.id,
             fullVersion,
             note,
             workerTag,
             content,
         });
-        const service = await this.api.getService(serviceId);
-        await this.api.updateService({
-            id: serviceId,
-            name: automation.metadata.serviceName,
-            domain: automation.metadata.domainId,
-            draft: automation.metadata.draft,
-            attributes: service.attributes,
-        });
+        await this.updateServiceMeta();
         if (activate) {
             await this.api.publishScript(script.id);
         }
@@ -154,6 +155,10 @@ export class SaveLoadController {
 
         const serialized = JSON.stringify(this.project.automation);
         await fs.writeFile(filePath, serialized, 'utf-8');
+        if (!this.metadata.serviceId) {
+            const name = path.basename(filePath, '.automation');
+            this.metadata.serviceName = name;
+        }
         this.location = 'file';
         this.filePath = filePath;
         this.diff.setNewBase(this.project.automation.script);
@@ -212,6 +217,21 @@ export class SaveLoadController {
         return await this.api.createService(spec);
     }
 
+    protected async updateServiceMeta() {
+        const { serviceId, serviceName, domainId, draft } = this.project.automation.metadata;
+        if (!serviceId) {
+            return;
+        }
+        const service = await this.api.getService(serviceId);
+        await this.api.updateService({
+            id: serviceId,
+            name: serviceName,
+            domain: domainId,
+            draft,
+            attributes: service.attributes,
+        });
+    }
+
     async getServices() {
         return await this.api.getServices();
     }
@@ -259,4 +279,16 @@ export class SaveLoadController {
             await shell.openExternal(`${baseUrl}/services/${serviceId}/script-versions`);
         }
     }
+
+    protected showError(action: string, err: any) {
+        this.notifications.removeById('saveload.*');
+        this.notifications.add({
+            id: `saveload.${action}.error`,
+            level: 'error',
+            title: `${action} Automation failed: ${err.code || err.name}`,
+            message: err.message,
+            canClose: true,
+        });
+    }
+
 }

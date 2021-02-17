@@ -15,7 +15,7 @@
             v-if="!metadataProxy.draft">
             <div class="form-row__label">Domain</div>
             <div class="form-row__controls">
-                <select class="input"
+                <select class="select"
                     v-model="metadataProxy.domainId">
                     <option v-for="domain of availableDomains"
                         :value="domain.id">
