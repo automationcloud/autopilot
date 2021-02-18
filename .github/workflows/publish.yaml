@@ -17,9 +17,11 @@ jobs:
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
+      - name: Exclude Autopilot
+        run: rm -rf packages/autopilot
       - run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
-      - run: npm run bootstrap
-      - run: npm run ci-publish
+      - run: npm run ci:bootstrap
+      - run: npm run ci:publish
 
       - name: Build and push development image
         uses: docker/build-push-action@v1

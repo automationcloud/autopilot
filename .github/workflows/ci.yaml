@@ -32,7 +32,9 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - run: npm run bootstrap
+      - name: Exclude Autopilot
+        run: rm -rf packages/autopilot
+      - run: npm run ci:bootstrap
       - run: npm run compile
       - run: npm run lint
       - run: npm test
