@@ -3,6 +3,15 @@
 
 ### Bug Fixes
 
+* changelog workflow ([c7bef0b](https://github.com/automationcloud/autopilot/commit/c7bef0b98a212946a0461489b1a3d91fe706236c))
+
+
+
+#  (2021-02-18)
+
+
+### Bug Fixes
+
 * changelog workflow ([8fa7104](https://github.com/automationcloud/autopilot/commit/8fa7104f72500bffca4b64c3e316cf0cee5be6e5))
 
 
