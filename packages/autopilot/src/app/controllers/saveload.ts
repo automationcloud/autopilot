@@ -174,7 +174,7 @@ export class SaveLoadController {
             serviceName: service.name,
             draft: service.draft,
             domainId: service.domain,
-            version: script.version,
+            version: script.fullVersion,
             bundleIndex: 0,
         };
         await this.project.loadAutomationJson({

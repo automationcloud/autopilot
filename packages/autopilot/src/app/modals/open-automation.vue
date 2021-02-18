@@ -68,23 +68,14 @@
                     <div v-if="!openActive"
                         class="form-row" >
                         <div class="form-row__label">
-                            Script version
+                            Version
                         </div>
                         <div class="form-row__controls">
-                            <select class="select stretch"
-                                v-model="scriptId">
-                                <option v-if="scripts.length === 0"
-                                    :value="null">
-                                     No script found
-                                </option>
-                                <option  v-else
-                                    :value="null"> Version </option>
-                                <option v-for="script of scripts"
-                                    :key="script.id"
-                                    :value="script.id">
-                                    {{ script.fullVersion }} - {{ formatDate(script.createdAt) || '' }}
-                                </option>
-                            </select>
+                            <styled-select
+                                :options="scriptOptions"
+                                :selected-option-id="scriptId"
+                                placeholder="Select Version"
+                                @change="onScriptSelect"></styled-select>
                         </div>
                     </div>
                 </div>
@@ -115,10 +106,12 @@
 import { remote } from 'electron';
 const { dialog } = remote;
 import ServiceSelect from '../components/service-select.vue';
+import StyledSelect from '../components/styled-select.vue';
 
 export default {
     components: {
         ServiceSelect,
+        StyledSelect,
     },
 
     inject: [
@@ -143,14 +136,23 @@ export default {
             return this.apiLogin.accountFullName;
         },
         isAuthenticated() {
-            return this.saveload.isAuthenticated;
+            return this.apiLogin.isAuthenticated;
         },
         canOpenFromAc() {
             return this.scriptId;
         },
         modalTitle() {
             return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
-        }
+        },
+        scriptOptions() {
+            return this.scripts.map(script => {
+                return {
+                    id: script.id,
+                    text: `${script.fullVersion} ${script.note || 'no note'}`,
+                    html: `<b>${script.fullVersion}</b> &nbsp; ${script.note}`
+                };
+            });
+        },
     },
 
     watch: {
@@ -247,6 +249,10 @@ export default {
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        onScriptSelect(scriptId) {
+            this.scriptId = scriptId;
         },
 
         showError(error) {
