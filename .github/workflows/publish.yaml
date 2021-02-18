@@ -24,7 +24,7 @@ jobs:
       - run: git reset --hard
       - env:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run ci:publish
+        run: echo $NPM_TOKEN && npm run ci:publish
 
       - name: Build and push development image
         uses: docker/build-push-action@v1
