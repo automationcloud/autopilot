@@ -17,6 +17,8 @@ jobs:
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
+      - name: Setup NPM
+        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
       - name: Exclude Autopilot
         run: rm -rf packages/autopilot && sed /autopilot/d tsconfig.json > temp && mv temp tsconfig.json
       - run: npm run ci:bootstrap
@@ -24,7 +26,7 @@ jobs:
       - run: git reset --hard
       - env:
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: echo $NPM_TOKEN && npm run ci:publish
+        run: npm run ci:publish
 
       - name: Build and push development image
         uses: docker/build-push-action@v1
