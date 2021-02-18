@@ -21,7 +21,7 @@ jobs:
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Publish to NPM
-        run: npm run publish
+        run: npm run ci-publish
 
       - name: Build and push development image
         uses: docker/build-push-action@v1
