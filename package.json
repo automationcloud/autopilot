@@ -17,11 +17,11 @@
         "typedoc": "typedoc --tsconfig ./tsconfig.base.json ./packages/{cdp,engine}/src/main && git add docs/",
         "prettier-staged": "pretty-quick --staged --pattern '**/*.{ts,js,json}' --verbose",
         "test": "lerna run test --stream --concurrency 1",
-        "build": "lerna run build",
+        "docs": "lerna run docs",
         "changelog": "conventional-changelog --preset=angular --outfile=CHANGELOG.md --skip-unstable",
-        "worker:build-image": "docker build -t ubio/worker:latest --build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg VERSION=${npm_package_version} packages/worker",
-        "release": "lerna version --no-push --force-publish -y",
-        "prepublish": "npm run clean && npm run compile && npm run build",
+        "release": "lerna version --force-publish -y",
+        "preversion": "npm run compile && npm run docs && npm run changelog",
+        "prepublish": "npm run clean && npm run compile && npm run docs",
         "ci-publish": "lerna publish from-git -y"
     },
     "pre-commit": [
