@@ -32,8 +32,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: Setup npm private token
-        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
       - run: npm run bootstrap
       - run: npm run compile
       - run: npm run lint
