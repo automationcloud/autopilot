@@ -17,7 +17,7 @@
         "release": "lerna version --force-publish -y",
         "preversion": "npm run compile && npm run docs",
         "ci:bootstrap": "npm i && lerna bootstrap --ci",
-        "ci:compile": "npm run clean && npm run compile && npm run docs",
+        "ci:build": "npm run clean && npm run compile && npm run docs",
         "ci:publish": "lerna publish from-git -y"
     },
     "pre-commit": [

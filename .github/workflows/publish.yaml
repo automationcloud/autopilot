@@ -21,6 +21,8 @@ jobs:
         run: rm -rf packages/autopilot && sed /autopilot/d tsconfig.json > temp && mv temp tsconfig.json
       - run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
       - run: npm run ci:bootstrap
+      - run: npm run ci:build
+      - run: git reset --hard
       - run: npm run ci:publish
 
       - name: Build and push development image
