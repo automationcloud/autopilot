@@ -16,7 +16,6 @@ jobs:
         CHROME_PORT: "9123"
         CHROME_HEADLESS: "true"
         REDIS_HOST: redis
-        MONGO_URL: mongodb://mongodb:27017/
     services:
       redis:
         image: redis
@@ -25,10 +24,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      mongodb:
-        image: mongo
-        ports:
-          - 27017:27017
     steps:
       - name: checkout
         uses: actions/checkout@v2
