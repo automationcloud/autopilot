@@ -2,8 +2,8 @@ name: Build Autopilot
 
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - release
 
 jobs:
   build:
@@ -17,8 +17,6 @@ jobs:
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Setup npm private token
-        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
       - run: npm run init
       - run: npm run ap:release
         env:

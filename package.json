@@ -18,12 +18,11 @@
         "prettier-staged": "pretty-quick --staged --pattern '**/*.{ts,js,json}' --verbose",
         "test": "lerna run test --stream --concurrency 1",
         "build": "lerna run build",
-        "changelog": "node ./changelog.js",
+        "changelog": "conventional-changelog --preset=angular --outfile=CHANGELOG.md --skip-unstable",
         "worker:build-image": "docker build -t ubio/worker:latest --build-arg NPM_TOKEN=${NPM_TOKEN} --build-arg VERSION=${npm_package_version} packages/worker",
-        "release": "lerna version --no-push --force-publish -y && lerna publish from-git -y",
-        "preversion": "npm run clean && npm run compile && npm run build",
-        "version": "npm run changelog && git add ./CHANGELOG.md && git add .",
-        "postpublish": "git push origin $(git rev-parse --abbrev-ref HEAD) --tags"
+        "release": "lerna version --no-push --force-publish -y",
+        "prepublish": "npm run clean && npm run compile && npm run build",
+        "ci-publish": "lerna publish from-git -y"
     },
     "pre-commit": [
         "lint"
@@ -34,6 +33,7 @@
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
         "chalk": "^2.4.1",
+        "conventional-changelog-cli": "^2.1.1",
         "eslint": "^6.8.0",
         "eslint-config-recommended": "^4.0.0",
         "eslint-plugin-vue": "^6.2.2",
