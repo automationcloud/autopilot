@@ -18,9 +18,8 @@
         "prettier-staged": "pretty-quick --staged --pattern '**/*.{ts,js,json}' --verbose",
         "test": "lerna run test --stream --concurrency 1",
         "docs": "lerna run docs && git add docs/",
-        "changelog": "conventional-changelog --preset=angular -s -i CHANGELOG.md --skip-unstable && git add CHANGELOG.md",
         "release": "lerna version --force-publish -y",
-        "preversion": "npm run compile && npm run docs && npm run changelog",
+        "preversion": "npm run compile && npm run docs",
         "prepublish": "npm run clean && npm run compile && npm run docs",
         "ci-publish": "lerna publish from-git -y"
     },
@@ -33,7 +32,6 @@
         "@typescript-eslint/eslint-plugin": "^2.23.0",
         "@typescript-eslint/parser": "^2.23.0",
         "chalk": "^2.4.1",
-        "conventional-changelog-cli": "^2.1.1",
         "eslint": "^6.8.0",
         "eslint-config-recommended": "^4.0.0",
         "eslint-plugin-vue": "^6.2.2",
