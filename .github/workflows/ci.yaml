@@ -33,7 +33,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: Exclude Autopilot
-        run: rm -rf packages/autopilot
+        run: rm -rf packages/autopilot && sed /autopilot/d tsconfig.json > temp && mv temp tsconfig.json
       - run: npm run ci:bootstrap
       - run: npm run compile
       - run: npm run lint
