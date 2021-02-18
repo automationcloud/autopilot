@@ -51,10 +51,13 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <service-select
+                            <advanced-select
                                 @change="onServiceSelect"
-                                :service="service" >
-                            </service-select>
+                                @search="search => loadServices(search)"
+                                :options="services"
+                                :selected-option="service"
+                                :searchable="true">
+                            </advanced-select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -71,11 +74,12 @@
                             Version
                         </div>
                         <div class="form-row__controls">
-                            <styled-select
+                            <advanced-select
+                                @change="onScriptSelect"
                                 :options="scriptOptions"
-                                :selected-option-id="scriptId"
-                                placeholder="Select Version"
-                                @change="onScriptSelect"></styled-select>
+                                :selected-option="scriptOption"
+                                placeholder="Select Version">
+                            </advanced-select>
                         </div>
                     </div>
                 </div>
@@ -105,13 +109,11 @@
 <script>
 import { remote } from 'electron';
 const { dialog } = remote;
-import ServiceSelect from '../components/service-select.vue';
-import StyledSelect from '../components/styled-select.vue';
+import AdvancedSelect from '../components/advanced-select.vue';
 
 export default {
     components: {
-        ServiceSelect,
-        StyledSelect,
+        AdvancedSelect,
     },
 
     inject: [
@@ -127,6 +129,7 @@ export default {
             service: null,
             scriptId: null,
             openActive: true,
+            services: [],
             scripts: [],
         };
     },
@@ -148,16 +151,20 @@ export default {
             return this.scripts.map(script => {
                 return {
                     id: script.id,
-                    text: `${script.fullVersion} ${script.note || 'no note'}`,
+                    name: `${script.fullVersion} ${script.note || 'no note'}`,
                     html: `<b>${script.fullVersion}</b> &nbsp; ${script.note}`
                 };
             });
         },
+        scriptOption() {
+            return this.scriptOptions.find(_ => _.id === this.scriptId);
+        }
     },
 
     watch: {
         isAuthenticated(val) {
             if (val) {
+                this.loadServices();
                 const { serviceId } = this.project.automation.metadata;
                 this.loadService(serviceId);
             } else {
@@ -174,12 +181,19 @@ export default {
                 this.scripts = [];
             }
         },
+
+        openActive(val) {
+            if (val) {
+                this.scriptId = this.service.scriptId;
+            }
+        }
     },
 
-    created() {
+    async created() {
         const { serviceId } = this.project.automation.metadata;
         if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
+            await this.loadServices();
+            await this.loadService(serviceId);
         }
     },
 
@@ -216,6 +230,14 @@ export default {
             }
         },
 
+        async loadServices(name = '') {
+            try {
+                this.services = await this.api.getServices({ name, archived: false });
+            } catch (error) {
+                this.services = [];
+            }
+        },
+
         async loadScripts(serviceId) {
             if (serviceId) {
                 try {
@@ -235,24 +257,12 @@ export default {
             }
         },
 
-        formatDate(timestamp) {
-            const time = new Date(timestamp);
-            return time.toLocaleString('en-GB', {
-                timeZoneName: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            });
-        },
-
         onServiceSelect(service) {
             this.service = service;
         },
 
-        onScriptSelect(scriptId) {
-            this.scriptId = scriptId;
+        onScriptSelect(script) {
+            this.scriptId = script.id;
         },
 
         showError(error) {

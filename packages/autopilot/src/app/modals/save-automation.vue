@@ -45,11 +45,14 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                             <service-select
-                                :service="service"
+                            <advanced-select
                                 @change="onServiceSelect"
+                                @search="search => loadServices(search)"
+                                :options="services"
+                                :selected-option="service"
+                                :searchable="true"
                                 placeholder="Create new automation">
-                            </service-select>
+                            </advanced-select>
                             <span class="inline-message">
                                 <i class="fas fa-exclamation-circle"></i>
                                 An Automation contains versions and is what you call from the Automation Cloud API.
@@ -164,11 +167,11 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
-import ServiceSelect from '../components/service-select.vue';
+import AdvancedSelect from '../components/advanced-select.vue';
 
 export default {
     components: {
-        ServiceSelect,
+        AdvancedSelect,
     },
 
     inject: [
@@ -188,6 +191,7 @@ export default {
             note: '',
             release: 'patch',
             activate: false,
+            services: [],
             scripts: [],
             expandAdvanced: false,
         };
@@ -231,6 +235,7 @@ export default {
     watch: {
         isAuthenticated(val) {
             if (val) {
+                this.loadServices();
                 const { serviceId } = this.project.automation.metadata;
                 this.loadService(serviceId);
             } else {
@@ -247,10 +252,11 @@ export default {
         },
     },
 
-    created() {
+    async mounted() {
         const { serviceId } = this.project.automation.metadata;
         if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
+            await this.loadServices();
+            await this.loadService(serviceId);
         }
     },
 
@@ -305,6 +311,14 @@ export default {
                 console.warn('failed to load service', error);
             }
 
+        },
+
+        async loadServices(name = '') {
+            try {
+                this.services = await this.api.getServices({ name, archived: false });
+            } catch (error) {
+                this.services = [];
+            }
         },
 
         async loadScripts(serviceId) {
