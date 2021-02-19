@@ -53,10 +53,6 @@
                                 :searchable="true"
                                 placeholder="Create new automation">
                             </advanced-select>
-                            <span class="inline-message">
-                                <i class="fas fa-exclamation-circle"></i>
-                                An Automation contains versions and is what you call from the Automation Cloud API.
-                            </span>
                         </div>
                     </div>
                     <div v-if="serviceIdMismatch"
@@ -98,6 +94,24 @@
                                 v-model="fullVersion"/>
                         </div>
                     </div>
+
+                    <div v-if="!isLatest"
+                        class="box box--primary group group--gap">
+                        <i class="fas fa-exclamation-circle"
+                            style="align-self: flex-start; margin-top: var(--gap--small);"></i>
+                        <div>
+                            <b>A more recent version of this Automation has been saved since your edits were made.</b>
+                            <p>Note: <i>{{ latestScript && latestScript.note || 'Note not provided.' }}</i></p>
+                            You may wish to compare this version with yours before you Save.
+                            <div style="display: flex; justify-content: flex-end; margin-top: var(--gap);">
+                                <button
+                                    class="button button--alt button--secondary"
+                                    @click.prevent="loadAsDiff">
+                                    Load recent version as Diff base</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="expand clickable"
                         @click="expandAdvanced = !expandAdvanced">
                         <i class="fas"
@@ -152,7 +166,7 @@
                 class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
-                Save
+                {{ isLatest ? 'Save' : 'Save anyway' }}
             </button>
             <button v-if="location === 'file'"
                 class="button button--alt button--primary"
@@ -213,8 +227,14 @@ export default {
         canSaveToAc() {
             return this.isAuthenticated && this.isVersionValid && (this.service || this.newServiceName);
         },
+        latestScript() {
+            return this.scripts[0] || null;
+        },
         latestVersion() {
-            return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
+            return this.latestScript ? this.latestScript.fullVersion : '0.0.0';
+        },
+        isLatest() {
+            return this.metadata.version === this.latestVersion;
         },
         serviceIdMismatch() {
             return this.service && this.service.id !== this.metadata.serviceId;
@@ -338,22 +358,27 @@ export default {
 
         showError(error) {
             this.saveload.showError('Save', error);
+        },
+
+        async loadAsDiff() {
+            this.saveload._setDiffBase = false;
+            const latestScript = this.scripts[0];
+            if (!this.service || !latestScript) {
+                this.showError(new Error('Automation is not found or valid version not found'));
+                return;
+            }
+            try {
+                await this.saveload.openAutomationFromAc(this.service.id, latestScript.id);
+                this.$emit('hide');
+            } catch (error) {å
+                this.showError(error);
+            }
         }
     },
 };
 </script>
 
 <style scoped>
-.inline-message {
-    font-style: italic;
-    font-size: 10px;
-    color: var(--color-cool--600);
-    line-height: 1.2em;
-    padding: var(--gap) 2px;
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-gap: 2px;
-}
 
 .expand {
     margin: var(--gap--large) 0px var(--gap) 0px;
