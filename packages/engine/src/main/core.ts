@@ -26,6 +26,7 @@ export const coreExtension = new Extension(__dirname, {
     name: '<core>',
     title: '',
     description: 'UBIO Automation Core',
+    category: 'extension',
     version: pkg.version,
     modules: [
         './matcher.js',

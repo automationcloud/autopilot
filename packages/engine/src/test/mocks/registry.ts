@@ -58,6 +58,7 @@ export class RegistryServiceMock extends RegistryService {
                 version,
                 title: '',
                 description: '',
+                category: 'extension',
                 modules: [],
                 tags: [],
                 private: false,
