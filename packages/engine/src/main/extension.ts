@@ -35,6 +35,7 @@ export interface ExtensionSpec {
     version: string;
     title: string;
     description: string;
+    category: 'extension' | 'connector';
     modules: string[];
     entrypoint?: string;
     tags: string[];
@@ -182,9 +183,10 @@ export class Extension {
         const {
             name,
             version,
-            title = '',
-            description = '',
         } = pkg;
+        const title = pkg.extension?.title ?? pkg.title ?? name;
+        const description = pkg.extension?.description ?? pkg.description ?? name;
+        const category = pkg.extension?.category ?? 'extension';
         const modules = pkg.extension?.modules ?? pkg.modules ?? [];
         const entrypoint = pkg.extension?.entrypoint;
         const isPrivate = pkg.extension?.private ?? true;
@@ -194,6 +196,7 @@ export class Extension {
             version,
             title,
             description,
+            category,
             modules,
             entrypoint,
             private: isPrivate,
