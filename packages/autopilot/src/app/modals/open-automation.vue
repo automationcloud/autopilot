@@ -51,10 +51,13 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                            <service-select
+                            <advanced-select
                                 @change="onServiceSelect"
-                                :service="service" >
-                            </service-select>
+                                @search="search => loadServices(search)"
+                                :options="services"
+                                :selected-option="service"
+                                :searchable="true">
+                            </advanced-select>
                         </div>
                     </div>
                     <div class="form-row">
@@ -68,23 +71,15 @@
                     <div v-if="!openActive"
                         class="form-row" >
                         <div class="form-row__label">
-                            Script version
+                            Version
                         </div>
                         <div class="form-row__controls">
-                            <select class="select stretch"
-                                v-model="scriptId">
-                                <option v-if="scripts.length === 0"
-                                    :value="null">
-                                     No script found
-                                </option>
-                                <option  v-else
-                                    :value="null"> Version </option>
-                                <option v-for="script of scripts"
-                                    :key="script.id"
-                                    :value="script.id">
-                                    {{ script.fullVersion }} - {{ formatDate(script.createdAt) || '' }}
-                                </option>
-                            </select>
+                            <advanced-select
+                                @change="onScriptSelect"
+                                :options="scriptOptions"
+                                :selected-option="scriptOption"
+                                placeholder="Select Version">
+                            </advanced-select>
                         </div>
                     </div>
                 </div>
@@ -114,12 +109,8 @@
 <script>
 import { remote } from 'electron';
 const { dialog } = remote;
-import ServiceSelect from '../components/service-select.vue';
 
 export default {
-    components: {
-        ServiceSelect,
-    },
 
     inject: [
         'saveload',
@@ -134,6 +125,7 @@ export default {
             service: null,
             scriptId: null,
             openActive: true,
+            services: [],
             scripts: [],
         };
     },
@@ -150,12 +142,25 @@ export default {
         },
         modalTitle() {
             return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
+        },
+        scriptOptions() {
+            return this.scripts.map(script => {
+                return {
+                    id: script.id,
+                    name: `${script.fullVersion} ${script.note || 'no note'}`,
+                    html: `<b>${script.fullVersion}</b> &nbsp; ${script.note}`
+                };
+            });
+        },
+        scriptOption() {
+            return this.scriptOptions.find(_ => _.id === this.scriptId);
         }
     },
 
     watch: {
         isAuthenticated(val) {
             if (val) {
+                this.loadServices();
                 const { serviceId } = this.project.automation.metadata;
                 this.loadService(serviceId);
             } else {
@@ -172,12 +177,19 @@ export default {
                 this.scripts = [];
             }
         },
+
+        openActive(val) {
+            if (val) {
+                this.scriptId = this.service.scriptId;
+            }
+        }
     },
 
-    created() {
+    async created() {
         const { serviceId } = this.project.automation.metadata;
         if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
+            await this.loadServices();
+            await this.loadService(serviceId);
         }
     },
 
@@ -190,9 +202,7 @@ export default {
                 await this.saveload.openAutomationFromAc(this.service.id, this.scriptId);
                 this.$emit('hide');
             } catch (error) {
-                console.warn('failed to load automation', error);
-                // TODO: use newe spec for error
-                alert('Failed to open Automation');
+                this.showError(error);
             }
         },
 
@@ -212,9 +222,15 @@ export default {
                 await this.saveload.openAutomationFromFile(filepath);
                 this.$emit('hide');
             } catch (error) {
-                console.warn('failed to load automation', error);
-                // TODO: use newe spec for error
-                alert('Failed to open Automation');
+                this.showError(error);
+            }
+        },
+
+        async loadServices(name = '') {
+            try {
+                this.services = await this.api.getServices({ name, archived: false });
+            } catch (error) {
+                this.services = [];
             }
         },
 
@@ -233,25 +249,20 @@ export default {
             try {
                 this.service = await this.api.getService(serviceId);
             } catch (error) {
-                console.warn('failed to load service', error);
+                this.showError(error);
             }
-
-        },
-
-        formatDate(timestamp) {
-            const time = new Date(timestamp);
-            return time.toLocaleString('en-GB', {
-                timeZoneName: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-            });
         },
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        onScriptSelect(script) {
+            this.scriptId = script.id;
+        },
+
+        showError(error) {
+            this.saveload.showError('Open', error);
         }
     },
 };

@@ -45,15 +45,14 @@
                             Automation
                         </div>
                         <div class="form-row__controls">
-                             <service-select
-                                :service="service"
+                            <advanced-select
                                 @change="onServiceSelect"
+                                @search="search => loadServices(search)"
+                                :options="services"
+                                :selected-option="service"
+                                :searchable="true"
                                 placeholder="Create new automation">
-                            </service-select>
-                            <span class="inline-message">
-                                <i class="fas fa-exclamation-circle"></i>
-                                An Automation contains versions and is what you call from the Automation Cloud API.
-                            </span>
+                            </advanced-select>
                         </div>
                     </div>
                     <div v-if="serviceIdMismatch"
@@ -95,6 +94,24 @@
                                 v-model="fullVersion"/>
                         </div>
                     </div>
+
+                    <div v-if="versionWarningShown"
+                        class="box box--primary group group--gap">
+                        <i class="fas fa-exclamation-circle"
+                            style="align-self: flex-start; margin-top: var(--gap--small);"></i>
+                        <div>
+                            <b>A more recent version of this Automation has been saved since your edits were made.</b>
+                            <p>Note: <i>{{ latestScript && latestScript.note || 'Note not provided.' }}</i></p>
+                            You may wish to compare this version with yours before you Save.
+                            <div style="display: flex; justify-content: flex-end; margin-top: var(--gap);">
+                                <button
+                                    class="button button--alt button--secondary"
+                                    @click.prevent="loadAsDiff">
+                                    Load recent version as Diff base</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="expand clickable"
                         @click="expandAdvanced = !expandAdvanced">
                         <i class="fas"
@@ -149,7 +166,7 @@
                 class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
-                Save
+                {{ versionWarningShown ? 'Save anyway' : 'Save'  }}
             </button>
             <button v-if="location === 'file'"
                 class="button button--alt button--primary"
@@ -164,12 +181,8 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
-import ServiceSelect from '../components/service-select.vue';
 
 export default {
-    components: {
-        ServiceSelect,
-    },
 
     inject: [
         'saveload',
@@ -182,14 +195,16 @@ export default {
         return {
             location: this.saveload.location || 'ac',
             service: null,
-            newServiceName: '',
+            newServiceName: this.project.automation.metadata.serviceName,
             customVersion: '0.0.1',
             workerTag: 'stable',
             note: '',
             release: 'patch',
             activate: false,
+            services: [],
             scripts: [],
             expandAdvanced: false,
+            scriptLoading: false,
         };
     },
 
@@ -209,8 +224,14 @@ export default {
         canSaveToAc() {
             return this.isAuthenticated && this.isVersionValid && (this.service || this.newServiceName);
         },
+        latestScript() {
+            return this.scripts[0] || null;
+        },
         latestVersion() {
-            return this.scripts[0] ? this.scripts[0].fullVersion : '0.0.0';
+            return this.latestScript ? this.latestScript.fullVersion : '0.0.0';
+        },
+        versionWarningShown() {
+            return this.service && !this.scriptLoading && this.metadata.version !== this.latestVersion;
         },
         serviceIdMismatch() {
             return this.service && this.service.id !== this.metadata.serviceId;
@@ -231,6 +252,7 @@ export default {
     watch: {
         isAuthenticated(val) {
             if (val) {
+                this.loadServices();
                 const { serviceId } = this.project.automation.metadata;
                 this.loadService(serviceId);
             } else {
@@ -247,10 +269,11 @@ export default {
         },
     },
 
-    created() {
+    async created() {
         const { serviceId } = this.project.automation.metadata;
         if (serviceId && this.isAuthenticated) {
-            this.loadService(serviceId);
+            await this.loadServices();
+            await this.loadService(serviceId);
         }
     },
 
@@ -261,8 +284,7 @@ export default {
             }
             try {
                 await this.saveload.saveAutomationToAc({
-                    serviceId: this.service.id,
-                    serviceName: this.service.name,
+                    service: this.service,
                     fullVersion: this.fullVersion,
                     workerTag: this.workerTag,
                     activate: this.activate,
@@ -271,7 +293,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -281,7 +303,7 @@ export default {
                 filters: [
                     { name: 'Automation', extensions: ['automation'] },
                 ],
-                defaultPath: this.saveload.filePath || `${this.serviceName}.automation`,
+                defaultPath: this.saveload.filePath || `${this.newServiceName}.automation`,
             });
             if (filePath == null) {
                 return;
@@ -291,7 +313,7 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 console.warn(error);
-                alert('Failed to save your Automation');
+                this.showError(error);
             }
         },
 
@@ -308,35 +330,55 @@ export default {
 
         },
 
+        async loadServices(name = '') {
+            try {
+                this.services = await this.api.getServices({ name, archived: false });
+            } catch (error) {
+                this.services = [];
+            }
+        },
+
         async loadScripts(serviceId) {
+            this.scriptLoading = true;
             if (serviceId) {
                 try {
                     this.scripts = await this.saveload.getScripts(serviceId);
                 } catch (error) {
                     console.warn('failed to load scripts');
                     this.scripts = [];
+                } finally {
+                    this.scriptLoading = false;
                 }
             }
         },
 
         onServiceSelect(service) {
             this.service = service;
+        },
+
+        showError(error) {
+            this.saveload.showError('Save', error);
+        },
+
+        async loadAsDiff() {
+            this.saveload.setDiffBase = false;
+            const latestScript = this.scripts[0];
+            if (!this.service || !latestScript) {
+                this.showError(new Error('Automation is not found or valid version not found'));
+                return;
+            }
+            try {
+                await this.saveload.openAutomationFromAc(this.service.id, latestScript.id);
+                this.$emit('hide');
+            } catch (error) {å
+                this.showError(error);
+            }
         }
     },
 };
 </script>
 
 <style scoped>
-.inline-message {
-    font-style: italic;
-    font-size: 10px;
-    color: var(--color-cool--600);
-    line-height: 1.2em;
-    padding: var(--gap) 2px;
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-gap: 2px;
-}
 
 .expand {
     margin: var(--gap--large) 0px var(--gap) 0px;

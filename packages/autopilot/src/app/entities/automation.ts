@@ -8,7 +8,7 @@ export interface Automation {
 }
 
 export interface AutomationMetadata {
-    version: string;
+    version: string | null;
     serviceId: string | null;
     serviceName: string;
     draft: boolean;
@@ -17,7 +17,7 @@ export interface AutomationMetadata {
 }
 
 export const DEFAULT_AUTOMATION_METADATA: AutomationMetadata = {
-    version: '0.0.0',
+    version: null,
     serviceId: null,
     serviceName: 'New Automation',
     domainId: 'Generic',

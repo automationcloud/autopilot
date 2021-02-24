@@ -191,7 +191,7 @@ export interface ApiService {
 export interface ApiScript {
     id: string;
     serviceId: string;
-    version: string;
+    fullVersion: string;
     workerVersion: string;
     note: string;
 }
