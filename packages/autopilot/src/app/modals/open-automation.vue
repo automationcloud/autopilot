@@ -139,7 +139,7 @@ export default {
             return this.apiLogin.accountFullName;
         },
         isAuthenticated() {
-            return this.apiLogin.isAuthenticated;
+            return this.apiLogin.isAuthenticated();
         },
         canOpenFromAc() {
             return this.scriptId;

@@ -4,7 +4,7 @@
             <div class="section__title">Automation</div>
             <div class="edit-default__automation-meta">
                 <div class="edit-default__name">
-                    {{ metadata.serviceName }} {{ metadata.version /* ? 'v' + metadata.version : ''*/ }}
+                    {{ metadata.serviceName }} {{ metadata.version ? 'v' + metadata.version : '' }}
                 </div>
                 <div v-if="!metadata.serviceId">
                     <p>Saved on your computer</p>

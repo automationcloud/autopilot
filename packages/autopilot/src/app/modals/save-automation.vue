@@ -95,7 +95,7 @@
                         </div>
                     </div>
 
-                    <div v-if="!isLatest"
+                    <div v-if="versionWarningShown"
                         class="box box--primary group group--gap">
                         <i class="fas fa-exclamation-circle"
                             style="align-self: flex-start; margin-top: var(--gap--small);"></i>
@@ -166,7 +166,7 @@
                 class="button button--alt button--primary"
                 @click="saveToAc()"
                 :disabled="!canSaveToAc">
-                {{ isLatest ? 'Save' : 'Save anyway' }}
+                {{ versionWarningShown ? 'Save anyway' : 'Save'  }}
             </button>
             <button v-if="location === 'file'"
                 class="button button--alt button--primary"
@@ -208,6 +208,7 @@ export default {
             services: [],
             scripts: [],
             expandAdvanced: false,
+            scriptLoading: false,
         };
     },
 
@@ -233,8 +234,8 @@ export default {
         latestVersion() {
             return this.latestScript ? this.latestScript.fullVersion : '0.0.0';
         },
-        isLatest() {
-            return this.metadata.version === this.latestVersion;
+        versionWarningShown() {
+            return this.service && !this.scriptLoading && this.metadata.version !== this.latestVersion;
         },
         serviceIdMismatch() {
             return this.service && this.service.id !== this.metadata.serviceId;
@@ -272,7 +273,7 @@ export default {
         },
     },
 
-    async mounted() {
+    async created() {
         const { serviceId } = this.project.automation.metadata;
         if (serviceId && this.isAuthenticated) {
             await this.loadServices();
@@ -342,12 +343,15 @@ export default {
         },
 
         async loadScripts(serviceId) {
+            this.scriptLoading = true;
             if (serviceId) {
                 try {
                     this.scripts = await this.saveload.getScripts(serviceId);
                 } catch (error) {
                     console.warn('failed to load scripts');
                     this.scripts = [];
+                } finally {
+                    this.scriptLoading = false;
                 }
             }
         },
