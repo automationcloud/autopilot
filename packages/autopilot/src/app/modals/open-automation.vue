@@ -109,12 +109,8 @@
 <script>
 import { remote } from 'electron';
 const { dialog } = remote;
-import AdvancedSelect from '../components/advanced-select.vue';
 
 export default {
-    components: {
-        AdvancedSelect,
-    },
 
     inject: [
         'saveload',

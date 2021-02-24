@@ -38,7 +38,7 @@ export class SaveLoadController {
     userData: UserData;
     location: 'file' | 'ac' = 'file';
     filePath: string | null = null;
-    _setDiffBase: boolean = true;
+    setDiffBase: boolean = true;
 
     constructor(
         @inject(StorageController)
@@ -76,8 +76,6 @@ export class SaveLoadController {
         this.location = location;
     }
 
-    get setDiffBase() { return this._setDiffBase; }
-
     get metadata() { return this.project.automation.metadata; }
 
     update() {
@@ -94,12 +92,12 @@ export class SaveLoadController {
     }
 
     async openAutomation() {
-        this._setDiffBase = true;
+        this.setDiffBase = true;
         this.modals.show('open-automation');
     }
 
     async loadAsDiff() {
-        this._setDiffBase = false;
+        this.setDiffBase = false;
         this.modals.show('open-automation');
     }
 

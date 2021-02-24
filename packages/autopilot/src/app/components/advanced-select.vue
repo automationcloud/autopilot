@@ -34,8 +34,8 @@
 export default {
 
     props: {
-        options: { type: Array, default() { return []; } }, //id, name, html?
-        selectedOption: { type: Object, default: null },
+        options: { type: Array, default() { return []; } },
+        selectedOption: { type: Object, default: null }, // { id: string, name: string, html?: string }
         searchable: { type: Boolean, default: false },
         placeholder: { type: String, default: 'Search or select' },
     },
@@ -50,6 +50,7 @@ export default {
 
     watch: {
         selectedOption(val) {
+            // to display selected option name
             this.search = val ? val.name : '';
         },
     },

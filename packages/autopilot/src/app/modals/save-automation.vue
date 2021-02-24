@@ -181,12 +181,8 @@
 import * as semver from 'semver';
 import { remote } from 'electron';
 const { dialog } = remote;
-import AdvancedSelect from '../components/advanced-select.vue';
 
 export default {
-    components: {
-        AdvancedSelect,
-    },
 
     inject: [
         'saveload',
@@ -365,7 +361,7 @@ export default {
         },
 
         async loadAsDiff() {
-            this.saveload._setDiffBase = false;
+            this.saveload.setDiffBase = false;
             const latestScript = this.scripts[0];
             if (!this.service || !latestScript) {
                 this.showError(new Error('Automation is not found or valid version not found'));
