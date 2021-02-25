@@ -200,6 +200,42 @@ export class ExtensionRegistryController {
         }
     }
 
+    async installMultipleExtensions(list: ExtensionVersion[]) {
+        if (this.loading) {
+            return;
+        }
+        this.loading = true;
+        let installed = 0;
+        for (const { name, version } of list) {
+            try {
+                const ext = await this.registry.loadExtension(name, version);
+                this._addExtension(ext);
+                installed += 1;
+            } catch (err) {
+                this.notifications.add({
+                    id: 'extension.install.failed',
+                    level: 'fatal',
+                    title: `Could not install extension ${name}:${version}`,
+                    message: err.message,
+                    canClose: true,
+                    timeout: 5000,
+                });
+                console.warn(`Could not install extension ${name}`, err);
+            }
+        }
+        this.events.emit('extensionsUpdated');
+        if (installed > 0) {
+            this.notifications.add({
+                id: 'extension.install.success',
+                level: 'info',
+                title: `Installed ${installed} extension${installed > 1 ? 's' : ''}`,
+                canClose: true,
+                timeout: 5000,
+            });
+        }
+        this.loading = false;
+    }
+
     async uninstallExtension(name: string) {
         if (this.loading) {
             return;

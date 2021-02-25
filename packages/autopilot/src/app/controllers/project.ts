@@ -39,6 +39,11 @@ export class ProjectController {
 
     automation: Automation;
     initialized: boolean = false;
+    // If script dependencies need to be updated on load, we'll stash the JSON
+    // so that it can be then reloaded from unmodified source. This prevents bugs
+    // where script.dependencies are auto-updated based on what's currently installed
+    // and are no longer accurate.
+    stashedJson: any = {};
 
     constructor(
         @inject(Engine)
@@ -108,9 +113,15 @@ export class ProjectController {
     }
 
     reloadScript() {
-        const json = JSON.parse(JSON.stringify(this.automation.script));
+        const needsUpdate = !!this.stashedJson;
+        const json = this.stashedJson ?? JSON.parse(JSON.stringify(this.automation.script));
+        this.stashedJson = null;
         this.automation.script = this.initScript(json);
         this.events.emit('feedbackInvalidated');
+        if (needsUpdate) {
+            // This makes sure we save the script with up-to-date deps after we make the decision
+            this.update();
+        }
     }
 
     protected initScript(json: any) {
@@ -119,9 +130,11 @@ export class ProjectController {
         const missingDeps = unmetDeps.filter(_ => _.existingVersion == null);
         const unsatisfiedDeps = unmetDeps.filter(_ => _.existingVersion != null);
         if (missingDeps.length) {
+            this.stashedJson = json;
             this.notifyMissingDeps(missingDeps);
         }
         if (unsatisfiedDeps.length) {
+            this.stashedJson = json;
             this.notifyUnsatisfiedDeps(unsatisfiedDeps);
         }
         return script;
@@ -188,9 +201,7 @@ export class ProjectController {
     }
 
     protected async installDeps(deps: ExtensionVersion[]) {
-        for (const dep of deps) {
-            await this.registry.installExtension(dep.name, dep.version);
-        }
+        await this.registry.installMultipleExtensions(deps);
     }
 
     async loadFromAutosave(filename: string) {

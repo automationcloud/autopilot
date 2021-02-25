@@ -30,7 +30,13 @@
                 {{ description }}
             </div>
             <div class="ext-name">
-                {{ manifest.name }}:{{ manifest.latestVersion }}
+                {{ manifest.name }}
+                <span v-if="installed">
+                v{{ extReg.getInstalledVersion(manifest) }}
+                </span>
+                <span v-else>
+                v{{ manifest.latestVersion }}
+                </span>
             </div>
         </section>
 
