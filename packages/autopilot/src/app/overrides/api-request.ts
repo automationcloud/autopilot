@@ -14,6 +14,7 @@
 
 import { ApiRequest, Configuration } from '@automationcloud/engine';
 import { inject } from 'inversify';
+import { OAuth2Agent } from '../../../../engine/out/main';
 import { EventsController } from '../controllers/events';
 
 export class AutopilotApiRequest extends ApiRequest {
@@ -31,10 +32,14 @@ export class AutopilotApiRequest extends ApiRequest {
 
     setup() {
         super.setup();
+        // verbose logs for debug
+        const auth = this.request.config.auth as OAuth2Agent;
+        console.debug('[api-request] setup done: refreshToken: ', auth.params.refreshToken);
         this.request.onRetry = (error, info) => {
-            console.debug('API request failed, retrying', info, error);
+            console.debug('[api-request] onRetry: API request failed, retrying', info, error);
         };
-        this.request.onError = (_error, info) => {
+        this.request.onError = (error, info) => {
+            console.debug('[api-request] onError: API request failed', { error, info });
             if (info.status === 401) {
                 console.info('API responded with 401, invalidating refresh token', { details: info });
                 this.events.emit('apiAuthInvalidated');
