@@ -61,7 +61,8 @@ export class ApiLoginController {
 
     async init() {
         // get accessToken before other api calls
-        await this.api.authAgent.getHeader();
+        const accessToken = await this.api.authAgent.getHeader();
+        console.debug(`[api-login] access token from authAgent: ${accessToken}`);
         this.authenticate().catch(() => { });
     }
 
