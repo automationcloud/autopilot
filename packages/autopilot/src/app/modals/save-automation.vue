@@ -305,7 +305,7 @@ export default {
                 ],
                 defaultPath: this.saveload.filePath || `${this.newServiceName}.automation`,
             });
-            if (filePath == null) {
+            if (!filePath) {
                 return;
             }
             try {

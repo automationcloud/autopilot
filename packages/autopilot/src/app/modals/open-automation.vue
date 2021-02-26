@@ -215,7 +215,7 @@ export default {
                 ],
             });
             const filepath = filePaths[0] || '';
-            if (filepath == null) {
+            if (!filepath) {
                 return;
             }
             try {
