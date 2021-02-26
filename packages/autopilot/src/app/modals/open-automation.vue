@@ -41,14 +41,14 @@
                 </div>
             </div>
             <div v-show="location === 'ac'">
-                <signin-warning message="to open automation from the Automation Cloud" />
+                <signin-warning message="to open service from the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
                         Signed-in as {{ userName }}
                     </div>
                     <div class="form-row">
                         <div class="form-row__label">
-                            Automation
+                            Service
                         </div>
                         <div class="form-row__controls">
                             <advanced-select
@@ -208,14 +208,14 @@ export default {
 
         async openFromFile() {
             const { filePaths } = await dialog.showOpenDialog({
-                title: 'Open Automation',
+                title: 'Open Service',
                 filters: [
-                    { name: 'Automation', extensions: ['automation', 'ubscript', 'json', 'json5'] },
+                    { name: 'Service', extensions: ['automation', 'ubscript', 'json', 'json5'] },
                     { name: 'All Files', extensions: ['*'] },
                 ],
             });
             const filepath = filePaths[0] || '';
-            if (filepath == null) {
+            if (!filepath) {
                 return;
             }
             try {

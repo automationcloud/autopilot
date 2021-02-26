@@ -144,31 +144,33 @@ export class AppMenuController {
 
     *buildFileMenu(): Iterable<MenuItemConstructorOptions> {
         yield {
-            label: 'New Automation',
+            label: 'New Service',
             accelerator: 'CmdOrCtrl+Shift+N',
             click: () => this.saveload.newAutomation(),
         };
         yield {
-            label: 'Open Automation...',
+            label: 'Open Service...',
             accelerator: 'CmdOrCtrl+O',
             click: () => this.saveload.openAutomation(),
         };
         yield {
-            label: 'Load as diff base...',
+            label: 'Load as Diff Base...',
             click: () => this.saveload.loadAsDiff(),
         };
+        yield { type: 'separator' };
         yield {
-            label: 'Save Automation',
+            label: 'Save Service',
             accelerator: 'CmdOrCtrl+S',
             click: () => this.saveload.saveAutomation(),
         };
         yield {
-            label: 'Save Automation As...',
+            label: 'Save Service As...',
             accelerator: 'CmdOrCtrl+Shift+S',
             click: () => this.saveload.saveAutomationAs(),
         };
+        yield { type: 'separator' };
         yield {
-            label: 'Manage Automation versions',
+            label: 'Manage Service Versions',
             enabled: !!this.project.automation.metadata.serviceId,
             click: () => this.saveload.openAutomationManage(),
         };

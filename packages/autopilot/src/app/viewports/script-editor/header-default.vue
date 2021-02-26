@@ -1,6 +1,6 @@
 <template>
     <div class="header-default">
-        Script settings
+        Service Settings
     </div>
 </template>
 
