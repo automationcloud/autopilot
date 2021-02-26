@@ -35,14 +35,14 @@
                 </div>
             </div>
             <div v-show="location === 'ac'">
-                <signin-warning message="to save and run automations in the Automation Cloud" />
+                <signin-warning message="to save and run services in the Automation Cloud" />
                 <div v-if="isAuthenticated">
                     <div class="box box--light">
                         Signed-in as {{ userName }}
                     </div>
                     <div class="form-row">
                         <div class="form-row__label">
-                            Automation
+                            Service
                         </div>
                         <div class="form-row__controls">
                             <advanced-select
@@ -51,15 +51,15 @@
                                 :options="services"
                                 :selected-option="service"
                                 :searchable="true"
-                                placeholder="Create new automation">
+                                placeholder="Create new Service">
                             </advanced-select>
                         </div>
                     </div>
                     <div v-if="serviceIdMismatch"
                         class="box box--yellow box--small">
                         <strong>Warning!</strong>
-                        You are saving your script to a different automation, <strong>{{ service && service.name }}</strong>.
-                        It will update the automation name to {{ metadata.serviceName }}.
+                        You are saving your script to a different service, <strong>{{ service && service.name }}</strong>.
+                        It will update the service name to {{ metadata.serviceName }}.
                         Proceed at your own risk.
                     </div>
                     <div v-if="!service"
@@ -100,7 +100,7 @@
                         <i class="fas fa-exclamation-circle"
                             style="align-self: flex-start; margin-top: var(--gap--small);"></i>
                         <div>
-                            <b>A more recent version of this Automation has been saved since your edits were made.</b>
+                            <b>A more recent version of this Service has been saved since your edits were made.</b>
                             <p>Note: <i>{{ latestScript && latestScript.note || 'Note not provided.' }}</i></p>
                             You may wish to compare this version with yours before you Save.
                             <div style="display: flex; justify-content: flex-end; margin-top: var(--gap);">
@@ -299,9 +299,9 @@ export default {
 
         async saveToFile() {
             const { filePath } = await dialog.showSaveDialog({
-                title: 'Save Automation',
+                title: 'Save Service',
                 filters: [
-                    { name: 'Automation', extensions: ['automation'] },
+                    { name: 'Service', extensions: ['automation'] },
                 ],
                 defaultPath: this.saveload.filePath || `${this.newServiceName}.automation`,
             });
@@ -364,13 +364,13 @@ export default {
             this.saveload.setDiffBase = false;
             const latestScript = this.scripts[0];
             if (!this.service || !latestScript) {
-                this.showError(new Error('Automation is not found or valid version not found'));
+                this.showError(new Error('Service or valid version not found'));
                 return;
             }
             try {
                 await this.saveload.openAutomationFromAc(this.service.id, latestScript.id);
                 this.$emit('hide');
-            } catch (error) {å
+            } catch (error) {
                 this.showError(error);
             }
         }

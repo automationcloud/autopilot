@@ -1,7 +1,7 @@
 <template>
     <div class="edit-default">
         <div class="edit-default__automation section">
-            <div class="section__title">Automation</div>
+            <div class="section__title">Service</div>
             <div class="edit-default__automation-meta">
                 <div class="edit-default__name">
                     {{ metadata.serviceName }} {{ metadata.version ? 'v' + metadata.version : '' }}
