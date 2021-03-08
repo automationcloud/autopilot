@@ -141,7 +141,7 @@ export default {
             return this.scriptId;
         },
         modalTitle() {
-            return this.saveload.setDiffBase ? 'Open' : 'Load as diff base';
+            return this.saveload.loadAsDiffBase ? 'Load as diff base' : 'Open';
         },
         scriptOptions() {
             return this.scripts.map(script => {

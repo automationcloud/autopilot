@@ -38,7 +38,7 @@ export class SaveLoadController {
     userData: UserData;
     location: 'file' | 'ac' = 'file';
     filePath: string | null = null;
-    setDiffBase: boolean = true;
+    loadAsDiffBase: boolean = false;
 
     constructor(
         @inject(StorageController)
@@ -92,12 +92,12 @@ export class SaveLoadController {
     }
 
     async openAutomation() {
-        this.setDiffBase = true;
+        this.loadAsDiffBase = false;
         this.modals.show('open-automation');
     }
 
     async loadAsDiff() {
-        this.setDiffBase = false;
+        this.loadAsDiffBase = true;
         this.modals.show('open-automation');
     }
 
@@ -175,13 +175,14 @@ export class SaveLoadController {
             version: script.fullVersion,
             bundleIndex: 0,
         };
-        await this.project.loadAutomationJson({
-            ...content,
-            metadata,
-        });
-        if (this.setDiffBase) {
-            this.diff.setNewBase(content.script);
+        // load the automation on project only when loadAsDiffBase is set to true
+        if (!this.loadAsDiffBase) {
+            await this.project.loadAutomationJson({
+                ...content,
+                metadata,
+            });
         }
+        this.diff.setNewBase(content.script);
         this.location = 'ac';
         this.update();
     }
@@ -189,12 +190,12 @@ export class SaveLoadController {
     async openAutomationFromFile(filePath: string) {
         const text = await fs.readFile(filePath, 'utf-8');
         const automation = JSON.parse(text);
-        await this.project.loadAutomationJson(automation);
+        if (!this.loadAsDiffBase) {
+            await this.project.loadAutomationJson(automation);
+        }
+        this.diff.setNewBase(automation.script);
         this.location = 'file';
         this.filePath = filePath;
-        if (this.setDiffBase) {
-            this.diff.setNewBase(automation.script);
-        }
         this.update();
     }
 
