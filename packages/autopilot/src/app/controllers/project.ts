@@ -73,9 +73,6 @@ export class ProjectController {
                 this.reloadScript();
             }
         });
-        events.on('diffBaseSet', () => {
-            this.update();
-        });
     }
 
     async init() {

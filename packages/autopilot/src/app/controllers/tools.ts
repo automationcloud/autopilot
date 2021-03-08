@@ -79,11 +79,6 @@ export class ToolsController {
         });
     }
 
-    async loadScriptAsDiffBase(scriptId: string) {
-        const scriptData = await this.api.getScriptData(scriptId);
-        this.diff.setNewBase(scriptData.script);
-    }
-
     async loadHtmlSnapshot(htmlSnapshotId: string) {
         const snapshot = await this.api.getHtmlSnapshot(htmlSnapshotId);
         const { html } = snapshot;

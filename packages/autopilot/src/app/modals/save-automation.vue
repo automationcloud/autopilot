@@ -361,7 +361,7 @@ export default {
         },
 
         async loadAsDiff() {
-            this.saveload.setDiffBase = false;
+            this.saveload.loadAsDiffBase = true;
             const latestScript = this.scripts[0];
             if (!this.service || !latestScript) {
                 this.showError(new Error('Service or valid version not found'));
