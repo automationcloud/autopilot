@@ -19,7 +19,7 @@ export default {
         },
 
         serviceName() {
-            return this.app.project.automation.metadata.serviceName || 'New Automation';
+            return this.app.project.automation.metadata.serviceName || 'Untitled';
         },
 
         profileCount() {

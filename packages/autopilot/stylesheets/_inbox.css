@@ -92,3 +92,8 @@ select option, option {
     border: 1px solid var(--color-mono--600);
     background-position: right 2px center;
 }
+
+input[type="radio"],
+input[type="checkbox"] {
+    vertical-align: bottom;
+}
