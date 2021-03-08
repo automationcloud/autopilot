@@ -43,7 +43,7 @@ export class ProjectController {
     // so that it can be then reloaded from unmodified source. This prevents bugs
     // where script.dependencies are auto-updated based on what's currently installed
     // and are no longer accurate.
-    stashedJson: any = {};
+    stashedJson: any = null;
 
     constructor(
         @inject(Engine)
