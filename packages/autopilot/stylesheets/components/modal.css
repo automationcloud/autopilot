@@ -30,7 +30,7 @@
 .modal__body {
     min-height: 0;
     flex: 1;
-    padding: var(--gap);
+    padding: var(--gap) var(--gap--large);
     overflow-y: auto;
 }
 

@@ -19,7 +19,7 @@ export interface AutomationMetadata {
 export const DEFAULT_AUTOMATION_METADATA: AutomationMetadata = {
     version: null,
     serviceId: null,
-    serviceName: 'New Automation',
+    serviceName: 'Untitled',
     domainId: 'Generic',
     draft: true,
     bundleIndex: 0,

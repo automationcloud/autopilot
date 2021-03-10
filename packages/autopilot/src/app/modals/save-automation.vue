@@ -40,58 +40,105 @@
                     <div class="box box--light">
                         Signed-in as {{ userName }}
                     </div>
+                    <div>
+                        <div class="form-row">
+                            <div class="form-row__controls">
+                                <label class="form-row__label">
+                                    <input class="input"
+                                        type="radio"
+                                        v-model="createNew"
+                                        :value="true"/>
+                                    Create new Service
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-row__controls">
+                                <label class="form-row__label">
+                                    <input class="input"
+                                        type="radio"
+                                        v-model="createNew"
+                                        :value="false"/>
+                                    Use existing Service
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="!createNew">
+                        <div class="form-row">
+                            <div class="form-row__label">
+                                Service
+                            </div>
+                            <div class="form-row__controls">
+                                <advanced-select
+                                    @change="onServiceSelect"
+                                    @search="search => loadServices(search)"
+                                    :options="services"
+                                    :selected-option="service"
+                                    :searchable="true">
+                                </advanced-select>
+                            </div>
+                        </div>
+                        <div v-if="serviceIdMismatch"
+                            class="box box--primary group group--gap">
+                            <i class="fas fa-exclamation-circle"
+                                style="align-self: flex-start; margin-top: var(--gap--small);"></i>
+                            <div> You were working on service <b>{{ metadata.serviceName }}</b> but you are saving to <b>{{ service && service.name }}</b>.
+                            Proceed at your own risk.
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-row__label">
+                                Version
+                            </div>
+                            <div class="form-row__controls">
+                                <select class="select stretch"
+                                    v-model="release">
+                                    <option value="patch"> Patch version to {{ getVersion('patch') }} </option>
+                                    <option value="minor"> Minor version to {{ getVersion('minor') }} </option>
+                                    <option value="major"> Major version to {{ getVersion('major') }} </option>
+                                    <option value="custom"> Manually assign version </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-if="release === 'custom'"
+                            class="form-row">
+                            <div class="form-row__label"></div>
+                            <div>
+                                <input class="input"
+                                    type="text"
+                                    v-model="fullVersion"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="form-row">
+                            <div class="form-row__label">
+                                Name
+                            </div>
+                            <div class="form-row__controls">
+                                <input class="input"
+                                    type="text"
+                                    v-model="newServiceName" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-row__label">Version</div>
+                            <div class="form-row__controls" >
+                                <input class="input"
+                                    type="text"
+                                    v-model="fullVersion"/>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-row">
-                        <div class="form-row__label">
-                            Service
-                        </div>
-                        <div class="form-row__controls">
-                            <advanced-select
-                                @change="onServiceSelect"
-                                @search="search => loadServices(search)"
-                                :options="services"
-                                :selected-option="service"
-                                :searchable="true"
-                                placeholder="Create new Service">
-                            </advanced-select>
-                        </div>
-                    </div>
-                    <div v-if="serviceIdMismatch"
-                        class="box box--yellow box--small">
-                        <strong>Warning!</strong>
-                        You are saving your script to a different service, <strong>{{ service && service.name }}</strong>.
-                        It will update the service name to {{ metadata.serviceName }}.
-                        Proceed at your own risk.
-                    </div>
-                    <div v-if="!service"
-                        class="form-row">
-                        <div class="form-row__label">
-                            Name
-                        </div>
-                        <div class="form-row__controls">
-                            <input class="input" type="text" v-model="newServiceName" />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-row__label">
-                            Version
-                        </div>
-                        <div class="form-row__controls">
-                            <select class="select stretch"
-                                v-model="release">
-                                <option value="patch"> Increment patch version to {{ getVersion('patch') }} </option>
-                                <option value="minor"> Increment minor version to {{ getVersion('minor') }} </option>
-                                <option value="major"> Increment major version to {{ getVersion('major') }} </option>
-                                <option value="custom"> Manually assign version </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div v-if="release === 'custom'"
-                         class="form-row">
                         <div class="form-row__label"></div>
-                        <div>
-                            <input class="input"
-                                type="text"
-                                v-model="fullVersion"/>
+                        <div class="form-row__controls">
+                            <label>
+                                <input type="checkbox" v-model="activate">
+                                Make version active
+                            </label>
                         </div>
                     </div>
 
@@ -144,15 +191,6 @@
                                 </textarea>
                             </div>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-row__controls">
-                                <label>
-                                    <input type="checkbox" v-model="activate">
-                                    Make version active
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -195,12 +233,13 @@ export default {
         return {
             location: this.saveload.location || 'ac',
             service: null,
+            createNew: !this.project.automation.metadata.serviceId,
             newServiceName: this.project.automation.metadata.serviceName,
             customVersion: '0.0.1',
             workerTag: 'stable',
             note: '',
             release: 'patch',
-            activate: false,
+            activate: true,
             services: [],
             scripts: [],
             expandAdvanced: false,
@@ -222,7 +261,7 @@ export default {
             return semver.valid(this.fullVersion);
         },
         canSaveToAc() {
-            return this.isAuthenticated && this.isVersionValid && (this.service || this.newServiceName);
+            return this.isAuthenticated && this.isVersionValid && (this.createNew ? !!this.newServiceName : !!this.service);
         },
         latestScript() {
             return this.scripts[0] || null;
@@ -231,10 +270,10 @@ export default {
             return this.latestScript ? this.latestScript.fullVersion : '0.0.0';
         },
         versionWarningShown() {
-            return this.service && !this.scriptLoading && this.metadata.version !== this.latestVersion;
+            return this.service && !this.scriptLoading && this.metadata.version !== this.latestVersion && !this.serviceIdMismatch;
         },
         serviceIdMismatch() {
-            return this.service && this.service.id !== this.metadata.serviceId;
+            return this.service && this.metadata.serviceId && this.service.id !== this.metadata.serviceId;
         },
         fullVersion: {
             get() {
@@ -279,10 +318,10 @@ export default {
 
     methods: {
         async saveToAc() {
-            if (!this.service) {
-                this.service = await this.saveload.createService(this.newServiceName);
-            }
             try {
+                if (this.createNew) {
+                    this.service = await this.saveload.createService(this.newServiceName);
+                }
                 await this.saveload.saveAutomationToAc({
                     service: this.service,
                     fullVersion: this.fullVersion,
