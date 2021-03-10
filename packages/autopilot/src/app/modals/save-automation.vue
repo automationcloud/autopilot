@@ -306,6 +306,12 @@ export default {
                 this.scripts = [];
             }
         },
+
+        createNew(val) {
+            if (val) {
+                this.service = null;
+            }
+        }
     },
 
     async created() {
