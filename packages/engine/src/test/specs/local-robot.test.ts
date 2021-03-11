@@ -1,5 +1,6 @@
-import { LocalRobot } from '../../main';
 import assert from 'assert';
+
+import { LocalRobot } from '../../main';
 
 describe('Local Robot', () => {
 

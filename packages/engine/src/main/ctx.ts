@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as util from './util';
-import { Action } from './action';
-import { Context } from './context';
-import { Script } from './script';
-import { Pipe } from './pipe';
-import { Element } from './element';
-
 import jsonPointer from 'jsonpointer';
 import moment from 'moment';
 import fetch from 'node-fetch';
+
+import { Action } from './action';
+import { Context } from './context';
+import { Element } from './element';
+import { Pipe } from './pipe';
 import { Pipeline } from './pipeline';
+import { Script } from './script';
 import { ApiRequest, FetchService, ProxyService, ReporterService } from './services';
+import * as util from './util';
 
 /**
  * Runtime context object for carrying state within a single action execution.

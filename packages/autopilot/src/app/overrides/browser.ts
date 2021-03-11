@@ -14,12 +14,13 @@
 
 import {
     BrowserService,
+    CdpRequestWillBeSent,
     Configuration,
     Logger,
-    CdpRequestWillBeSent,
     Page
 } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 

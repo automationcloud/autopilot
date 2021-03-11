@@ -13,8 +13,9 @@
 // limitations under the License.
 
 // import assert from 'assert';
-import { Exception } from './exception';
 import dotenv from 'dotenv';
+
+import { Exception } from './exception';
 
 dotenv.config();
 

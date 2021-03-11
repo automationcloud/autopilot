@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ScriptEditorViewport } from '.';
 import { Command } from '../../command';
+import { ScriptEditorViewport } from '.';
 
 export abstract class ScriptEditorCommand extends Command<ScriptEditorViewport> {
     getConnectedViewports() {

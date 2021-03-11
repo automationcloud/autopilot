@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import { autoUpdater } from 'electron-updater';
-import { getSettings } from './settings';
 import path from 'path';
+
+import { getSettings } from './settings';
 
 export function autoCheckForUpdates() {
     configure();

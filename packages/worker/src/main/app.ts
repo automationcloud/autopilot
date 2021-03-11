@@ -13,18 +13,24 @@
 // limitations under the License.
 
 import {
+    CheckpointService,
     Engine,
     FlowService,
-    ReporterService,
-    CheckpointService,
     Logger as EngineLogger,
+    ReporterService,
 } from '@automationcloud/engine';
 import {
-    Logger as FrameworkLogger, Application, Router
+    Application, Logger as FrameworkLogger, Router
 } from '@ubio/framework';
+import { Container } from 'inversify';
+
+import { WorkerCheckpointService } from './overrides/checkpoints';
+import { WorkerFlowService } from './overrides/flow';
+import { WorkerLogger } from './overrides/logger';
+import { WorkerReporterService } from './overrides/reporter';
+import { StatusRouter } from './routes/status';
 import { ApiService } from './services/api';
 import { ChromeLaunchService } from './services/chrome';
-import { Container } from 'inversify';
 import { ExtensionManager } from './services/extension-manager';
 import { HeartbeatsService } from './services/heartbeats';
 import { InputsService } from './services/inputs';
@@ -34,11 +40,6 @@ import { RedisProvider } from './services/redis';
 import { Runner } from './services/runner';
 import { ScriptLoaderService } from './services/script-loader';
 import { SignalsService } from './services/signals';
-import { StatusRouter } from './routes/status';
-import { WorkerCheckpointService } from './overrides/checkpoints';
-import { WorkerFlowService } from './overrides/flow';
-import { WorkerLogger } from './overrides/logger';
-import { WorkerReporterService } from './overrides/reporter';
 import { WorkerState } from './services/state';
 
 export class WorkerBaseApp extends Application {

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { params } from '../model';
-import { Pipe } from '../pipe';
+import Json5 from 'json5';
+
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-
-import Json5 from 'json5';
+import { params } from '../model';
+import { Pipe } from '../pipe';
 
 export class ValueGetJson extends Pipe {
     static $type = 'Value.getJson';

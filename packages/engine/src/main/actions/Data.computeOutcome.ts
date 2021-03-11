@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { Action } from '../action';
-import { Pipeline } from '../pipeline';
 import { params } from '../model';
+import { Pipeline } from '../pipeline';
 
 export class DataComputeOutcome extends Action {
     static $type = 'Data.computeOutcome';

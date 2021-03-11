@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { Command } from '../../command';
-import { ScriptEditorViewport } from '.';
 import { clipboard } from '../../util';
+import { ScriptEditorViewport } from '.';
 
 export class CopyPipeCommand extends Command<ScriptEditorViewport> {
     static title = 'Copy';

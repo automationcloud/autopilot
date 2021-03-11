@@ -1,8 +1,9 @@
 import { ipcRenderer } from 'electron';
 import { injectable } from 'inversify';
+import semver from 'semver';
+
 import { controller } from '../controller';
 import { version } from '../globals';
-import semver from 'semver';
 
 @injectable()
 @controller({ alias: 'updater' })

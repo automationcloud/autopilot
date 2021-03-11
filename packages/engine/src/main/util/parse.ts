@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import URL from 'url';
-import querystring from 'querystring';
-import { assertPlayback, assertScript } from './assert';
 import colorParser from 'parse-color';
+import querystring from 'querystring';
+import URL from 'url';
+
+import { assertPlayback, assertScript } from './assert';
 import * as price from './price';
 
 export interface ParsedUrl {

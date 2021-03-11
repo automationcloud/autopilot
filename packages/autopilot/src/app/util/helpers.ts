@@ -14,12 +14,12 @@
 
 import { util } from '@automationcloud/engine';
 import fs from 'fs';
-import rimraf from 'rimraf';
-import { promisify } from 'util';
-import mkdirp from 'mkdirp';
 import Json5 from 'json5';
 import marked from 'marked';
+import mkdirp from 'mkdirp';
+import rimraf from 'rimraf';
 import sanitize from 'sanitize-html';
+import { promisify } from 'util';
 
 export const rimrafAsync = promisify(rimraf);
 export const mkdirpAsync = promisify(mkdirp);

@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Context, Action, Pipe, model, Pipeline, Element, booleanConfig } from '@automationcloud/engine';
+import { Action, booleanConfig, Context, Element, model, Pipe, Pipeline } from '@automationcloud/engine';
+import { MenuItemConstructorOptions } from 'electron';
+
 import { App } from '../../app';
-import { helpers, clipboard } from '../../util';
+import { HelpController } from '../../controllers/help';
+import { clipboard, helpers } from '../../util';
+import { toCsv } from '../../util/csv';
+import { InsertLocation, ScriptViewport } from '../script-viewport';
 import { ScriptEditorCommandsController } from './commands';
 import { ScriptEditorMenusController } from './menus';
-import { ScriptViewport, InsertLocation } from '../script-viewport';
-import { MenuItemConstructorOptions } from 'electron';
-import { toCsv } from '../../util/csv';
-import { HelpController } from '../../controllers/help';
 
 const UI_PIPE_VERBOSE_FEEDBACK = booleanConfig('UI_PIPE_VERBOSE_FEEDBACK', true);
 const UI_PIPE_INSERT_LINES = booleanConfig('UI_PIPE_INSERT_LINES', true);

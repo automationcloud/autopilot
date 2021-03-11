@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { stringConfig, Configuration } from '@automationcloud/cdp';
-import { injectable, inject } from 'inversify';
-import { RequestOptions, Request, OAuth2Agent } from '@automationcloud/request';
+import { Configuration, stringConfig } from '@automationcloud/cdp';
+import { OAuth2Agent, Request, RequestOptions } from '@automationcloud/request';
+import { inject, injectable } from 'inversify';
 
 const AC_API_URL = stringConfig('AC_API_URL', 'https://api.automationcloud.net');
 const AC_API_TOKEN_URL = stringConfig('AC_API_TOKEN_URL', '');

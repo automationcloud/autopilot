@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pipe } from '../pipe';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
+import { Pipe } from '../pipe';
 import * as util from '../util';
 
 export class ObjectEntries extends Pipe {

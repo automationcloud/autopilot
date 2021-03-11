@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../../runtime';
 import assert from 'assert';
-import rimraf from 'rimraf';
-import { promisify } from 'util';
 import { promises as fs } from 'fs';
 import glob from 'glob';
+import rimraf from 'rimraf';
+import { promisify } from 'util';
+
+import { runtime } from '../../runtime';
 
 const rimrafAsync = promisify(rimraf);
 const globAsync = promisify(glob);

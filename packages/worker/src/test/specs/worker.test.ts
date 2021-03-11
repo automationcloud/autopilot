@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../runtime';
-import { WorkerState } from '../../main/services/state';
-import { SignalsService } from '../../main/services/signals';
 import assert from 'assert';
+
+import { SignalsService } from '../../main/services/signals';
+import { WorkerState } from '../../main/services/state';
+import { runtime } from '../runtime';
 
 describe('Worker', () => {
     describe('happy case', () => {

@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import './server';
-import { runtime } from './runtime';
+
 import { ChromeLaunchService } from '../main/services/chrome';
+import { runtime } from './runtime';
 
 before(async () => {
     await runtime.app.beforeStart();

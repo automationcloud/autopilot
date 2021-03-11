@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FuzzyMatchOptions, fuzzyMatch } from './match';
+import { fuzzyMatch, FuzzyMatchOptions } from './match';
 
 /**
  * Fuzzy search candidates using fuzzy match algorithm (see `fuzzyMatch`).

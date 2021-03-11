@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import path from 'path';
-import glob from 'glob';
-import { promises as fs } from 'fs';
-import { promisify } from 'util';
 import assert from 'assert';
+import { promises as fs } from 'fs';
+import glob from 'glob';
+import path from 'path';
+import { promisify } from 'util';
 
 const globAsync = promisify(glob);
 

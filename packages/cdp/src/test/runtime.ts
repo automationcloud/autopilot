@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Browser, Page } from '../main';
 import assert from 'assert';
+
+import { Browser, Page } from '../main';
 
 const chromePort = Number(process.env.CHROME_PORT) || 9123;
 

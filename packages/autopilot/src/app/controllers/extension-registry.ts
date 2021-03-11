@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UserData } from '../userdata';
-import { RegistryService, ExtensionManifest, Extension, ExtensionSpec, ExtensionVersion, Configuration, numberConfig } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
-import { StorageController } from './storage';
-import { EventsController } from '../controllers/events';
-import { controller } from '../controller';
+import { Configuration, Extension, ExtensionManifest, ExtensionSpec, ExtensionVersion, numberConfig, RegistryService } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import semver from 'semver';
+
+import { controller } from '../controller';
+import { EventsController } from '../controllers/events';
+import { UserData } from '../userdata';
 import { NotificationsController } from './notifications';
+import { StorageController } from './storage';
 
 const EXTENSIONS_AUTO_REFRESH_INTERVAL = numberConfig('EXTENSIONS_AUTO_REFRESH_INTERVAL', 5 * 60 * 1000);
 
@@ -284,7 +285,7 @@ export class ExtensionRegistryController {
                 canClose: true,
                 timeout: 5000,
             });
-        } catch(err) {
+        } catch (err) {
             this.notifications.add({
                 id: 'extension.update.success',
                 level: 'fatal',

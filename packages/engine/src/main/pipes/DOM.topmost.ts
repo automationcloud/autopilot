@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pipe } from '../pipe';
 import { Element } from '../element';
+import { Pipe } from '../pipe';
 
 export class FindTopmost extends Pipe {
     static $type = 'DOM.topmost';

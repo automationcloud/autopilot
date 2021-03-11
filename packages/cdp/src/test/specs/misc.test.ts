@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime, assert } from '../globals';
+import { assert, runtime } from '../globals';
 
 describe('Misc', () => {
     it('does not send Do-Not-Track', async () => {

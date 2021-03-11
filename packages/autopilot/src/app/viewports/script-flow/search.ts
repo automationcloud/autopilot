@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ScriptFlowViewport } from '.';
-import { ScriptSearchQuery, ScriptSearchResult, Context, Action } from '@automationcloud/engine';
+import { Action, Context, ScriptSearchQuery, ScriptSearchResult } from '@automationcloud/engine';
+
 import { helpers } from '../../util';
+import { ScriptFlowViewport } from '.';
 
 export interface SearchCriterion {
     type: 'label' | 'action' | 'input' | 'errorCode' | 'resolve 3dsecure';

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Page } from './page';
 import { Frame } from './frame';
+import { Page } from './page';
 import {
-    CdpFrameTree,
     CdpFrame,
-    CdpRequestWillBeSent,
-    CdpResponseReceived,
+    CdpFrameTree,
     CdpLoadingFailed,
     CdpLoadingFinished,
+    CdpRequestWillBeSent,
+    CdpResponseReceived,
 } from './types';
 
 /**

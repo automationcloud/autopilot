@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { App } from '../app';
-import { clipboard, helpers } from '../util';
 import { Controller } from '../controller';
+import { clipboard, helpers } from '../util';
 
 export type LoaderResourceType = 'none' | 'service' | 'script' | 'job' | 'execution' | 'html-snapshot' | 'uuid';
 

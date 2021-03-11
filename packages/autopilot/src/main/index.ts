@@ -13,10 +13,11 @@
 // limitations under the License.
 
 import { app } from 'electron';
-import { windows, createLastProfileWindow, activateWindow } from './windows';
+
 import { controlServer } from './globals';
-import { autoCheckForUpdates } from './updater';
 import { initIpcListeners } from './ipc';
+import { autoCheckForUpdates } from './updater';
+import { activateWindow, createLastProfileWindow, windows } from './windows';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 process.env.NODE_OPTIONS = '--insecure-http-parser';

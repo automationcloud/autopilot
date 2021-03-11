@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime, assert, assertError } from '../globals';
-
 import { RemoteElement } from '../../main/remote-element';
 import { RemoteObject } from '../../main/remote-object';
+import { assert, assertError, runtime } from '../globals';
 
 describe('ExecutionContext', () => {
     describe('evaluate', () => {

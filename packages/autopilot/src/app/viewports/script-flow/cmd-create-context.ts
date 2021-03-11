@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ContextType } from '@automationcloud/engine';
+
 import { Command } from '../../command';
 import { ScriptFlowViewport } from '.';
-import { ContextType } from '@automationcloud/engine';
 
 export class CreateContextCommand extends Command<ScriptFlowViewport> {
     newId: string | null = null;

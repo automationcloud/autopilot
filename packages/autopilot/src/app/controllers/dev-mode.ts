@@ -1,5 +1,6 @@
 import { booleanConfig } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { SettingsController } from './settings';
 

@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { RemoteElementInfo } from '@automationcloud/cdp';
+
 import { params } from '../model';
 import { DomExtractPipe } from './_extract';
-import { RemoteElementInfo } from '@automationcloud/cdp';
 
 export class DomHasClass extends DomExtractPipe {
     static $type = 'DOM.hasClass';

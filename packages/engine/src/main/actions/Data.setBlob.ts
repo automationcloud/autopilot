@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { Action } from '../action';
-import { Pipeline } from '../pipeline';
 import { params } from '../model';
-import { BlobEncoding, BlobService } from '../services';
+import { Pipeline } from '../pipeline';
 import { JsonSchema } from '../schema';
+import { BlobEncoding, BlobService } from '../services';
 
 export class DataSetBlob extends Action {
     static $type = 'Data.setBlob';

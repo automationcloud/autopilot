@@ -13,20 +13,21 @@
 // limitations under the License.
 
 import {
-    Logger,
-    Configuration,
-    ReporterService,
-    ScreenshotSpec,
-    Page,
     BrowserService,
+    Configuration,
     EventData,
+    Logger,
+    Page,
+    ReporterService,
     ReportingLevel,
+    ScreenshotSpec,
     stringConfig,
 } from '@automationcloud/engine';
-import { Execution } from '../types';
 import { inject } from 'inversify';
-import { WorkerState } from '../services/state';
+
 import { ApiService } from '../services/api';
+import { WorkerState } from '../services/state';
+import { Execution } from '../types';
 
 const DEFAULT_SCREENSHOT_LEVEL = stringConfig('DEFAULT_SCREENSHOT_LEVEL', 'info');
 const DEFAULT_HTML_SNAPSHOT_LEVEL = stringConfig('DEFAULT_HTML_SNAPSHOT_LEVEL', 'info');

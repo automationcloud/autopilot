@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'reflect-metadata';
+
 import { WorkerProductionApp } from '../main';
 
 process.env.ENGINE_ENV = 'worker';

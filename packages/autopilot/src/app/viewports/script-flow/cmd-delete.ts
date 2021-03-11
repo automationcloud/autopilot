@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Command } from '../../command';
 import { Context, model, util } from '@automationcloud/engine';
+
+import { Command } from '../../command';
 import { ScriptFlowViewport } from '.';
 
 export class FlowDeleteCommand extends Command<ScriptFlowViewport> {

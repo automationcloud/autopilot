@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Command } from '../../command';
-import { ScriptFlowViewport } from '.';
-import { clipboard } from '../../util';
 import { model } from '@automationcloud/engine';
+
+import { Command } from '../../command';
+import { clipboard } from '../../util';
 import { InsertLocation } from '../script-viewport';
+import { ScriptFlowViewport } from '.';
 
 /**
  * Pastes the context of clipboard according to following rules:

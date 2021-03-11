@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { WorkerState } from './state';
+import { Configuration, Logger, numberConfig } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { ApiService } from './api';
-import { Logger, Configuration, numberConfig } from '@automationcloud/engine';
+import { WorkerState } from './state';
 
 const HEARTBEAT_INTERVAL = numberConfig('HEARTBEAT_INTERVAL', 5000);
 

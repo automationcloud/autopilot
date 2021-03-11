@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import { App } from '../app';
+import { ClipboardLoaderController } from './clipboard-loader';
+import { FeedbackController } from './feedback';
+import { FrequentItemController } from './frequent-item';
 import { ModalMenuController } from './modal-menu';
 import { NavigationController } from './navigation';
-import { ClipboardLoaderController } from './clipboard-loader';
 import { ObjectsController } from './objects';
-import { FrequentItemController } from './frequent-item';
-import { FeedbackController } from './feedback';
 
 export { ClipboardLoaderController, ModalMenuController, NavigationController };
 

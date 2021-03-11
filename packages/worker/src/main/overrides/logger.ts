@@ -13,7 +13,8 @@
 // limitations under the License.
 
 import { StandardLogger } from '@ubio/framework';
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
+
 import { WorkerState } from '../services/state';
 
 @injectable()

@@ -13,11 +13,12 @@
 // limitations under the License.
 
 import jsonPointer from 'jsonpointer';
-import { checkType } from './data';
-import vm from 'vm';
 import fetch from 'node-fetch';
-import { setTimeout, clearTimeout, setInterval, clearInterval, setImmediate, clearImmediate } from 'timers';
+import { clearImmediate, clearInterval, clearTimeout, setImmediate, setInterval, setTimeout } from 'timers';
+import vm from 'vm';
+
 import * as util from '../util';
+import { checkType } from './data';
 
 const globals = ['module', 'exports', 'require', 'global', 'process'];
 

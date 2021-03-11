@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ChromeLauncher } from '../main/launcher';
 import assert from 'assert';
 import path from 'path';
+
+import { ChromeLauncher } from '../main/launcher';
 import { TestRuntime } from './runtime';
 
 const chromePort = Number(process.env.CHROME_PORT) || 9123;

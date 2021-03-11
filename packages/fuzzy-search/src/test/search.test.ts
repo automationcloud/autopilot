@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fuzzySearch } from '../main';
 import assert from 'assert';
+
+import { fuzzySearch } from '../main';
 
 const candidates = [
     'DOM.getText',

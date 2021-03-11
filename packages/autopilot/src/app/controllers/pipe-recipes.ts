@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { UserData } from '../userdata';
 import { StorageController } from './storage';

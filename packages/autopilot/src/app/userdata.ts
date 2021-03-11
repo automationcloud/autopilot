@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import debounce from 'debounce-promise';
+
 import { StorageController } from './controllers/storage';
 
 export class UserData {

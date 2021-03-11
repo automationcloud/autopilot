@@ -12,26 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Configuration, ConsoleLogger, EnvConfiguration, Logger } from '@automationcloud/cdp';
+import { Container, decorate, injectable, interfaces } from 'inversify';
+
+import { Extension } from './extension';
 import {
-    BrowserService,
+    ApiRequest,
     BlobService,
+    BrowserService,
     CheckpointService,
-    GlobalsService,
-    ProxyService,
+    EmulationService,
     FetchService,
-    UserAgentService,
     FlowService,
+    GlobalsService,
+    HttpCallbackService,
+    ProxyService,
+    RegistryService,
     ReporterService,
     ResolverService,
-    RegistryService,
-    ApiRequest,
-    EmulationService,
-    HttpCallbackService,
+    UserAgentService,
 } from './services';
-import { decorate, injectable, interfaces, Container } from 'inversify';
 import { sessionHandlers, SessionLifecycleHandler } from './session';
-import { Logger, ConsoleLogger, Configuration, EnvConfiguration } from '@automationcloud/cdp';
-import { Extension } from './extension';
 
 // CDP modules need to be decorated
 decorate(injectable(), ConsoleLogger);

@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UserData } from '../userdata';
 import {
-    Script,
     Engine,
-    ResolverService,
-    ExtensionVersion,
     ExtensionUnmetDep,
+    ExtensionVersion,
+    ResolverService,
+    Script,
 } from '@automationcloud/engine';
+import { promises as fs } from 'fs';
 import { inject, injectable } from 'inversify';
-import { StorageController } from './storage';
+import path from 'path';
+import semver from 'semver';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
+import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
-import { promises as fs } from 'fs';
-import path from 'path';
-import { NotificationsController } from './notifications';
-import semver from 'semver';
 import { ExtensionRegistryController } from './extension-registry';
+import { NotificationsController } from './notifications';
+import { StorageController } from './storage';
 
 @injectable()
 @controller({ alias: 'project' })

@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ActionClass, Action } from './action';
 import { Exception } from '@automationcloud/cdp';
-import { PipeClass, Pipe } from './pipe';
+import Ajv from 'ajv';
 import { promises as fs } from 'fs';
 import glob from 'glob';
+import { Container } from 'inversify';
 import path from 'path';
 import semver from 'semver';
 import tar from 'tar';
 import { promisify } from 'util';
+
+import { Action, ActionClass } from './action';
 import { Engine } from './engine';
-import { Container } from 'inversify';
-import { InspectionClass, Inspection } from './inspection';
-import Ajv from 'ajv';
+import { Inspection, InspectionClass } from './inspection';
+import { Pipe, PipeClass } from './pipe';
 import { JsonSchema } from './schema';
 
 const globAsync = promisify(glob);

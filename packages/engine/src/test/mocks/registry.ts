@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RegistryService, ExtensionManifest, ExtensionVersion, Extension } from '../../main';
+import { Exception } from '@automationcloud/cdp';
+import { promises as fs } from 'fs';
 import { injectable } from 'inversify';
 import semver from 'semver';
+
+import { Extension, ExtensionManifest, ExtensionVersion, RegistryService } from '../../main';
 import { runtime } from '../runtime';
-import { promises as fs } from 'fs';
-import { Exception } from '@automationcloud/cdp';
 
 @injectable()
 export class RegistryServiceMock extends RegistryService {

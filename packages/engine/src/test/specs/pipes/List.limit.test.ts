@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from'../../runtime';
 import assert from 'assert';
+
+import { runtime } from '../../runtime';
 
 describe('Pipes: other/limit', () => {
     it('limits the elements', async () => {

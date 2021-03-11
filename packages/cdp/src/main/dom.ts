@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Page } from './page';
-import { CdpNode } from './types';
-import { RemoteElement } from './remote-element';
 import { HIGHLIGHT_CONFIG } from './constants';
+import { Page } from './page';
+import { RemoteElement } from './remote-element';
+import { CdpNode } from './types';
 
 /**
  * Maintains stateful CDP DOM client, similar to DevTools "Elements" tab.

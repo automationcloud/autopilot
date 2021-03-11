@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FlowDeleteCommand } from './cmd-delete';
-import { clipboard } from '../../util';
 import { ActionList, ContextList } from '@automationcloud/engine';
+
+import { clipboard } from '../../util';
+import { FlowDeleteCommand } from './cmd-delete';
 
 export class FlowCutCommand extends FlowDeleteCommand {
     dataType: string = '';

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ScriptFlowViewport } from '.';
-import { util, RemoteElementInfo } from '@automationcloud/engine';
-import { clipboard, helpers } from '../../util';
+import { RemoteElementInfo, util } from '@automationcloud/engine';
+
 import { InspectController } from '../../controllers/inspect';
+import { clipboard, helpers } from '../../util';
+import { ScriptFlowViewport } from '.';
 
 export class ActionRecorderController {
     viewport: ScriptFlowViewport;

@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Extension, ExtensionVersion } from '../extension';
+import { inject, injectable } from 'inversify';
+
 import { ActionClass, UnresolvedAction } from '../action';
-import { PipeClass, UnresolvedPipe } from '../pipe';
-import { Category } from '../model';
 import { coreExtension } from '../core';
-import { groupBy } from '../util';
 import { Engine } from '../engine';
+import { Extension, ExtensionVersion } from '../extension';
+import { Category } from '../model';
+import { PipeClass, UnresolvedPipe } from '../pipe';
+import { groupBy } from '../util';
 
 /**
  * @internal

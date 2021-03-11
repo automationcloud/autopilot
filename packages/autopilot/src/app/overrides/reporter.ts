@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable } from 'inversify';
 import { ReporterService } from '@automationcloud/engine';
+import { injectable } from 'inversify';
 
 @injectable()
 export class AutopilotReporterService extends ReporterService {

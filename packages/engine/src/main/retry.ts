@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import { numberConfig } from '@automationcloud/cdp';
+
 import { Script } from './script';
 
 const RETRY_TIMEOUT_MIN = numberConfig('RETRY_TIMEOUT_MIN', 3000);

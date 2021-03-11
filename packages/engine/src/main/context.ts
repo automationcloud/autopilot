@@ -14,14 +14,13 @@
 
 import uuid from 'uuid';
 
-import { Script } from './script';
-import { Action, ActionList, MatcherList, DefinitionList } from './action';
+import { Action, ActionList, DefinitionList, MatcherList } from './action';
 import { Element } from './element';
-
-import * as util from './util';
-import * as model from './model';
-import { MatcherAction } from './matcher';
 import { ScriptException } from './exception';
+import { MatcherAction } from './matcher';
+import * as model from './model';
+import { Script } from './script';
+import * as util from './util';
 
 export type ContextType = 'main' | 'context' | 'checkpoint';
 

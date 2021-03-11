@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from '../app';
-import { Element, ActionList } from '@automationcloud/engine';
+import { ActionList, Element } from '@automationcloud/engine';
 import debounce from 'debounce-promise';
+
+import { App } from '../app';
 
 export class Feedback {
     actionList: ActionList | null = null;

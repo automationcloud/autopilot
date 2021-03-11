@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { Command } from '../../command';
-import { ScriptFlowViewport } from '.';
 import { clipboard } from '../../util';
+import { ScriptFlowViewport } from '.';
 
 export class FlowCopyCommand extends Command<ScriptFlowViewport> {
     static title = 'Copy';

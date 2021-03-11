@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Configuration, Logger, numberConfig, stringConfig } from '@automationcloud/cdp';
 import { ProxyUpstream, RoutingProxy } from '@automationcloud/uniproxy';
-import { injectable, inject } from 'inversify';
-import { Configuration, numberConfig, Logger, stringConfig } from '@automationcloud/cdp';
-import { SessionHandler } from '../session';
 import { readFileSync } from 'fs';
+import { inject, injectable } from 'inversify';
 import path from 'path';
+
+import { SessionHandler } from '../session';
 
 const PROXY_PORT = numberConfig('PROXY_PORT', 3128);
 const CA_CERTIFICATES = stringConfig('CA_CERTIFICATES', '');
@@ -41,7 +42,7 @@ export class ProxyService extends RoutingProxy {
     getCACertificates() {
         const defaults = super.getCACertificates();
         const ca = this.config.get(CA_CERTIFICATES);
-        return [ ...defaults, ca, caCert].filter(Boolean);
+        return [...defaults, ca, caCert].filter(Boolean);
     }
 
     async onSessionStart() {

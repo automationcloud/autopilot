@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { controller } from '../controller';
 import { Exception } from '@automationcloud/engine';
-import os from 'os';
-import path from 'path';
-import { promises as fs, createWriteStream } from 'fs';
-import { promisify } from 'util';
-import rimRaf from 'rimraf';
+import extractZip from 'extract-zip';
+import { createWriteStream, promises as fs } from 'fs';
 import http from 'http';
 import https from 'https';
-import extractZip from 'extract-zip';
+import { inject, injectable } from 'inversify';
+import os from 'os';
+import path from 'path';
+import rimRaf from 'rimraf';
+import { promisify } from 'util';
+
+import { controller } from '../controller';
 import { ChromeManagerController } from './chrome-manager';
 
 const rimRafAsync = promisify(rimRaf);

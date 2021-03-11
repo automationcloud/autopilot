@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { Action } from '../action';
-import { Pipeline } from '../pipeline';
-import * as util from '../util';
 import { ScriptException } from '../exception';
 import { params } from '../model';
+import { Pipeline } from '../pipeline';
+import * as util from '../util';
 
 export class ExpectAction extends Action {
     static $type = 'Flow.expect';

@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RemoteElement, BrowserService, HIGHLIGHT_CONFIG, CdpNode } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
-import { controller } from '../controller';
-import { remote } from 'electron';
-const { BrowserWindow } = remote;
+import { BrowserService, CdpNode, HIGHLIGHT_CONFIG, RemoteElement } from '@automationcloud/engine';
 import assert from 'assert';
+import { remote } from 'electron';
 import { EventEmitter } from 'events';
+import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
+
+const { BrowserWindow } = remote;
 
 @injectable()
 @controller({ alias: 'inspect' })
@@ -90,25 +92,21 @@ export class InspectController {
         this.prompt = prompt;
         await this.startInspect(scopeEl);
         const result = await new Promise<RemoteElement | null>(resolve => {
-            const inspector = this;
-            inspector.emitter.addListener('element', onElement);
-            inspector.emitter.addListener('stop', onStop);
-
-            function onElement(result: RemoteElement) {
+            const onElement = (result: RemoteElement) => {
                 cleanup();
                 resolve(result);
-            }
-
-            function onStop() {
+            };
+            const onStop = () => {
                 cleanup();
                 resolve(null);
-            }
-
-            function cleanup() {
-                inspector.emitter.removeListener('element', onElement);
-                inspector.emitter.removeListener('stop', onStop);
-                inspector.stopInspect();
-            }
+            };
+            const cleanup = () => {
+                this.emitter.removeListener('element', onElement);
+                this.emitter.removeListener('stop', onStop);
+                this.stopInspect();
+            };
+            this.emitter.addListener('element', onElement);
+            this.emitter.addListener('stop', onStop);
         });
         if (wnd) {
             wnd.focus();

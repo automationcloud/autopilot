@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import os from 'os';
-import { spawn, ChildProcess } from 'child_process';
-import { Exception } from './exception';
+import { ChildProcess, spawn } from 'child_process';
 import net from 'net';
+import os from 'os';
 import rimraf from 'rimraf';
+
+import { Exception } from './exception';
 
 const STANDARD_PATHS: { [index: string]: string } = {
     darwin: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',

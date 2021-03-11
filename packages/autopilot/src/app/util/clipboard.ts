@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { clipboard } from 'electron';
 import { util } from '@automationcloud/engine';
+import { clipboard } from 'electron';
 
 export function readText() {
     return clipboard.readText() || '';

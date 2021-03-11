@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RemoteObject } from './remote-object';
-import { ExecutionContext } from './execution-context';
-import * as util from './util';
-import { CdpRemoteObject, CdpNode, CdpQuad, Point, Quad, BoxModel } from './types';
-import { Frame } from './frame';
 import { Exception } from './exception';
+import { ExecutionContext } from './execution-context';
+import { Frame } from './frame';
+import { RemoteObject } from './remote-object';
+import { BoxModel, CdpNode, CdpQuad, CdpRemoteObject, Point, Quad } from './types';
+import * as util from './util';
 
 /**
  * Represents a remote reference to DOM node.

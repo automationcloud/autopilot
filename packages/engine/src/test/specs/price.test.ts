@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import assert from 'assert';
+
 import * as priceParser from '../../main/util/price';
 
 describe('price parser', () => {
