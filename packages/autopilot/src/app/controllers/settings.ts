@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UserData } from '../userdata';
-import { PropertyDecl, ConfigValue, Configuration, getConfigDeclarations, util } from '@automationcloud/engine';
+import { Configuration, ConfigValue, getConfigDeclarations, PropertyDecl, util } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
-import { injectable, inject } from 'inversify';
-import { StorageController } from './storage';
 import { EventsController } from '../controllers/events';
+import { UserData } from '../userdata';
+import { StorageController } from './storage';
 
 export type SettingsEnv = 'staging' | 'production';
 

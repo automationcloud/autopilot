@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import moment from 'moment';
 import 'moment/locale/af';
 import 'moment/locale/ar-dz';
 import 'moment/locale/ar-kw';
@@ -136,5 +135,7 @@ import 'moment/locale/yo';
 import 'moment/locale/zh-cn';
 import 'moment/locale/zh-hk';
 import 'moment/locale/zh-tw';
+
+import moment from 'moment';
 
 export { moment };

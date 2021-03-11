@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import { ResolverService } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
-import { EventsController } from '../controllers/events';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
+import { EventsController } from '../controllers/events';
 import { ExtensionDevController } from './extension-dev';
 import { ExtensionRegistryController } from './extension-registry';
 

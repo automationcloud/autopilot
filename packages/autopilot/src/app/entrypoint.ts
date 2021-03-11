@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Vue from 'vue';
-import { App } from './app';
-import RootView from './views/root.vue';
-import * as util from './util';
-import path from 'path';
-import { getAppPath } from './globals';
-import { createControllerProvider } from './provider';
-
 import './resolve-components';
 import './resolve-controllers';
 import './directives';
+
+import path from 'path';
+import Vue from 'vue';
+
+import { App } from './app';
+import { getAppPath } from './globals';
+import { createControllerProvider } from './provider';
+import * as util from './util';
+import RootView from './views/root.vue';
 
 process.env.ENGINE_ENV = 'autopilot';
 process.env.LOG_LEVEL = 'debug';

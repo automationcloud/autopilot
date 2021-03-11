@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
-import jsonPointer from 'jsonpointer';
 import diacritics from 'diacritics';
-import { assertScript } from './assert';
+import jsonPointer from 'jsonpointer';
+import uuid from 'uuid';
+
 import { ScriptException } from '../exception';
+import { assertScript } from './assert';
 
 export interface StringComparisonOptions {
     caseSensitive?: boolean;

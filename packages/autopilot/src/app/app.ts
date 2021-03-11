@@ -12,42 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ipcRenderer } from 'electron';
-import { AppUiControllers, createUiControllers } from './ui';
-import { Controller, controllers } from './controller';
 import {
-    Engine,
-    Logger,
-    ConsoleLogger,
-    Configuration,
+    ApiRequest,
     BrowserService,
     CheckpointService,
+    Configuration,
+    ConsoleLogger,
+    Engine,
     FlowService,
-    ReporterService,
-    ProxyService,
-    ResolverService,
-    ApiRequest,
     HttpCallbackService,
+    Logger,
+    ProxyService,
+    ReporterService,
+    ResolverService,
 } from '@automationcloud/engine';
-
+import { ipcRenderer } from 'electron';
 import ms from 'ms';
-import { ViewportManager } from './viewports/viewport-manager';
+
+import { Controller, controllers } from './controller';
+import { ApiController } from './controllers/api';
+import { EventsController } from './controllers/events';
+import { ExpandableController } from './controllers/expandable';
+import { LayoutController } from './controllers/layout';
+import { ProjectController } from './controllers/project';
+import { ProtocolController } from './controllers/protocol';
+import { SettingsController } from './controllers/settings';
 import { StorageController } from './controllers/storage';
+import { ToolsController } from './controllers/tools';
+import { AutopilotApiRequest } from './overrides/api-request';
 import { AutopilotBrowserService } from './overrides/browser';
 import { AutopilotCheckpointService } from './overrides/checkpoint';
 import { AutopilotConfiguration } from './overrides/config';
 import { AutopilotFlowService } from './overrides/flow';
-import { AutopilotReporterService } from './overrides/reporter';
-import { EventsController } from './controllers/events';
-import { ToolsController } from './controllers/tools';
-import { AutopilotApiRequest } from './overrides/api-request';
 import { AutopilotHttpCallbackService } from './overrides/http-callback';
-import { SettingsController } from './controllers/settings';
-import { ProjectController } from './controllers/project';
-import { ApiController } from './controllers/api';
-import { ExpandableController } from './controllers/expandable';
-import { ProtocolController } from './controllers/protocol';
-import { LayoutController } from './controllers/layout';
+import { AutopilotReporterService } from './overrides/reporter';
+import { AppUiControllers, createUiControllers } from './ui';
+import { ViewportManager } from './viewports/viewport-manager';
 
 export class App extends Engine {
     // Deprecated

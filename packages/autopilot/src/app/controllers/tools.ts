@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
+import { BrowserService, CheckpointService } from '@automationcloud/engine';
+import { remote } from 'electron';
+import { inject, injectable } from 'inversify';
 import os from 'os';
 import path from 'path';
-import { helpers } from '../util';
-import { BrowserService, CheckpointService } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import uuid from 'uuid';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
-import { ProjectController } from './project';
-import { ApiController } from './api';
-import { ScriptDiffController } from './script-diff';
-import { PlaybackController } from './playback';
 import { version } from '../globals';
+import { helpers } from '../util';
+import { ApiController } from './api';
 import { BundlesController } from './bundles';
-import { remote } from 'electron';
+import { PlaybackController } from './playback';
+import { ProjectController } from './project';
+import { ScriptDiffController } from './script-diff';
 
 const { dialog } = remote;
 

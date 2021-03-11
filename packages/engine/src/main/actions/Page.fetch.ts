@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Action } from '../action';
-import { Pipeline } from '../pipeline';
 import { Exception } from '@automationcloud/cdp';
+
+import { Action } from '../action';
 import { params } from '../model';
-import { FetchService, FetchRequestSpec, FetchResponseSpec } from '../services';
+import { Pipeline } from '../pipeline';
+import { FetchRequestSpec, FetchResponseSpec, FetchService } from '../services';
 
 export const RETRIABLE_ERRORS = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE', 'ERR_STREAM_DESTROYED'];
 

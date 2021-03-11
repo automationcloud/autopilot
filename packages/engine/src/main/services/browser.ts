@@ -14,17 +14,18 @@
 
 import {
     Browser,
-    Page,
     CdpLoadingFailed,
-    CdpResponseReceived,
     CdpRequestWillBeSent,
-    Target,
+    CdpResponseReceived,
     Configuration,
     Logger,
     numberConfig,
+    Page,
     stringConfig,
+    Target,
 } from '@automationcloud/cdp';
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
+
 import { util } from '..';
 import { SessionHandler } from '../session';
 

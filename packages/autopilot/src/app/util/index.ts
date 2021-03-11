@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import * as clipboard from './clipboard';
-import * as dom from './dom';
 import * as csskit from './csskit';
+import * as dom from './dom';
+import * as helpers from './helpers';
 import * as keyboard from './keyboard';
 import * as menu from './menu';
-import * as helpers from './helpers';
 import * as vfx from './vfx';
 
 export { clipboard, csskit, dom, keyboard, menu, helpers, vfx };

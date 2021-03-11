@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as model from './model';
-import { Pipeline } from './pipeline';
+import { Container } from 'inversify';
+
 import { Action } from './action';
 import { Context } from './context';
-import { Script } from './script';
 import { Element } from './element';
-import { parseModuleMetadata, ModuleMetadata, Module } from './module';
-import { Container } from 'inversify';
+import * as model from './model';
+import { Module, ModuleMetadata, parseModuleMetadata } from './module';
+import { Pipeline } from './pipeline';
+import { Script } from './script';
 
 /**
  * Base class of Action and Pipe, manages parameter (de)serialization and

@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import { Action } from '../action';
-import { Pipeline } from '../pipeline';
-import * as util from '../util';
-import { BlobService } from '../services';
 import { params } from '../model';
+import { Pipeline } from '../pipeline';
+import { BlobService } from '../services';
+import * as util from '../util';
 
 export class InputFileAction extends Action {
-    static $type = 'Page.inputFile';;
+    static $type = 'Page.inputFile';
     static $icon = 'far fa-file';
     static $help = `
 Sets file (blob data) to \`<input type = "file" />\`.

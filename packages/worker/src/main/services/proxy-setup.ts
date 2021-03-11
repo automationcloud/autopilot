@@ -14,6 +14,7 @@
 
 import { Configuration, ProxyService, SessionHandler, stringConfig } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { Execution, ProxyConnection } from '../types';
 import { ApiService } from './api';
 import { WorkerState } from './state';

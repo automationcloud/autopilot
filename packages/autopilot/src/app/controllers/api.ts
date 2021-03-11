@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CdpCookie, GlobalValue, ApiRequest } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { ApiRequest, CdpCookie, GlobalValue } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 
 export interface RequestOptions {

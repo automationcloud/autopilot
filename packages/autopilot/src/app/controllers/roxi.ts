@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ProxyConfig, ApiController } from './api';
-import { injectable, inject } from 'inversify';
+import { ApiRequest, Configuration, ProxyService, uniproxy } from '@automationcloud/engine';
+import { MenuItemConstructorOptions } from 'electron';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
-import { ProxyService, ApiRequest, Configuration, uniproxy } from '@automationcloud/engine';
 import { UserData } from '../userdata';
-import { StorageController } from './storage';
 import { popupMenu } from '../util/menu';
-import { MenuItemConstructorOptions } from 'electron';
+import { ApiController, ProxyConfig } from './api';
+import { StorageController } from './storage';
 
 export type ProxyConnectionType = 'direct' | 'proxy';
 

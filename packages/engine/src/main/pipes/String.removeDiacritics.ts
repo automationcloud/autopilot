@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as util from '../util';
-import { Pipe } from '../pipe';
+import diacritics from 'diacritics';
+
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-import diacritics from 'diacritics';
+import { Pipe } from '../pipe';
+import * as util from '../util';
 
 export class RemoveDiacriticsPipe extends Pipe {
     static $type = 'String.removeDiacritics';

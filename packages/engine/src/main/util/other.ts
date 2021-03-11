@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import diacritics from 'diacritics';
+import levenshtein from 'fast-levenshtein';
 import moment from 'moment';
 import htmlSanitizer from 'sanitize-html';
-import levenshtein from 'fast-levenshtein';
-import diacritics from 'diacritics';
 
 export { levenshtein };
 
@@ -97,8 +97,8 @@ export const sanitizeOptions = {
     ],
     allowedAttributes: {
         '*': ['colspan', 'rowspan', 'align'],
-        'a': ['href'],
-        'img': ['src'],
+        a: ['href'],
+        img: ['src'],
     },
 };
 

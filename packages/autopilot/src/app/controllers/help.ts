@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { ResolverService } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { mdToHtml } from '../util/helpers';
-import { inject, injectable } from 'inversify';
-import { ResolverService } from '@automationcloud/engine';
 import { ModalsController } from './modals';
 
 @injectable()

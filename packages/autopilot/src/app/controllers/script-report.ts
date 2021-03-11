@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { InspectionReport, InspectionLevel } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { InspectionLevel, InspectionReport } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { ProjectController } from './project';
 

@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { EditEntityCommand } from './cmd';
 import { Action } from '@automationcloud/engine';
+
+import { EditEntityCommand } from './cmd';
 
 export class EditActionCommand extends EditEntityCommand<Action> {
     static title = 'Edit Action';

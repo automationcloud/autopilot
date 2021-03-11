@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Context, Action, Script, Engine, BrowserService } from '@automationcloud/engine';
+import { Action, BrowserService, Context, Engine, Script } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { App } from '../app';
 import { controller } from '../controller';
 import { ExpandableController } from './expandable';
@@ -192,11 +193,11 @@ export class PlaybackController {
             'context.leave': (c: Context) => this.onContextLeave(c),
             'action.start': (a: Action) => this.onActionStart(a),
             'action.end': (a: Action) => this.onActionEnd(a),
-            'beforeCurrentTask': () => (mode === 'action' ? {} : this.onBeforeCurrentTask()),
-            'success': () => this.onSuccess(),
-            'fail': (err: any) => this.onFail(err),
-            'input': (input: any) => this.onInput(input),
-            'output': (output: any) => this.onOutput(output),
+            beforeCurrentTask: () => (mode === 'action' ? {} : this.onBeforeCurrentTask()),
+            success: () => this.onSuccess(),
+            fail: (err: any) => this.onFail(err),
+            input: (input: any) => this.onInput(input),
+            output: (output: any) => this.onOutput(output),
         };
         try {
             for (const [k, fn] of Object.entries(scriptListeners)) {

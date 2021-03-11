@@ -14,10 +14,10 @@
 
 import { Action } from '../action';
 import { params } from '../model';
-import { UserAgentService } from '../services/user-agent';
 import { Pipeline } from '../pipeline';
 // import * as util from '../util';
 import { JsonSchema } from '../schema';
+import { UserAgentService } from '../services/user-agent';
 
 export class SetUserAgentAction extends Action {
     static $type = 'Page.setUserAgent';

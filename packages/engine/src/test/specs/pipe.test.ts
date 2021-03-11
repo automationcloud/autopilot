@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../runtime';
 import assert from 'assert';
 import jsonPointer from 'jsonpointer';
-import { Pipe, Element } from '../../main';
+
+import { Element, Pipe } from '../../main';
 import { params } from '../../main/model';
+import { runtime } from '../runtime';
 
 describe('Pipe', () => {
 

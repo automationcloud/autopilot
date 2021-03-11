@@ -13,8 +13,9 @@
 // limitations under the License.
 
 /* eslint-disable no-console */
-import { FlowService, Engine, BrowserService, Script } from '../main';
 import { promises as fs } from 'fs';
+
+import { BrowserService, Engine, FlowService, Script } from '../main';
 
 process.env.LOG_LEVEL = 'mute';
 

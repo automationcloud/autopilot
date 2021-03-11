@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Extension, ExtensionVersion, ExtensionManifest } from '../extension';
-import { stringConfig, Configuration, Logger } from '@automationcloud/cdp';
-import path from 'path';
-import { inject, injectable } from 'inversify';
+import { Configuration, Logger, stringConfig } from '@automationcloud/cdp';
 import { promises as fs } from 'fs';
-import tar from 'tar';
-import { ApiRequest } from './api-request';
+import { inject, injectable } from 'inversify';
+import path from 'path';
 import rimraf from 'rimraf';
+import tar from 'tar';
 import { promisify } from 'util';
+
+import { Extension, ExtensionManifest, ExtensionVersion } from '../extension';
+import { ApiRequest } from './api-request';
 
 const rimrafAsync = promisify(rimraf);
 

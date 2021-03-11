@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { RuntimeCtx } from '../ctx';
+import { Element } from '../element';
 import { params } from '../model';
 import { Pipe } from '../pipe';
 import { Pipeline } from '../pipeline';
-import { RuntimeCtx } from '../ctx';
-import { Element } from '../element';
 
 export class ListAppend extends Pipe {
     static $type = 'List.append';

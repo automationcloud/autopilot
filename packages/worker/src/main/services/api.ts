@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Execution, Checkpoint, ProxyConnection } from '../types';
 import {
-    Context,
     Action,
-    CheckpointData,
     ApiRequest,
+    CheckpointData,
+    Context,
 } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
+import { Checkpoint, Execution, ProxyConnection } from '../types';
 import { WorkerInfo } from './state';
 
 export interface RequestOptions {

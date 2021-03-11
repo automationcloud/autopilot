@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { booleanConfig } from '@automationcloud/engine';
+
 import { App } from '../app';
 import { UserData } from '../userdata';
-import { booleanConfig } from '@automationcloud/engine';
 
 const UI_SHOW_FREQUENT_ITEMS = booleanConfig('UI_SHOW_FREQUENT_ITEMS', true);
 

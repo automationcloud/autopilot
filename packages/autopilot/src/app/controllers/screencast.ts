@@ -1,5 +1,6 @@
 import { BrowserService } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { UserData } from '../userdata';

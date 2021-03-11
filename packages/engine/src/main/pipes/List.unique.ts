@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import jsonStableStringify from 'fast-json-stable-stringify';
+
 import { Pipe } from '..';
 import { Element } from '../element';
-import jsonStableStringify from 'fast-json-stable-stringify';
 
 export class ListUnique extends Pipe {
     static $type = 'List.unique';

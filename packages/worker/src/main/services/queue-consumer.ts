@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { WorkerState } from './state';
-import { Runner } from './runner';
+import { Configuration, Logger, numberConfig } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import { Redis } from 'ioredis';
+
 import { RedisProvider } from './redis';
-import { Logger, Configuration, numberConfig } from '@automationcloud/engine';
+import { Runner } from './runner';
+import { WorkerState } from './state';
 
 const EXECUTIONS_THRESHOLD = numberConfig('EXECUTIONS_THRESHOLD', 100);
 

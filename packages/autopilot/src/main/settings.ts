@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
-import os from 'os';
-import { promises as fs, readFileSync } from 'fs';
-import path from 'path';
 import debounce from 'debounce-promise';
+import { promises as fs, readFileSync } from 'fs';
+import os from 'os';
+import path from 'path';
+import uuid from 'uuid';
 
 const DEFAULT_SETTINGS: Settings = {
     instanceId: uuid.v4(),

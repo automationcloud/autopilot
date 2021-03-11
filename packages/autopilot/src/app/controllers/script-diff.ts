@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UserData } from '../userdata';
-import { Script, booleanConfig, util, Engine } from '@automationcloud/engine';
+import { booleanConfig, Engine, Script, util } from '@automationcloud/engine';
 import { createHash } from 'crypto';
 import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
+import { UserData } from '../userdata';
+import { EventsController } from './events';
 import { SettingsController } from './settings';
 import { StorageController } from './storage';
-import { controller } from '../controller';
-import { EventsController } from './events';
 
 const UI_DIFF_ENABLED = booleanConfig('UI_DIFF_ENABLED', true);
 

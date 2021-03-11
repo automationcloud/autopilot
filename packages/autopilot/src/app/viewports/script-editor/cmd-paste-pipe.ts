@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Command } from '../../command';
-import { ScriptEditorViewport } from '.';
-import { clipboard } from '../../util';
 import { model } from '@automationcloud/engine';
+
+import { Command } from '../../command';
+import { clipboard } from '../../util';
+import { ScriptEditorViewport } from '.';
 
 export class PastePipeCommand extends Command<ScriptEditorViewport> {
     listPath: string = '';

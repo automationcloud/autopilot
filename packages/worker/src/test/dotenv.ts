@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import path from 'path';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config({
     path: path.resolve(process.cwd(), '.env.test'),

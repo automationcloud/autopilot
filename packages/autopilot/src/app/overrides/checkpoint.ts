@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CheckpointService, CheckpointData } from '@automationcloud/engine';
+import { CheckpointData, CheckpointService } from '@automationcloud/engine';
 import { injectable } from 'inversify';
 
 @injectable()

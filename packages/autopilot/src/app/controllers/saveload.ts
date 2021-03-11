@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { shell } from 'electron';
+import { promises as fs } from 'fs';
 import { inject, injectable } from 'inversify';
 import path from 'path';
-import { promises as fs } from 'fs';
+
 import { controller } from '../controller';
+import { Automation, AutomationMetadata } from '../entities/automation';
 import { UserData } from '../userdata';
-import { AutosaveController } from './autosave';
-import { ModalsController } from './modals';
-import { ProjectController } from './project';
-import { StorageController } from './storage';
+import { acUrls } from '../util';
 import { ApiController, ApiService } from './api';
+import { ApiLoginController } from './api-login';
+import { AutosaveController } from './autosave';
+import { BundlesController } from './bundles';
+import { EventsController } from './events';
+import { ModalsController } from './modals';
+import { NotificationsController } from './notifications';
+import { ProjectController } from './project';
 import { ScriptDiffController } from './script-diff';
 import { SettingsController } from './settings';
-import { EventsController } from './events';
-import { Automation, AutomationMetadata } from '../entities/automation';
-import { BundlesController } from './bundles';
-import { shell } from 'electron';
-import { acUrls } from '../util';
-import { NotificationsController } from './notifications';
-import { ApiLoginController } from './api-login';
+import { StorageController } from './storage';
 
 @injectable()
 @controller({ alias: 'saveload' })

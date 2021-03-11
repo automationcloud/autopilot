@@ -15,9 +15,9 @@
 import WebSocket from 'ws';
 
 import { Browser } from './browser';
+import { Exception } from './exception';
 import { Target } from './target';
 import { CdpTargetInfo } from './types';
-import { Exception } from './exception';
 
 const TARGET_ATTACH_TIMEOUT = 1000;
 

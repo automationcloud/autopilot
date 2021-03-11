@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { EventEmitter } from 'events';
-import { ScriptFlowViewport } from '.';
 import { Action, ActionList } from '@automationcloud/engine';
+import { EventEmitter } from 'events';
+
 import { clipboard } from '../../util';
+import { ScriptFlowViewport } from '.';
 
 export class DragAndDropActionsController extends EventEmitter {
     viewport: ScriptFlowViewport;

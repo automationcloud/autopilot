@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { booleanConfig, BrowserService, ProxyService, stringConfig, Target } from '@automationcloud/engine';
+import { ChildProcess, spawn } from 'child_process';
+import { inject, injectable } from 'inversify';
 import os from 'os';
 import path from 'path';
-import { spawn, ChildProcess } from 'child_process';
-import { Target, stringConfig, BrowserService, ProxyService, booleanConfig } from '@automationcloud/engine';
+
 import { controller } from '../controller';
-import { injectable, inject } from 'inversify';
-import { SettingsController } from './settings';
 import { EventsController } from '../controllers/events';
+import { SettingsController } from './settings';
 
 const CHROME_PATH = stringConfig('CHROME_PATH', '');
 const CHROME_STDIO = stringConfig('CHROME_STDIO', 'ignore');
@@ -140,7 +141,7 @@ export class ChromeManagerController {
     }
 
     async restartChrome() {
-        await new Promise((resolve) => {
+        await new Promise(resolve => {
             if (this.chromeProcess) {
                 this.chromeProcess.on('exit', resolve);
                 this.chromeProcess.kill('SIGTERM');

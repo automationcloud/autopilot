@@ -12,24 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { remote, MenuItemConstructorOptions, ipcRenderer } from 'electron';
-import { injectable, inject } from 'inversify';
-import { EventsController } from '../controllers/events';
-import debounce from 'debounce';
 import { booleanConfig, ProxyService } from '@automationcloud/engine';
-import { SettingsController } from './settings';
-import { ViewportManager } from '../viewports/viewport-manager';
-import { ProjectController } from './project';
+import debounce from 'debounce';
+import { ipcRenderer, MenuItemConstructorOptions, remote } from 'electron';
+import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
+import { EventsController } from '../controllers/events';
 import { dom, helpers } from '../util';
 import { Viewport } from '../viewport';
+import { ViewportManager } from '../viewports/viewport-manager';
+import { AutosaveController } from './autosave';
 import { EmulationController } from './emulation';
-import { ToolsController } from './tools';
-import { controller } from '../controller';
-import { ProtocolController } from './protocol';
 import { LayoutController } from './layout';
 import { PlaybackController } from './playback';
-import { AutosaveController } from './autosave';
+import { ProjectController } from './project';
+import { ProtocolController } from './protocol';
 import { SaveLoadController } from './saveload';
+import { SettingsController } from './settings';
+import { ToolsController } from './tools';
 
 const UI_HIDE_MENU = booleanConfig('UI_HIDE_MENU', true);
 

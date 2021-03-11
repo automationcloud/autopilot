@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Command } from '../../command';
 import { Pipeline, util } from '@automationcloud/engine';
+
+import { Command } from '../../command';
 import { ScriptEditorViewport } from '.';
 
 export class DeletePipeCommand extends Command<ScriptEditorViewport> {

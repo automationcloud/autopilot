@@ -9,6 +9,7 @@ const FormData = require('form-data');
 const inquirer = require('inquirer');
 
 const { version } = require('./package.json');
+
 const isGA = /-GA/.test(version);
 
 const SLACK_TOKEN = process.env.SLACK_TOKEN;

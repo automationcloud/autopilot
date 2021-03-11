@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { RegistryService } from '@automationcloud/engine';
+
 import { WorkerBaseApp } from '../main';
 import { TestHelpers } from './helpers';
-import { RegistryService } from '@automationcloud/engine';
 import { RegistryServiceMock } from './mocks/registry';
 
 export class TestRuntime {

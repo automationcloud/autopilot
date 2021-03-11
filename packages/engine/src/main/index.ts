@@ -14,6 +14,11 @@
 
 import 'reflect-metadata';
 
+import * as uniproxy from '@automationcloud/uniproxy';
+
+import * as model from './model';
+import * as util from './util';
+
 export * from '@automationcloud/cdp';
 export * from '@automationcloud/request';
 
@@ -35,9 +40,5 @@ export * from './script';
 export * from './search';
 export * from './services';
 export * from './session';
-
-import * as uniproxy from '@automationcloud/uniproxy';
-import * as util from './util';
-import * as model from './model';
 const params = model.params;
 export { util, model, params, uniproxy };

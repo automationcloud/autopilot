@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CreateContextCommand } from './cmd-create-context';
-import { FlowCopyCommand } from './cmd-copy';
-import { FlowCutCommand } from './cmd-cut';
-import { FlowPasteCommand } from './cmd-paste';
-import { FlowDeleteCommand } from './cmd-delete';
-import { CreateActionsCommand } from './cmd-create-actions';
-import { ResetCommand } from './cmd-reset';
-import { ChangeActionTypeCommand } from './cmd-change-action-type';
 import { ContextType } from '@automationcloud/engine';
+
 import { ScriptFlowViewport } from '.';
+import { ChangeActionTypeCommand } from './cmd-change-action-type';
+import { FlowCopyCommand } from './cmd-copy';
+import { CreateActionsCommand } from './cmd-create-actions';
+import { CreateContextCommand } from './cmd-create-context';
+import { FlowCutCommand } from './cmd-cut';
+import { FlowDeleteCommand } from './cmd-delete';
+import { FlowPasteCommand } from './cmd-paste';
+import { ResetCommand } from './cmd-reset';
 
 export class ScriptFlowCommandsController {
     viewport: ScriptFlowViewport;

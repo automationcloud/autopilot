@@ -1,4 +1,5 @@
 import { injectable } from 'inversify';
+
 import { controller } from '../controller';
 
 @injectable()

@@ -14,6 +14,7 @@
 
 import { ApiRequest, Configuration } from '@automationcloud/engine';
 import { inject } from 'inversify';
+
 import { OAuth2Agent } from '../../../../engine/out/main';
 import { EventsController } from '../controllers/events';
 

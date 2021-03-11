@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Command } from './command';
 import { App } from './app';
+import { Command } from './command';
 import { Viewport } from './viewport';
 
 // A delay during which sequential commands may be merged into one.

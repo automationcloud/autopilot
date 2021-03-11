@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { CheckpointService, CheckpointData } from '../../main';
 import { injectable } from 'inversify';
+
+import { CheckpointData, CheckpointService } from '../../main';
 
 @injectable()
 export class CheckpointServiceMock extends CheckpointService {

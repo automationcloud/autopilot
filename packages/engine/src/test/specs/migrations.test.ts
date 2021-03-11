@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../runtime';
 import assert from 'assert';
+
 import { actionRenameMap, pipeRenameMap } from '../../main/migrations';
+import { runtime } from '../runtime';
 
 describe('Migrations', () => {
 

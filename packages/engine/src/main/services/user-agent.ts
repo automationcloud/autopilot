@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { stringConfig, Configuration, Logger, Target } from '@automationcloud/cdp';
+import { Configuration, Logger, stringConfig, Target } from '@automationcloud/cdp';
 import { inject, injectable } from 'inversify';
-import { BrowserService } from './browser';
+
 import { SessionHandler } from '../session';
+import { BrowserService } from './browser';
 
 const USER_AGENT = stringConfig(
     'USER_AGENT',

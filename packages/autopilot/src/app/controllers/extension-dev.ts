@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { UserData } from '../userdata';
-import { Extension, ApiRequest } from '@automationcloud/engine';
+import { ApiRequest, Extension } from '@automationcloud/engine';
 import chokidar from 'chokidar';
-import { injectable, inject } from 'inversify';
-import { StorageController } from './storage';
+import { debounce } from 'debounce';
 import { remote } from 'electron';
 import { promises as fs } from 'fs';
-import path from 'path';
-import { EventsController } from '../controllers/events';
-import { controller } from '../controller';
-import { SettingsController } from './settings';
-import { rimrafAsync } from '../util/helpers';
-import { getAppPath } from '../globals';
-import { debounce } from 'debounce';
+import { inject, injectable } from 'inversify';
 import os from 'os';
+import path from 'path';
+
+import { controller } from '../controller';
+import { EventsController } from '../controllers/events';
+import { getAppPath } from '../globals';
+import { UserData } from '../userdata';
+import { rimrafAsync } from '../util/helpers';
+import { SettingsController } from './settings';
+import { StorageController } from './storage';
 
 @injectable()
 @controller({ alias: 'extDev', priority: 1001 })

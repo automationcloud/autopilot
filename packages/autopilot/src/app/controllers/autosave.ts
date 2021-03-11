@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { inject, injectable } from 'inversify';
-import { controller } from '../controller';
 import { promises as fs } from 'fs';
-import path from 'path';
-import { StorageController } from './storage';
+import { inject, injectable } from 'inversify';
 import moment from 'moment';
+import path from 'path';
 import rimraf from 'rimraf';
 import { promisify } from 'util';
+
+import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { Automation } from '../entities/automation';
+import { StorageController } from './storage';
 
 const rimrafAsync = promisify(rimraf);
 

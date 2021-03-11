@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Controller } from '../controller';
 import { App } from '../app';
+import { Controller } from '../controller';
 
 export class ObjectsController implements Controller {
     constructor(public app: App) {}

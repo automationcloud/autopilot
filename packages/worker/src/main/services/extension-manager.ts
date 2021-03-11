@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RegistryService, ResolverService, SessionHandler, Logger } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { Logger, RegistryService, ResolverService, SessionHandler } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 @SessionHandler()

@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { fuzzySearch } from '@automationcloud/fuzzy-search';
+
 import { App } from '../app';
 import { Controller } from '../controller';
-import { fuzzySearch } from '@automationcloud/fuzzy-search';
 
 export interface ModalMenuItem {
     label?: string;

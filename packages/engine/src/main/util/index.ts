@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import ajv from 'ajv';
+import Json5 from 'json5';
+import jsonPointer from 'jsonpointer';
+
+import { moment } from './moment';
+
 export * from './assert';
 export * from './data';
 export * from './error';
@@ -23,11 +29,6 @@ export * from './parse';
 export * from './price';
 export * from './currencies';
 export * from './events';
-
-import Json5 from 'json5';
-import ajv from 'ajv';
-import jsonPointer from 'jsonpointer';
-import { moment } from './moment';
 
 export {
     moment,

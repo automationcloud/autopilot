@@ -13,7 +13,8 @@
 // limitations under the License.
 
 import { booleanConfig } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { SettingsController } from './settings';
 

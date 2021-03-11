@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { Action } from '../action';
+import { params } from '../model';
 import { Pipeline } from '../pipeline';
 import * as util from '../util';
 import { collectIfElseChain } from './Flow.if';
-import { params } from '../model';
 
 export class ElseIfAction extends Action {
     static $type = 'Flow.elseIf';

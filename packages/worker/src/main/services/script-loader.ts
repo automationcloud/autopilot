@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Logger, Configuration, numberConfig, Script, Engine, ResolverService } from '@automationcloud/engine';
-import { ApiService } from './api';
+import { Configuration, Engine, Logger, numberConfig, ResolverService, Script } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import LRU from 'lru-cache';
+
+import { ApiService } from './api';
 
 const SCRIPT_CACHE_MAX_SIZE = numberConfig('SCRIPT_CACHE_MAX_SIZE', 100);
 

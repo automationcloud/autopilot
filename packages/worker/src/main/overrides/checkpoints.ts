@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Logger, CheckpointService, GlobalsService, BrowserService, CheckpointData } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { BrowserService, CheckpointData, CheckpointService, GlobalsService, Logger } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { ApiService } from '../services/api';
 import { WorkerState } from '../services/state';
 

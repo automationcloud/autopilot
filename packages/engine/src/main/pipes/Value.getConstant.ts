@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pipe } from '../pipe';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-import * as util from '../util';
 import { params } from '../model';
+import { Pipe } from '../pipe';
+import * as util from '../util';
 
 export class ValueGetConstant extends Pipe {
     static $type = 'Value.getConstant';

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Script } from './script';
 import { Context } from './context';
+import { Script } from './script';
 
 export const sessionHandlers: Set<SessionConstructor> = new Set();
 

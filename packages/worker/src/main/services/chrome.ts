@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
 import {
-    ChromeLauncher,
-    BrowserService,
-    ProxyService,
-    Configuration,
-    stringConfig,
     booleanConfig,
+    BrowserService,
+    ChromeLauncher,
+    Configuration,
     numberConfig,
+    ProxyService,
+    stringConfig,
 } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 
 const CHROME_ADDITIONAL_ARGS = stringConfig('CHROME_ADDITIONAL_ARGS', '');
 const CHROME_PATH = stringConfig('CHROME_PATH');

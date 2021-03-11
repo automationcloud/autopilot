@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import path from 'path';
+import { ActionClass, Engine, PipeClass, ResolverService } from '@automationcloud/engine';
 import { promises as fs } from 'fs';
 import marked from 'marked';
-import { PipeClass, ActionClass, Engine, ResolverService } from '@automationcloud/engine';
+import path from 'path';
 
 const targetDir = path.join(process.cwd(), '../../docs');
 

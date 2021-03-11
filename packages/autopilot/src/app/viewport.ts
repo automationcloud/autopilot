@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from './app';
-import { UserData } from './userdata';
 import { util } from '@automationcloud/engine';
-import { CommandBuffer } from './command-buffer';
 import { MenuItemConstructorOptions } from 'electron';
+
+import { App } from './app';
+import { CommandBuffer } from './command-buffer';
+import { UserData } from './userdata';
 import { dom } from './util';
 
 export abstract class Viewport<State> {

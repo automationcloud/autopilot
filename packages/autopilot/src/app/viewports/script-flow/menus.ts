@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import os from 'os';
-import { ModalMenuItem } from '../../ui/modal-menu';
 import {
-    ContextList,
-    MatcherList,
-    DefinitionList,
-    ActionList,
     ActionClass,
+    ActionList,
+    ContextList,
+    DefinitionList,
+    MatcherList,
     model,
 } from '@automationcloud/engine';
-import { ScriptFlowViewport } from '.';
-import { dom } from '../../util';
+import { Domain, InputDef } from '@ubio/protocol';
 import { MenuItemConstructorOptions } from 'electron';
-import { InputDef, Domain } from '@ubio/protocol';
-import { PlaybackController } from '../../controllers/playback';
+import os from 'os';
+
 import { HelpController } from '../../controllers/help';
+import { PlaybackController } from '../../controllers/playback';
+import { ModalMenuItem } from '../../ui/modal-menu';
+import { dom } from '../../util';
+import { ScriptFlowViewport } from '.';
 
 const standardActionCategories = [
     'Page',

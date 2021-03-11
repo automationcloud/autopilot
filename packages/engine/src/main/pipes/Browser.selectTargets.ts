@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { params } from '../model';
-import { Pipe } from '../pipe';
+import { Page } from '@automationcloud/cdp';
+import URL from 'url';
+
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-import { Page } from '@automationcloud/cdp';
-
-import URL from 'url';
+import { params } from '../model';
+import { Pipe } from '../pipe';
 
 export class SelectTargets extends Pipe {
     static $type = 'Browser.selectTargets';

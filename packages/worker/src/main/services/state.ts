@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Execution } from '../types';
-import { Script, util, Configuration, stringConfig, uniproxy } from '@automationcloud/engine';
+import { Configuration, Script, stringConfig, uniproxy, util } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import uuid from 'uuid';
+
+import { Execution } from '../types';
+
 const pkg = (require as any)('../../../package.json');
 
 const WORKER_TAG = stringConfig('WORKER_TAG');

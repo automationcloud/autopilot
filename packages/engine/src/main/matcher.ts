@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Action } from './action';
-import { Pipeline } from './pipeline';
-import { params } from './model';
-import * as util from './util';
 import { Exception } from '@automationcloud/cdp';
+
+import { Action } from './action';
+import { params } from './model';
+import { Pipeline } from './pipeline';
+import * as util from './util';
 
 export class MatcherAction extends Action {
     static $type = 'matcher';

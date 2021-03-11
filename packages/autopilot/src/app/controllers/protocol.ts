@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ProtocolProvider, Domain } from '@ubio/protocol';
-import { injectable, inject } from 'inversify';
+import { Domain, ProtocolProvider } from '@ubio/protocol';
+import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
-import { ProjectController } from './project';
 import { EventsController } from '../controllers/events';
-import { ExecutionError, ApiController } from './api';
+import { ApiController, ExecutionError } from './api';
+import { ProjectController } from './project';
 
 @injectable()
 @controller({ alias: 'protocol', backgroundInit: true })

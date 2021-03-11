@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from'../../runtime';
+import { runtime } from '../../runtime';
 
 describe('Pipes: other/assert-exists', () => {
     it('throws a custom error code', async () => {

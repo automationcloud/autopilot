@@ -13,22 +13,22 @@
 // limitations under the License.
 
 import { App } from '../app';
+import { LayoutDirection } from '../util/layout-item';
+import { Viewport } from '../viewport';
 import {
     BrowserViewport,
+    BundlesViewport,
     ExtensionsViewport,
+    HelpResourcesViewport,
     InspectionsViewport,
     PlaybackEventsViewport,
     RecipesViewport,
+    ScreencastViewport,
     ScriptEditorViewport,
     ScriptFlowViewport,
     SearchScriptsViewport,
-    ScreencastViewport,
     SettingsViewport,
-    HelpResourcesViewport,
-    BundlesViewport,
 } from '../viewports';
-import { Viewport } from '../viewport';
-import { LayoutDirection } from '../util/layout-item';
 
 export class ViewportManager {
     app: App;

@@ -14,10 +14,11 @@
 
 import { ApiRequest, BrowserService } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
-import { instanceId } from '../globals';
 import os from 'os';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
+import { instanceId } from '../globals';
 
 // eslint-disable-next-line import/no-commonjs
 const pkg = require('../../../package.json');

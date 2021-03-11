@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Frame } from './frame';
-import { RemoteObject } from './remote-object';
-import { RemoteElement } from './remote-element';
-import { CdpRemoteObject } from './types';
-import { contentScripts } from './inject';
 import { Exception } from './exception';
+import { Frame } from './frame';
+import { contentScripts } from './inject';
+import { RemoteElement } from './remote-element';
+import { RemoteObject } from './remote-object';
+import { CdpRemoteObject } from './types';
 
 /**
  * In Chrome architecture each page/frame has a default execution context,

@@ -14,11 +14,12 @@
 
 import { clamp, util } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
+
 import { controller } from '../controller';
-import { ViewportManager } from '../viewports/viewport-manager';
 import { UserData } from '../userdata';
 import { LayoutDirection, LayoutItem } from '../util/layout-item';
 import { Viewport } from '../viewport';
+import { ViewportManager } from '../viewports/viewport-manager';
 import { StorageController } from './storage';
 
 @injectable()

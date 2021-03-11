@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pipe } from '../pipe';
+import jsonPointer from 'jsonpointer';
+
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
-import * as util from '../util';
 import { params } from '../model';
-import jsonPointer from 'jsonpointer';
+import { Pipe } from '../pipe';
+import * as util from '../util';
 
 export class ObjectFromEntries extends Pipe {
     static $type = 'Object.fromEntries';

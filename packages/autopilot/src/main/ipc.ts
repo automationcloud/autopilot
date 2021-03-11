@@ -1,7 +1,8 @@
-import { getProfile, getAllProfiles, createNewProfile } from './settings';
 import { ipcMain } from 'electron';
-import { windows, createWindow } from './windows';
+
+import { createNewProfile, getAllProfiles, getProfile } from './settings';
 import { getUpdateInfo, installUpdates } from './updater';
+import { createWindow, windows } from './windows';
 
 export function initIpcListeners() {
 

@@ -12,24 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { WorkerState } from './state';
-import { ApiService } from './api';
-import { Execution } from '../types';
-import { ChromeLaunchService } from './chrome';
 import {
-    Script,
-    util,
-    Context,
     Action,
-    ReporterService,
     BrowserService,
     CheckpointService,
+    Context,
     Engine,
     Logger,
+    ReporterService,
+    Script,
+    util,
 } from '@automationcloud/engine';
-import { SignalsService } from './signals';
+import { inject, injectable } from 'inversify';
+
+import { Execution } from '../types';
+import { ApiService } from './api';
+import { ChromeLaunchService } from './chrome';
 import { ScriptLoaderService } from './script-loader';
+import { SignalsService } from './signals';
+import { WorkerState } from './state';
 
 @injectable()
 export class Runner {

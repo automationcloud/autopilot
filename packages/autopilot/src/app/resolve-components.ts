@@ -17,7 +17,7 @@ import Vue from 'vue';
 /**
  * Dynamically resolves the contents of `./components` directory.
  */
-(function () {
+(function() {
     // https://webpack.js.org/guides/dependency-management/#requirecontext
     const resolve = (require as any).context('./components', true, /\.vue$/);
     for (const key of resolve.keys()) {

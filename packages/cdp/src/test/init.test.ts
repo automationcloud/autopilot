@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { launcher, runtime } from './globals';
-
 import './server';
+
+import { launcher, runtime } from './globals';
 
 before(async () => {
     await launcher.launch();

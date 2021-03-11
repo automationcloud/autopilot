@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import http from 'http';
-import uuid from 'uuid';
-import * as util from '../util';
-import querystring from 'querystring';
-import FormData from 'form-data';
-import { injectable, inject } from 'inversify';
-import nodeFetch, { RequestInit } from 'node-fetch';
 import { CdpHeaders, Logger } from '@automationcloud/cdp';
+import { HttpProxyAgent, HttpsProxyAgent } from '@automationcloud/uniproxy';
+import FormData from 'form-data';
+import http from 'http';
+import { inject, injectable } from 'inversify';
+import nodeFetch, { RequestInit } from 'node-fetch';
+import querystring from 'querystring';
+import uuid from 'uuid';
+
+import * as util from '../util';
 import { BlobService } from './blob';
 import { BrowserService } from './browser';
 import { ProxyService } from './proxy';
-import { HttpProxyAgent, HttpsProxyAgent } from '@automationcloud/uniproxy';
 
 export const RETRIABLE_ERRORS = ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'EPIPE', 'ERR_STREAM_DESTROYED'];
 
