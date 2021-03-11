@@ -56,7 +56,7 @@ export class Connection {
         if (this.ws) {
             return;
         }
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.webSocketDebuggerUrl = webSocketDebuggerUrl;
             const ws = new WebSocket(webSocketDebuggerUrl, {
                 perMessageDeflate: false,

@@ -93,7 +93,7 @@ export class NetworkManager {
     }
 
     async waitForFinish(requestId: string, timeout: number = 30000) {
-        return await new Promise((resolve, reject) => {
+        return await new Promise<void>((resolve, reject) => {
             const timer = setTimeout(onTimeout, timeout);
             const { target } = this.page;
             target.addListener('Network.loadingFinished', onFinished);

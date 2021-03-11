@@ -40,7 +40,7 @@ export class ControlServer {
     }
 
     async start() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.server.listen(this.port, () => {
                 const port = this.getServerPort();
                 console.info(`Server is running on http://localhost:${port}`);

@@ -132,7 +132,7 @@ export class ChromeLauncher {
     }
 
     async shutdown(timeout: number) {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             if (!this.childProcess) {
                 return resolve();
             }
@@ -178,7 +178,7 @@ export class ChromeLauncher {
 
     async tryConnect() {
         const { chromePort } = this.options;
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const onConnect = () => {
                 socket.destroy();
                 resolve();

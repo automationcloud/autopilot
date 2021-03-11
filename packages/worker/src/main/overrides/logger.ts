@@ -18,24 +18,27 @@ import { WorkerState } from '../services/state';
 
 @injectable()
 export class WorkerLogger extends StandardLogger {
+    _contextData: object = {};
+
     constructor(
         @inject(WorkerState)
         protected state: WorkerState,
     ) {
         super();
+
+        Object.defineProperties(this, {
+            contextData: {
+                get() {
+                    return {
+                        ...this.state.getInfo(),
+                        ...this._contextData,
+                    };
+                },
+                set(data: object) {
+                    this._contextData = data;
+                }
+            }
+        });
     }
 
-    _contextData: object = {};
-
-    get contextData() {
-        // Note: this solves circular dependency problem.
-        return {
-            ...this.state.getInfo(),
-            ...this._contextData,
-        };
-    }
-
-    set contextData(data: object) {
-        this._contextData = data;
-    }
 }

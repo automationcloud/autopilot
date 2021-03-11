@@ -88,7 +88,7 @@ export abstract class Pipe extends Unit<Pipeline> {
      * @param list An array of input elements produced by previous pipe or by Action scope.
      * @param ctx Action runtime context.
      */
-    abstract async apply(list: Element[], ctx: RuntimeCtx): Promise<Element[]>;
+    abstract apply(list: Element[], ctx: RuntimeCtx): Promise<Element[]>;
 
     /**
      * Entity type, used for reflection.
