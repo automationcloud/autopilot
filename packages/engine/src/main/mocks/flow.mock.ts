@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable } from 'inversify';
 import assert from 'assert';
-import { FlowService } from '../services';
+import { injectable } from 'inversify';
+
 import { ScriptInput, ScriptOutput } from '../script';
+import { FlowService } from '../services';
 
 @injectable()
 export class FlowServiceMock extends FlowService {

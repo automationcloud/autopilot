@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import http from 'http';
-import { sendToAllWindows, windows } from './windows';
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import Router from 'koa-router2';
 import { AddressInfo } from 'net';
 
-import Koa from 'koa';
-import Router from 'koa-router2';
-import bodyParser from 'koa-bodyparser';
+import { sendToAllWindows, windows } from './windows';
 
 export class ControlServer {
     app: Koa;
@@ -40,7 +40,7 @@ export class ControlServer {
     }
 
     async start() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.server.listen(this.port, () => {
                 const port = this.getServerPort();
                 console.info(`Server is running on http://localhost:${port}`);

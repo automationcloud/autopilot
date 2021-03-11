@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Exception, CdpCookie } from '@automationcloud/cdp';
+import { CdpCookie, Exception } from '@automationcloud/cdp';
+import { inject, injectable } from 'inversify';
+
 import { BrowserService } from './browser';
-import { GlobalValue, GlobalsService } from './globals';
+import { GlobalsService, GlobalValue } from './globals';
 
 /**
  * Manages checkpoints.

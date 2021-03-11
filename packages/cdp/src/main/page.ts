@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Target } from './target';
-import { FrameManager } from './frame-manager';
-import { Frame, FrameNavigateOptions } from './frame';
-import { InputManager } from './input-manager';
-import { RemoteObject } from './remote-object';
-import { RemoteElement } from './remote-element';
-import { CdpFrameTree, CdpLayoutMetrics, CdpCookie } from './types';
-import { NetworkManager } from './network-manager';
-import { ScreenshotManager } from './screenshot-manager';
-import { RemoteExpression } from './execution-context';
 import { DomManager } from './dom';
+import { RemoteExpression } from './execution-context';
+import { Frame, FrameNavigateOptions } from './frame';
+import { FrameManager } from './frame-manager';
+import { InputManager } from './input-manager';
 import { Interceptor, InterceptorHandler } from './interceptor';
+import { NetworkManager } from './network-manager';
+import { RemoteElement } from './remote-element';
+import { RemoteObject } from './remote-object';
+import { ScreenshotManager } from './screenshot-manager';
+import { Target } from './target';
+import { CdpCookie, CdpFrameTree, CdpLayoutMetrics } from './types';
 
 /**
  * Represents a page CDP target.

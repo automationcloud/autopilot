@@ -13,10 +13,10 @@
 // limitations under the License.
 
 import { Action } from '../action';
-import { Pipeline } from '../pipeline';
-import * as util from '../util';
 import { Element } from '../element';
 import { params } from '../model';
+import { Pipeline } from '../pipeline';
+import * as util from '../util';
 
 export class InputAction extends Action {
     static $type = 'Page.input';

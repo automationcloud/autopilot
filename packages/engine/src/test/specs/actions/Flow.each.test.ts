@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../../runtime';
 import assert from 'assert';
+
 import { GlobalsService } from '../../../main';
+import { runtime } from '../../runtime';
 
 describe('Flow.each', () => {
     describe('non-empty', () => {

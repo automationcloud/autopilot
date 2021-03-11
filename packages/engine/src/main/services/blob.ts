@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
-import os from 'os';
+import { Configuration, stringConfig } from '@automationcloud/cdp';
 import { promises as fs } from 'fs';
+import { inject, injectable } from 'inversify';
+import os from 'os';
 import path from 'path';
 import rimraf from 'rimraf';
 import util from 'util';
-import { createError } from '../util';
-import { stringConfig, Configuration } from '@automationcloud/cdp';
-import { injectable, inject } from 'inversify';
+import uuid from 'uuid';
+
 import { SessionHandler } from '../session';
+import { createError } from '../util';
 
 const rimrafAsync = util.promisify(rimraf);
 

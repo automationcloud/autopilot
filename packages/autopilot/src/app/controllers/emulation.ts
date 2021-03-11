@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { controller } from '../controller';
-import { StorageController } from './storage';
-import {
-    BrowserService,
+import { BrowserService,
+    EMULATION_MODE,
     EmulationMode,
     EmulationService,
-    stringConfig,
-    EMULATION_MODE
-} from '@automationcloud/engine';
-import { SettingsController } from './settings';
+    stringConfig } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
+import { SettingsController } from './settings';
+import { StorageController } from './storage';
 
 export type ThrottlingMode = 'none' | '3g' | '2g';
 

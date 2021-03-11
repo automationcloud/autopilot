@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import fs from 'fs';
 import Koa from 'koa';
-import Router from 'koa-router2';
-import serveStatic from 'koa-static';
 import bodyParser from 'koa-bodyparser';
 import multer, { MulterIncomingMessage } from 'koa-multer';
-
-import URL from 'url';
+import Router from 'koa-router2';
+import serveStatic from 'koa-static';
+import path from 'path';
 import querystring from 'querystring';
 import rimraf from 'rimraf';
-
-import path from 'path';
-import fs from 'fs';
+import URL from 'url';
 
 const uploadsDir = path.resolve(process.cwd(), '.tmp/uploads');
 

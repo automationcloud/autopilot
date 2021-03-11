@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Script } from './script';
-import { Context } from './context';
-import { Action } from './action';
-import { Pipe } from './pipe';
-
-import * as util from './util';
 import jsonPointer from 'jsonpointer';
+
+import { Action } from './action';
+import { Context } from './context';
+import { Pipe } from './pipe';
+import { Script } from './script';
+import * as util from './util';
 
 export class ScriptSearch {
     script: Script;

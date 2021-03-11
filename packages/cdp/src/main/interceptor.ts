@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import uuid from 'uuid';
-import { Page } from './page';
+
 import { Browser } from './browser';
-import { CdpRequest, CdpRequestPaused, CdpHeaderEntry, CdpNetworkErrorReason, CdpHeaders } from './types';
+import { Page } from './page';
+import { CdpHeaderEntry, CdpHeaders, CdpNetworkErrorReason, CdpRequest, CdpRequestPaused } from './types';
 import { convertHeadersToEntries, convertHeadersToObject } from './util';
 
 export type InterceptorScope = Page | Browser;

@@ -13,7 +13,8 @@
 // limitations under the License.
 
 import { FlowService, util } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
+
 import { BundlesController } from '../controllers/bundles';
 import { ProjectController } from '../controllers/project';
 import { ProtocolController } from '../controllers/protocol';

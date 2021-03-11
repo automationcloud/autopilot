@@ -14,13 +14,14 @@
 
 import assert from 'assert';
 import { promises as fs } from 'fs';
-import path from 'path';
-import { Extension, Action, InspectionLevel, ActionInspection } from '../../main';
-import { runtime } from '../runtime';
-import tar from 'tar';
 import glob from 'glob';
 import os from 'os';
+import path from 'path';
 import rimraf from 'rimraf';
+import tar from 'tar';
+
+import { Action, ActionInspection, Extension, InspectionLevel } from '../../main';
+import { runtime } from '../runtime';
 
 describe('Extension', () => {
 
@@ -106,7 +107,7 @@ describe('Extension', () => {
         };
         runtime.$resolver.addExtension(extension);
         const script = await runtime.createScriptWithActions([
-            { id: 'tst', type: 'blah '}
+            { id: 'tst', type: 'blah ' }
         ]);
         const action = script.getActionById('tst');
         const reports = [...script.inspect()];

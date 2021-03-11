@@ -13,10 +13,11 @@
 // limitations under the License.
 
 import { BrowserWindow, screen, shell } from 'electron';
-import { Profile, getLastProfile, updateProfile, getSettings } from './settings';
-import path from 'path';
 import os from 'os';
+import path from 'path';
+
 import { controlServer } from './globals';
+import { getLastProfile, getSettings, Profile, updateProfile } from './settings';
 
 // eslint-disable-next-line import/no-commonjs
 const pkg = require('../../package.json');

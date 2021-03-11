@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Extension } from './extension';
 import fs from 'fs';
 import path from 'path';
+
+import { Extension } from './extension';
 
 const pkgFile = path.join(__dirname, '../../package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));

@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Exception, RemoteElement, RemoteElementInfo, RemoteObject } from '@automationcloud/cdp';
+
 import * as util from './util';
-import { RemoteElement, RemoteElementInfo, RemoteObject, Exception } from '@automationcloud/cdp';
 
 /**
  * Represents a data unit in Automation Engine.

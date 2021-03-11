@@ -13,10 +13,11 @@
 // limitations under the License.
 
 import { EventEmitter } from 'events';
+
 import { Browser } from './browser';
 import { Exception } from './exception';
-import { CdpTargetInfo, CdpTargetType } from './types';
 import { Page } from './page';
+import { CdpTargetInfo, CdpTargetType } from './types';
 
 export class Target extends EventEmitter {
     browser!: Browser;

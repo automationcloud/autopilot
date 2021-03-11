@@ -12,29 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
+import { Configuration, Exception, Logger, numberConfig } from '@automationcloud/cdp';
+import crypto from 'crypto';
 import { EventEmitter } from 'events';
-import { Context, ContextList } from './context';
-import { Action } from './action';
-import * as util from './util';
-import * as model from './model';
-import { ScriptSearchQuery, ScriptSearchResult, ScriptSearch, ScriptSearchOptions } from './search';
-import { ContextMatchTimer } from './context-match-timer';
 import jsonPointer from 'jsonpointer';
-import { numberConfig, Configuration, Logger, Exception } from '@automationcloud/cdp';
+import uuid from 'uuid';
+
+import { Action } from './action';
+import { Context, ContextList } from './context';
+import { ContextMatchTimer } from './context-match-timer';
+import { DefinitionAction } from './definition';
 import { Engine } from './engine';
+import { ExtensionVersion } from './extension';
+import { ActionInspection, ContextInspection, Inspection, InspectionNode, InspectionReport, ScriptInspection } from './inspection';
+import * as model from './model';
+import { ScriptSearch, ScriptSearchOptions, ScriptSearchQuery, ScriptSearchResult } from './search';
 import {
-    ReporterService,
-    RegistryService,
     BrowserService,
     FlowService,
     GlobalsService,
+    RegistryService,
+    ReporterService,
     ResolverService,
 } from './services';
-import crypto from 'crypto';
-import { ExtensionVersion } from './extension';
-import { Inspection, InspectionReport, InspectionNode, ScriptInspection, ContextInspection, ActionInspection } from './inspection';
-import { DefinitionAction } from './definition';
+import * as util from './util';
 
 const CONTEXT_MATCH_INTERVAL = numberConfig('CONTEXT_MATCH_INTERVAL', 100);
 const CONTEXT_MATCH_SLOW_MARGIN = numberConfig('CONTEXT_MATCH_SLOW_MARGIN', 3000);

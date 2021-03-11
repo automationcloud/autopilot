@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { FlowService, Script, util, ReporterService, Logger } from '@automationcloud/engine';
-import { WorkerState } from '../services/state';
-import { InputsService } from '../services/inputs';
+import { FlowService, Logger, ReporterService, Script, util } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { ApiService } from '../services/api';
+import { InputsService } from '../services/inputs';
+import { WorkerState } from '../services/state';
 
 @injectable()
 export class WorkerFlowService extends FlowService {

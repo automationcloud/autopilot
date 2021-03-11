@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ObjectWithId, IdDatabase } from './commons';
-import { Entity } from './entity';
 import { Exception } from '@automationcloud/cdp';
+
+import { IdDatabase, ObjectWithId } from './commons';
+import { Entity } from './entity';
 
 /**
  * A typed list of script entities.

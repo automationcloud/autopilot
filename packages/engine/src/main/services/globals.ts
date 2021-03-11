@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as util from '../util';
 import { injectable } from 'inversify';
+
 import { SessionHandler } from '../session';
+import * as util from '../util';
 
 /**
  * Manages script globals.

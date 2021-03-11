@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Router, Get } from '@ubio/framework';
+import { Get, Router } from '@ubio/framework';
 import { injectable } from 'inversify';
 
 // eslint-disable-next-line import/no-commonjs

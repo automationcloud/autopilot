@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Pipeline } from '@automationcloud/engine';
+
 import { ScriptEditorViewport } from '.';
 import { ScriptEditorCommand } from './cmd';
-import { Pipeline } from '@automationcloud/engine';
 
 export class CreatePipeCommand extends ScriptEditorCommand {
     newSpec: any;

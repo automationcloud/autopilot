@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Redis } from 'ioredis';
-import { EventEmitter } from 'events';
-import { injectable, inject } from 'inversify';
-import { RedisProvider } from './redis';
 import { Logger, SessionHandler } from '@automationcloud/engine';
+import { EventEmitter } from 'events';
+import { inject, injectable } from 'inversify';
+import { Redis } from 'ioredis';
+
+import { RedisProvider } from './redis';
 import { WorkerState } from './state';
 
 @injectable()

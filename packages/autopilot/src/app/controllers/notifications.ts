@@ -1,5 +1,6 @@
 import { util } from '@automationcloud/engine';
 import { injectable } from 'inversify';
+
 import { controller } from '../controller';
 import { Notification } from '../entities/notification';
 

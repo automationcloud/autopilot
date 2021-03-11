@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as params from './params';
+
 export * from './commons';
 export * from './entity';
 export * from './list';
 export * from './params';
-
-import * as params from './params';
 export { params };

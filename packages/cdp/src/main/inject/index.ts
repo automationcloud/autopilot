@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { toolkit } from './toolkit';
-import { stubs } from './stubs';
-import { crosshair } from './crosshair';
 import { exposeAudioUtils } from './audio-utils';
+import { crosshair } from './crosshair';
+import { stubs } from './stubs';
+import { toolkit } from './toolkit';
 
 export const contentScripts = [
     { filename: 'toolkit.js', fn: toolkit },

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../runtime';
 import assert from 'assert';
-import { Extension, Action, Script, SessionHandler } from '../../main';
 import { injectable } from 'inversify';
+
+import { Action, Extension, Script, SessionHandler } from '../../main';
+import { runtime } from '../runtime';
 
 describe('Script', () => {
     describe('matchNextContext', () => {
@@ -322,7 +323,7 @@ describe('Script', () => {
                     type: 'Flow.output',
                     outputKey: 'foo',
                     pipeline: [
-                        { type: 'Value.getJson', value: JSON.stringify({ data: 1 })}
+                        { type: 'Value.getJson', value: JSON.stringify({ data: 1 }) }
                     ]
                 },
                 {

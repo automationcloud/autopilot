@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { EditEntityCommand } from './cmd';
 import { Script } from '@automationcloud/engine';
+
 import { ScriptEditorViewport } from '.';
+import { EditEntityCommand } from './cmd';
 
 export class EditScriptCommand extends EditEntityCommand<Script> {
     static title = 'Edit Script';

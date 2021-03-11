@@ -13,12 +13,12 @@
 // limitations under the License.
 
 /* eslint-disable no-console */
+import { Engine, OAuth2Agent, RegistryService, Request, ResolverService, Script } from '@automationcloud/engine';
 import chalk from 'chalk';
-import { Engine, Script, Request, RegistryService, ResolverService, OAuth2Agent } from '@automationcloud/engine';
-import dotenv from 'dotenv';
 import { diffLines } from 'diff';
-import stringify from 'json-stable-stringify';
+import dotenv from 'dotenv';
 import inquirer from 'inquirer';
+import stringify from 'json-stable-stringify';
 
 let yesToAll = false;
 
@@ -125,7 +125,7 @@ async function showDiff(oldStr: string, newStr: string) {
     }
 }
 
-async function ask(message: string, ) {
+async function ask(message: string,) {
     if (yesToAll) {
         return true;
     }

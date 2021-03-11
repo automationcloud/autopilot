@@ -14,6 +14,7 @@
 
 import { Exception } from '@automationcloud/cdp';
 import { inject } from 'inversify';
+
 import { ScriptInput, ScriptPlaybackStatus } from '..';
 import { FlowService } from '../services';
 import { LocalRobot } from './local-robot';

@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
-import querystring from 'querystring';
-import Ajv from 'ajv';
-import { remote, shell, ipcRenderer } from 'electron';
-import { injectable, inject } from 'inversify';
 import {
     ApiRequest,
-    Request,
-    OAuth2GrantType,
-    OAuth2Agent,
-    stringConfig,
-    JsonSchema,
     Exception,
+    JsonSchema,
+    OAuth2Agent,
+    OAuth2GrantType,
+    Request,
+    stringConfig,
 } from '@automationcloud/engine';
+import Ajv from 'ajv';
+import { ipcRenderer, remote, shell } from 'electron';
+import { inject, injectable } from 'inversify';
+import querystring from 'querystring';
+import uuid from 'uuid';
+
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
-import { StorageController } from './storage';
-import { SettingsController } from './settings';
 import { controlServerPort, profile } from '../globals';
+import { SettingsController } from './settings';
+import { StorageController } from './storage';
 
 const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
 const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
@@ -120,9 +121,9 @@ export class ApiLoginController {
             state,
             nonce,
             scope: 'openid',
-            'client_id': clientId,
-            'redirect_uri': this.getRedirectUrl(),
-            'response_type': 'code',
+            client_id: clientId,
+            redirect_uri: this.getRedirectUrl(),
+            response_type: 'code',
         });
         const url = this.settings.get(AC_AUTHORIZATION_URL);
         return url + '?' + query;
@@ -177,9 +178,9 @@ export class ApiLoginController {
             clientId,
         });
         const tokens = await oauth2.createToken({
-            'grant_type': OAuth2GrantType.AUTHORIZATION_CODE,
-            'client_id': clientId,
-            'redirect_uri': this.getRedirectUrl(),
+            grant_type: OAuth2GrantType.AUTHORIZATION_CODE,
+            client_id: clientId,
+            redirect_uri: this.getRedirectUrl(),
             code,
         });
         return tokens;
@@ -228,13 +229,13 @@ const accountInfoSchema: JsonSchema = {
     type: 'object',
     required: ['email'],
     properties: {
-        'email': { type: 'string' },
-        'email_verified': { type: 'boolean' },
-        'given_name': { type: 'string' },
-        'family_name': { type: 'string' },
-        'preferred_username': { type: 'string' },
-        'organisationId': { type: 'string' },
-        'userId': { type: 'string' },
+        email: { type: 'string' },
+        email_verified: { type: 'boolean' },
+        given_name: { type: 'string' },
+        family_name: { type: 'string' },
+        preferred_username: { type: 'string' },
+        organisationId: { type: 'string' },
+        userId: { type: 'string' },
     }
 };
 

@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { controller } from '../controller';
-import { injectable, inject } from 'inversify';
-import { clipboard, helpers } from '../util';
 import { clamp, ScriptInput } from '@automationcloud/engine';
-import { ProjectController } from './project';
-import { Bundle } from '../entities/bundle';
-import { ExpandableController } from './expandable';
-import { StorageController } from './storage';
 import { promises as fs } from 'fs';
+import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
+import { Bundle } from '../entities/bundle';
+import { clipboard, helpers } from '../util';
+import { ExpandableController } from './expandable';
+import { ProjectController } from './project';
+import { StorageController } from './storage';
 
 @injectable()
 @controller({ alias: 'bundles' })
@@ -49,7 +50,7 @@ export class BundlesController {
             }
             await fs.unlink(file);
             console.info('migrated dataset to bundles');
-        } catch(err) {
+        } catch (err) {
             // do nothing.
         }
     }

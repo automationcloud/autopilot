@@ -13,13 +13,14 @@
 // limitations under the License.
 
 import uuid from 'uuid';
-import * as util from './util';
-import { Pipeline } from './pipeline';
-import { RuntimeCtx } from './ctx';
+
 import { Action } from './action';
+import { RuntimeCtx } from './ctx';
 import { Element } from './element';
 import { Module } from './module';
+import { Pipeline } from './pipeline';
 import { Unit } from './unit';
+import * as util from './util';
 
 export interface PipeClass extends Module {
     new ($parent: Pipeline): Pipe;
@@ -88,7 +89,7 @@ export abstract class Pipe extends Unit<Pipeline> {
      * @param list An array of input elements produced by previous pipe or by Action scope.
      * @param ctx Action runtime context.
      */
-    abstract async apply(list: Element[], ctx: RuntimeCtx): Promise<Element[]>;
+    abstract apply(list: Element[], ctx: RuntimeCtx): Promise<Element[]>;
 
     /**
      * Entity type, used for reflection.

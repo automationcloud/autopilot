@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { Action } from '../action';
+import { params } from '../model';
 import { Pipeline } from '../pipeline';
 import * as util from '../util';
-import { params } from '../model';
 
 export class JavascriptAction extends Action {
     static $type = 'Eval.javascript';

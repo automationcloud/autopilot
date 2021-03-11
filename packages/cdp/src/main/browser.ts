@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { EventEmitter } from 'events';
+import fetch from 'node-fetch';
+import uuid from 'uuid';
+
 import { Connection } from './connection';
+import { Interceptor, InterceptorHandler } from './interceptor';
+import { ConsoleLogger, Logger } from './logger';
 import { Page } from './page';
 import { Target } from './target';
-
-import fetch from 'node-fetch';
-import { EventEmitter } from 'events';
-import uuid from 'uuid';
-import { ConsoleLogger, Logger } from './logger';
-import { Interceptor, InterceptorHandler } from './interceptor';
 
 export interface BrowserConfig {
     chromeAddress: string;

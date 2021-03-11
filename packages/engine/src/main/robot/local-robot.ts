@@ -13,13 +13,14 @@
 // limitations under the License.
 
 import { ChromeLauncher, ConsoleLogger, Exception, Logger } from '@automationcloud/cdp';
-import { Script, ScriptInput, ScriptOutput } from '../script';
-import { Engine } from '../engine';
-import { FlowService, BrowserService } from '../services';
-import { LocalFlowService } from './local-flow';
-import path from 'path';
 import { promises as fs } from 'fs';
+import path from 'path';
+
+import { Engine } from '../engine';
+import { Script, ScriptInput, ScriptOutput } from '../script';
+import { BrowserService, FlowService } from '../services';
 import { createEventHandler, EventHandler } from '../util';
+import { LocalFlowService } from './local-flow';
 
 /**
  * A high level API for running Automation scripts locally.

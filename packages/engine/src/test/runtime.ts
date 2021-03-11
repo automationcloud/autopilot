@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import path from 'path';
-import json5 from 'json5';
 import { promises as fs } from 'fs';
-import { CheckpointServiceMock } from './mocks/checkpoint';
+import json5 from 'json5';
+import path from 'path';
+
 import {
-    Script,
     CheckpointService,
     GlobalsService,
-    ResolverService,
-    RegistryService,
-    TestRig,
     ProxyService,
+    RegistryService,
+    ResolverService,
+    Script,
+    TestRig,
 } from '../main';
+import { CheckpointServiceMock } from './mocks/checkpoint';
 import { RegistryServiceMock } from './mocks/registry';
 
 export class TestRuntime extends TestRig {

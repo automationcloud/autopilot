@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { fuzzyMatch } from '../main';
 import assert from 'assert';
+
+import { fuzzyMatch } from '../main';
 
 describe('Fuzzy match', () => {
 

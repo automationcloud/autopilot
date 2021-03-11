@@ -1,4 +1,5 @@
 import { Script } from '@automationcloud/engine';
+
 import { Bundle } from './bundle';
 
 export interface Automation {

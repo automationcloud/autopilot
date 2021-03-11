@@ -14,8 +14,7 @@
 
 import { App } from '../app';
 import { Controller } from '../controller';
-
-import { keyboard, dom } from '../util';
+import { dom, keyboard } from '../util';
 
 export class NavigationController implements Controller {
     app: App;
@@ -34,12 +33,12 @@ export class NavigationController implements Controller {
             return;
         }
         keyboard.handle(ev, {
-            'Space': () => focusEl.dispatchEvent(new CustomEvent('uiactivate')),
-            'ArrowLeft': () => focusEl.dispatchEvent(new CustomEvent('uicollapse')),
-            'ArrowRight': () => focusEl.dispatchEvent(new CustomEvent('uiexpand')),
-            'ArrowDown': () => this.focusSibling({ base, next: true, event: 'uiselect' }),
+            Space: () => focusEl.dispatchEvent(new CustomEvent('uiactivate')),
+            ArrowLeft: () => focusEl.dispatchEvent(new CustomEvent('uicollapse')),
+            ArrowRight: () => focusEl.dispatchEvent(new CustomEvent('uiexpand')),
+            ArrowDown: () => this.focusSibling({ base, next: true, event: 'uiselect' }),
             'Shift+ArrowDown': () => this.focusSibling({ base, next: true, event: 'uiselectexpand' }),
-            'ArrowUp': () => this.focusSibling({ base, next: false, event: 'uiselect' }),
+            ArrowUp: () => this.focusSibling({ base, next: false, event: 'uiselect' }),
             'Shift+ArrowUp': () => this.focusSibling({ base, next: false, event: 'uiselectexpand' }),
             'CmdOrCtrl+Space': () => focusEl.dispatchEvent(new CustomEvent('uiselecttoggle')),
             'CmdOrCtrl+ArrowDown': () => this.focusSibling({ base, next: true }),

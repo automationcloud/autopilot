@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { helpers } from '../../util';
 import { ScriptEditorViewport } from '.';
+import { ChangePipeTypeCommand } from './cmd-change-pipe-type';
 import { CopyPipeCommand } from './cmd-copy-pipes';
 import { CreatePipeCommand } from './cmd-create-pipe';
 import { CutPipeCommand } from './cmd-cut-pipes';
 import { DeletePipeCommand } from './cmd-delete-pipe';
 import { EditActionCommand } from './cmd-edit-action';
 import { EditContextCommand } from './cmd-edit-context';
+import { EditMetadataCommand } from './cmd-edit-metadata';
 import { EditPipeCommand } from './cmd-edit-pipe';
 import { EditScriptCommand } from './cmd-edit-script';
-import { EditMetadataCommand } from './cmd-edit-metadata';
-import { PastePipeCommand } from './cmd-paste-pipe';
-import { ChangePipeTypeCommand } from './cmd-change-pipe-type';
 import { InsertPipeRecipeCommand } from './cmd-insert-recipe';
-import { helpers } from '../../util';
+import { PastePipeCommand } from './cmd-paste-pipe';
 
 export class ScriptEditorCommandsController {
     viewport: ScriptEditorViewport;

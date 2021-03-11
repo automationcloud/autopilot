@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { remote, ipcRenderer } from 'electron';
-import path from 'path';
-import os from 'os';
-import uuid from 'uuid';
-import { injectable } from 'inversify';
+import { ipcRenderer, remote } from 'electron';
 import { promises as fs } from 'fs';
-import { UserData } from '../userdata';
+import { injectable } from 'inversify';
+import os from 'os';
+import path from 'path';
+import uuid from 'uuid';
+
 import { controller } from '../controller';
+import { UserData } from '../userdata';
 
 const wnd = remote.getCurrentWindow();
 const profile = (wnd as any).profile;

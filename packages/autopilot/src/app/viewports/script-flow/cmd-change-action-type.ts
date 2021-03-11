@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Action, util } from '@automationcloud/engine';
+
 import { Command } from '../../command';
 import { ScriptFlowViewport } from '.';
-import { Action, util } from '@automationcloud/engine';
 
 export class ChangeActionTypeCommand extends Command<ScriptFlowViewport> {
     newSpec: any;

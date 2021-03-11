@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Page, numberConfig, Configuration } from '@automationcloud/cdp';
+import { Configuration, numberConfig, Page } from '@automationcloud/cdp';
 
 const CONTEXT_MATCH_TIMEOUT_MAX = numberConfig('CONTEXT_MATCH_TIMEOUT_MAX', 3 * 60000);
 const CONTEXT_MATCH_TIMEOUT_LOADED = numberConfig('CONTEXT_MATCH_TIMEOUT_LOADED', 60000);

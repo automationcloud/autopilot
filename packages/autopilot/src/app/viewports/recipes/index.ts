@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { StatelessViewport } from '../../viewport';
-import { helpers, clipboard } from '../../util';
+import { util } from '@automationcloud/engine';
 import assert from 'assert';
 import { MenuItemConstructorOptions } from 'electron';
-import { util } from '@automationcloud/engine';
+
 import { PipeGroup, PipeRecipe, PipeRecipesController } from '../../controllers/pipe-recipes';
+import { clipboard, helpers } from '../../util';
+import { StatelessViewport } from '../../viewport';
 
 export class RecipesViewport extends StatelessViewport {
     getViewportId(): string {

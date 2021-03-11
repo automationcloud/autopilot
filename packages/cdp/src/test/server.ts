@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import fs from 'fs';
 import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router2';
 import serveStatic from 'koa-static';
-import bodyParser from 'koa-bodyparser';
-
-import URL from 'url';
+import path from 'path';
 import querystring from 'querystring';
 import rimraf from 'rimraf';
-import fs from 'fs';
-
-import path from 'path';
+import URL from 'url';
 
 const uploadsDir = path.resolve(process.cwd(), '.tmp/uploads');
 

@@ -13,18 +13,19 @@
 // limitations under the License.
 
 import {
-    numberConfig,
     Configuration,
-    HttpCallbackService,
-    HttpCallbackResponse,
     Exception,
+    HttpCallbackResponse,
+    HttpCallbackService,
+    numberConfig,
 } from '@automationcloud/engine';
-import { inject, injectable } from 'inversify';
-import { controller } from '../controller';
 import { ipcRenderer, shell } from 'electron';
-import { controlServerPort } from '../globals';
+import { inject, injectable } from 'inversify';
+
+import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { StorageController } from '../controllers/storage';
+import { controlServerPort } from '../globals';
 
 const HTTP_CALLBACK_TIMEOUT = numberConfig('HTTP_CALLBACK_TIMEOUT', 60000);
 

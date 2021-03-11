@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime, assert, assertError } from '../globals';
+import { assert, assertError, runtime } from '../globals';
 
 describe('Page', () => {
     describe('navigate', () => {

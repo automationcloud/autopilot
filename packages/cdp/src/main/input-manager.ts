@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { KeySpec, lookupKey } from './keyboard';
 import { Page } from './page';
-import { lookupKey, KeySpec } from './keyboard';
 import { Point } from './types';
 
 const MOD_SHIFT = 8;

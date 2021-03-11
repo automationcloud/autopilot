@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Page } from './page';
-import { ExecutionContext, RemoteExpression } from './execution-context';
 import { EventEmitter } from 'events';
-import { asyncRegexpReplace } from './util';
+
 import { Exception } from './exception';
-import { CdpFrame, CdpRequest, CdpResponse } from './types';
+import { ExecutionContext, RemoteExpression } from './execution-context';
+import { NetworkResource } from './network-manager';
+import { Page } from './page';
 import { RemoteElement } from './remote-element';
 import { RemoteObject } from './remote-object';
-import { NetworkResource } from './network-manager';
+import { CdpFrame, CdpRequest, CdpResponse } from './types';
+import { asyncRegexpReplace } from './util';
 
 /**
  * Represents a single frame (may correspond to page's main frame or any of the child frames).

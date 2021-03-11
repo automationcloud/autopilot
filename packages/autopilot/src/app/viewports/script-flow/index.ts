@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Context, Action, model, ActionList, ContextList, booleanConfig } from '@automationcloud/engine';
-import { App } from '../../app';
-
+import { Action, ActionList, booleanConfig, Context, ContextList, model } from '@automationcloud/engine';
 import { MenuItemConstructorOptions } from 'electron';
-import { ScriptSearchController } from './search';
+
+import { App } from '../../app';
+import { HelpController } from '../../controllers/help';
+import { PlaybackController } from '../../controllers/playback';
+import { InsertLocation, ScriptViewport } from '../script-viewport';
 import { ScriptFlowCommandsController } from './commands';
+import { DragAndDropActionsController } from './dnd-actions';
 import { ScriptFlowMenusController } from './menus';
 import { ActionRecorderController } from './recorder';
-import { ScriptViewport, InsertLocation } from '../script-viewport';
-import { DragAndDropActionsController } from './dnd-actions';
-import { PlaybackController } from '../../controllers/playback';
-import { HelpController } from '../../controllers/help';
+import { ScriptSearchController } from './search';
 
 type ScriptFlowItem = Context | Action;
 

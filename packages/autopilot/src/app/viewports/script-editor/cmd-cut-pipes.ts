@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { DeletePipeCommand } from './cmd-delete-pipe';
 import { clipboard } from '../../util';
+import { DeletePipeCommand } from './cmd-delete-pipe';
 
 export class CutPipeCommand extends DeletePipeCommand {
     dataType: string = '';

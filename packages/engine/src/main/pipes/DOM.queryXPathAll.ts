@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Pipe } from '../pipe';
-import { params } from '../model';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
+import { params } from '../model';
+import { Pipe } from '../pipe';
 
 export class DomQueryXpathAll extends Pipe {
     static $type = 'DOM.queryXPathAll';

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { BrowserService } from './browser';
-import { SessionHandler } from '../session';
 import { Configuration, Logger, stringConfig, Target } from '@automationcloud/cdp';
+import { inject, injectable } from 'inversify';
+
+import { SessionHandler } from '../session';
+import { BrowserService } from './browser';
 
 export type EmulationMode = 'disabled' | 'mobile' | 'desktop';
 

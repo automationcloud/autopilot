@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import os from 'os';
-import { ModalMenuItem } from '../../ui/modal-menu';
-import { ScriptEditorViewport } from '.';
-import { dom } from '../../util';
+import { model, PipeClass } from '@automationcloud/engine';
 import { MenuItemConstructorOptions } from 'electron';
-import { PipeClass, model } from '@automationcloud/engine';
-import { PipeRecipesController } from '../../controllers/pipe-recipes';
+import os from 'os';
+
 import { HelpController } from '../../controllers/help';
 import { ModalsController } from '../../controllers/modals';
+import { PipeRecipesController } from '../../controllers/pipe-recipes';
+import { ModalMenuItem } from '../../ui/modal-menu';
+import { dom } from '../../util';
+import { ScriptEditorViewport } from '.';
 
 const standardPipeCategories = [
     'Assert',

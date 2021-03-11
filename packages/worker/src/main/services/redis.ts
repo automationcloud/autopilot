@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Configuration, Logger, numberConfig, stringConfig } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 import Redis from 'ioredis';
-import { Logger, Configuration, stringConfig, numberConfig } from '@automationcloud/engine';
-import { injectable, inject } from 'inversify';
 
 const REDIS_HOST = stringConfig('REDIS_HOST');
 const REDIS_PORT = numberConfig('REDIS_PORT', 6379);

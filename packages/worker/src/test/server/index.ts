@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import Koa from 'koa';
-import serveStatic from 'koa-static';
 import bodyParser from 'koa-bodyparser';
+import serveStatic from 'koa-static';
+
 import { apiRouter } from './api';
 
 const server = new Koa();

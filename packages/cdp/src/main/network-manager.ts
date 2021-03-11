@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Exception } from './exception';
+import { InterceptedRequest } from './interceptor';
 import { Page } from './page';
 import {
-    CdpRequestWillBeSent,
-    CdpResponseReceived,
-    CdpLoadingFinished,
-    CdpLoadingFailed,
-    CdpRequest,
-    CdpResponse,
-    CdpRequestPaused,
-    CdpHeaders,
     CdpHeaderEntry,
+    CdpHeaders,
+    CdpLoadingFailed,
+    CdpLoadingFinished,
+    CdpRequest,
+    CdpRequestPaused,
+    CdpRequestWillBeSent,
+    CdpResponse,
+    CdpResponseReceived,
 } from './types';
-import { InterceptedRequest } from './interceptor';
-import { Exception } from './exception';
 import { convertHeadersToEntries, convertHeadersToObject } from './util';
 
 /**
@@ -93,7 +93,7 @@ export class NetworkManager {
     }
 
     async waitForFinish(requestId: string, timeout: number = 30000) {
-        return await new Promise((resolve, reject) => {
+        return await new Promise<void>((resolve, reject) => {
             const timer = setTimeout(onTimeout, timeout);
             const { target } = this.page;
             target.addListener('Network.loadingFinished', onFinished);

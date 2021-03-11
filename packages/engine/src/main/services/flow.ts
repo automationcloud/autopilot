@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable } from 'inversify';
 import { Exception } from '@automationcloud/cdp';
+import { injectable } from 'inversify';
+
 import { Script } from '../script';
 
 @injectable()

@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { runtime } from '../../runtime';
 import assert from 'assert';
+
+import { runtime } from '../../runtime';
 
 describe('DOM.isSelected', () => {
     it('returns true if checked', async () => {

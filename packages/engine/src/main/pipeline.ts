@@ -13,17 +13,18 @@
 // limitations under the License.
 
 import uuid from 'uuid';
-import * as util from './util';
-import * as model from './model';
+
 import { Action } from './action';
-import { Pipe } from './pipe';
+import { Context } from './context';
 import { RuntimeCtx } from './ctx';
 import { Element } from './element';
-import { Script } from './script';
-import { Context } from './context';
 import { migratePipeSpec } from './migrations';
-import { Unit } from './unit';
+import * as model from './model';
+import { Pipe } from './pipe';
+import { Script } from './script';
 import { ResolverService } from './services';
+import { Unit } from './unit';
+import * as util from './util';
 
 /**
  * Encapsulates an array of pipes applied sequentially.

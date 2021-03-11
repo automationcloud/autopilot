@@ -12,23 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import uuid from 'uuid';
+import { Logger } from '@automationcloud/cdp';
+import Ajv from 'ajv';
 import assert from 'assert';
-import * as util from './util';
-import * as model from './model';
+import uuid from 'uuid';
+
 import { Context } from './context';
-import { migrateActionSpec } from './migrations';
-import { retry, RetryOptions } from './retry';
 import { RuntimeCtx } from './ctx';
 import { Element } from './element';
-import { Pipeline } from './pipeline';
-import { Pipe } from './pipe';
-import { ReporterService, ResolverService } from './services';
+import { migrateActionSpec } from './migrations';
+import * as model from './model';
 import { Module } from './module';
-import { Logger } from '@automationcloud/cdp';
-import { Unit } from './unit';
+import { Pipe } from './pipe';
+import { Pipeline } from './pipeline';
+import { retry, RetryOptions } from './retry';
 import { JsonSchema } from './schema';
-import Ajv from 'ajv';
+import { ReporterService, ResolverService } from './services';
+import { Unit } from './unit';
+import * as util from './util';
 
 const ajv = new Ajv({
     messages: true,
@@ -156,7 +157,7 @@ export abstract class Action extends Unit<ActionList> {
     /**
      * @internal
      */
-    get $reporter() {return this.$engine.get(ReporterService);}
+    get $reporter() { return this.$engine.get(ReporterService); }
 
     /**
      * A self-reference to satisfy {@link PipeOwner} interface.

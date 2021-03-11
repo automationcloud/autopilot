@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { injectable, inject } from 'inversify';
-import { Configuration, numberConfig, Logger, util } from '@automationcloud/engine';
-import { WorkerState } from './state';
-import { SignalsService } from './signals';
+import { Configuration, Logger, numberConfig, util } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
+
 import { ApiService } from './api';
+import { SignalsService } from './signals';
+import { WorkerState } from './state';
 
 const REQUEST_INPUT_TIMEOUT = numberConfig('REQUEST_INPUT_TIMEOUT', 15 * 60000);
 

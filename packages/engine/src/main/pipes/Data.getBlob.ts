@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { params } from '../model';
-import * as util from '../util';
-import { Pipe } from '../pipe';
 import { RuntimeCtx } from '../ctx';
 import { Element } from '../element';
+import { params } from '../model';
+import { Pipe } from '../pipe';
 import { BlobEncoding, BlobService } from '../services';
+import * as util from '../util';
 
 export class DataGetBlob extends Pipe {
     static $type = 'Data.getBlob';

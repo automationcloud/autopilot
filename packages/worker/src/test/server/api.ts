@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Router from 'koa-router2';
 import fs from 'fs';
+import Json5 from 'json5';
+import Router from 'koa-router2';
 import path from 'path';
 import util from 'util';
-import Json5 from 'json5';
-import uuid = require('uuid');
+
 import { WorkerBaseApp } from '../../main';
 import { RedisProvider } from '../../main/services/redis';
+import uuid = require('uuid');
 
 const readFile = util.promisify(fs.readFile);
 
@@ -276,9 +277,9 @@ router.post('/api/token', ctx => {
     }
 
     const response = {
-        'access_token': uuid.v4(),
-        'expires_in': 60,
-        'refresh_token': uuid.v4(),
+        access_token: uuid.v4(),
+        expires_in: 60,
+        refresh_token: uuid.v4(),
     };
     ctx.body = response;
 });

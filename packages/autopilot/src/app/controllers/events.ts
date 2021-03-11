@@ -14,6 +14,7 @@
 
 import { EventEmitter } from 'events';
 import { injectable } from 'inversify';
+
 import { controller } from '../controller';
 
 @injectable()

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Script } from './script';
 import { Action } from './action';
 import { Context } from './context';
+import { Script } from './script';
 
 export type InspectionNode = Script | Context | Action;
 
