@@ -60,7 +60,7 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     }
 
     getViewportId(): string {
-        return 'script-flow';
+        return 'scriptFlow';
     }
 
     getViewportName(): string {

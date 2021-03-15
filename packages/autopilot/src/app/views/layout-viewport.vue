@@ -19,15 +19,15 @@
                 <i class="fas fa-chevron-down header-button-caret"></i>
             </div>
             <component
-                v-if="viewportId"
+                v-if="componentId"
                 class="header-component"
-                :is="viewportId + '-header'"/>
+                :is="componentId + '-header'"/>
         </div>
 
         <component
-            v-if="viewportId"
+            v-if="componentId"
             class="body"
-            :is="viewportId + '-viewport'"/>
+            :is="componentId + '-viewport'"/>
 
         <div class="drag-overlay"
             v-if="showDragOverlay">
@@ -60,9 +60,13 @@
 </template>
 
 <script>
-import { menu } from '../util';
+import { helpers, menu } from '../util';
 
 export default {
+
+    inject: [
+        'layout'
+    ],
 
     props: {
         layoutItem: { type: Object }
@@ -88,7 +92,11 @@ export default {
     computed: {
 
         viewport() {
-            return this.app.viewports.get(this.layoutItem.viewportId);
+            return this.app.viewports[this.layoutItem.viewportId];
+        },
+
+        componentId() {
+            return helpers.camelToKebab(this.viewportId);
         },
 
         viewportId() {
@@ -108,11 +116,11 @@ export default {
         },
 
         isDragging() {
-            return !!this.app.layout.draggingItem;
+            return !!this.layout.draggingItem;
         },
 
         showDragOverlay() {
-            const item = this.app.layout.draggingItem;
+            const item = this.layout.draggingItem;
             if (!item) {
                 return false;
             }
@@ -132,11 +140,11 @@ export default {
 
         onDragStart(ev) {
             ev.dataTransfer.effectAllowed = 'move';
-            this.app.layout.draggingItem = this.layoutItem;
+            this.layout.draggingItem = this.layoutItem;
         },
 
         onDragEnd() {
-            this.app.layout.draggingItem = null;
+            this.layout.draggingItem = null;
         },
 
         onDragEnter(ev) {
@@ -155,9 +163,9 @@ export default {
         onDrop(ev, dir) {
             ev.preventDefault();
             ev.stopPropagation();
-            const item = this.app.layout.draggingItem;
+            const item = this.layout.draggingItem;
             if (item) {
-                this.app.layout.moveOnto(this.layoutItem, item, dir);
+                this.layout.moveOnto(this.layoutItem, item, dir);
             }
         },
 
@@ -167,7 +175,7 @@ export default {
 
         popupViewportsMenu() {
             const menuItems = [];
-            for (const viewport of this.app.viewports.all) {
+            for (const viewport of Object.values(this.app.viewports)) {
                 menuItems.push({
                     label: viewport.getViewportName(),
                     type: 'checkbox',
@@ -176,8 +184,8 @@ export default {
                     enabled: true,
                     click: () => {
                         this.layoutItem.viewportId = viewport.getViewportId();
-                        this.app.viewports.activate(this.layoutItem.viewportId);
-                        this.app.layout.update();
+                        this.layout.activateViewport(this.layoutItem.viewportId);
+                        this.layout.update();
                     }
                 });
             }
@@ -186,31 +194,31 @@ export default {
                 {
                     label: 'New horizontal panel',
                     click: () => {
-                        const item = this.app.layout.createDetachedItem({
+                        const item = this.layout.createDetachedItem({
                             type: 'viewport',
                             viewportId: null
                         });
-                        this.app.layout.split(this.layoutItem, item, 'bottom');
+                        this.layout.split(this.layoutItem, item, 'bottom');
                     }
                 },
                 {
                     label: 'New vertical panel',
                     click: () => {
-                        const item = this.app.layout.createDetachedItem({
+                        const item = this.layout.createDetachedItem({
                             type: 'viewport',
                             viewportId: null
                         });
-                        this.app.layout.split(this.layoutItem, item, 'right');
+                        this.layout.split(this.layoutItem, item, 'right');
                     }
                 },
                 { type: 'separator' },
                 {
                     label: 'Remove panel',
                     click: () => {
-                        this.app.layout.remove(this.layoutItem);
-                        this.app.viewports.activateCycle();
+                        this.layout.remove(this.layoutItem);
+                        this.layout.activateCycle();
                     },
-                    enabled: this.app.layout.getViewportItems().length > 1
+                    enabled: this.layout.getViewportItems().length > 1
                 }
             );
             menu.popupMenu(menuItems);

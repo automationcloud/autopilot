@@ -10,6 +10,7 @@
         "no-eval": 2,
         "init-declarations": [2, "always"],
         "import/no-unresolved": [2, { "ignore": ["^~/"] }],
+        "import/no-commonjs": 0,
         "no-console": [2, {
             "allow": ["info", "warn", "error", "debug"]
         }],

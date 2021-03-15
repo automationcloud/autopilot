@@ -55,7 +55,7 @@ export class DeletePipeCommand extends Command<ScriptEditorViewport> {
             this.viewport.selectListHead(list);
         }
         this.app.project.update();
-        this.app.viewports.focusActive();
+        this.app.layout.focusActiveViewport();
     }
 
     protected async unapply() {

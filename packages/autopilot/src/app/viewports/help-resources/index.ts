@@ -16,7 +16,7 @@ import { StatelessViewport } from '../../viewport';
 
 export class HelpResourcesViewport extends StatelessViewport {
     getViewportId(): string {
-        return 'help-resources';
+        return 'helpResources';
     }
 
     getViewportName(): string {

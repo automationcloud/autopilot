@@ -20,11 +20,11 @@ import path from 'path';
 import uuid from 'uuid';
 
 import { controller } from '../controller';
-import { EventsController } from '../controllers/events';
 import { version } from '../globals';
 import { helpers } from '../util';
 import { ApiController } from './api';
 import { BundlesController } from './bundles';
+import { EventsController } from './events';
 import { PlaybackController } from './playback';
 import { ProjectController } from './project';
 import { ScriptDiffController } from './script-diff';

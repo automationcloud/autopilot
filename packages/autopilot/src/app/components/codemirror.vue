@@ -9,6 +9,8 @@ const { CodeMirror } = window;
 
 export default {
 
+    inject: ['layout'],
+
     props: {
         value: {
             type: String,
@@ -32,8 +34,8 @@ export default {
             lineNumbers: this.lineNumbers,
             styleSelectedText: true,
             extraKeys: {
-                'Esc': () => {
-                    this.app.viewports.focusActive(true);
+                Esc: () => {
+                    this.layout.focusActiveViewport(true);
                 }
             }
         });

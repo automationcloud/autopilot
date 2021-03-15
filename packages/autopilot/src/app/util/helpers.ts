@@ -242,3 +242,11 @@ export function mdToHtml(text: string) {
         allowedTags: ['b', 'i', 'em', 'strong', 'h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'hr', 'code', 'pre', 'a'],
     });
 }
+
+export function kebabToCamel(str: string) {
+    return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+export function camelToKebab(str: string) {
+    return str.replace(/([A-Z])/g, (_, letter) => '-' + letter.toLowerCase());
+}
