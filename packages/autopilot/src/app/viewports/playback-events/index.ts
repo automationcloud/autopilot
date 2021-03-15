@@ -16,7 +16,7 @@ import { StatelessViewport } from '../../viewport';
 
 export class PlaybackEventsViewport extends StatelessViewport {
     getViewportId(): string {
-        return 'playback-events';
+        return 'playbackEvents';
     }
 
     getViewportName(): string {

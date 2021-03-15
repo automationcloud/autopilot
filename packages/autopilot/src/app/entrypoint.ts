@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import './resolve-components';
-import './resolve-controllers';
-import './directives';
-
 import path from 'path';
 import Vue from 'vue';
 
@@ -24,6 +20,10 @@ import { getAppPath } from './globals';
 import { createControllerProvider } from './provider';
 import * as util from './util';
 import RootView from './views/root.vue';
+
+require('./resolve-components');
+require('./resolve-controllers');
+require('./directives');
 
 process.env.ENGINE_ENV = 'autopilot';
 process.env.LOG_LEVEL = 'debug';
@@ -37,8 +37,7 @@ const localNodeModules = [
     path.join(getAppPath(), 'node_modules'),
     path.join(getAppPath(), 'node_modules', '@automationcloud', 'engine', 'node_modules'),
 ];
-// eslint-disable-next-line import/no-commonjs
-(require('module') as any).globalPaths.push(...localNodeModules);
+require('module').globalPaths.push(...localNodeModules);
 
 Vue.mixin({
     beforeCreate() {

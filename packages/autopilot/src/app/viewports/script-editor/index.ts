@@ -44,7 +44,7 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
     }
 
     getViewportId(): string {
-        return 'script-editor';
+        return 'scriptEditor';
     }
 
     getViewportName(): string {

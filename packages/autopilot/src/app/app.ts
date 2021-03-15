@@ -29,7 +29,7 @@ import {
 import { ipcRenderer } from 'electron';
 import ms from 'ms';
 
-import { Controller, controllers } from './controller';
+import { controllers } from './controller';
 import { ApiController } from './controllers/api';
 import { EventsController } from './controllers/events';
 import { ExpandableController } from './controllers/expandable';
@@ -47,14 +47,11 @@ import { AutopilotFlowService } from './overrides/flow';
 import { AutopilotHttpCallbackService } from './overrides/http-callback';
 import { AutopilotReporterService } from './overrides/reporter';
 import { AppUiControllers, createUiControllers } from './ui';
-import { ViewportManager } from './viewports/viewport-manager';
+import * as v from './viewports';
 
 export class App extends Engine {
-    // Deprecated
-    viewports: ViewportManager;
-
+    viewports: Viewports;
     ui: AppUiControllers;
-    uiControllers: Controller[];
 
     initialized: boolean = false;
     profileCount: number = 0;
@@ -80,15 +77,24 @@ export class App extends Engine {
         this.container.rebind(ApiRequest).to(AutopilotApiRequest).inSingletonScope();
         this.container.rebind(HttpCallbackService).to(AutopilotHttpCallbackService).inSingletonScope();
 
-        // TODO inbox: this allows providing IoC with adhoc-bound managers
-        // Clean this up after everything is migrated to IoC
-        this.container.bind(ViewportManager).toDynamicValue(() => this.viewports);
-
-        // Old stuff
-        this.viewports = new ViewportManager(this);
+        // Deprecated
+        this.viewports = {
+            scriptFlow: new v.ScriptFlowViewport(this),
+            scriptEditor: new v.ScriptEditorViewport(this),
+            bundles: new v.BundlesViewport(this),
+            extensions: new v.ExtensionsViewport(this),
+            inspections: new v.InspectionsViewport(this),
+            playbackEvents: new v.PlaybackEventsViewport(this),
+            recipes: new v.RecipesViewport(this),
+            searchScripts: new v.SearchScriptsViewport(this),
+            settings: new v.SettingsViewport(this),
+            browserViewport: new v.BrowserViewport(this),
+            screencast: new v.ScreencastViewport(this),
+            helpResources: new v.HelpResourcesViewport(this),
+        };
+        this.container.bind('viewports').toConstantValue(this.viewports);
 
         this.ui = createUiControllers(this);
-        this.uiControllers = Object.values(this.ui) as Controller[];
 
         // TODO Move those somewhere else
         ipcRenderer.on('focus', () => this.events.emit('windowFocused'));
@@ -100,7 +106,7 @@ export class App extends Engine {
     // TODO these are left for backwards compatibility
     // for those who still rely on accessing this.app.xxx to reach out for dependencies.
     // New controllers should use Inversify for that.
-    // Vue components should use this.get(MyController) and import { MyController } from ~/controllers
+    // Vue components should use inject['controllerAlias']
     get browser() { return this.get(BrowserService); }
     get storage() { return this.get(StorageController); }
     get events() { return this.get(EventsController); }
@@ -137,19 +143,8 @@ export class App extends Engine {
             }
         }
 
-        // DEPRECATED: use controllers instead, port these whenever time allows
-        // Old initialization
-        // Note: order of initialization matters atm
-        const ctrls = this.uiControllers.concat([this.viewports]);
-        for (const ctl of ctrls) {
-            try {
-                await ctl.init();
-            } catch (err) {
-                console.warn(`Failed to initialize application, some functionality may be unavailable`, err);
-            }
-        }
-
-        // This one remains in the new way
+        await this.initUiControllers();
+        await this.initViewports();
         await this.startSession();
         this.initialized = true;
         this.events.emit('initialized');
@@ -169,4 +164,45 @@ export class App extends Engine {
         });
     }
 
+    /**
+     * @deprecated use controllers instead, port these whenever time allows
+     */
+    protected async initUiControllers() {
+        for (const ctl of Object.values(this.ui)) {
+            try {
+                await ctl.init();
+            } catch (err) {
+                console.warn(`Failed to initialize application, some functionality may be unavailable`, err);
+            }
+        }
+    }
+
+    /**
+     * @deprecated use controllers instead, port these whenever time allows
+     */
+    protected async initViewports() {
+        for (const viewport of Object.values(this.viewports)) {
+            try {
+                await viewport.init();
+            } catch (err) {
+                console.warn(`Failed to initialize viewport ${viewport.constructor.name}`, err);
+            }
+        }
+    }
+
+}
+
+export interface Viewports {
+    scriptFlow: v.ScriptFlowViewport;
+    scriptEditor: v.ScriptEditorViewport;
+    bundles: v.BundlesViewport;
+    extensions: v.ExtensionsViewport;
+    inspections: v.InspectionsViewport;
+    playbackEvents: v.PlaybackEventsViewport;
+    recipes: v.RecipesViewport;
+    searchScripts: v.SearchScriptsViewport;
+    settings: v.SettingsViewport;
+    browserViewport: v.BrowserViewport;
+    screencast: v.ScreencastViewport;
+    helpResources: v.HelpResourcesViewport;
 }

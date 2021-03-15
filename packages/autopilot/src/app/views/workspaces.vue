@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { menu, DragAndDrop } from '../util';
+import { DragAndDrop, menu } from '../util';
 
 export default {
 
@@ -149,6 +149,7 @@ export default {
             this.workspaces.splice(srcIndex, 1);
             this.workspaces.splice(dstIndex, 0, workspace);
             this.layout.activeWorkspaceIndex = this.workspaces.indexOf(activeWorkspace);
+            this.layout.update();
         }
 
     }

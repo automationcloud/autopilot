@@ -1,3 +1,5 @@
+import { kebabToCamel } from './helpers';
+
 export type LayoutItemType = 'viewport' | 'row' | 'column';
 export type LayoutDirection = 'left' | 'right' | 'top' | 'bottom';
 
@@ -24,7 +26,7 @@ export class LayoutItem {
         this.type = type;
         this.size = size;
         this.children = children.map((c: any) => new LayoutItem(this, c));
-        this.viewportId = viewportId;
+        this.viewportId = viewportId ? kebabToCamel(viewportId) : null;
         this.repack();
     }
 
@@ -167,4 +169,5 @@ export class LayoutItem {
         }
         return null;
     }
+
 }

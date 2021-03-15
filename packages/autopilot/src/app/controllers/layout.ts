@@ -19,7 +19,7 @@ import { controller } from '../controller';
 import { UserData } from '../userdata';
 import { LayoutDirection, LayoutItem } from '../util/layout-item';
 import { Viewport } from '../viewport';
-import { ViewportManager } from '../viewports/viewport-manager';
+import { EventsController } from './events';
 import { StorageController } from './storage';
 
 @injectable()
@@ -31,13 +31,16 @@ export class LayoutController {
     workspaces!: LayoutWorkspace[];
     activeWorkspaceIndex: number = 0;
 
+    activeViewportId: string = '';
     draggingItem: LayoutItem | null = null;
 
     constructor(
         @inject(StorageController)
         storage: StorageController,
-        @inject(ViewportManager)
-        protected viewports: ViewportManager,
+        @inject(EventsController)
+        protected events: EventsController,
+        @inject('viewports')
+        protected viewports: { [key: string]: Viewport<any> },
     ) {
         this.userData = storage.createUserData('layout', 500);
     }
@@ -49,6 +52,7 @@ export class LayoutController {
         this.activeWorkspaceIndex = clamp(activeWorkspaceIndex, 0, this.workspaces.length - 1);
         const layout = this.workspaces[this.activeWorkspaceIndex]?.layout ?? DEFAULT_WORKSPACES[0].layout;
         this.root = new LayoutItem(null, layout);
+        this.activateCycle();
     }
 
     protected update() {
@@ -75,7 +79,7 @@ export class LayoutController {
         }
         const firstViewport = this.root.getFirstViewport();
         if (firstViewport && firstViewport.viewportId) {
-            this.viewports.activate(firstViewport.viewportId);
+            this.activateViewport(firstViewport.viewportId);
         }
         this.update();
     }
@@ -85,7 +89,7 @@ export class LayoutController {
         this.root = new LayoutItem(null, layout);
         const firstViewport = this.root.getFirstViewport();
         if (firstViewport && firstViewport.viewportId) {
-            this.viewports.activate(firstViewport.viewportId);
+            this.activateViewport(firstViewport.viewportId);
         }
         this.update();
     }
@@ -133,7 +137,7 @@ export class LayoutController {
 
     getViewports(): Array<Viewport<any>> {
         return this.getViewportItems()
-            .map(i => this.viewports.get(i.viewportId!)!)
+            .map(i => this.viewports[i.viewportId!]!)
             .filter(Boolean);
     }
 
@@ -162,6 +166,52 @@ export class LayoutController {
         this.update();
     }
 
+
+    isViewportActive(viewportId: string) {
+        return this.activeViewportId === viewportId;
+    }
+
+    getActiveViewport(): Viewport<any> | null {
+        const visible = this.findByViewportId(this.activeViewportId) != null;
+        return visible ? this.viewports[this.activeViewportId] : null;
+    }
+
+    activateViewport(viewportId: string) {
+        if (this.activeViewportId === viewportId) {
+            return;
+        }
+        this.activateWorkspaceForViewport(viewportId);
+        this.activeViewportId = viewportId;
+        this.events.emit('activeViewportChanged');
+        this.focusActiveViewport();
+    }
+
+    activateInDirection(dir: LayoutDirection) {
+        const activeViewportItem = this.findByViewportId(this.activeViewportId);
+        if (!activeViewportItem) {
+            return;
+        }
+        const nextViewport = activeViewportItem.getViewportInDirection(dir);
+        if (nextViewport) {
+            this.activateViewport(nextViewport.viewportId!);
+        }
+    }
+
+    activateCycle(forward: boolean = true) {
+        const visibleIds = this.getViewportIds();
+        const i = visibleIds.indexOf(this.activeViewportId);
+        const newIndex = ((forward ? i + 1 : i - 1) + visibleIds.length) % visibleIds.length;
+        this.activateViewport(visibleIds[newIndex]);
+    }
+
+    focusActiveViewport(force: boolean = false) {
+        const viewport = this.getActiveViewport();
+        if (!viewport) {
+            return;
+        }
+        viewport.focus(force);
+    }
+
     /**
      * Removes the workspaces that don't contain any viewports.
      */
@@ -169,9 +219,19 @@ export class LayoutController {
         this.workspaces = this.workspaces.filter(workspace => {
             const layout = new LayoutItem(null, workspace.layout);
             const viewports = [...layout.root().searchByType('viewport')]
-                .filter(_ => this.viewports.get(_.viewportId!) != null);
+                .filter(_ => this.viewports[_.viewportId!] != null);
             return viewports.length > 0;
         });
+    }
+
+    protected activateWorkspaceForViewport(viewportId: string) {
+        const viewportItem = this.findByViewportId(viewportId);
+        if (!viewportItem) {
+            const workspaceIndex = this.findWorkspaceByViewport(viewportId);
+            if (workspaceIndex > -1) {
+                this.activateWorkspace(workspaceIndex);
+            }
+        }
     }
 
 }

@@ -52,7 +52,7 @@ export class SearchScriptsViewport extends Viewport<SearchScriptsState> {
     }
 
     getViewportId(): string {
-        return 'search-scripts';
+        return 'searchScripts';
     }
 
     getViewportName(): string {

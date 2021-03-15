@@ -1,3 +1,6 @@
 {
-    "extends": ["@ubio/eslint-config"]
+    "extends": ["@ubio/eslint-config"],
+    "rules": {
+        "quote-props": 0
+    }
 }

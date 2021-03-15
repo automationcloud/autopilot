@@ -21,7 +21,6 @@ import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { dom, helpers } from '../util';
 import { Viewport } from '../viewport';
-import { ViewportManager } from '../viewports/viewport-manager';
 import { AutosaveController } from './autosave';
 import { EmulationController } from './emulation';
 import { LayoutController } from './layout';
@@ -44,7 +43,6 @@ export class AppMenuController {
     constructor(
         @inject(EventsController) protected events: EventsController,
         @inject(SettingsController) protected settings: SettingsController,
-        @inject(ViewportManager) protected viewports: ViewportManager,
         @inject(LayoutController) protected layout: LayoutController,
         @inject(ProjectController) protected project: ProjectController,
         @inject(PlaybackController) protected playback: PlaybackController,
@@ -92,7 +90,7 @@ export class AppMenuController {
     }
 
     *buildMenuItems(): Iterable<MenuItemConstructorOptions> {
-        const viewport = this.viewports.getActive();
+        const viewport = this.layout.getActiveViewport();
         yield {
             label: 'Autopilot',
             submenu: [...this.buildAutopilotMenu()],
@@ -251,37 +249,37 @@ export class AppMenuController {
         };
         yield {
             label: 'Focus active viewport',
-            click: () => this.viewports.focusActive(true),
+            click: () => this.layout.focusActiveViewport(true),
             accelerator: 'Esc',
         };
         yield {
             label: 'Select next viewport',
-            click: () => this.viewports.activateCycle(true),
+            click: () => this.layout.activateCycle(true),
             accelerator: 'CmdOrCtrl+`',
         };
         yield {
             label: 'Select previous viewport',
-            click: () => this.viewports.activateCycle(false),
+            click: () => this.layout.activateCycle(false),
             accelerator: 'CmdOrCtrl+Shift+`',
         };
         yield {
             label: 'Select viewport to the left',
-            click: () => this.viewports.activateInDirection('left'),
+            click: () => this.layout.activateInDirection('left'),
             accelerator: 'CmdOrCtrl+Shift+Left',
         };
         yield {
             label: 'Select viewport to the right',
-            click: () => this.viewports.activateInDirection('right'),
+            click: () => this.layout.activateInDirection('right'),
             accelerator: 'CmdOrCtrl+Shift+Right',
         };
         yield {
             label: 'Select viewport to the top',
-            click: () => this.viewports.activateInDirection('top'),
+            click: () => this.layout.activateInDirection('top'),
             accelerator: 'CmdOrCtrl+Shift+Up',
         };
         yield {
             label: 'Select viewport to the bottom',
-            click: () => this.viewports.activateInDirection('bottom'),
+            click: () => this.layout.activateInDirection('bottom'),
             accelerator: 'CmdOrCtrl+Shift+Down',
         };
         yield { type: 'separator' };

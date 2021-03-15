@@ -49,11 +49,11 @@ export abstract class Viewport<State> {
     }
 
     isViewportActive(): boolean {
-        return this.app.viewports.isActive(this.getViewportId());
+        return this.app.layout.isViewportActive(this.getViewportId());
     }
 
     activateViewport() {
-        this.app.viewports.activate(this.getViewportId());
+        this.app.layout.activateViewport(this.getViewportId());
     }
 
     getState(): State {
