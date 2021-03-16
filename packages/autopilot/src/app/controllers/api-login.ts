@@ -63,7 +63,9 @@ export class ApiLoginController {
     async init() {
         // get accessToken before other api calls
         const accessToken = await this.api.authAgent.getHeader();
-        console.debug(`[api-login] access token from authAgent: ${accessToken}`);
+        if (!accessToken) {
+            console.debug('[api-login] access token from authAgent is empty');
+        }
         this.authenticate().catch(() => { });
     }
 
