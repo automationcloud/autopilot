@@ -122,7 +122,7 @@ export class ApiLoginController {
         const query = querystring.stringify({
             state,
             nonce,
-            scope: 'openid',
+            scope: 'offline_access',
             client_id: clientId,
             redirect_uri: this.getRedirectUrl(),
             response_type: 'code',
