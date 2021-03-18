@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import iconv from 'iconv-lite';
+import { Headers } from 'node-fetch';
 import colorParser from 'parse-color';
 import querystring from 'querystring';
 import URL from 'url';
@@ -109,19 +111,30 @@ export function parseColor(str: string): any {
     return color.rgb ? color : null;
 }
 
-export function parseBodyData(buffer: Buffer, format: string): any {
+export function parseBodyData(buffer: Buffer, format: string, encoding: string = 'utf8'): any {
     switch (format) {
         case 'none':
             return null;
         case 'text':
-            return buffer.toString('utf-8');
+            return iconv.decode(buffer, encoding);
         case 'base64':
             return buffer.toString('base64');
         case 'json':
-            return JSON.parse(buffer.toString('utf-8'));
+            return JSON.parse(iconv.decode(buffer, encoding));
         case 'urlencoded':
-            return querystring.parse(buffer.toString('utf-8'));
+            return querystring.parse(iconv.decode(buffer, encoding));
         default:
             assertScript(false, `Unknown body format: ${format}`);
     }
+}
+
+export function parseEncoding(headers: Headers | { [key: string]: string }) {
+    const contentType = headers instanceof Headers ? headers.get('content-type') : headers['content-type'];
+    if (contentType && contentType.includes('charset')) {
+        const charset = contentType.split(';').find(_ => _.includes('charset'));
+        const [, encoding = 'utf8'] = charset?.split('=') ?? '';
+        return encoding;
+    }
+
+    return 'utf8';
 }

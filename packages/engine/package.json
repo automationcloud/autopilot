@@ -42,6 +42,7 @@
         "fast-levenshtein": "^2.0.6",
         "form-data": "^2.5.1",
         "glob": "^7.1.6",
+        "iconv-lite": "^0.6.2",
         "inversify": "^5.0.5",
         "json5": "^2.1.1",
         "jsonpointer": "^4.0.1",

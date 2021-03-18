@@ -285,12 +285,13 @@ export class FetchService {
         try {
             const res = await nodeFetch(url, fetchOptions);
             const buffer = await res.buffer();
+            const encoding = await util.parseEncoding(res.headers);
             const response: FetchResponseSpec = {
                 url: res.url,
                 status: res.status,
                 statusText: res.statusText,
                 headers: {},
-                body: await this.parseResponseBody(spec, buffer),
+                body: await this.parseResponseBody(spec, buffer, encoding),
             };
             for (const [k, v] of res.headers) {
                 response.headers[k] = v;
@@ -303,11 +304,11 @@ export class FetchService {
         }
     }
 
-    protected async parseResponseBody(spec: FetchRequestSpec, buffer: Buffer): Promise<any> {
+    protected async parseResponseBody(spec: FetchRequestSpec, buffer: Buffer, encoding: string = 'utf8'): Promise<any> {
         if (spec.responseBodyFormat === 'blob') {
             return await this.blobs.createBlob(uuid.v4(), buffer);
         }
-        return util.parseBodyData(buffer, spec.responseBodyFormat);
+        return util.parseBodyData(buffer, spec.responseBodyFormat, encoding);
     }
 
 }
