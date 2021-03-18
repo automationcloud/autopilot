@@ -88,7 +88,7 @@ export class App extends Engine {
             recipes: new v.RecipesViewport(this),
             searchScripts: new v.SearchScriptsViewport(this),
             settings: new v.SettingsViewport(this),
-            browserViewport: new v.BrowserViewport(this),
+            browser: new v.BrowserViewport(this),
             screencast: new v.ScreencastViewport(this),
             helpResources: new v.HelpResourcesViewport(this),
         };
@@ -202,7 +202,7 @@ export interface Viewports {
     recipes: v.RecipesViewport;
     searchScripts: v.SearchScriptsViewport;
     settings: v.SettingsViewport;
-    browserViewport: v.BrowserViewport;
+    browser: v.BrowserViewport;
     screencast: v.ScreencastViewport;
     helpResources: v.HelpResourcesViewport;
 }
