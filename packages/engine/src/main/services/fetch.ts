@@ -258,7 +258,8 @@ export class FetchService {
             return result;
         }, spec)) as FetchResponseSpec;
         const bodyBuffer = Buffer.from(response.body, 'base64');
-        response.body = await this.parseResponseBody(spec, bodyBuffer);
+        const encoding = util.parseEncoding(response.headers);
+        response.body = await this.parseResponseBody(spec, bodyBuffer, encoding);
         return response;
     }
 

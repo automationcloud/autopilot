@@ -92,6 +92,48 @@ describe('Page.fetch', () => {
             assert.equal(output.data.request.url, runtime.getUrl('/error/403'));
             assert.equal(output.data.response.status, 403);
         });
+
+        it('parses specified encoding response body', async () => {
+            await runtime.goto('/index.html');
+            await runtime.runActions([
+                {
+                    type: 'Page.fetch',
+                    mode: 'Fetch',
+                    requestBodyFormat: 'none',
+                    responseBodyFormat: 'text',
+                    pipeline: {
+                        pipes: [
+                            {
+                                type: 'Value.getJson',
+                                value: JSON.stringify({
+                                    url: runtime.getUrl('/headers'),
+                                    method: 'GET',
+                                    headers: {
+                                        'content-type': 'text/plain;charset=ISO-8859-1',
+                                        hello: 'SANT VICENÇ DE CALDERS',
+                                    },
+                                }),
+                            },
+                        ],
+                    },
+                    children: [
+                        {
+                            type: 'Flow.output',
+                            outputKey: 'result',
+                        },
+                    ],
+                },
+            ]);
+            const output = runtime.flow.outputs.find(o => o.key === 'result')!;
+            assert.ok(output);
+            assert.equal(output.data.request.method, 'GET');
+            assert.equal(output.data.request.url, runtime.getUrl('/headers'));
+            assert.ok(output.data.request.headers);
+            assert.equal(output.data.response.status, 200);
+            assert.equal(output.data.response.statusText, 'OK');
+            assert.ok(output.data.response.headers);
+            assert.ok(output.data.response.body.includes('VICENÇ'));
+        });
     });
 
     context('Node.js runtime', () => {
@@ -175,7 +217,6 @@ describe('Page.fetch', () => {
             assert.equal(output.data.response.statusText, 'OK');
             assert.ok(output.data.response.headers);
             assert.ok(output.data.response.body.includes('VICENÇ'));
-
         });
     });
 });

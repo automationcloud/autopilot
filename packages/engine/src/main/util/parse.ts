@@ -129,7 +129,7 @@ export function parseBodyData(buffer: Buffer, format: string, encoding: string =
 }
 
 export function parseEncoding(headers: Headers | { [key: string]: string }) {
-    const contentType = headers instanceof Headers ? headers.get('content-type') : headers['content-type'];
+    const contentType = getContentType(headers);
     if (contentType && contentType.includes('charset')) {
         const charset = contentType.split(';').find(_ => _.includes('charset'));
         const [, encoding = 'utf8'] = charset?.split('=') ?? '';
@@ -137,4 +137,14 @@ export function parseEncoding(headers: Headers | { [key: string]: string }) {
     }
 
     return 'utf8';
+}
+
+function getContentType(headers: Headers | { [key: string]: string }) {
+    if (headers instanceof Headers) {
+        return headers.get('content-type');
+    }
+    const entry = Object.entries(headers)
+        .map(([k, v]) => [k.toLowerCase(), v])
+        .find(([k, _v]) => k === 'content-type');
+    return entry ? entry[1] : null;
 }
