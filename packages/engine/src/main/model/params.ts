@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import * as util from '../util';
+import { CredentialsConfig } from './commons';
 
 /**
  * @internal
@@ -41,7 +42,8 @@ export type AdvancedParamType =
     'pipeline' |
     'button' |
     'outcome' |
-    'ref';
+    'ref' |
+    'credentials';
 
 /**
  * All possible parameter types.
@@ -258,6 +260,23 @@ export function Button(spec: { label?: string; help?: string } = {}) {
         serialized: false,
     });
 }
+
+/**
+ * Declares Credentials parameter.
+ * @param spec
+ * @beta
+ */
+export function Credentials(spec: CredentialsParamSpec) {
+    return paramDecorator('credentials', { ...spec });
+}
+
+export type CredentialsParamSpec = {
+    label?: string;
+    help?: string;
+    icon?: string;
+    providerName: string;
+    config: CredentialsConfig
+};
 
 /**
  * Declares Outcome parameter, used to display the intermediary of an action or pipe.

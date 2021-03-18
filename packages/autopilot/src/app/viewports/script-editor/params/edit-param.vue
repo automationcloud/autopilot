@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import ParamMixin from './param-mixin';
-
 import ParamBoolean from './param-boolean.vue';
 import ParamButton from './param-button.vue';
+import ParamCredentials from './param-credentials.vue';
 import ParamDefinition from './param-definition.vue';
 import ParamEnum from './param-enum.vue';
 import ParamJavascript from './param-javascript.vue';
 import ParamJson from './param-json.vue';
 import ParamKeys from './param-keys.vue';
+import ParamMixin from './param-mixin';
 import ParamNumber from './param-number.vue';
 import ParamOutcome from './param-outcome.vue';
 import ParamPipeline from './param-pipeline.vue';
@@ -35,6 +35,7 @@ export default {
     components: {
         ParamBoolean,
         ParamButton,
+        ParamCredentials,
         ParamDefinition,
         ParamEnum,
         ParamJavascript,
