@@ -122,7 +122,6 @@ export abstract class Unit<P> extends model.Entity<P> {
             case 'template':
             case 'json':
             case 'javascript':
-            case 'credentials':
             case 'definition':
                 return String(value || '');
             case 'keys':

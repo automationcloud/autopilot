@@ -10,6 +10,10 @@
     background: #fff;
 }
 
+.modal--narrow {
+    max-width: 320px;
+}
+
 .modal__header {
     flex: 0 0 auto;
     display: flex;
@@ -30,7 +34,7 @@
 .modal__body {
     min-height: 0;
     flex: 1;
-    padding: var(--gap) var(--gap--large);
+    padding: var(--gap);
     overflow-y: auto;
 }
 

@@ -22,25 +22,29 @@ export class TestAuthAction extends Action {
     static $help = ``;
 
     @params.Credentials({
-        label: 'Basic',
-        providerName: 'Some Service',
-        icon: '',
-        config: { type: 'basic' },
-    })
-    authBasic: unknown;
-
-    @params.Credentials({
-        label: 'OAuth2',
+        label: 'Authentication',
         providerName: 'GitHub',
         icon: 'fab fa-github',
-        config: {
-            type: 'oauth2',
-            authorizationUrl: 'https://github.com/login/oauth/authorize',
-            tokenUrl: 'https://github.com/login/oauth/access_token',
-            scopes: 'repo,'
-        }
+        configs: [
+            {
+                type: 'basic',
+                passwordLabel: 'Access token',
+                help: 'Create a new personal access token in "Settings" > "Developer settings" > "Personal access tokens".',
+            },
+            {
+                type: 'bearer',
+                help: 'Some more help text.'
+            },
+            {
+                type: 'oauth2',
+                grantTypes: ['authorization_code', 'client_credentials', 'refresh_token'],
+                authorizationUrl: 'https://github.com/login/oauth/authorize',
+                tokenUrl: 'https://github.com/login/oauth/access_token',
+                scopes: 'repo,'
+            },
+        ]
     })
-    authOauth2: unknown;
+    auth: unknown;
 
     get $credentialsService() {
         return this.$container.get(CredentialsService);

@@ -1,22 +1,46 @@
 <template>
     <div class="param--credentials">
-
         <div class="param__field">
             <div class="param__label">
                 {{ label }}
             </div>
-            <div class="param__controls login-details">
-                <button v-if="!value"
-                    @click="credentials.login(item, param)"
-                    class="button button--primary">
-                    <i v-if="param.icon"
-                        class="button__icon"
-                        :class="param.icon"></i>
-                    <span>Log into {{ param.providerName }}</span>
-                </button>
+            <div class="param__controls">
+
+                <div class="group group--gap stretch">
+                    <select
+                        class="input stretch"
+                        v-model="value">
+                        <option label="- New login -"
+                            :value="null">
+                        </option>
+                        <optgroup label="Existing logins"
+                            v-if="availableCreds.length">
+                            <option v-for="cred of availableCreds"
+                                :key="cred.id"
+                                :value="cred">
+                                {{ cred.name }}
+                                ({{ new Date(cred.updatedAt).toLocaleString() }})
+                            </option>
+                        </optgroup>
+                    </select>
+
+                    <button v-if="!value"
+                        @click="login()"
+                        class="button button--primary button--icon"
+                        title="Log in">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+
+                    <button v-if="value"
+                        @click="logout()"
+                        class="button button--tertiary button--icon"
+                        title="Log out">
+                        <i class="fas fa-times"></i>
+                    </button>
+
+                </div>
             </div>
         </div>
-        {{ value }}
     </div>
 </template>
 
@@ -33,6 +57,23 @@ export default {
 
     computed: {
 
+        availableCreds() {
+            return this.credentials.availableCredentials
+                .filter(_ => _.providerName === this.param.providerName);
+        }
+
+    },
+
+    methods: {
+
+        login() {
+            this.credentials.login(this.itemProxy, this.param);
+        },
+
+        logout() {
+            this.credentials.logout(this.itemProxy, this.param);
+        }
+
     }
 
 };
@@ -41,5 +82,9 @@ export default {
 <style scoped>
 .login-details {
     text-align: right;
+}
+
+.login-options {
+    margin: var(--gap) 0;
 }
 </style>

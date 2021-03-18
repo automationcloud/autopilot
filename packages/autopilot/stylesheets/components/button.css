@@ -35,6 +35,7 @@ button.button--cta::before {
 }
 
 .button--alt.button--secondary {
+    border-color: var(--color-blue--700);
     background: var(--color-blue--600);
     color: #fff;
 }
@@ -44,7 +45,7 @@ button.button--cta::before {
     border-color: transparent;
 }
 
-.button--alt.button--disabled {
+.button--alt.button--disabled, .button--alt:disabled {
     background: var(--color-mono--400);
     color: var(--color-mono--600);
 }

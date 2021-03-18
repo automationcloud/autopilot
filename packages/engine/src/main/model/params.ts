@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { CredentialsConfig } from '../services/credentials';
 import * as util from '../util';
-import { CredentialsConfig } from './commons';
 
 /**
  * @internal
@@ -267,7 +267,8 @@ export function Button(spec: { label?: string; help?: string } = {}) {
  * @beta
  */
 export function Credentials(spec: CredentialsParamSpec) {
-    return paramDecorator('credentials', { ...spec });
+    const configs = Array.isArray(spec.configs) ? spec.configs : [spec.configs];
+    return paramDecorator('credentials', { ...spec, configs });
 }
 
 export type CredentialsParamSpec = {
@@ -275,7 +276,7 @@ export type CredentialsParamSpec = {
     help?: string;
     icon?: string;
     providerName: string;
-    config: CredentialsConfig
+    configs: CredentialsConfig | CredentialsConfig[];
 };
 
 /**
