@@ -10,7 +10,7 @@
         <img src="resources/ubio-robot-white.svg"
             class="topbar__logo"/>
 
-        <workspaces class="topbar__workspaces"/>
+        <workspaces class="topbar__workspaces" />
 
         <div class="topbar__tools">
             <proxy-select class="topbar__link"/>
@@ -141,7 +141,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .topbar {
     --topbar-height: 38px;
     flex: 0 0 auto;

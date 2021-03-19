@@ -13,17 +13,18 @@
 // limitations under the License.
 
 import { inject, injectable } from 'inversify';
+
 import { booleanConfig } from '../../../../cdp/out/main';
 import { controller } from '../controller';
 import { SettingsController } from './settings';
 
 
-const SHOW_WELCOME = booleanConfig('SHOW_WELCOME', true);
+const WELCOME_SHOWN = booleanConfig('WElCOME_SHOWN', true);
 
 @injectable()
 @controller({ 'alias': 'welcome' })
 export class WelcomeController {
-
+    currentIndex: number = -1;
 
     constructor(
         @inject(SettingsController)
@@ -32,19 +33,87 @@ export class WelcomeController {
     }
 
     async init() {
+        if (this.settings.get(WELCOME_SHOWN)) {
+            this.currentIndex = 0;
+        }
+    }
+
+    next() {
+        if (this.currentIndex === this.contents.length - 1) {
+            this.hide();
+        } else {
+            this.currentIndex += 1;
+        }
 
     }
 
-    showWelcome() {
-        return this.settings.get(SHOW_WELCOME);
+    hide() {
+        this.currentIndex = -1;
+        this.setWelcomeShown(false);
     }
 
-    setFirstRun(value: boolean) {
-        this.settings.setEntries([['SHOW_WELCOME', String(value)]]);
+    get welcomeShown() {
+        return this.currentIndex >= 0 && this.settings.get(WELCOME_SHOWN);
+    }
+
+    protected setWelcomeShown(value: boolean) {
+        this.settings.setEntries([['WELCOME_SHOWN', String(value)]]);
     }
 
     getWelcomeAutomation() {
         return { ...welcomeAutomation };
+    }
+
+    get contents() {
+        return [
+            {
+                title: 'The Workspace Menu',
+                message: [
+                    'Workspaces contain different Panels of tools.',
+                    'We\'ve set up default Workspaces like this one for scripting. You can also configure your own.'
+                ],
+                image: null,
+                arrow: { direction: 'top', align: { left: '200px' } }
+            },
+            {
+                title: 'The Script panel',
+                message: ['Define contexts which match pages and then add Actions which perform automation tasks.'],
+                image: null,
+                arrow: { direction: 'left', align: 'center' }
+            },
+            {
+                title: 'The Editor panel',
+                message: [
+                    'Compose Pipelines to do things in each Action',
+                    'The last pipe\'s output provides input to the next',
+                ],
+                image: null,
+                arrow: { direction: 'right', align: 'center' }
+            },
+            {
+                title: 'The Play bar',
+                message: [
+                    'Control and debug playback of your script in the browser.'
+                ],
+                image: 'base64:',
+                arrow: { direction: 'bottom', align: 'center' }
+            },
+            {
+                title: 'Your Automation Cloud Account',
+                message: ['Sign in here to save your automations. Run them in the Automation Cloud later, at scale'],
+                image: null,
+                arrow: { direction: 'top', align: 'right' }
+            },
+            {
+                title: 'Play your first script',
+                message: [
+                    'Clock the Play button to start playing this script.',
+                    'Go on. Dare you!',
+                ],
+                image: null,
+                arrow: { direction: 'bottom', align: 'left' }
+            }
+        ];
     }
 }
 
@@ -61,7 +130,7 @@ const welcomeAutomation = {
     script: {
         dependencies: [],
         id: '1326e401-7801-4064-94fa-9bc05d546989',
-        contexts: {
+        conmessage: {
             items: [
                 {
                     id: '7865046c-d354-44e5-afb0-23f49ace2e80',
