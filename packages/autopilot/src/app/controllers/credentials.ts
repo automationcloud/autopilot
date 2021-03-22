@@ -22,7 +22,7 @@ export class CredentialsController {
     // We'll write the credentials here
     item: Action | Pipe | null = null;
     param: params.ParamSpec | null = null;
-
+    // These are available in our lists
     availableCredentials: StoredCredentials[] = [];
 
     constructor(
@@ -38,7 +38,19 @@ export class CredentialsController {
         await this.fetchAvailableCredentials();
     }
 
-    async login(item: Action | Pipe, param: model.ParamSpec) {
+    /**
+     * Refreshes the list of available credentials
+     * (on startup and when credentials change).
+     */
+    async fetchAvailableCredentials() {
+        const { entities } = await this.apiRequest.get('/Credentials/listCredentials');
+        this.availableCredentials = entities;
+    }
+
+    /**
+     * Invoked by pressing "New login" button in Credentials parameter.
+     */
+    async showLoginDialog(item: Action | Pipe, param: model.ParamSpec) {
         if (param.type !== 'credentials') {
             return;
         }
@@ -76,36 +88,41 @@ export class CredentialsController {
         });
     }
 
-    async fetchAvailableCredentials() {
-        const { entities } = await this.apiRequest.get('/Credentials/listCredentials');
-        this.availableCredentials = entities;
-    }
-
-    async saveCredentials(name: string, config: CredentialsConfig, data: CredentialsData) {
+    async login(spec: CreateCredentialsSpec) {
         if (!this.param) {
             // OR throw?
             return;
         }
-        const { providerName } = this.param;
-        const { type } = config;
+        await this.saveCredentials(spec, this.param);
+    }
+
+    protected async saveCredentials(spec: CreateCredentialsSpec, param: params.ParamSpec) {
+        const { name, config, data, providerName } = spec;
         const creds = await this.apiRequest.post('/Credentials/saveCredentials', {
             body: {
                 name,
-                credentialsType: type,
+                credentialsType: config.type,
                 providerName,
                 data,
             }
         });
         await this.fetchAvailableCredentials();
-        (this.item as any)[this.param.name] = creds;
+        (this.item as any)[param.name] = creds;
         this.modals.hide();
     }
 
-    async deleteCredentials(id: string) {
+    protected async deleteCredentials(id: string) {
         await this.apiRequest.delete('/Credentials/deleteCredentials', {
             query: { id }
         });
         await this.fetchAvailableCredentials();
     }
 
+}
+
+export interface CreateCredentialsSpec {
+    name: string;
+    providerName: string;
+    config: CredentialsConfig;
+    data: CredentialsData;
 }

@@ -167,7 +167,11 @@ export abstract class Unit<P> extends model.Entity<P> {
             }
             // Value is read from either spec, or param defaults, or class-level defaults
             // (whichever one is non-null first)
-            const val = [spec[param.name], param.value, (this as any)[param.name]].find(_ => _ != null);
+            const val = [
+                spec[param.name],
+                param.value,
+                (this as any)[param.name]
+            ].find(_ => _ != null) ?? null;
             (this as any)[param.name] = this.deserializeParam(param, val);
         }
     }

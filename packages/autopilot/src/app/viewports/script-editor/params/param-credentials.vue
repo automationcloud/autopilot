@@ -67,12 +67,12 @@ export default {
     methods: {
 
         login() {
-            this.credentials.login(this.itemProxy, this.param);
+            this.credentials.showLoginDialog(this.itemProxy, this.param);
         },
 
         logout() {
             this.credentials.logout(this.itemProxy, this.param);
-        }
+        },
 
     }
 

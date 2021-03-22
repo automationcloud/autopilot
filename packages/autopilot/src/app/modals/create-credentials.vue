@@ -216,8 +216,11 @@ export default {
 
         login() {
             const config = this.selectedConfig;
-            const data = this[config.type];
-            this.credentials.saveCredentials(this.name, config, data);
+            this.credentials.login({
+                name: this.name,
+                config,
+                data: this[config.type],
+            });
         },
 
     }
