@@ -1,16 +1,29 @@
-import { injectable } from 'inversify';
+import * as r from '@automationcloud/request';
+import { inject, injectable } from 'inversify';
 
 import { util } from '..';
+import { ApiRequest } from './api-request';
 
 @injectable()
 export class CredentialsService {
 
-    protected async resolveCredentials(_token: unknown): Promise<CredentialsData | null> {
-        return null;
+    constructor(
+        @inject(ApiRequest)
+        protected api: ApiRequest,
+    ) {}
+
+    protected async resolveCredentials(prop: any): Promise<CredentialsData | null> {
+        const id = (prop as any)?.id ?? null;
+        if (!id) {
+            return null;
+        }
+        return await this.api.get('/Credentials/getCredentialsData', {
+            query: { id }
+        });
     }
 
-    async getCredentials(token: unknown): Promise<CredentialsData> {
-        const credentials = await this.resolveCredentials(token);
+    async getCredentials(prop: any): Promise<CredentialsData> {
+        const credentials = await this.resolveCredentials(prop);
         if (credentials == null) {
             throw util.createError({
                 code: 'CredentialsNotFound',
@@ -19,6 +32,31 @@ export class CredentialsService {
             });
         }
         return credentials;
+    }
+
+    async getAuthAgent(prop: any): Promise<r.AuthAgent> {
+        const data = await this.getCredentials(prop);
+        // If we have data, assuming token is intact
+        switch (prop.credentialsType) {
+            case 'basic': {
+                const { username, password } = data as CredentialsBasicData;
+                return new r.BasicAuthAgent({ username, password });
+            }
+            case 'bearer': {
+                const { token } = data as CredentialsBearerData;
+                const { prefix } = prop as CredentialsBearerConfig;
+                return new r.BearerAuthAgent({ token, prefix });
+            }
+            case 'oauth2': {
+                return new r.OAuth2Agent({ ...prop, ...data });
+            }
+            default:
+                throw util.createError({
+                    code: 'CredentialsNotSupported',
+                    message: `This type of credentials is not supported.`,
+                    retry: false,
+                });
+        }
     }
 
 }
@@ -53,11 +91,11 @@ export interface CredentialsBearerConfig {
     help?: string;
 }
 
-export type CredentialsOAuth2GrantType = 'authorization_code' | 'client_credentials' | 'refresh_token';
+// export type CredentialsOAuth2GrantType = 'authorization_code' | 'client_credentials' | 'refresh_token';
 
 export interface CredentialsOAuth2Config {
     type: 'oauth2';
-    grantTypes: CredentialsOAuth2GrantType[];
+    // grantTypes: CredentialsOAuth2GrantType[];
     authorizationUrl: string;
     tokenUrl: string;
     help?: string;
@@ -83,4 +121,5 @@ export interface CredentialsOAuth2Data {
     clientSecret: string;
     refreshToken?: string;
     accessToken?: string;
+    expiresAt?: number;
 }

@@ -73,6 +73,7 @@
             </div>
 
             <div v-if="selectedConfig.type === 'oauth2'">
+                <!--
                 <div class="form-row">
                     <div class="form-row__label">
                         Grant Type
@@ -88,6 +89,7 @@
                         </select>
                     </div>
                 </div>
+                -->
                 <div class="form-row">
                     <div class="form-row__label">
                         Client Id

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Request } from '@automationcloud/request';
+
 import { Action } from '../action';
 import { params } from '../model';
 import { CredentialsService } from '../services/credentials';
@@ -37,7 +39,7 @@ export class TestAuthAction extends Action {
             },
             {
                 type: 'oauth2',
-                grantTypes: ['authorization_code', 'client_credentials', 'refresh_token'],
+                // grantTypes: ['authorization_code', 'client_credentials', 'refresh_token'],
                 authorizationUrl: 'https://github.com/login/oauth/authorize',
                 tokenUrl: 'https://github.com/login/oauth/access_token',
                 scopes: 'repo,'
@@ -46,12 +48,21 @@ export class TestAuthAction extends Action {
     })
     auth: unknown;
 
-    get $credentialsService() {
+    get $credentials() {
         return this.$container.get(CredentialsService);
     }
 
     async exec() {
-        // TODO work!
-
+        const auth = await this.$credentials.getAuthAgent(this.auth);
+        const request = new Request({
+            baseUrl: 'https://api.github.com',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+            },
+            auth,
+        });
+        const res = await request.get('/user');
+        // eslint-disable-next-line no-console
+        console.log(res);
     }
 }

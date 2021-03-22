@@ -3,16 +3,19 @@ import {
     ApiRequest,
     CredentialsConfig,
     CredentialsData,
+    CredentialsOAuth2Data,
+    HttpCallbackService,
     model,
     Pipe,
     StoredCredentials,
 } from '@automationcloud/engine';
-import { params } from '@automationcloud/engine/out/main/model';
 import { inject, injectable } from 'inversify';
 
 import { controller } from '../controller';
 import { ModalsController } from './modals';
 import { NotificationsController } from './notifications';
+
+const SSO_SERVICE_URL = 'https://connectors.automation.cloud/';
 
 @injectable()
 @controller({
@@ -21,7 +24,7 @@ import { NotificationsController } from './notifications';
 export class CredentialsController {
     // We'll write the credentials here
     item: Action | Pipe | null = null;
-    param: params.ParamSpec | null = null;
+    param: model.ParamSpec | null = null;
     // These are available in our lists
     availableCredentials: StoredCredentials[] = [];
 
@@ -32,7 +35,10 @@ export class CredentialsController {
         protected apiRequest: ApiRequest,
         @inject(NotificationsController)
         protected notifications: NotificationsController,
-    ) {}
+        @inject(HttpCallbackService)
+        protected httpCallback: HttpCallbackService,
+    ) {
+    }
 
     async init() {
         await this.fetchAvailableCredentials();
@@ -93,11 +99,38 @@ export class CredentialsController {
             // OR throw?
             return;
         }
-        await this.saveCredentials(spec, this.param);
+        const { config } = spec;
+        switch (config.type) {
+            // TODO oauth1
+            case 'oauth2': {
+                const data = spec.data as CredentialsOAuth2Data;
+                const url = new URL('/v1/oauth2', SSO_SERVICE_URL);
+                url.searchParams.set('authorizationURL', config.authorizationUrl);
+                url.searchParams.set('tokenURL', config.tokenUrl);
+                url.searchParams.set('clientID', data.clientId);
+                url.searchParams.set('clientSecret', data.clientSecret);
+                url.searchParams.set('redirectURL', this.httpCallback.getCallbackUrl());
+                const res = await this.httpCallback.open(url);
+                const {
+                    accessToken,
+                    refreshToken,
+                    expiresAt,
+                } = res?.query ?? {};
+                data.accessToken = accessToken;
+                data.refreshToken = refreshToken;
+                data.expiresAt = Number(expiresAt) || undefined;
+                await this.saveCredentials(spec, this.param);
+                return;
+            }
+            default: {
+                await this.saveCredentials(spec, this.param);
+            }
+        }
     }
 
-    protected async saveCredentials(spec: CreateCredentialsSpec, param: params.ParamSpec) {
-        const { name, config, data, providerName } = spec;
+    protected async saveCredentials(spec: CreateCredentialsSpec, param: model.ParamSpec) {
+        const { name, config, data } = spec;
+        const { providerName } = param;
         const creds = await this.apiRequest.post('/Credentials/saveCredentials', {
             body: {
                 name,
