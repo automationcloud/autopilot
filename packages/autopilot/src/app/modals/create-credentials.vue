@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 -->
-                <template v-if="oauth2.customConfig">
+                <template v-if="selectedConfig.customConfig">
                     <div class="form-row">
                         <div class="form-row__label">
                             Authorization URL
@@ -106,7 +106,7 @@
                             Token URL
                         </div>
                         <div class="form-row__controls">
-                            <input type="password"
+                            <input
                                 class="input stretch"
                                 v-model.trim="oauth2.tokenUrl"/>
                         </div>
@@ -200,6 +200,14 @@ export default {
         // Infer login name from AC auth
         const { firstName } = this.apiLogin.account || {};
         this.name = firstName;
+        // Pre-fill custom URLs for OAuth configs
+        // TODO oauth1
+        // const oauth1Config = this.configs.find(_ => _.type === 'oauth1');
+        const oauth2Config = this.configs.find(_ => _.type === 'oauth2');
+        if (oauth2Config) {
+            this.oauth2.tokenUrl = oauth2Config.tokenUrl;
+            this.oauth2.authorizationUrl = oauth2Config.authorizationUrl;
+        }
     },
 
     computed: {

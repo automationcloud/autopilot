@@ -39,9 +39,12 @@ export class TestAuthAction extends Action {
             },
             {
                 type: 'oauth2',
+                customConfig: true,
                 // grantTypes: ['authorization_code', 'client_credentials', 'refresh_token'],
-                authorizationUrl: 'https://github.com/login/oauth/authorize',
-                tokenUrl: 'https://github.com/login/oauth/access_token',
+                // authorizationUrl: 'https://github.com/login/oauth/authorize',
+                // tokenUrl: 'https://github.com/login/oauth/access_token',
+                authorizationUrl: '',
+                tokenUrl: '',
                 scopes: 'repo,'
             },
         ]
