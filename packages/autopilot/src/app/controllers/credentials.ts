@@ -65,6 +65,10 @@ export class CredentialsController {
         this.modals.show('create-credentials');
     }
 
+    /**
+     * Invoked when Log Out button is pressed, prompts to remove the credentials
+     * from Credentials Store.
+     */
     async logout(item: Action | Pipe, param: model.ParamSpec) {
         const creds = (item as any)[param.name];
         if (!(param.type === 'credentials' && creds.id)) {
@@ -94,6 +98,9 @@ export class CredentialsController {
         });
     }
 
+    /**
+     * Invoked when Log In button is pressed in "New Login" dialog.
+     */
     async login(spec: CreateCredentialsSpec) {
         if (!this.param) {
             // OR throw?
@@ -104,9 +111,13 @@ export class CredentialsController {
             // TODO oauth1
             case 'oauth2': {
                 const data = spec.data as CredentialsOAuth2Data;
+                if (!config.customConfig) {
+                    data.authorizationUrl = config.authorizationUrl;
+                    data.tokenUrl = config.tokenUrl;
+                }
                 const url = new URL('/v1/oauth2', SSO_SERVICE_URL);
-                url.searchParams.set('authorizationURL', config.authorizationUrl);
-                url.searchParams.set('tokenURL', config.tokenUrl);
+                url.searchParams.set('authorizationURL', data.authorizationUrl);
+                url.searchParams.set('tokenURL', data.tokenUrl);
                 url.searchParams.set('clientID', data.clientId);
                 url.searchParams.set('clientSecret', data.clientSecret);
                 url.searchParams.set('redirectURL', this.httpCallback.getCallbackUrl());

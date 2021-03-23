@@ -35,6 +35,9 @@ export class CredentialsService {
     }
 
     async getAuthAgent(prop: any): Promise<r.AuthAgent> {
+        if (prop == null) {
+            return new r.NoAuthAgent();
+        }
         const data = await this.getCredentials(prop);
         // If we have data, assuming token is intact
         switch (prop.credentialsType) {
@@ -98,8 +101,9 @@ export interface CredentialsOAuth2Config {
     // grantTypes: CredentialsOAuth2GrantType[];
     authorizationUrl: string;
     tokenUrl: string;
-    help?: string;
     scopes: string;
+    customConfig?: boolean;
+    help?: string;
 }
 
 export type CredentialsData =
@@ -117,6 +121,8 @@ export interface CredentialsBearerData {
 }
 
 export interface CredentialsOAuth2Data {
+    authorizationUrl: string;
+    tokenUrl: string;
     clientId: string;
     clientSecret: string;
     refreshToken?: string;

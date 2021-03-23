@@ -90,6 +90,28 @@
                     </div>
                 </div>
                 -->
+                <template v-if="oauth2.customConfig">
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Authorization URL
+                        </div>
+                        <div class="form-row__controls">
+                            <input
+                                class="input stretch"
+                                v-model.trim="oauth2.authorizationUrl"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Token URL
+                        </div>
+                        <div class="form-row__controls">
+                            <input type="password"
+                                class="input stretch"
+                                v-model.trim="oauth2.tokenUrl"/>
+                        </div>
+                    </div>
+                </template>
                 <div class="form-row">
                     <div class="form-row__label">
                         Client Id
@@ -167,6 +189,9 @@ export default {
                 grantType: 'authorization_code',
                 clientId: '',
                 clientSecret: '',
+                // Those are only modified when `config.customConfig: true`
+                authorizationUrl: '',
+                tokenUrl: '',
             },
         };
     },
