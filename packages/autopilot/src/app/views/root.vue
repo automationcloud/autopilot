@@ -16,21 +16,24 @@
             <playback/>
             <modal-menu/>
             <notifications/>
+            <welcome-bubbles />
         </div>
     </div>
 </template>
 
 <script>
-import { dom } from '../util';
 import '../../../stylesheets/index.css';
-import Topbar from './topbar.vue';
+
+import { dom } from '../util';
+import FirstRun from './first-run.vue';
 import Layout from './layout.vue';
+import ModalMenu from './modal-menu.vue';
 import Modals from './modals.vue';
+import Notifications from './notifications.vue';
 import Playback from './playback.vue';
 import SystemNotifications from './system-notifications.vue';
-import FirstRun from './first-run.vue';
-import ModalMenu from './modal-menu.vue';
-import Notifications from './notifications.vue';
+import Topbar from './topbar.vue';
+import WelcomeBubbles from './welcome-bubbles.vue';
 
 export default {
 
@@ -43,6 +46,7 @@ export default {
         FirstRun,
         ModalMenu,
         Notifications,
+        WelcomeBubbles,
     },
 
     inject: [

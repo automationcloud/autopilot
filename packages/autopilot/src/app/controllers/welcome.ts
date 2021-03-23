@@ -16,25 +16,41 @@ import { inject, injectable } from 'inversify';
 
 import { booleanConfig } from '../../../../cdp/out/main';
 import { controller } from '../controller';
+import { LayoutController } from './layout';
 import { SettingsController } from './settings';
 
 
 const WELCOME_SHOWN = booleanConfig('WElCOME_SHOWN', true);
 
 @injectable()
-@controller({ 'alias': 'welcome' })
+@controller({ alias: 'welcome' })
 export class WelcomeController {
     currentIndex: number = -1;
 
     constructor(
         @inject(SettingsController)
         protected settings: SettingsController,
+        @inject(LayoutController)
+        protected layout: LayoutController,
     ) {
     }
 
     async init() {
-        if (this.settings.get(WELCOME_SHOWN)) {
+        // TODO: just need to make sure this layout is available and activated
+        // probably this should be done in layout manager.
+        if (this.welcomeShown()) {
             this.currentIndex = 0;
+            this.layout.workspaces.unshift({
+                name: 'Welcome',
+                layout: {
+                    type: 'row',
+                    children: [
+                        { type: 'viewport', viewportId: 'script-flow' },
+                        { type: 'viewport', viewportId: 'script-editor' },
+                    ],
+                },
+            });
+            this.layout.activateWorkspace(this.layout.workspaces.length - 1);
         }
     }
 
@@ -44,7 +60,6 @@ export class WelcomeController {
         } else {
             this.currentIndex += 1;
         }
-
     }
 
     hide() {
@@ -52,8 +67,8 @@ export class WelcomeController {
         this.setWelcomeShown(false);
     }
 
-    get welcomeShown() {
-        return this.currentIndex >= 0 && this.settings.get(WELCOME_SHOWN);
+    welcomeShown() {
+        return this.settings.get(WELCOME_SHOWN);
     }
 
     protected setWelcomeShown(value: boolean) {
@@ -61,64 +76,62 @@ export class WelcomeController {
     }
 
     getWelcomeAutomation() {
-        return { ...welcomeAutomation };
+        return { ...WELCOME_AUTOMATION };
+    }
+
+    getCurrentContent() {
+        return this.currentIndex >= 0 ? this.contents[this.currentIndex] : null;
     }
 
     get contents() {
         return [
             {
+                id: 'workspace',
                 title: 'The Workspace Menu',
                 message: [
                     'Workspaces contain different Panels of tools.',
                     'We\'ve set up default Workspaces like this one for scripting. You can also configure your own.'
                 ],
-                image: null,
-                arrow: { direction: 'top', align: { left: '200px' } }
             },
             {
+                id: 'script-panel',
                 title: 'The Script panel',
                 message: ['Define contexts which match pages and then add Actions which perform automation tasks.'],
-                image: null,
-                arrow: { direction: 'left', align: 'center' }
             },
             {
+                id: 'editor-panel',
                 title: 'The Editor panel',
                 message: [
                     'Compose Pipelines to do things in each Action',
                     'The last pipe\'s output provides input to the next',
                 ],
-                image: null,
-                arrow: { direction: 'right', align: 'center' }
             },
             {
+                id: 'playback',
                 title: 'The Play bar',
                 message: [
                     'Control and debug playback of your script in the browser.'
                 ],
-                image: 'base64:',
-                arrow: { direction: 'bottom', align: 'center' }
+                image: 'resources/playback.png',
             },
             {
+                id: 'login',
                 title: 'Your Automation Cloud Account',
                 message: ['Sign in here to save your automations. Run them in the Automation Cloud later, at scale'],
-                image: null,
-                arrow: { direction: 'top', align: 'right' }
             },
             {
+                id: 'play-script',
                 title: 'Play your first script',
                 message: [
                     'Clock the Play button to start playing this script.',
                     'Go on. Dare you!',
                 ],
-                image: null,
-                arrow: { direction: 'bottom', align: 'left' }
             }
         ];
     }
 }
 
-
-const welcomeAutomation = {
+const WELCOME_AUTOMATION = {
     metadata: {
         version: null,
         serviceId: null,
@@ -130,7 +143,7 @@ const welcomeAutomation = {
     script: {
         dependencies: [],
         id: '1326e401-7801-4064-94fa-9bc05d546989',
-        conmessage: {
+        contents: {
             items: [
                 {
                     id: '7865046c-d354-44e5-afb0-23f49ace2e80',

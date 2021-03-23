@@ -33,10 +33,6 @@
             @click="addWorkspace()">
             <i class="fas fa-plus"></i>
         </div>
-
-        <welcome-bubble  v-if="welcome.currentIndex === bubbleIndex"
-            :bubble="welcome.contents[bubbleIndex]"
-            :index="bubbleIndex"/>
     </div>
 </template>
 
@@ -47,7 +43,6 @@ export default {
 
     inject: [
         'layout',
-        'welcome',
     ],
 
     data() {
@@ -57,7 +52,6 @@ export default {
             editingIndex: -1,
             editingName: '',
             dnd,
-            bubbleIndex: 0
         };
     },
 
