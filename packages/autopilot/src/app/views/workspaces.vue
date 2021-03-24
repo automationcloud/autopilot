@@ -33,6 +33,7 @@
             @click="addWorkspace()">
             <i class="fas fa-plus"></i>
         </div>
+        <div class="workspace-bubble" data-bubble-id="workspace">s</div>
     </div>
 </template>
 
@@ -159,11 +160,11 @@ export default {
 
 <style scoped>
 .workspaces {
+    position: relative;
     flex: 1;
     display: flex;
     flex-flow: row nowrap;
     min-width: 0;
-    overflow: hidden;
 }
 
 .edit-name {
@@ -230,5 +231,12 @@ export default {
     .link--item:not(.link--active) {
         display: none;
     }
+}
+
+.workspace-bubble {
+    position: absolute;
+    z-index: 1000;
+    top: 40px;
+    background-color: salmon;
 }
 </style>

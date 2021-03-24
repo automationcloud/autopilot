@@ -190,4 +190,5 @@ export default {
     font-family: var(--font-family--alt);
     font-weight: 400;
 }
+
 </style>

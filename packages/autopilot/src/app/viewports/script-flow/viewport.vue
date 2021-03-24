@@ -9,7 +9,6 @@
                 :key="context.id"
                 :context="context"/>
         </div>
-
     </div>
 </template>
 
@@ -45,6 +44,7 @@ export default {
 
 <style>
 .script-flow {
+    position: relative;
     display: flex;
     flex-flow: column nowrap;
     overflow: initial;
@@ -53,5 +53,12 @@ export default {
 .script-flow__contexts {
     flex: 1;
     overflow-y: auto;
+}
+
+.script-flow-bubble {
+    position: absolute;
+    z-index: 1000;
+    right: 0px;
+    background-color: salmon;
 }
 </style>

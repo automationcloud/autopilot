@@ -56,6 +56,8 @@
                 @drop="onDrop($event, 'right')">
             </div>
         </div>
+
+        <div class="script-flow-bubble">s</div>
     </div>
 </template>
 

@@ -21,6 +21,7 @@ import { LayoutDirection, LayoutItem } from '../util/layout-item';
 import { Viewport } from '../viewport';
 import { EventsController } from './events';
 import { StorageController } from './storage';
+import { WelcomeController } from './welcome';
 
 @injectable()
 @controller({ alias: 'layout' })
@@ -41,13 +42,18 @@ export class LayoutController {
         protected events: EventsController,
         @inject('viewports')
         protected viewports: { [key: string]: Viewport<any> },
+        @inject(WelcomeController)
+        protected welcome: WelcomeController,
     ) {
         this.userData = storage.createUserData('layout', 500);
     }
 
     async init() {
-        const { workspaces = DEFAULT_WORKSPACES, activeWorkspaceIndex = 0 } = await this.userData.loadData();
-        this.workspaces = workspaces;
+        const { workspaces, activeWorkspaceIndex = 0 } = await this.userData.loadData();
+        if (workspaces == null) {
+            this.welcome.setShown(true);
+        }
+        this.workspaces = workspaces ?? DEFAULT_WORKSPACES;
         this.cleanupWorkspaces();
         this.activeWorkspaceIndex = clamp(activeWorkspaceIndex, 0, this.workspaces.length - 1);
         const layout = this.workspaces[this.activeWorkspaceIndex]?.layout ?? DEFAULT_WORKSPACES[0].layout;

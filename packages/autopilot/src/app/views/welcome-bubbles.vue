@@ -1,37 +1,34 @@
 <template>
-    <div v-if="shown"
-        class="bubbles" >
-        <div class="bubbles__overlay"></div>
-        <div class="bubble"
-            :class="[
-                'bubble-' + current.id,
-                `bubble-${current.id}--${platform}`
-            ]">
-
-            <div class="bubble__icon">
-                <img src="resources/ubio-robot-black.svg" />
+    <div v-if="welcome.shown"
+        class="bubble"
+        :class="[
+            'arrow--' + currentBubble.arrow
+        ]"
+        :style="setStyle()"
+        data-bubble-arrow-style="left: 50%">
+        <div class="bubble__icon">
+            <img src="resources/ubio-robot-black.svg" />
+        </div>
+        <div class="bubble__close"
+            @click="welcome.hide()">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="bubble__body">
+            <div class="bubble__title">
+                {{ currentBubble.title }}
             </div>
-            <div class="bubble__close"
-                @click="welcome.hide()">
-                <i class="fas fa-times"></i>
-            </div>
-            <div class="bubble__body">
-                <div class="bubble__title">
-                    {{ current.title }}
-                </div>
-                <p class="bubble__message"
-                    v-if="current.message"
-                    v-text="current.message.join('\n')">
-                </p>
-                <img v-if="current.image" :src="current.image" />
-                <div class="bubble__actions group group--gap--small">
-                    <span v-text="`${currentIndex + 1}/${totalStep}`"></span>
-                    <button class="button button--cta bubble__button"
-                        @click="welcome.next()"
-                        :title="actionTitle">
-                        <span>{{ actionTitle }}</span>
-                    </button>
-                </div>
+            <p class="bubble__message"
+                v-if="currentBubble.message"
+                v-text="currentBubble.message.join('\n')">
+            </p>
+            <img v-if="currentBubble.image" :src="currentBubble.image" />
+            <div class="bubble__actions group group--gap--small">
+                <span v-text="`${welcome.currentIndex + 1}/${totalStep}`"></span>
+                <button class="button button--cta bubble__button"
+                    @click="welcome.next()"
+                    :title="actionTitle">
+                    <span>{{ actionTitle }}</span>
+                </button>
             </div>
         </div>
     </div>
@@ -46,14 +43,31 @@ export default {
         'welcome',
     ],
 
+    data() {
+        return {
+            style: '',
+        };
+    },
+
     computed: {
-        current() { return this.welcome.getCurrentContent(); },
-        currentIndex() { return this.welcome.currentIndex; },
-        shown() { return this.welcome.welcomeShown() && this.currentIndex >= 0; },
+        currentBubble() { return this.welcome.getCurrentContent(); },
         totalStep() { return this.welcome.contents.length; },
         actionTitle() { return this.currentIndex + 1 === this.totalStep ? 'Finish' : 'Next'; },
         platform() { return os.platform(); },
     },
+
+    watch: {
+        currentBubble() {
+            this.setStyle();
+        }
+    },
+
+    methods: {
+        setStyle() {
+            const position = this.welcome.getCurrentBubblePosition();
+            return position ? `top: ${position.top}px; left: ${position.left}px` : '';
+        }
+    }
 
 };
 </script>
@@ -110,10 +124,10 @@ export default {
     left: 100px;
 }
 
-.bubble-workspace::before {
+.arrow--up::before {
     content: '';
     top: -.5rem;
-    left: 1rem;
+    left: attr(data-bubble-arrow-style);
     box-shadow: -2px -2px 3px rgba(0,0,0,.2);
 }
 
@@ -122,47 +136,40 @@ export default {
     left: calc(50% + .5rem);
 
 }
-.bubble-script-panel::before {
+.arrow--left::before {
     content: '';
-    top: 50%;
     left: -.5rem;
     box-shadow: -2px 2px 3px rgba(0,0,0,.2);
 }
 
+.arrow--right::before {
+    content: '';
+    right: -.5rem;
+    box-shadow: 2px -2px 3px rgba(0,0,0,.2);
+}
+
+.arrow--down::before {
+    content: '';
+    bottom: -.5rem;
+    box-shadow: 2px 2px 3px rgba(0,0,0,.2);
+}
 
 .bubble-editor-panel {
     top: calc(50%);
     right: calc(50% + .5rem);
 
 }
-.bubble-editor-panel::before {
-    content: '';
-    top: 50%;
-    right: -.5rem;
-    box-shadow: 2px -2px 3px rgba(0,0,0,.2);
-}
 
 .bubble-playback {
     bottom: 60px;
     left: var(--gap);
-}
-.bubble-playback::before {
-    content: '';
-    bottom: -.5rem;
-    left: 50%;
-    box-shadow: 2px 2px 3px rgba(0,0,0,.2);
 }
 
 .bubble-login {
     top: 50px;
     right: var(--gap);
 }
-.bubble-login::before {
-    content: '';
-    top: -.5rem;
-    right: 30px;
-    box-shadow: -2px -2px 3px rgba(0,0,0,.2);
-}
+
 
 .bubble-login--win32 {
     right: calc(var(--gap) + 80px);

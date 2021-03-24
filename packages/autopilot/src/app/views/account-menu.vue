@@ -11,6 +11,7 @@
             @contextmenu.stop.prevent="popupMenu">
             {{ text }}
         </span>
+        <div class="account-menu-bubble">s</div>
     </div>
 </template>
 
@@ -59,4 +60,14 @@ export default {
 </script>
 
 <style scoped>
+.account-menu {
+    position: relative;
+}
+
+.account-menu-bubble {
+    position: absolute;
+    z-index: 1000;
+    top: 40px;
+    background-color: salmon;
+}
 </style>

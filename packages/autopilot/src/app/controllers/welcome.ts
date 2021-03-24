@@ -14,44 +14,24 @@
 
 import { inject, injectable } from 'inversify';
 
-import { booleanConfig } from '../../../../cdp/out/main';
 import { controller } from '../controller';
-import { LayoutController } from './layout';
 import { SettingsController } from './settings';
-
-
-const WELCOME_SHOWN = booleanConfig('WElCOME_SHOWN', true);
 
 @injectable()
 @controller({ alias: 'welcome' })
 export class WelcomeController {
-    currentIndex: number = -1;
+    currentIndex: number;
+    shown: boolean;
 
     constructor(
         @inject(SettingsController)
         protected settings: SettingsController,
-        @inject(LayoutController)
-        protected layout: LayoutController,
     ) {
+        this.currentIndex = 0;
+        this.shown = true;
     }
 
     async init() {
-        // TODO: just need to make sure this layout is available and activated
-        // probably this should be done in layout manager.
-        if (this.welcomeShown()) {
-            this.currentIndex = 0;
-            this.layout.workspaces.unshift({
-                name: 'Welcome',
-                layout: {
-                    type: 'row',
-                    children: [
-                        { type: 'viewport', viewportId: 'script-flow' },
-                        { type: 'viewport', viewportId: 'script-editor' },
-                    ],
-                },
-            });
-            this.layout.activateWorkspace(this.layout.workspaces.length - 1);
-        }
     }
 
     next() {
@@ -63,16 +43,29 @@ export class WelcomeController {
     }
 
     hide() {
-        this.currentIndex = -1;
-        this.setWelcomeShown(false);
+        this.currentIndex = 0;
+        this.setShown(false);
     }
 
-    welcomeShown() {
-        return this.settings.get(WELCOME_SHOWN);
+    setShown(value: boolean) {
+        this.shown = value;
     }
 
-    protected setWelcomeShown(value: boolean) {
-        this.settings.setEntries([['WELCOME_SHOWN', String(value)]]);
+    getCurrentBubblePosition() {
+
+        setTimeout(() => {}, 500);
+        const { id, offset = { x: 0, y: 0 } } = this.contents[this.currentIndex];
+        console.log(id, offset);
+
+        const el = document.querySelector(`div[data-bubble-id="${id}"]`);
+        if (!el) {
+            return null;
+        }
+        const rect = el.getBoundingClientRect();
+        return {
+            top: rect.top + offset.x,
+            left: rect.left + offset.y,
+        };
     }
 
     getWelcomeAutomation() {
@@ -80,7 +73,7 @@ export class WelcomeController {
     }
 
     getCurrentContent() {
-        return this.currentIndex >= 0 ? this.contents[this.currentIndex] : null;
+        return this.contents[this.currentIndex] ?? null;
     }
 
     get contents() {
@@ -92,6 +85,8 @@ export class WelcomeController {
                     'Workspaces contain different Panels of tools.',
                     'We\'ve set up default Workspaces like this one for scripting. You can also configure your own.'
                 ],
+                arrow: 'up',
+                offset: { x: -10, y: 15 },
             },
             {
                 id: 'script-panel',
@@ -143,7 +138,7 @@ const WELCOME_AUTOMATION = {
     script: {
         dependencies: [],
         id: '1326e401-7801-4064-94fa-9bc05d546989',
-        contents: {
+        contexts: {
             items: [
                 {
                     id: '7865046c-d354-44e5-afb0-23f49ace2e80',
@@ -250,7 +245,7 @@ const WELCOME_AUTOMATION = {
             inputs: [
                 {
                     key: 'url',
-                    data: 'https: //automation.cloud/welcome'
+                    data: 'https://automation.cloud/welcome'
                 }
             ],
             excluded: false

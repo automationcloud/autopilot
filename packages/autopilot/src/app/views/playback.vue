@@ -53,6 +53,8 @@
                         @click="matchContexts">
                     <i class="playback__icon fas fa-map-marker-alt"></i>
                 </button>
+
+                <div class="play-bubble">s</div>
             </div>
 
             <div class="playback__group">
@@ -81,6 +83,7 @@
                 <playback-status/>
             </div>
         </div>
+        <div class="playback-bubble">s</div>
     </div>
 </template>
 
@@ -252,5 +255,21 @@ button.playback__btn[disabled] {
 
 .playback__badges {
     align-self: center;
+}
+
+.playback-bubble {
+    position: absolute;
+    z-index: 1000;
+    bottom: 40px;
+    left: 50%;
+    background-color: salmon;
+}
+
+.play-bubble {
+    position: absolute;
+    z-index: 1000;
+    bottom: 40px;
+    left: var(--gap--small);
+    background-color: salmon;
 }
 </style>
