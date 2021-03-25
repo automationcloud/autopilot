@@ -158,7 +158,7 @@ export class ExecutionContext {
         return new RemoteObject(this, cdpRemoteObject);
     }
 
-    private convertArgument(arg: any): CallArgument {
+    protected convertArgument(arg: any): CallArgument {
         if (arg == null) {
             return { value: null };
         }
@@ -171,7 +171,7 @@ export class ExecutionContext {
         return { value: arg };
     }
 
-    private convertException(exceptionDetails: ExceptionDetails): Error {
+    protected convertException(exceptionDetails: ExceptionDetails): Error {
         const { exception, text, stackTrace } = exceptionDetails;
         let msg = text;
         if (exception && exception.description) {

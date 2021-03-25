@@ -13,13 +13,11 @@
 // limitations under the License.
 
 import { exposeAudioUtils } from './audio-utils';
-import { crosshair } from './crosshair';
 import { stubs } from './stubs';
 import { toolkit } from './toolkit';
 
 export const contentScripts = [
     { filename: 'toolkit.js', fn: toolkit },
     { filename: 'stubs.js', fn: stubs },
-    { filename: 'crosshair.js', fn: crosshair },
     { filename: 'audio-utils.js', fn: exposeAudioUtils },
 ];
