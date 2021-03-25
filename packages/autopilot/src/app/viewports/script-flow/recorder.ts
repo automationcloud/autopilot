@@ -36,14 +36,14 @@ export class ActionRecorderController {
     async recordAction(type: string): Promise<void> {
         this.app.ui.frequentItems.onActionCreate(type);
         switch (type) {
-            case 'matcher':
-            case 'Flow.expect':
-                return await this.recordMatcher(type);
-            case 'Page.click':
-            case 'Page.hover':
-            case 'Page.input':
-            case 'Flow.find':
-                return await this.recordSingleElAction(type);
+            // case 'matcher':
+            // case 'Flow.expect':
+            //     return await this.recordMatcher(type);
+            // case 'Page.click':
+            // case 'Page.hover':
+            // case 'Page.input':
+            // case 'Flow.find':
+            //     return await this.recordSingleElAction(type);
             case 'Page.fetch':
                 return await this.recordFetch(type);
             default:
@@ -51,7 +51,8 @@ export class ActionRecorderController {
         }
     }
 
-    async recordMatcher(type: string) {
+    // Note: not used, kept for reference
+    protected async recordMatcher(type: string) {
         const document = await this.app.browser.page.document();
         const res = await this.inspect.recordElement(document);
         const spec: any = {
@@ -77,7 +78,8 @@ export class ActionRecorderController {
         return await this.viewport.commands.createAction(spec);
     }
 
-    async recordSingleElAction(type: string) {
+    // Note: unused, kept for reference
+    protected async recordSingleElAction(type: string) {
         const document = await this.app.browser.page.document();
         const res = await this.inspect.recordElement(document);
         const spec: any = {
@@ -95,18 +97,17 @@ export class ActionRecorderController {
 
     async recordFetch(type: string) {
         const actionSpec: any = { type };
-        let url = clipboard.getUrl();
+        let url = '';
+        if (clipboard.getUrl()) {
+            url = clipboard.readText().trim();
+        }
         if (!url) {
-            url = util.parseUrl(this.app.browser.page.mainFrame().url);
+            url = this.app.browser.page.mainFrame().url;
         }
         if (url) {
-            const { protocol, host, pathname, query } = url;
             const mappings = helpers.createComposeMappings({
                 method: 'GET',
-                protocol,
-                host,
-                pathname,
-                query,
+                url,
             });
             actionSpec.pipeline = {
                 pipes: [{ type: 'Object.compose', mappings }],

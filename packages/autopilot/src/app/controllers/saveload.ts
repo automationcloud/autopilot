@@ -152,12 +152,13 @@ export class SaveLoadController {
             filePath = filePath.replace(ext, '.automation');
         }
 
-        const serialized = JSON.stringify(this.project.automation);
-        await fs.writeFile(filePath, serialized, 'utf-8');
         if (!this.metadata.serviceId) {
             const name = path.basename(filePath, '.automation');
             this.metadata.serviceName = name;
+            this.project.update();
         }
+        const serialized = JSON.stringify(this.project.automation);
+        await fs.writeFile(filePath, serialized, 'utf-8');
         this.location = 'file';
         this.filePath = filePath;
         this.diff.setNewBase(this.project.automation.script);

@@ -216,8 +216,9 @@
 </template>
 
 <script>
-import * as semver from 'semver';
 import { remote } from 'electron';
+import * as semver from 'semver';
+
 const { dialog } = remote;
 
 export default {
