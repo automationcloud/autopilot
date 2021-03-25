@@ -47,6 +47,8 @@ export class AutopilotFlowService extends FlowService {
         return data ? util.deepClone(data) : data;
     }
 
+    async resetInputData(_key: string): Promise<any> {}
+
     async sendOutputData(key: string, data: any) {
         const { draft } = this.project.automation.metadata;
         if (draft) {

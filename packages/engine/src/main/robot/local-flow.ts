@@ -86,6 +86,10 @@ export class LocalFlowService extends FlowService {
         return input ? input.data : undefined;
     }
 
+    async resetInputData(_key: string): Promise<any> {
+        // Nothing is required
+    }
+
     async sendOutputData(_key: string, _data: any) {
         // Nothing is required: outputs are managed by script.
     }

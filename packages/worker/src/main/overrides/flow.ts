@@ -62,6 +62,14 @@ export class WorkerFlowService extends FlowService {
         return await this.inputs.peekInputData(key);
     }
 
+    async resetInputData(key: string): Promise<any> {
+        this.logger.info(`Reset input ${key}`);
+        await this.reporter.sendEvent('info', 'input.reset', {
+            details: { key },
+        });
+        return await this.inputs.resetInputData(key);
+    }
+
     async sendOutputData(key: string, data: any): Promise<void> {
         const execution = this.state.getExecution();
         this.logger.info(`Send output ${key}`);
