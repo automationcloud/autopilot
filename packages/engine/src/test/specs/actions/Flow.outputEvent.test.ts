@@ -39,7 +39,7 @@ describe('Flow.outputEvent', () => {
         ]);
         const output = runtime.flow.outputs.find(o => o.key.startsWith('events'))!;
         assert.ok(output);
-        assert.ok(output.key.includes('events:'));
+        assert.ok(output.key.startsWith('events:'));
         assert.deepEqual(output.data.type, 'foo');
         assert.deepEqual(output.data.details, { bar: 'hello' });
     });
@@ -67,7 +67,7 @@ describe('Flow.outputEvent', () => {
         ]);
         const output = runtime.flow.outputs.find(o => o.key.startsWith('events'))!;
         assert.ok(output);
-        assert.ok(output.key.includes('events:'));
+        assert.ok(output.key.startsWith('events:'));
         assert.deepEqual(output.data.type, 'bar');
         assert.deepEqual(output.data.details, { bar: 'hello' });
     });

@@ -86,7 +86,7 @@ export class LocalFlowService extends FlowService {
         return input ? input.data : undefined;
     }
 
-    async resetInputData(_key: string): Promise<any> {
+    async resetInputData(_key: string): Promise<void> {
         // Nothing is required
     }
 

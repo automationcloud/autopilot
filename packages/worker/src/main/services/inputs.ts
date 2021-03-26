@@ -106,9 +106,9 @@ export abstract class InputsService {
         return input ? input.data : undefined;
     }
 
-    async resetInputData(key: string): Promise<any> {
+    async resetInputData(key: string): Promise<void> {
         const execution = this.state.getExecution();
-        this.logger.debug(`Reset input ${key}`, { key });
+        this.logger.info(`Reset input ${key}`, { key });
         return await this.api.resetInput(execution.id, key);
     }
 }

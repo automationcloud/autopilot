@@ -372,7 +372,9 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
      */
     async resetInput(key: string): Promise<void> {
         key = this.hashInputOutputKey(key);
-        return await this.$flow.resetInputData(key);
+        await this.$flow.resetInputData(key);
+        this.$inputs = this.$inputs.filter(_ => _.key !== key);
+        this.$consumedInputKeys.delete(key);
     }
 
     /**

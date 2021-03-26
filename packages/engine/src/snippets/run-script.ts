@@ -36,7 +36,7 @@ class MyCustomFlow extends FlowService {
         return inputs[key];
     }
 
-    async resetInputData(_key: string): Promise<any> {
+    async resetInputData(_key: string): Promise<void> {
         // Nothing is required
     }
 
