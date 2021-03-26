@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Request } from '@automationcloud/request';
+import { OAuth1SignatureMethod, Request } from '@automationcloud/request';
 
 import { Action } from '../action';
 import { params } from '../model';
@@ -24,7 +24,7 @@ export class TestAuthAction extends Action {
     static $help = ``;
 
     @params.Credentials({
-        label: 'Authentication',
+        label: 'Auth',
         providerName: 'GitHub',
         icon: 'fab fa-github',
         configs: [
@@ -38,13 +38,18 @@ export class TestAuthAction extends Action {
                 help: 'Some more help text.'
             },
             {
-                type: 'oauth2',
+                type: 'oauth1',
                 customConfig: true,
-                // grantTypes: ['authorization_code', 'client_credentials', 'refresh_token'],
-                // authorizationUrl: 'https://github.com/login/oauth/authorize',
-                // tokenUrl: 'https://github.com/login/oauth/access_token',
-                authorizationUrl: '',
-                tokenUrl: '',
+                requestTokenUrl: '',
+                accessTokenUrl: '',
+                userAuthorizationUrl: '',
+                signatureMethod: OAuth1SignatureMethod.HMAC_SHA1,
+            },
+            {
+                type: 'oauth2',
+                customConfig: true, // means the user can override them
+                authorizationUrl: 'https://github.com/login/oauth/authorize',
+                tokenUrl: 'https://github.com/login/oauth/access_token',
                 scopes: 'repo,'
             },
         ]

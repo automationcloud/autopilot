@@ -28,7 +28,7 @@
                         @click="login()"
                         class="button button--primary button--icon"
                         title="Log in">
-                        <i class="fas fa-sign-in-alt"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
 
                     <button v-if="value"

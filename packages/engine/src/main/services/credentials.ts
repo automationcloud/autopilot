@@ -73,13 +73,19 @@ export interface StoredCredentials {
     updatedAt: number;
 }
 
-// TODO oauth1
-export type CredentialsType = 'basic' | 'bearer' | 'oauth2';
+export type CredentialsType = 'basic' | 'bearer' | 'oauth1' | 'oauth2';
 
 export type CredentialsConfig =
     CredentialsBasicConfig |
     CredentialsBearerConfig |
+    CredentialsOAuth1Config |
     CredentialsOAuth2Config;
+
+export type CredentialsData =
+    CredentialsBasicData |
+    CredentialsBearerData |
+    CredentialsOAuth1Data |
+    CredentialsOAuth2Data;
 
 export interface CredentialsBasicConfig {
     type: 'basic';
@@ -88,13 +94,51 @@ export interface CredentialsBasicConfig {
     help?: string;
 }
 
+export interface CredentialsBasicData {
+    username: string;
+    password: string;
+}
+
 export interface CredentialsBearerConfig {
     type: 'bearer';
     prefix?: string;
     help?: string;
 }
 
-// export type CredentialsOAuth2GrantType = 'authorization_code' | 'client_credentials' | 'refresh_token';
+export interface CredentialsBearerData {
+    prefix: string;
+    token: string;
+}
+
+export interface CredentialsOAuth1Config {
+    type: 'oauth1';
+    // grantTypes: OAuth2GrantType[];
+    requestTokenUrl: string;
+    accessTokenUrl: string;
+    userAuthorizationUrl: string;
+    signatureMethod: r.OAuth1SignatureMethod;
+    customConfig?: boolean;
+    help?: string;
+}
+
+export interface CredentialsOAuth1Data {
+    requestTokenUrl: string;
+    accessTokenUrl: string;
+    userAuthorizationUrl: string;
+    consumerKey: string;
+    consumerSecret: string;
+
+    tokenKey?: string;
+    tokenSecret?: string;
+    privateKey?: string; // when signatureMethod is RSA_SHA1
+    version?: string;
+    realm?: string;
+    callback?: string;
+    verifier?: string;
+    timestamp?: string;
+    nonce?: string;
+    includeBodyHash?: boolean;
+}
 
 export interface CredentialsOAuth2Config {
     type: 'oauth2';
@@ -106,20 +150,6 @@ export interface CredentialsOAuth2Config {
     help?: string;
 }
 
-export type CredentialsData =
-    CredentialsBasicData |
-    CredentialsBearerData |
-    CredentialsOAuth2Data;
-
-export interface CredentialsBasicData {
-    username: string;
-    password: string;
-}
-
-export interface CredentialsBearerData {
-    token: string;
-}
-
 export interface CredentialsOAuth2Data {
     authorizationUrl: string;
     tokenUrl: string;
@@ -129,3 +159,5 @@ export interface CredentialsOAuth2Data {
     accessToken?: string;
     expiresAt?: number;
 }
+
+// export type OAuth2GrantType = 'authorization_code' | 'client_credentials' | 'refresh_token';
