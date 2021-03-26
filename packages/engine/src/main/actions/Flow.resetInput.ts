@@ -21,9 +21,6 @@ export class FlowResetInput extends Action {
     static $icon = 'fas fa-undo';
     static $help = `
 Resets Job Input with specified Input key.
-
-
-Note: Pair with \`Flow.outputEvent\` as a indication that reset input happened during the Automation
 `;
 
     @params.String({ source: 'inputs' })

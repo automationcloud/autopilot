@@ -20,11 +20,10 @@ export class outputEvent extends Action {
     static $type = 'Flow.outputEvent';
     static $icon = 'fas fa-share';
     static $help = `
-Emits a Job Event Output with \`type\`  and \`details\` being evaluated at runtime
-rather than pre-defined at scripting time.
+Emits a Job Event Output with \`type\`  and \`details\` with random id suffixed to the \`events:\`.
 
-The pipeline can return a single element with \`type: string\` and \`details: object\` and both are optional.
-\`type\` evaluated from pipeline will take precedence over the type text field.
+The pipeline can return a single element with \`type: string\` and \`details: object\`.
+If \`type\` is omitted, it will use the predefined type field. Note that evaluated value from pipeline will take precedence over predefined value.
 `;
 
     @params.String({ label: 'Type' })
