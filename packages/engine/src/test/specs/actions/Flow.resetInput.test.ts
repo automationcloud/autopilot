@@ -22,7 +22,7 @@ describe('Flow.resetInput', () => {
             {
                 id: 'reset-input',
                 type: 'Flow.resetInput',
-                resetInputKey: 'foo',
+                inputKey: 'foo',
             },
         ]);
         const input = runtime.flow.inputs.find(o => o.key === 'foo')!;
