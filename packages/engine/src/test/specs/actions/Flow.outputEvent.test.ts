@@ -28,9 +28,8 @@ describe('Flow.outputEvent', () => {
                         {
                             type: 'Value.getJson',
                             value: JSON.stringify({
-                                details: {
-                                    bar: 'hello'
-                                },
+                                foo: 'bar',
+                                details: 123,
                             }),
                         },
                     ],
@@ -41,7 +40,11 @@ describe('Flow.outputEvent', () => {
         assert.ok(output);
         assert.ok(output.key.startsWith('events:'));
         assert.deepEqual(output.data.type, 'foo');
-        assert.deepEqual(output.data.details, { bar: 'hello' });
+        assert.deepEqual(output.data, {
+            type: 'foo',
+            foo: 'bar',
+            details: 123,
+        });
     });
 
     it('sends output event with evaluated type', async () => {
@@ -56,9 +59,8 @@ describe('Flow.outputEvent', () => {
                             type: 'Value.getJson',
                             value: JSON.stringify({
                                 type: 'bar',
-                                details: {
-                                    bar: 'hello'
-                                },
+                                foo: 'bar',
+                                details: 123,
                             }),
                         },
                     ],
@@ -69,6 +71,10 @@ describe('Flow.outputEvent', () => {
         assert.ok(output);
         assert.ok(output.key.startsWith('events:'));
         assert.deepEqual(output.data.type, 'bar');
-        assert.deepEqual(output.data.details, { bar: 'hello' });
+        assert.deepEqual(output.data, {
+            type: 'bar',
+            foo: 'bar',
+            details: 123,
+        });
     });
 });
