@@ -34,6 +34,10 @@ export class FlowServiceMock extends FlowService {
         return input ? input.data : undefined;
     }
 
+    async resetInputData(key: string) {
+        this.inputs = this.inputs.filter(_ => _.key !== key);
+    }
+
     async sendOutputData(key: string, data: any) {
         this.outputs.push({ key, data });
     }

@@ -96,6 +96,14 @@ export class ApiService {
         return await this.api.get(`/private/executions/${executionId}/inputs/${key}`);
     }
 
+    async resetInput(executionId: string, key: string) {
+        return await this.api.post(`/private/executions/${executionId}/reset-input`, {
+            body: {
+                inputKey: key,
+            },
+        });
+    }
+
     async sendOutputData(executionId: string, key: string, data: any) {
         return await this.api.post(`/private/executions/${executionId}/outputs`, {
             body: {

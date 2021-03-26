@@ -25,6 +25,7 @@ export abstract class FlowService {
 
     abstract requestInputData(key: string): Promise<any>;
     abstract peekInputData(key: string): Promise<any>;
+    abstract resetInputData(key: string): Promise<void>;
     abstract sendOutputData(key: string, data: any): Promise<void>;
 
     /**
