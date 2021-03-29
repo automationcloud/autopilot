@@ -19,6 +19,7 @@
                             @click="selectedIndex = index">
                             <span v-if="conf.type === 'basic'">Basic</span>
                             <span v-if="conf.type === 'bearer'">Bearer</span>
+                            <span v-if="conf.type === 'oauth1'">OAuth1</span>
                             <span v-if="conf.type === 'oauth2'">OAuth2</span>
                         </button>
                     </div>
@@ -72,24 +73,89 @@
                 </div>
             </div>
 
-            <div v-if="selectedConfig.type === 'oauth2'">
-                <!--
+            <div v-if="selectedConfig.type === 'oauth1'">
+                <template v-if="selectedConfig.customConfig">
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Request Token URL
+                        </div>
+                        <div class="form-row__controls">
+                            <input
+                                class="input stretch"
+                                v-model.trim="oauth1.requestTokenUrl"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Access Token URL
+                        </div>
+                        <div class="form-row__controls">
+                            <input
+                                class="input stretch"
+                                v-model.trim="oauth1.accessTokenUrl"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Authorization URL
+                        </div>
+                        <div class="form-row__controls">
+                            <input
+                                class="input stretch"
+                                v-model.trim="oauth1.userAuthorizationUrl"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-row__label">
+                            Signature Method
+                        </div>
+                        <div class="form-row__controls">
+                            <select
+                                class="input stretch"
+                                v-model.trim="oauth1.signatureMethod">
+                                <option value="HMAC-SHA1">HMAC-SHA1</option>
+                                <option value="HMAC-SHA256">HMAC-SHA256</option>
+                                <option value="RSA-SHA1">RSA-SHA1</option>
+                                <option value="PLAINTEXT">Plain Text</option>
+                            </select>
+                        </div>
+                    </div>
+                </template>
+
                 <div class="form-row">
                     <div class="form-row__label">
-                        Grant Type
+                        Consumer Key
                     </div>
                     <div class="form-row__controls">
-                        <select v-model="oauth2.grantType"
-                            class="input stretch">
-                            <option v-for="gt of selectedConfig.grantTypes"
-                                :key="gt"
-                                :value="gt">
-                                {{ toHumanLabel(gt) }}
-                            </option>
-                        </select>
+                        <input
+                            class="input stretch"
+                            v-model.trim="oauth1.consumerKey"/>
                     </div>
                 </div>
-                -->
+                <div class="form-row">
+                    <div class="form-row__label">
+                        Consumer Secret
+                    </div>
+                    <div class="form-row__controls">
+                        <input type="password"
+                            class="input stretch"
+                            v-model.trim="oauth1.consumerSecret"/>
+                    </div>
+                </div>
+                <div class="form-row"
+                    v-if="oauth1.signatureMethod.includes('RSA')">
+                    <div class="form-row__label">
+                        Private Key
+                    </div>
+                    <div class="form-row__controls">
+                        <input type="password"
+                            class="input stretch"
+                            v-model.trim="oauth1.privateKey"/>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="selectedConfig.type === 'oauth2'">
                 <template v-if="selectedConfig.customConfig">
                     <div class="form-row">
                         <div class="form-row__label">
@@ -131,13 +197,6 @@
                             class="input stretch"
                             v-model.trim="oauth2.clientSecret"/>
                     </div>
-                </div>
-
-                <!-- Display additional help box, if custom one is not provided -->
-                <div class="help box box--blue"
-                    v-if="oauth2.grantType === 'authorization_code' && !selectedConfig.help">
-                    Set the following Authorization Redirect URL in your app settings:<br/>
-                    <b>https://connectors.automation.cloud/</b>
                 </div>
             </div>
 
@@ -185,8 +244,17 @@ export default {
             bearer: {
                 token: '',
             },
+            oauth1: {
+                consumerKey: '',
+                consumerSecret: '',
+                privateKey: '',
+                // Those are only modified when `config.customConfig: true`
+                requestTokenUrl: '',
+                accessTokenUrl: '',
+                userAuthorizationUrl: '',
+                signatureMethod: 'HMAC-SHA1',
+            },
             oauth2: {
-                grantType: 'authorization_code',
                 clientId: '',
                 clientSecret: '',
                 // Those are only modified when `config.customConfig: true`
@@ -201,8 +269,13 @@ export default {
         const { firstName } = this.apiLogin.account || {};
         this.name = firstName;
         // Pre-fill custom URLs for OAuth configs
-        // TODO oauth1
-        // const oauth1Config = this.configs.find(_ => _.type === 'oauth1');
+        const oauth1Config = this.configs.find(_ => _.type === 'oauth1');
+        if (oauth1Config) {
+            this.oauth1.requestTokenUrl = oauth1Config.requestTokenUrl;
+            this.oauth1.accessTokenUrl = oauth1Config.accessTokenUrl;
+            this.oauth1.userAuthorizationUrl = oauth1Config.userAuthorizationUrl;
+            this.oauth1.signatureMethod = oauth1Config.signatureMethod;
+        }
         const oauth2Config = this.configs.find(_ => _.type === 'oauth2');
         if (oauth2Config) {
             this.oauth2.tokenUrl = oauth2Config.tokenUrl;

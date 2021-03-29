@@ -112,7 +112,6 @@ export interface CredentialsBearerData {
 
 export interface CredentialsOAuth1Config {
     type: 'oauth1';
-    // grantTypes: OAuth2GrantType[];
     requestTokenUrl: string;
     accessTokenUrl: string;
     userAuthorizationUrl: string;
