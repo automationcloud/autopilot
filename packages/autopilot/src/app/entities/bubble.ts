@@ -1,11 +1,10 @@
-export type BubbleArrowDirection = 'up' | 'down' | 'left' | 'right';
+export type BubbleArrowType = 'up' | 'down' | 'left' | 'right';
 
 export interface Bubble {
     id: string;
     title: string;
     message: string[];
-    arrowDirection: BubbleArrowDirection;
-    arrowStyle: string;
+    arrow: BubbleArrowType;
     offset: {
         x: number;
         y: number;

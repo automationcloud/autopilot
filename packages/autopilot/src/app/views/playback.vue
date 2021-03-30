@@ -54,7 +54,7 @@
                     <i class="playback__icon fas fa-map-marker-alt"></i>
                 </button>
 
-                <div class="play-bubble">s</div>
+                <div class="play-bubble" data-bubble-id="play-script">s</div>
             </div>
 
             <div class="playback__group">
@@ -83,7 +83,7 @@
                 <playback-status/>
             </div>
         </div>
-        <div class="playback-bubble">s</div>
+        <div class="playback-bubble" data-bubble-id="playback">s</div>
     </div>
 </template>
 

@@ -15,12 +15,15 @@
 import { inject, injectable } from 'inversify';
 
 import { controller } from '../controller';
+import { BubbleArrowType } from '../entities/bubble';
 import { SettingsController } from './settings';
 
 @injectable()
 @controller({ alias: 'welcome' })
 export class WelcomeController {
+    readonly arrowHeight: number = 5;
     currentIndex: number;
+    currentStyle: string = '';
     shown: boolean;
 
     constructor(
@@ -31,14 +34,14 @@ export class WelcomeController {
         this.shown = true;
     }
 
-    async init() {
-    }
+    async init() { }
 
     next() {
         if (this.currentIndex === this.contents.length - 1) {
             this.hide();
         } else {
             this.currentIndex += 1;
+            this.setCurrentStyle();
         }
     }
 
@@ -51,21 +54,58 @@ export class WelcomeController {
         this.shown = value;
     }
 
-    getCurrentBubblePosition() {
+    setCurrentStyle() {
+        this.currentStyle = this.getCurrentStyle();
+        console.log('this.currentStyle', this.currentStyle);
+    }
 
-        setTimeout(() => {}, 500);
-        const { id, offset = { x: 0, y: 0 } } = this.contents[this.currentIndex];
-        console.log(id, offset);
+    getCurrentStyle() {
+        const { id, arrow } = this.contents[this.currentIndex];
+        console.info('bubble id: ', id);
 
         const el = document.querySelector(`div[data-bubble-id="${id}"]`);
         if (!el) {
-            return null;
+            console.info('no data-bubble-id div found');
+            return '';
         }
+
         const rect = el.getBoundingClientRect();
-        return {
-            top: rect.top + offset.x,
-            left: rect.left + offset.y,
-        };
+        console.info('data-bubble-id div found: ', rect);
+        // const body = this.getPositionStyle(arrow as BubbleArrowType, position);
+        const styles = this.getStyle(arrow as BubbleArrowType, rect);
+        return styles.join(';');
+    }
+
+    // get position of bubble from arrow point
+    getStyle(direction: BubbleArrowType = 'up', rect: DOMRect) {
+        const { top, left } = rect;
+        switch (direction) {
+            case 'up':
+                return [
+                    `top: ${this.arrowHeight + top}px`,
+                    `left: ${this.arrowHeight + left}px`,
+                    `flex-flow: column`
+                ];
+            case 'down':
+                return [
+                    `bottom: ${document.documentElement.clientHeight - top + this.arrowHeight}px`,
+                    `left: ${left - this.arrowHeight}px`,
+                    `flex-flow: column-reverse`
+                ];
+            case 'left':
+                return [
+                    `bottom: ${this.arrowHeight + top}px`,
+                    `left: ${this.arrowHeight + left}px`,
+                    `flex-flow: row`
+                ];
+            case 'right':
+                return [
+                    `bottom: ${this.arrowHeight + top}px`,
+                    `left: ${this.arrowHeight + left}px`,
+                    `flex-flow: row-reverse`
+                ];
+        }
+
     }
 
     getWelcomeAutomation() {
@@ -76,7 +116,7 @@ export class WelcomeController {
         return this.contents[this.currentIndex] ?? null;
     }
 
-    get contents() {
+    get contents() /* : Bubble[] */ {
         return [
             {
                 id: 'workspace',
@@ -86,12 +126,17 @@ export class WelcomeController {
                     'We\'ve set up default Workspaces like this one for scripting. You can also configure your own.'
                 ],
                 arrow: 'up',
-                offset: { x: -10, y: 15 },
+                bodyStyle: 'margin-left: -10px'
             },
+            /*
             {
                 id: 'script-panel',
                 title: 'The Script panel',
                 message: ['Define contexts which match pages and then add Actions which perform automation tasks.'],
+                arrow: 'left',
+                position: {
+                    bottom: '50%',
+                },
             },
             {
                 id: 'editor-panel',
@@ -100,7 +145,7 @@ export class WelcomeController {
                     'Compose Pipelines to do things in each Action',
                     'The last pipe\'s output provides input to the next',
                 ],
-            },
+            }, */
             {
                 id: 'playback',
                 title: 'The Play bar',
@@ -108,11 +153,15 @@ export class WelcomeController {
                     'Control and debug playback of your script in the browser.'
                 ],
                 image: 'resources/playback.png',
+                arrow: 'down',
+                bodyStyle: 'margin-left: -50%;'
             },
             {
                 id: 'login',
                 title: 'Your Automation Cloud Account',
                 message: ['Sign in here to save your automations. Run them in the Automation Cloud later, at scale'],
+                arrow: 'up',
+                bodyStyle: 'margin-right: 100px;'
             },
             {
                 id: 'play-script',
@@ -121,6 +170,8 @@ export class WelcomeController {
                     'Clock the Play button to start playing this script.',
                     'Go on. Dare you!',
                 ],
+                arrow: 'down',
+                bodyStyle: 'margin-left: -10px;'
             }
         ];
     }
