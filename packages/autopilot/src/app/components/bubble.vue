@@ -64,9 +64,7 @@ export default {
             if (this.anchorEl && !this.anchorEl.isConnected) {
                 this.anchorEl = null;
             }
-            if (!this.anchorEl) {
-                this.anchorEl = document.querySelector(this.selector);
-            }
+            this.anchorEl = document.querySelector(this.selector);
             this.anchorExists = !!this.anchorEl;
         },
 
