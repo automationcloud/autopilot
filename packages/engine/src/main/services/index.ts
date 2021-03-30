@@ -16,6 +16,7 @@ export * from './api-request';
 export * from './blob';
 export * from './browser';
 export * from './checkpoint';
+export * from './credentials';
 export * from './emulation';
 export * from './fetch';
 export * from './flow';

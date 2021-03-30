@@ -29,6 +29,8 @@ export class ControlServer {
         this.app = new Koa();
         this.router = new Router();
         this.router.get('/acLoginCallback', this.onLoginResult.bind(this));
+        this.router.get('/credentialsCallback', this.onCredentials.bind(this));
+        // deprecated
         this.router.get('/httpCallback', this.onHttpCallback.bind(this));
         this.app.use(
             bodyParser({
@@ -60,10 +62,22 @@ export class ControlServer {
             wnd.webContents.send('acLoginResult', code);
         }
         ctx.status = 200;
-        ctx.type = 'html';
+        ctx.type = 'text/html';
         ctx.body = `
         <body onload="setTimeout(() => self.close(), 100)">
         <h2>Automation Cloud Authentication</h2>
+        <p>You may now close the window.</p>
+        </body>
+        `;
+    }
+
+    onCredentials(ctx: Koa.Context) {
+        const result = ctx.query;
+        sendToAllWindows('credentialsCallback', result);
+        ctx.status = 200;
+        ctx.type = 'text/html';
+        ctx.body = `
+        <body onload="setTimeout(() => self.close(), 100)">
         <p>You may now close the window.</p>
         </body>
         `;
@@ -77,6 +91,7 @@ export class ControlServer {
             headers: ctx.headers,
             body: ctx.body,
         });
+        ctx.type = 'text/html';
         ctx.body = `
         <body onload="setTimeout(() => self.close(), 100)">
             <p>You may now close the window.</p>

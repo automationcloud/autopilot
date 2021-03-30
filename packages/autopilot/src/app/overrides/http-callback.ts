@@ -57,7 +57,7 @@ export class AutopilotHttpCallbackService extends HttpCallbackService {
     }
 
     async open(url: string | URL): Promise<HttpCallbackResponse> {
-        const targetUrl = url.toString().replace(/\{CALLBACK_URL\}/g, this.getCallbackUrl());
+        const targetUrl = url.toString();
         await shell.openExternal(targetUrl);
         return await this.waitForCallbackResult();
     }

@@ -33,9 +33,9 @@
 </template>
 
 <script>
+import { Feedback } from '../../util/feedback';
 import ActionNotes from './action-notes.vue';
 import ActionParams from './action-params.vue';
-import { Feedback } from '../../util/feedback';
 
 export default {
 
@@ -109,6 +109,7 @@ export default {
     display: none;
     padding: var(--gap--small);
     background: var(--color-cool--500);
+    border-bottom: 1px solid var(--color-cool--600);
 }
 
 .layout-item--width--s .edit-action__label {

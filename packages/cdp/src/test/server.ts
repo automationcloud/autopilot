@@ -46,7 +46,7 @@ server.use(async (ctx, next) => {
         ctx.status = status;
     }
     if (ctx.query.download) {
-        ctx.response.attachment(ctx.query.download);
+        ctx.response.attachment(ctx.query.download as string);
     }
     await next();
 });
