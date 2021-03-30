@@ -46,6 +46,8 @@
 <li><a href="#Flow.if">Flow.if</a></li>
 <li><a href="#Flow.leaveContext">Flow.leaveContext</a></li>
 <li><a href="#Flow.output">Flow.output</a></li>
+<li><a href="#Flow.outputEvent">Flow.outputEvent</a></li>
+<li><a href="#Flow.resetInput">Flow.resetInput</a></li>
 <li><a href="#Flow.sleep">Flow.sleep</a></li>
 <li><a href="#Flow.success">Flow.success</a></li>
 <li><a href="#Flow.while">Flow.while</a></li>
@@ -250,6 +252,16 @@ If the value is <code>true</code>, then the control is passed to the children, o
 Its value will be sent as output data.</p>
 <p>Note: multiple elements are not automatically serialized to arrays;
 use Fold Array to send arrays instead.</p>
+<h2 id="Flow.outputEvent">Flow.outputEvent</h2>
+
+
+<p>Emits a Job Event Output with <code>type</code> and other arbitrary properties. The output key looks like <code>events:&lt;random-id&gt;</code>.</p>
+<p>The pipeline can return a single element with <code>type: string</code> and other data fields.
+If <code>type</code> is omitted, it will use the predefined type field. Note that evaluated value from pipeline will take precedence over predefined value.</p>
+<h2 id="Flow.resetInput">Flow.resetInput</h2>
+
+
+<p>Resets Job Input with specified Input key.</p>
 <h2 id="Flow.sleep">Flow.sleep</h2>
 
 

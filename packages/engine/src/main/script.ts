@@ -364,6 +364,20 @@ export class Script extends model.Entity<null> implements model.IdDatabase {
     }
 
     /**
+     * Resets input with specified `key`. It is used to remove previously submitted input
+     * so that new input can be supplied.
+     *
+     * @param key
+     * @public
+     */
+    async resetInput(key: string): Promise<void> {
+        key = this.hashInputOutputKey(key);
+        await this.$flow.resetInputData(key);
+        this.$inputs = this.$inputs.filter(_ => _.key !== key);
+        this.$consumedInputKeys.delete(key);
+    }
+
+    /**
      * Sends output with specified `key` and `data`.
      *
      * @param key

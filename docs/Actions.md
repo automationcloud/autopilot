@@ -20,6 +20,8 @@
   - [Flow.if](#Flow.if)
   - [Flow.leaveContext](#Flow.leaveContext)
   - [Flow.output](#Flow.output)
+  - [Flow.outputEvent](#Flow.outputEvent)
+  - [Flow.resetInput](#Flow.resetInput)
   - [Flow.sleep](#Flow.sleep)
   - [Flow.success](#Flow.success)
   - [Flow.while](#Flow.while)
@@ -272,6 +274,21 @@ Its value will be sent as output data.
 
 Note: multiple elements are not automatically serialized to arrays;
 use Fold Array to send arrays instead.
+
+
+<h2 id="Flow.outputEvent">Flow.outputEvent</h2>
+
+
+Emits a Job Event Output with `type` and other arbitrary properties. The output key looks like `events:<random-id>`.
+
+The pipeline can return a single element with `type: string` and other data fields.
+If `type` is omitted, it will use the predefined type field. Note that evaluated value from pipeline will take precedence over predefined value.
+
+
+<h2 id="Flow.resetInput">Flow.resetInput</h2>
+
+
+Resets Job Input with specified Input key.
 
 
 <h2 id="Flow.sleep">Flow.sleep</h2>
