@@ -178,8 +178,8 @@ export class CredentialsController {
     }
 
     protected async deleteCredentials(id: string) {
-        await this.apiRequest.delete('/Credentials/deleteCredentials', {
-            query: { id }
+        await this.apiRequest.post('/Credentials/deleteCredentials', {
+            body: { id }
         });
         await this.fetchAvailableCredentials();
     }
