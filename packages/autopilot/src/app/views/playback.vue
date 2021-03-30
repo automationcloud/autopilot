@@ -12,11 +12,12 @@
         <div class="playback__toolbar">
             <div class="playback__group playback__buttons">
 
-                <button class="playback__btn"
+                <button class="playback__btn playback__btn--play"
                         :disabled="!isCanPlayScript"
                         @click="playScript"
                         title="Play script from selected item">
                     <i class="playback__icon fas fa-play"></i>
+                    <div class="play-bubble" data-bubble-id="play-script"></div>
                 </button>
                 <button class="playback__btn"
                         :disabled="isPaused"
@@ -53,6 +54,7 @@
                         @click="matchContexts">
                     <i class="playback__icon fas fa-map-marker-alt"></i>
                 </button>
+
             </div>
 
             <div class="playback__group">
@@ -81,6 +83,7 @@
                 <playback-status/>
             </div>
         </div>
+        <div class="playback-bubble" data-bubble-id="playback"></div>
     </div>
 </template>
 
@@ -191,6 +194,9 @@ button.playback__btn {
 button.playback__btn:hover {
     box-shadow: 0 0 0 9999px rgba(255,255,255,.05) inset;
 }
+button.playback__btn--play {
+    position: relative;
+}
 
 button.playback__btn--play-action {
     color: var(--color-brand-blue--500);
@@ -252,5 +258,17 @@ button.playback__btn[disabled] {
 
 .playback__badges {
     align-self: center;
+}
+
+.playback-bubble {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+}
+
+.play-bubble {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 </style>

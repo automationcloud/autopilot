@@ -33,6 +33,7 @@
             @click="addWorkspace()">
             <i class="fas fa-plus"></i>
         </div>
+        <div class="workspace-bubble" data-bubble-id="workspace"></div>
     </div>
 </template>
 
@@ -159,6 +160,7 @@ export default {
 
 <style scoped>
 .workspaces {
+    position: relative;
     flex: 1;
     display: flex;
     flex-flow: row nowrap;
@@ -230,5 +232,11 @@ export default {
     .link--item:not(.link--active) {
         display: none;
     }
+}
+
+.workspace-bubble {
+    position: absolute;
+    bottom: 0px;
+    left: 20px;
 }
 </style>

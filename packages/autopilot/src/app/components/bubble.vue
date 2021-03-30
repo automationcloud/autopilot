@@ -58,6 +58,13 @@ export default {
 
     },
 
+    watch: {
+        selector() {
+            this.refreshAnchor();
+            this.calcCoordinates();
+        }
+    },
+
     methods: {
 
         refreshAnchor() {
@@ -104,7 +111,7 @@ export default {
 .bubble__content {
     position: absolute;
     padding: var(--gap);
-    width: 240px;
+    min-width: 240px;
     min-height: 64px;
     border-radius: var(--border-radius);
     background: var(--color-yellow--300);
@@ -137,13 +144,13 @@ export default {
 }
 
 .bubble--top.bubble--start .bubble__content,
-.bubble--bottom.bubble--start .bubble__content { transform: translateX(-15%) }
+.bubble--bottom.bubble--start .bubble__content { transform: translateX(-10%) }
 
 .bubble--top.bubble--middle .bubble__content,
 .bubble--bottom.bubble--middle .bubble__content { transform: translateX(-50%) }
 
 .bubble--top.bubble--end .bubble__content,
-.bubble--bottom.bubble--end .bubble__content { transform: translateX(-85%) }
+.bubble--bottom.bubble--end .bubble__content { transform: translateX(-90%) }
 
 .bubble--left.bubble--start .bubble__content,
 .bubble--right.bubble--start .bubble__content { transform: translateY(-25%) }
