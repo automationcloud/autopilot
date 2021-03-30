@@ -1,6 +1,8 @@
 <template>
     <div class="welcome">
-        <bubble selector="[data-anchor='viewport-scriptEditor-w']">
+        <bubble selector="[data-anchor='viewport-scriptEditor-w']"
+            orientation="left"
+            alignment="end">
             <p>Some content</p>
         </bubble>
     </div>
@@ -14,5 +16,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
 </style>

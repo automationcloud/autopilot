@@ -62,6 +62,7 @@ export class LayoutController {
             workspaces: this.workspaces,
             activeWorkspaceIndex: this.activeWorkspaceIndex,
         });
+        this.events.emit('layoutUpdated');
     }
 
     protected syncActiveWorkspace() {
