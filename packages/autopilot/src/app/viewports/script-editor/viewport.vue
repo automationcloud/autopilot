@@ -5,10 +5,10 @@
 </template>
 
 <script>
+import EditAction from './edit-action.vue';
+import EditContext from './edit-context.vue';
 import EditDefault from './edit-default.vue';
 import EditNothing from './edit-nothing.vue';
-import EditContext from './edit-context.vue';
-import EditAction from './edit-action.vue';
 
 export default {
 

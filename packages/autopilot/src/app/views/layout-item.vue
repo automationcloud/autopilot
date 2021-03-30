@@ -32,15 +32,13 @@
 
 <script>
 import LayoutViewport from './layout-viewport.vue';
-import { EventEmitter } from 'events';
-
-const events = new EventEmitter();
 
 export default {
     name: 'layout-item',
 
     inject: [
-        'layout'
+        'layout',
+        'events',
     ],
 
     components: {
@@ -71,13 +69,13 @@ export default {
 
     mounted() {
         window.addEventListener('resize', this.updateSize);
-        events.addListener('resize', this.updateSize);
+        this.events.addListener('layoutResized', this.updateSize);
         this.updateSize();
     },
 
     destroyed() {
         window.removeEventListener('resize', this.updateSize);
-        events.removeListener('resize', this.updateSize);
+        this.events.removeListener('layoutResized', this.updateSize);
     },
 
     methods: {
@@ -126,7 +124,7 @@ export default {
             const bSize = a.size + b.size - aSize;
             a.size = aSize;
             b.size = bSize;
-            events.emit('resize');
+            this.events.emit('layoutResized', { layoutItem });
         },
 
         updateSize() {
