@@ -307,8 +307,10 @@ export default {
                     return this.basic.username || this.basic.password;
                 case 'bearer':
                     return this.bearer.token;
+                case 'oauth1':
+                    return this.isFilled(this.oauth1, ['privateKey']);
                 case 'oauth2':
-                    return this.oauth2.clientId && this.oauth2.clientSecret;
+                    return this.isFilled(this.oauth2);
                 default:
                     return false;
             }
@@ -330,6 +332,18 @@ export default {
                 data: this[config.type],
             });
         },
+
+        isFilled(obj, exceptKeys = []) {
+            for (const [k, v] of Object.entries(obj)) {
+                if (exceptKeys.includes(k)) {
+                    continue;
+                }
+                if (!String(v || '').trim()) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
     }
 

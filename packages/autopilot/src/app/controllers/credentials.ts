@@ -3,6 +3,7 @@ import {
     ApiRequest,
     CredentialsConfig,
     CredentialsData,
+    CredentialsOAuth1Data,
     CredentialsOAuth2Data,
     HttpCallbackService,
     model,
@@ -108,7 +109,28 @@ export class CredentialsController {
         }
         const { config } = spec;
         switch (config.type) {
-            // TODO oauth1
+            case 'oauth1': {
+                const data = spec.data as CredentialsOAuth1Data;
+                if (!config.customConfig) {
+                    data.requestTokenUrl = config.requestTokenUrl;
+                    data.accessTokenUrl = config.accessTokenUrl;
+                    data.userAuthorizationUrl = config.userAuthorizationUrl;
+                    data.signatureMethod = config.signatureMethod;
+                }
+                const url = new URL('/v1/oauth', SSO_SERVICE_URL);
+                url.searchParams.set('requestTokenURL', data.requestTokenUrl);
+                url.searchParams.set('accessTokenURL', data.accessTokenUrl);
+                url.searchParams.set('userAuthorizationURL', data.userAuthorizationUrl);
+                url.searchParams.set('consumerKey', data.consumerKey);
+                url.searchParams.set('consumerSecret', data.consumerSecret);
+                url.searchParams.set('redirectURL', this.httpCallback.getCallbackUrl());
+                const res = await this.httpCallback.open(url);
+                const { token, tokenSecret } = res?.query ?? {};
+                data.tokenKey = token;
+                data.tokenSecret = tokenSecret;
+                await this.saveCredentials(spec, this.param);
+                return;
+            }
             case 'oauth2': {
                 const data = spec.data as CredentialsOAuth2Data;
                 if (!config.customConfig) {

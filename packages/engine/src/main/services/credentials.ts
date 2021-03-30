@@ -50,6 +50,9 @@ export class CredentialsService {
                 const { prefix } = prop as CredentialsBearerConfig;
                 return new r.BearerAuthAgent({ token, prefix });
             }
+            case 'oauth1': {
+                return new r.OAuth1Agent({ ...prop, ...data });
+            }
             case 'oauth2': {
                 return new r.OAuth2Agent({ ...prop, ...data });
             }
@@ -124,6 +127,7 @@ export interface CredentialsOAuth1Data {
     requestTokenUrl: string;
     accessTokenUrl: string;
     userAuthorizationUrl: string;
+    signatureMethod: r.OAuth1SignatureMethod;
     consumerKey: string;
     consumerSecret: string;
 
