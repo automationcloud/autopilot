@@ -248,8 +248,8 @@ const DEFAULT_WORKSPACES: LayoutWorkspace[] = [
         layout: {
             type: 'row',
             children: [
-                { type: 'viewport', viewportId: 'script-flow' },
-                { type: 'viewport', viewportId: 'script-editor' },
+                { type: 'viewport', viewportId: 'scriptFlow' },
+                { type: 'viewport', viewportId: 'scriptEditor' },
             ],
         },
     },
@@ -259,6 +259,6 @@ const DEFAULT_WORKSPACES: LayoutWorkspace[] = [
     },
     {
         name: '❔',
-        layout: { type: 'viewport', viewportId: 'help-resources' },
+        layout: { type: 'viewport', viewportId: 'helpResources' },
     },
 ];

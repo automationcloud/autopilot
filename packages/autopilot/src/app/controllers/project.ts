@@ -32,6 +32,7 @@ import { AutosaveController } from './autosave';
 import { ExtensionRegistryController } from './extension-registry';
 import { NotificationsController } from './notifications';
 import { StorageController } from './storage';
+import { WelcomeController } from './welcome';
 
 @injectable()
 @controller({ alias: 'project' })
@@ -61,6 +62,8 @@ export class ProjectController {
         protected notifications: NotificationsController,
         @inject(ExtensionRegistryController)
         protected registry: ExtensionRegistryController,
+        @inject(WelcomeController)
+        protected welcome: WelcomeController,
     ) {
         this.userData = storage.createUserData('project', 300);
         this.automation = {
@@ -77,8 +80,9 @@ export class ProjectController {
     }
 
     async init() {
-        const { automation = {} } = await this.userData.loadData();
-        await this.loadAutomationJson(automation);
+        const { automation } = await this.userData.loadData();
+        const defaultAutomation = this.welcome.shown ? this.welcome.getWelcomeAutomation() : {};
+        await this.loadAutomationJson(automation ?? defaultAutomation);
         this.initialized = true;
     }
 

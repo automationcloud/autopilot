@@ -11,27 +11,41 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+import { booleanConfig } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 
 import { controller } from '../controller';
+import { LayoutController } from './layout';
 import { SettingsController } from './settings';
+
+const WELCOME_SHOWN = booleanConfig('WELCOME_SHOWN', true);
 
 @injectable()
 @controller({ alias: 'welcome' })
 export class WelcomeController {
     currentIndex: number;
-    shown: boolean; // TODO: move it to settings
+    dynamicShown: boolean = true;
 
     constructor(
         @inject(SettingsController)
         protected settings: SettingsController,
+        @inject(LayoutController)
+        protected layout: LayoutController,
     ) {
         this.currentIndex = 0;
-        this.shown = true;
     }
 
-    async init() { }
+    async init() {
+        this.dynamicShown = this.isDynamicViewportsVisible();
+    }
+
+    get shown() {
+        return this.settings.get(WELCOME_SHOWN);
+    }
+
+    setShowWelcome(value: boolean) {
+        this.settings.setEntries([['WELCOME_SHOWN', String(value)]]);
+    }
 
     next() {
         if (this.currentIndex === this.contents.length - 1) {
@@ -43,7 +57,7 @@ export class WelcomeController {
 
     hide() {
         this.currentIndex = 0;
-        this.shown = false;
+        this.setShowWelcome(false);
     }
 
     getWelcomeAutomation() {
@@ -52,6 +66,13 @@ export class WelcomeController {
 
     getCurrentContent() {
         return this.contents[this.currentIndex] ?? null;
+    }
+
+    isDynamicViewportsVisible() {
+        const { layout } = this.layout.workspaces[this.layout.activeWorkspaceIndex];
+        return layout.type === 'row' &&
+            layout.children[0]?.viewportId === 'scriptFlow' &&
+            layout.children[1]?.viewportId === 'scriptEditor';
     }
 
     get contents() {
@@ -71,7 +92,8 @@ export class WelcomeController {
                 selector: `[data-anchor='viewport-scriptFlow-e']`,
                 message: ['Define contexts which match pages and then add Actions which perform automation tasks.'],
                 orientation: 'left',
-                alignment: 'middle'
+                alignment: 'middle',
+                dynamic: true,
             },
             {
                 title: 'The Editor panel',
@@ -81,7 +103,8 @@ export class WelcomeController {
                     'The last pipe\'s output provides input to the next',
                 ],
                 orientation: 'right',
-                alignment: 'middle'
+                alignment: 'middle',
+                dynamic: true,
             },
             {
                 title: 'The Play bar',
@@ -110,7 +133,7 @@ export class WelcomeController {
                 orientation: 'bottom',
                 alignment: 'start'
             }
-        ];
+        ].filter(_ => this.dynamicShown ? true : !_.dynamic);
     }
 }
 
