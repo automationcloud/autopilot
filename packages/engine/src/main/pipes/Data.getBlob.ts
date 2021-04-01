@@ -48,7 +48,7 @@ Caution: decoding large blobs may result in decreased application and engine per
             util.checkType(el.value, 'object');
             util.checkType(el.value.blobId, 'string', 'blobId');
             const buffer = await this.$blobs.readBlob(el.value.blobId);
-            return el.clone(buffer.toString(encoding));
+            return el.clone(buffer.toString(encoding as BufferEncoding));
         });
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { CredentialsConfig } from '../services/credentials';
 import * as util from '../util';
 
 /**
@@ -41,7 +42,8 @@ export type AdvancedParamType =
     'pipeline' |
     'button' |
     'outcome' |
-    'ref';
+    'ref' |
+    'credentials';
 
 /**
  * All possible parameter types.
@@ -258,6 +260,24 @@ export function Button(spec: { label?: string; help?: string } = {}) {
         serialized: false,
     });
 }
+
+/**
+ * Declares Credentials parameter.
+ * @param spec
+ * @beta
+ */
+export function Credentials(spec: CredentialsParamSpec) {
+    const configs = Array.isArray(spec.configs) ? spec.configs : [spec.configs];
+    return paramDecorator('credentials', { ...spec, configs });
+}
+
+export type CredentialsParamSpec = {
+    label?: string;
+    help?: string;
+    icon?: string;
+    providerName: string;
+    configs: CredentialsConfig | CredentialsConfig[];
+};
 
 /**
  * Declares Outcome parameter, used to display the intermediary of an action or pipe.

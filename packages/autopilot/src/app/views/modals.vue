@@ -49,10 +49,12 @@ export default {
     right: 0;
     bottom: 0;
 
+    padding-top: 64px;
+
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .modals__overlay {
