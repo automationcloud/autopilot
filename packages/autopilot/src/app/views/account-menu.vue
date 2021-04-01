@@ -56,7 +56,7 @@ export default {
             menu.popupMenu(menuItems);
         },
     },
-};
+}
 </script>
 
 <style scoped>

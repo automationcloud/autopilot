@@ -54,7 +54,6 @@
                         @click="matchContexts">
                     <i class="playback__icon fas fa-map-marker-alt"></i>
                 </button>
-
             </div>
 
             <div class="playback__group">
@@ -194,6 +193,7 @@ button.playback__btn {
 button.playback__btn:hover {
     box-shadow: 0 0 0 9999px rgba(255,255,255,.05) inset;
 }
+
 button.playback__btn--play {
     position: relative;
 }

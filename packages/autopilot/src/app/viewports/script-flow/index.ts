@@ -55,10 +55,6 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.search.performSearch();
     }
 
-    getDefaultState() {
-        return { path: '', indices: [] };
-    }
-
     get playback() {
         return this.app.get(PlaybackController);
     }
