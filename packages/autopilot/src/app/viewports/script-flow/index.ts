@@ -55,6 +55,10 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.search.performSearch();
     }
 
+    getDefaultState() {
+        return { path: '', indices: [] };
+    }
+
     get playback() {
         return this.app.get(PlaybackController);
     }
@@ -142,10 +146,9 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
 
     onAutomationLoaded() {
         this.commandBuffer.reset();
-        this.clearSelection();
         const [context] = this.script.contexts;
         const action: Action | null = context.descendentActions().next().value;
-        this.addToSelection(action ?? context);
+        this.selectItem(action ?? context);
         this.revealSelected();
     }
 

@@ -112,7 +112,6 @@ export class WelcomeController {
                 message: [
                     'Control and debug playback of your script in the browser.'
                 ],
-                image: 'resources/playback.png',
                 orientation: 'bottom',
                 alignment: 'middle'
             },
