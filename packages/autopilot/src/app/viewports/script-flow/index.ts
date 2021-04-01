@@ -51,7 +51,7 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.menus = new ScriptFlowMenusController(this);
         this.recorder = new ActionRecorderController(this);
         this.dndActions = new DragAndDropActionsController(this);
-        this.app.events.on('automationLoaded', () => this.commandBuffer.reset());
+        this.app.events.on('automationLoaded', () => this.onAutomationLoaded());
         this.search.performSearch();
     }
 
@@ -138,6 +138,15 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
 
     isShowInsertLines() {
         return this.app.settings.get(UI_ACTION_INSERT_LINES);
+    }
+
+    onAutomationLoaded() {
+        this.commandBuffer.reset();
+        this.clearSelection();
+        const [context] = this.script.contexts;
+        const action: Action | null = context.descendentActions().next().value;
+        this.addToSelection(action ?? context);
+        this.revealSelected();
     }
 
 }
