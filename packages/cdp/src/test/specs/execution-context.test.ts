@@ -20,13 +20,13 @@ describe('ExecutionContext', () => {
     describe('evaluate', () => {
         it('evaluates document as RemoteElement', async () => {
             await runtime.goto('/index.html');
-            const ex = await runtime.page.mainFrame().getDefaultExecutionContext();
+            const ex = await runtime.page.mainFrame().getCurrentExecutionContext();
             const res = await ex.evaluate(() => document);
             assert(res instanceof RemoteElement);
         });
 
         it('evaluates async functions', async () => {
-            const ex = await runtime.page.mainFrame().getDefaultExecutionContext();
+            const ex = await runtime.page.mainFrame().getCurrentExecutionContext();
             const res = await ex.evaluate(async () => {
                 await new Promise(r => setTimeout(r, 100));
             });
@@ -34,7 +34,7 @@ describe('ExecutionContext', () => {
         });
 
         it('provides on-page exceptions', async () => {
-            const ex = await runtime.page.mainFrame().getDefaultExecutionContext();
+            const ex = await runtime.page.mainFrame().getCurrentExecutionContext();
             const err = await assertError('EvaluateFailed', async () => {
                 await ex.evaluate(() => {
                     throw new Error('Some error message');

@@ -15,7 +15,7 @@
 import { RemoteElementInfo } from '../remote-element';
 
 export function toolkit(options: any = {}) {
-    const binding: string = options.toolkitBinding || 'ubio';
+    const binding: string = options.toolkitBinding || 'AP';
 
     (window as any)[binding] = {
         getElementInfo,
