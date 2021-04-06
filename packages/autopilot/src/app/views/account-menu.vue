@@ -11,7 +11,7 @@
             @contextmenu.stop.prevent="popupMenu">
             {{ text }}
         </span>
-        <div class="account-menu-bubble" data-bubble-id="login"></div>
+        <div class="account-menu-bubble" data-anchor="login"></div>
     </div>
 </template>
 

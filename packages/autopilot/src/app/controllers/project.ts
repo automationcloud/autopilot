@@ -27,12 +27,12 @@ import semver from 'semver';
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
+import { WELCOME_AUTOMATION } from '../resources/automations/welcome';
 import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
 import { ExtensionRegistryController } from './extension-registry';
 import { NotificationsController } from './notifications';
 import { StorageController } from './storage';
-import { WelcomeController } from './welcome';
 
 @injectable()
 @controller({ alias: 'project' })
@@ -62,8 +62,6 @@ export class ProjectController {
         protected notifications: NotificationsController,
         @inject(ExtensionRegistryController)
         protected registry: ExtensionRegistryController,
-        @inject(WelcomeController)
-        protected welcome: WelcomeController,
     ) {
         this.userData = storage.createUserData('project', 300);
         this.automation = {
@@ -81,8 +79,7 @@ export class ProjectController {
 
     async init() {
         const { automation } = await this.userData.loadData();
-        const defaultAutomation = this.welcome.shown ? this.welcome.getWelcomeAutomation() : {};
-        await this.loadAutomationJson(automation ?? defaultAutomation);
+        await this.loadAutomationJson(automation ?? WELCOME_AUTOMATION ?? {});
         this.initialized = true;
     }
 

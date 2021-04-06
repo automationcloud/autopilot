@@ -33,7 +33,7 @@
             @click="addWorkspace()">
             <i class="fas fa-plus"></i>
         </div>
-        <div class="workspace-bubble" data-bubble-id="workspace"></div>
+        <div class="workspace-bubble" data-anchor="workspace"></div>
     </div>
 </template>
 

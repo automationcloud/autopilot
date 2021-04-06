@@ -17,7 +17,7 @@
                         @click="playScript"
                         title="Play script from selected item">
                     <i class="playback__icon fas fa-play"></i>
-                    <div class="play-bubble" data-bubble-id="play-script"></div>
+                    <div class="play-bubble" data-anchor="play-script"></div>
                 </button>
                 <button class="playback__btn"
                         :disabled="isPaused"
@@ -82,7 +82,7 @@
                 <playback-status/>
             </div>
         </div>
-        <div class="playback-bubble" data-bubble-id="playback"></div>
+        <div class="playback-bubble" data-anchor="playback"></div>
     </div>
 </template>
 
