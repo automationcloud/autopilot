@@ -8,7 +8,14 @@
         :style="style">
         <div class="bubble__arrow">
         </div>
-        <div class="bubble__content">
+        <div class="bubble__body">
+            <div class="bubble__icon">
+                <img src="resources/ubio-robot-black.svg" />
+            </div>
+            <div class="bubble__close"
+                @click="$emit('hide')">
+                <i class="fas fa-times"></i>
+            </div>
             <slot/>
         </div>
     </div>
@@ -55,7 +62,6 @@ export default {
         style() {
             return `transform: translate(${this.x}px, ${this.y}px)`;
         },
-
     },
 
     watch: {
@@ -84,6 +90,27 @@ export default {
             this.y = rect.top;
         },
 
+        /*
+        calcBodySize() {
+            if (!this.anchorEl) {
+                return;
+            }
+
+
+            const elem = document.querySelector('.bubble__body');
+            const bounding = elem.getBoundingClientRect();
+            const vw = window.innerWidth || document.documentElement.clientWidth;
+            if (bounding.left < 0) {
+                // Left side is out of viewoprt
+                this.width = 350 + bounding.left;
+            }
+
+            if (bounding.right > vw) {
+                this.width = 350 - (bounding.right - vw);
+            }
+        },
+        */
+
         onResize() {
             this.refreshAnchor();
             this.calcCoordinates();
@@ -100,70 +127,3 @@ export default {
 
 };
 </script>
-
-<style scoped>
-.bubble {
-    --arrow-size: 12px;
-    position: absolute;
-    filter: drop-shadow(0 1px 3px rgba(0,0,0,.25));
-}
-
-.bubble__content {
-    position: absolute;
-    padding: var(--gap);
-    min-width: 240px;
-    min-height: 64px;
-    border-radius: var(--border-radius);
-    background: var(--color-yellow--300);
-}
-
-.bubble__arrow {
-    position: absolute;
-    z-index: 5;
-    width: 0;
-    height: 0;
-    border: var(--arrow-size) solid transparent;
-    transform: translate(-50%, -50%);
-}
-
-.bubble--top .bubble__content {
-    margin-top: var(--arrow-size);
-    top: 0;
-}
-.bubble--bottom .bubble__content {
-    margin-bottom: var(--arrow-size);
-    bottom: 0;
-}
-.bubble--right .bubble__content {
-    margin-right: var(--arrow-size);
-    right: 0;
-}
-.bubble--left .bubble__content {
-    margin-left: var(--arrow-size);
-    left: 0;
-}
-
-.bubble--top.bubble--start .bubble__content,
-.bubble--bottom.bubble--start .bubble__content { transform: translateX(-10%) }
-
-.bubble--top.bubble--middle .bubble__content,
-.bubble--bottom.bubble--middle .bubble__content { transform: translateX(-50%) }
-
-.bubble--top.bubble--end .bubble__content,
-.bubble--bottom.bubble--end .bubble__content { transform: translateX(-90%) }
-
-.bubble--left.bubble--start .bubble__content,
-.bubble--right.bubble--start .bubble__content { transform: translateY(-25%) }
-
-.bubble--left.bubble--middle .bubble__content,
-.bubble--right.bubble--middle .bubble__content { transform: translateY(-50%) }
-
-.bubble--left.bubble--end .bubble__content,
-.bubble--right.bubble--end .bubble__content { transform: translateY(-75%) }
-
-.bubble--top .bubble__arrow { border-bottom-color: var(--color-yellow--300) }
-.bubble--bottom .bubble__arrow { border-top-color: var(--color-yellow--300) }
-.bubble--left .bubble__arrow { border-right-color: var(--color-yellow--300) }
-.bubble--right .bubble__arrow { border-left-color: var(--color-yellow--300) }
-
-</style>

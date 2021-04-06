@@ -1,0 +1,98 @@
+.bubble {
+    --arrow-size: 12px;
+    position: absolute;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.25));
+}
+
+.bubble__body {
+    position: absolute;
+    display: flex;
+    flex-flow: row nowrap;
+    padding: var(--gap--small);
+    width: 350px;
+    min-height: 64px;
+    height: fit-content;
+    border-radius: var(--border-radius);
+    background: var(--color-yellow--300);
+    color: var(--ui-color--black);
+    font-family: var(--font-family--alt);
+    font-size: var(--font-size--alt);
+}
+
+.bubble__icon {
+    flex: 0 0 auto;
+    padding: var(--gap--small);
+    font-size: 16px;
+    line-height: var(--font-size--alt);
+}
+
+.bubble__close {
+    order: 3;
+    padding: var(--gap--small);
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.bubble__content {
+    flex: 1;
+    margin-bottom: var(--gap);
+}
+
+.bubble__title {
+    margin: var(--gap--small) 0;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.bubble__message {
+    font-size: var(--font-size);
+}
+
+.bubble__arrow {
+    position: absolute;
+    z-index: 5;
+    width: 0;
+    height: 0;
+    border: var(--arrow-size) solid transparent;
+    transform: translate(-50%, -50%);
+}
+
+.bubble--top .bubble__body {
+    margin-top: var(--arrow-size);
+    top: 0;
+}
+.bubble--bottom .bubble__body {
+    margin-bottom: var(--arrow-size);
+    bottom: 0;
+}
+.bubble--right .bubble__body {
+    margin-right: var(--arrow-size);
+    right: 0;
+}
+.bubble--left .bubble__body {
+    margin-left: var(--arrow-size);
+    left: 0;
+}
+
+.bubble--top.bubble--start .bubble__body,
+.bubble--bottom.bubble--start .bubble__body { transform: translateX(-10%) }
+
+.bubble--top.bubble--middle .bubble__body,
+.bubble--bottom.bubble--middle .bubble__body { transform: translateX(-50%) }
+
+.bubble--top.bubble--end .bubble__body,
+.bubble--bottom.bubble--end .bubble__body { transform: translateX(-90%) }
+
+.bubble--left.bubble--start .bubble__body,
+.bubble--right.bubble--start .bubble__body { transform: translateY(-25%) }
+
+.bubble--left.bubble--middle .bubble__body,
+.bubble--right.bubble--middle .bubble__body { transform: translateY(-50%) }
+
+.bubble--left.bubble--end .bubble__body,
+.bubble--right.bubble--end .bubble__body { transform: translateY(-75%) }
+
+.bubble--top .bubble__arrow { border-bottom-color: var(--color-yellow--300) }
+.bubble--bottom .bubble__arrow { border-top-color: var(--color-yellow--300) }
+.bubble--left .bubble__arrow { border-right-color: var(--color-yellow--300) }
+.bubble--right .bubble__arrow { border-left-color: var(--color-yellow--300) }

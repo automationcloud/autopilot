@@ -11,123 +11,108 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import { booleanConfig } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 
 import { controller } from '../controller';
+import { Bubble } from '../entities/bubble';
+import { UserData } from '../userdata';
+import { BubblesController } from './bubbles';
 import { LayoutController } from './layout';
 import { SettingsController } from './settings';
-
-const WELCOME_SHOWN = booleanConfig('WELCOME_SHOWN', true);
+import { StorageController } from './storage';
 
 @injectable()
 @controller({ alias: 'welcome' })
 export class WelcomeController {
-    currentIndex: number;
-    dynamicShown: boolean = true;
+    userData: UserData;
+    shownIds: string[] = [];
+    viewportShown: boolean = true;
 
     constructor(
         @inject(SettingsController)
         protected settings: SettingsController,
         @inject(LayoutController)
         protected layout: LayoutController,
+        @inject(StorageController)
+        protected storage: StorageController,
+        @inject(BubblesController)
+        protected bubbles: BubblesController,
     ) {
-        this.currentIndex = 0;
+        this.userData = storage.createUserData('welcome');
     }
 
     async init() {
-        this.dynamicShown = this.isDynamicViewportsVisible();
-    }
-
-    get shown() {
-        return this.settings.get(WELCOME_SHOWN);
-    }
-
-    setShowWelcome(value: boolean) {
-        this.settings.setEntries([['WELCOME_SHOWN', String(value)]]);
-    }
-
-    next() {
-        if (this.currentIndex === this.contents.length - 1) {
-            this.hide();
-        } else {
-            this.currentIndex += 1;
+        const { shownIds = [] } = await this.userData.loadData();
+        this.shownIds = shownIds;
+        if (!this.showScriptViewportBubble()) {
+            this.shownIds.push('welcome-script-flow', 'welcome-script-editor');
+            this.update();
         }
+        const bubbles = this.contents
+            .filter(_ => !shownIds.includes(_.id))
+            .map(bubble => ({
+                ...bubble,
+                onRemove: () => { this.onMarkAsShown(bubble.id); }
+            }));
+        this.bubbles.addMany(bubbles);
     }
 
-    hide() {
-        this.currentIndex = 0;
-        this.setShowWelcome(false);
+    update() {
+        this.userData.saveData({
+            shownIds: this.shownIds,
+        });
     }
 
-    getCurrentContent() {
-        return this.contents[this.currentIndex] ?? null;
-    }
-
-    isDynamicViewportsVisible() {
+    showScriptViewportBubble() {
         const { layout } = this.layout.workspaces[this.layout.activeWorkspaceIndex];
         return layout.type === 'row' &&
             layout.children[0]?.viewportId === 'scriptFlow' &&
             layout.children[1]?.viewportId === 'scriptEditor';
     }
 
-    get contents() {
+    onMarkAsShown(id: string) {
+        this.shownIds.push(id);
+        this.update();
+    }
+
+    get contents(): Bubble[] {
         return [
             {
-                title: 'The Workspace Menu',
+                id: 'welcome-workspace',
                 selector: `[data-anchor='workspace']`,
-                message: [
-                    'Workspaces contain different Panels of tools.',
-                    'We\'ve set up default Workspaces like this one for scripting. You can also configure your own.'
-                ],
                 orientation: 'top',
-                alignment: 'start'
+                alignment: 'start',
             },
             {
-                title: 'The Script panel',
+                id: 'welcome-script-flow',
                 selector: `[data-anchor='viewport-scriptFlow-e']`,
-                message: ['Define contexts which match pages and then add Actions which perform automation tasks.'],
                 orientation: 'left',
                 alignment: 'middle',
-                dynamic: true,
             },
             {
-                title: 'The Editor panel',
+                id: 'welcome-script-editor',
                 selector: `[data-anchor='viewport-scriptEditor-w']`,
-                message: [
-                    'Compose Pipelines to do things in each Action',
-                    'The last pipe\'s output provides input to the next',
-                ],
                 orientation: 'right',
                 alignment: 'middle',
-                dynamic: true,
             },
             {
-                title: 'The Play bar',
+                id: 'welcome-playback',
                 selector: `[data-anchor='playback']`,
-                message: [
-                    'Control and debug playback of your script in the browser.'
-                ],
                 orientation: 'bottom',
                 alignment: 'middle'
             },
             {
-                title: 'Your Automation Cloud Account',
+                id: 'welcome-login',
                 selector: `[data-anchor='login']`,
-                message: ['Sign in here to save your automations. Run them in the Automation Cloud later, at scale'],
                 orientation: 'top',
                 alignment: 'end'
             },
             {
-                title: 'Play your first script',
+                id: 'welcome-play-script',
                 selector: `[data-anchor='play-script']`,
-                message: [
-                    'Clock the Play button to start playing this script.',
-                    'Go on. Dare you!',
-                ],
                 orientation: 'bottom',
                 alignment: 'start'
             }
-        ].filter(_ => this.dynamicShown ? true : !_.dynamic);
+        ];
     }
 }
