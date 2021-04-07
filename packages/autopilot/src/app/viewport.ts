@@ -40,10 +40,8 @@ export abstract class Viewport<State> {
 
     async init() {
         // to not reset the state already set before init hook
-        if (Object.keys(this.state).length === 0) {
-            const state = await this.userData.loadData(this.getDefaultState());
-            this.state = state;
-        }
+        const state = await this.userData.loadData(this.getDefaultState());
+        this.state = state;
     }
 
     update() {
