@@ -9,7 +9,7 @@
     display: flex;
     flex-flow: row nowrap;
     padding: var(--gap--small);
-    width: 350px;
+    width: 280px;
     min-height: 64px;
     height: fit-content;
     border-radius: var(--border-radius);
@@ -17,6 +17,10 @@
     color: var(--ui-color--black);
     font-family: var(--font-family--alt);
     font-size: var(--font-size--alt);
+}
+
+.bubble--wide .bubble__body {
+    width: 320px;
 }
 
 .bubble__icon {

@@ -6,11 +6,15 @@
             <bubble :selector="currentBubble.selector"
                 :orientation="currentBubble.orientation"
                 :alignment="currentBubble.alignment"
+                :closable="true"
+                :class="currentBubble.class"
                 @hide="bubbles.removeAll()">
                 <div class="bubble__content">
                     <component :is="'bubble-' + currentBubble.id" />
                     <div class="group group--gap--small">
-                        <b v-text="`${currentStep}/${totalStep}`"></b>
+                        <b>
+                            {{ currentStep }}/{{ totalSteps }}
+                        </b>
                         <button class="button button--cta bubbles__button"
                             @click="bubbles.remove(currentBubble.id)"
                             :title="actionTitle">
@@ -44,10 +48,10 @@ export default {
     },
 
     computed: {
-        currentBubble() { return this.bubbles.currentBubble; },
-        totalStep() { return this.bubbles.countForSession; },
-        currentStep() { return this.totalStep - this.bubbles.queue.length + 1; },
-        actionTitle() { return this.currentStep === this.totalStep ? 'Finish' : 'Next'; },
+        currentBubble() { return this.bubbles.getCurrent(); },
+        totalSteps() { return this.bubbles.getAll().length; },
+        currentStep() { return this.totalSteps - this.bubbles.getRemaining().length + 1; },
+        actionTitle() { return this.currentStep === this.totalSteps ? 'Finish' : 'Next'; },
     }
 };
 </script>
@@ -73,6 +77,6 @@ button.bubbles__button {
     background: var(--color-yellow--400);
     border: 0;
     font-family: var(--font-family--alt);
+    margin-left: var(--gap);
 }
-
 </style>

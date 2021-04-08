@@ -12,7 +12,8 @@
             <div class="bubble__icon">
                 <img src="resources/ubio-robot-black.svg" />
             </div>
-            <div class="bubble__close"
+            <div v-if="closable"
+                class="bubble__close"
                 @click="$emit('hide')">
                 <i class="fas fa-times"></i>
             </div>
@@ -33,6 +34,7 @@ export default {
         selector: { type: String, required: true },
         orientation: { type: String, required: true },
         alignment: { type: String, required: true },
+        closable: { type: Boolean, default: false },
     },
 
     data() {
