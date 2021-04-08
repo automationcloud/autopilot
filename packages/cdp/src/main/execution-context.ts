@@ -30,6 +30,11 @@ import { CdpRemoteObject } from './types';
  * `RemoteElement` and `RemoteObject` instances.
  */
 export class ExecutionContext {
+    /**
+     * Execution context may be destroyed, in which case it's no longer possible to use this.
+     * Frames will have to check if the context is alive and re-initialize them if necessary.
+     */
+    isAlive: boolean = true;
 
     /**
      * Creates a new execution context.
@@ -39,8 +44,15 @@ export class ExecutionContext {
      */
     constructor(
         readonly frame: Frame,
-        readonly executionContextId: string
-    ) {}
+        readonly executionContextId: string,
+    ) {
+        this.page.target.on('Runtime.executionContextsCleared', () => this.isAlive = false);
+        this.page.target.on('Runtime.executionContextDestroyed', ev => {
+            if (ev.executionContextId === this.executionContextId) {
+                this.isAlive = false;
+            }
+        });
+    }
 
     /**
      * @returns The page this execution context belongs to.
@@ -70,7 +82,7 @@ export class ExecutionContext {
             returnByValue: false,
             userGesture: true,
             awaitPromise: true,
-        });
+        }).catch(err => this.handleEvaluateError(err));
         if (exceptionDetails) {
             const err = this.convertException(exceptionDetails);
             this.frame.emit('evaluateError', err);
@@ -97,7 +109,7 @@ export class ExecutionContext {
             returnByValue: true,
             userGesture: true,
             awaitPromise: true,
-        });
+        }).catch(err => this.handleEvaluateError(err));
         if (exceptionDetails) {
             const err = this.convertException(exceptionDetails);
             this.frame.emit('evaluateError', err);
@@ -191,6 +203,13 @@ export class ExecutionContext {
             message: msg,
             retry: true,
         });
+    }
+
+    protected handleEvaluateError(err: Error) {
+        if (/Cannot find context with specified id/.test(err.message)) {
+            this.isAlive = false;
+        }
+        throw err;
     }
 
     initContentScripts(scripts: ContentScript[]) {

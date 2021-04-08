@@ -158,7 +158,7 @@ export class Frame extends EventEmitter {
 
     async getCurrentExecutionContext() {
         // Note: we can implement logic to switch between isolated world and default exec context here
-        if (this._isolatedWorld) {
+        if (this._isolatedWorld && this._isolatedWorld.isAlive) {
             return this._isolatedWorld;
         }
         return await this.initIsolatedWorld();
