@@ -14,7 +14,7 @@
 
 import { Exception } from './exception';
 import { Frame } from './frame';
-import { contentScripts } from './inject';
+import { ContentScript } from './inject';
 import { RemoteElement } from './remote-element';
 import { RemoteObject } from './remote-object';
 import { CdpRemoteObject } from './types';
@@ -193,11 +193,11 @@ export class ExecutionContext {
         });
     }
 
-    initContentScripts() {
+    initContentScripts(scripts: ContentScript[]) {
         const options = {
             toolkitBinding: this.page.toolkitBinding,
         };
-        for (const { fn, filename } of contentScripts) {
+        for (const { fn, filename } of scripts) {
             const source = `(${fn.toString()})(${JSON.stringify(options)})\n//# sourceURL=${filename}\n`;
             this.page.sendAndForget('Runtime.evaluate', {
                 contextId: this.executionContextId,

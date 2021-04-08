@@ -14,7 +14,6 @@
 
 import { EventEmitter } from 'events';
 import fetch from 'node-fetch';
-import uuid from 'uuid';
 
 import { Connection } from './connection';
 import { Interceptor, InterceptorHandler } from './interceptor';
@@ -58,7 +57,7 @@ export class Browser extends EventEmitter {
             cdpTimeout: 60000,
             navigationTimeout: 30000,
             stableBoxTimeout: 5000,
-            toolkitBinding: uuid.v4(),
+            toolkitBinding: 'Autopilot',
             logger: new ConsoleLogger(),
             ...config,
         };

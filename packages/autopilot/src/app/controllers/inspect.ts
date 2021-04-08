@@ -153,8 +153,12 @@ export class InspectController {
     }
 
     protected async resolveRemoteFromNode(scopeRemoteEl: RemoteElement, node: CdpNode): Promise<RemoteElement> {
-        const { object } = await scopeRemoteEl.page.send('DOM.resolveNode', { nodeId: node.nodeId });
-        return new RemoteElement(scopeRemoteEl.executionContext, object);
+        const { executionContext } = scopeRemoteEl;
+        const { object } = await scopeRemoteEl.page.send('DOM.resolveNode', {
+            nodeId: node.nodeId,
+            executionContextId: executionContext.executionContextId,
+        });
+        return new RemoteElement(executionContext, object);
     }
 
     async highlightScope(scopeEl: RemoteElement) {

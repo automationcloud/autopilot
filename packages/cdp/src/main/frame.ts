@@ -16,6 +16,7 @@ import { EventEmitter } from 'events';
 
 import { Exception } from './exception';
 import { ExecutionContext, RemoteExpression } from './execution-context';
+import { runtimeScripts, stubScripts } from './inject';
 import { NetworkResource } from './network-manager';
 import { Page } from './page';
 import { RemoteElement } from './remote-element';
@@ -46,7 +47,8 @@ export class Frame extends EventEmitter {
     response: CdpResponse | null = null;
     postData?: string;
 
-    _defaultExecCtx: ExecutionContext | null = null;
+    protected _isolatedWorld: ExecutionContext | null = null;
+    protected _defaultExecCtx: ExecutionContext | null = null;
 
     constructor(
         public page: Page,
@@ -57,8 +59,7 @@ export class Frame extends EventEmitter {
         if (parentFrame) {
             parentFrame.childFrames.add(this);
         }
-
-        this.clearDefaultExecutionContext();
+        this.clearExecutionContexts();
     }
 
     get logger() {
@@ -155,6 +156,25 @@ export class Frame extends EventEmitter {
         });
     }
 
+    async getCurrentExecutionContext() {
+        // Note: we can implement logic to switch between isolated world and default exec context here
+        if (this._isolatedWorld) {
+            return this._isolatedWorld;
+        }
+        return await this.initIsolatedWorld();
+    }
+
+    protected async initIsolatedWorld() {
+        const { executionContextId } = await this.page.target.send('Page.createIsolatedWorld', {
+            frameId: this.frameId,
+            worldName: 'Autopilot',
+            grantUniveralAccess: true,
+        });
+        this._isolatedWorld = new ExecutionContext(this, executionContextId);
+        this._isolatedWorld.initContentScripts(runtimeScripts);
+        return this._isolatedWorld;
+    }
+
     async getDefaultExecutionContext(): Promise<ExecutionContext> {
         if (!this._defaultExecCtx) {
             throw new Exception({
@@ -166,26 +186,23 @@ export class Frame extends EventEmitter {
         return this._defaultExecCtx;
     }
 
-    updateDefaultExecutionContext(exCtx: ExecutionContext) {
-        this._defaultExecCtx = exCtx;
-    }
-
-    clearDefaultExecutionContext() {
+    clearExecutionContexts() {
         this._defaultExecCtx = null;
+        this._isolatedWorld = null;
     }
 
     async evaluate(pageFn: RemoteExpression, ...args: any[]): Promise<RemoteObject> {
-        const execContext = await this.getDefaultExecutionContext();
+        const execContext = await this.getCurrentExecutionContext();
         return await execContext.evaluate(pageFn, ...args);
     }
 
     async evaluateElement(pageFn: RemoteExpression, ...args: any[]): Promise<RemoteElement | null> {
-        const execContext = await this.getDefaultExecutionContext();
+        const execContext = await this.getCurrentExecutionContext();
         return await execContext.evaluateElement(pageFn, ...args);
     }
 
     async evaluateJson(pageFn: RemoteExpression, ...args: any[]): Promise<any> {
-        const execContext = await this.getDefaultExecutionContext();
+        const execContext = await this.getCurrentExecutionContext();
         return await execContext.evaluateJson(pageFn, ...args);
     }
 
@@ -282,19 +299,19 @@ export class Frame extends EventEmitter {
         const { id, auxData = {} } = context;
         if (auxData.isDefault) {
             const exCtx = new ExecutionContext(this, id);
-            exCtx.initContentScripts();
-            this.updateDefaultExecutionContext(exCtx);
+            exCtx.initContentScripts(stubScripts);
+            this._defaultExecCtx = exCtx;
         }
     }
 
     onExecutionContextDestroyed(executionContextId: string) {
         if (this._defaultExecCtx && this._defaultExecCtx.executionContextId === executionContextId) {
-            this.clearDefaultExecutionContext();
+            this.clearExecutionContexts();
         }
     }
 
     onExecutionContextsCleared() {
-        this.clearDefaultExecutionContext();
+        this.clearExecutionContexts();
     }
 
     collectLogInfo() {

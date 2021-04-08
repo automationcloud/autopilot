@@ -16,8 +16,16 @@ import { exposeAudioUtils } from './audio-utils';
 import { stubs } from './stubs';
 import { toolkit } from './toolkit';
 
-export const contentScripts = [
+export interface ContentScript {
+    filename: string;
+    fn: Function;
+}
+
+export const runtimeScripts: ContentScript[] = [
     { filename: 'toolkit.js', fn: toolkit },
-    { filename: 'stubs.js', fn: stubs },
     { filename: 'audio-utils.js', fn: exposeAudioUtils },
+];
+
+export const stubScripts: ContentScript[] = [
+    { filename: 'stubs.js', fn: stubs }
 ];
