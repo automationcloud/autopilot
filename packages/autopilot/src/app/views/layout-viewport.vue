@@ -9,6 +9,11 @@
         @focusin="activateViewport"
         @keydown="onKeyDown">
 
+        <div class="anchor anchor--n" :data-anchor="'viewport-' + viewportId + '-n'"></div>
+        <div class="anchor anchor--s" :data-anchor="'viewport-' + viewportId + '-s'"></div>
+        <div class="anchor anchor--w" :data-anchor="'viewport-' + viewportId + '-w'"></div>
+        <div class="anchor anchor--e" :data-anchor="'viewport-' + viewportId + '-e'"></div>
+
         <div class="header">
             <div class="header-button"
                 draggable
@@ -349,4 +354,13 @@ export default {
     right: 0;
     width: 33%;
 }
+
+.anchor {
+    position: absolute;
+}
+
+.anchor--n { left: 50%; top: 0; }
+.anchor--s { left: 50%; bottom: 0; }
+.anchor--e { right: 0; top: 50%; }
+.anchor--w { left: 0; top: 50%; }
 </style>

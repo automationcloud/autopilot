@@ -39,6 +39,7 @@ export abstract class Viewport<State> {
     abstract getDefaultState(): State;
 
     async init() {
+        // to not reset the state already set before init hook
         const state = await this.userData.loadData(this.getDefaultState());
         this.state = state;
     }

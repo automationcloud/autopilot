@@ -16,6 +16,7 @@
             <playback/>
             <modal-menu/>
             <notifications/>
+            <bubbles/>
         </div>
     </div>
 </template>
@@ -24,6 +25,7 @@
 import '../../../stylesheets/index.css';
 
 import { dom } from '../util';
+import Bubbles from './bubbles.vue';
 import FirstRun from './first-run.vue';
 import Layout from './layout.vue';
 import ModalMenu from './modal-menu.vue';
@@ -44,6 +46,7 @@ export default {
         FirstRun,
         ModalMenu,
         Notifications,
+        Bubbles,
     },
 
     inject: [

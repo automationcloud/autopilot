@@ -27,6 +27,7 @@ import semver from 'semver';
 import { controller } from '../controller';
 import { EventsController } from '../controllers/events';
 import { Automation, DEFAULT_AUTOMATION_METADATA } from '../entities/automation';
+import { WELCOME_AUTOMATION } from '../resources/automations/welcome';
 import { UserData } from '../userdata';
 import { AutosaveController } from './autosave';
 import { ExtensionRegistryController } from './extension-registry';
@@ -77,8 +78,8 @@ export class ProjectController {
     }
 
     async init() {
-        const { automation = {} } = await this.userData.loadData();
-        await this.loadAutomationJson(automation);
+        const { automation } = await this.userData.loadData();
+        await this.loadAutomationJson(automation ?? WELCOME_AUTOMATION ?? {});
         this.initialized = true;
     }
 
