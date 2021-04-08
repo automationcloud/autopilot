@@ -4,7 +4,7 @@ export type BubbleAlignment = 'start' | 'middle' | 'end';
 export interface Bubble {
     id: string;
     selector: string;
+    class?: string;
     orientation: BubbleOrientation;
     alignment: BubbleAlignment;
-    onRemove?: () => void;
 }
