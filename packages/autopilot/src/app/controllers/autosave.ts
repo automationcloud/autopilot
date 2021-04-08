@@ -50,10 +50,10 @@ export class AutosaveController {
             .map((filename, i) => {
                 return {
                     filename,
-                    mtime: stats[i].mtime.getDate(),
+                    mtime: stats[i].mtime.getTime(),
                 };
             })
-            .sort((f1, f2) => (f1.mtime > f2.mtime ? 1 : -1))
+            .sort((f1, f2) => (f1.mtime < f2.mtime ? 1 : -1))
             .map(f => f.filename);
     }
 
