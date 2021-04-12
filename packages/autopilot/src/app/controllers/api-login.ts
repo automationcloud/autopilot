@@ -33,7 +33,6 @@ import { controlServerPort, profile } from '../globals';
 import { SettingsController } from './settings';
 import { StorageController } from './storage';
 
-const AC_LOGOUT_URL = stringConfig('AC_LOGOUT_URL', '');
 const AC_ACCOUNT_URL = stringConfig('AC_ACCOUNT_URL', '');
 const AC_AUTHORIZATION_URL = stringConfig('AC_AUTHORIZATION_URL', '');
 const AC_ACCOUNT_INFO_URL = stringConfig('AC_ACCOUNT_INFO_URL', '');
@@ -55,18 +54,15 @@ export class ApiLoginController {
         @inject(ApiRequest)
         protected api: ApiRequest,
     ) {
-        this.events.on('settingsUpdated', () => this.onSettingsUpdated());
-        this.events.on('apiAuthInvalidated', () => this.onAuthInvalidated());
+        this.events.on('apiAuthError', () => this.onAuthError());
+        this.events.on('tokenUpdated', () => this.onTokenUpdated());
         ipcRenderer.on('acLoginResult', (_ev, code: string) => this.onAcLoginResult(code));
     }
 
     async init() {
         // get accessToken before other api calls
         const accessToken = await this.api.authAgent.getHeader();
-        if (!accessToken) {
-            console.debug('[api-login] access token from authAgent is empty');
-        }
-        this.authenticate().catch(() => { });
+        console.debug(`[api-login] access token ${ accessToken ? 'obtained' : 'empty' }`);
     }
 
     updateRefreshToken(refreshToken: string) {
@@ -74,7 +70,7 @@ export class ApiLoginController {
     }
 
     isAuthenticated(): boolean {
-        return this.account != null && this.api.isAuthenticated();
+        return !!this.api.authAgent.params.accessToken;
     }
 
     get userInitial() {
@@ -85,18 +81,6 @@ export class ApiLoginController {
     get accountFullName() {
         const { firstName, lastName, email } = this.account || {};
         return [firstName, lastName].filter(Boolean).join(' ') || email || '';
-    }
-
-    async logout() {
-        // Send a logout request
-        const baseUrl = this.settings.get(AC_LOGOUT_URL);
-        const request = new Request({
-            baseUrl,
-            auth: this.api.authAgent,
-        });
-        await request.send('get', '');
-        this.updateRefreshToken('');
-        this.events.emit('apiAuthUpdated');
     }
 
     async manageAccount() {
@@ -135,17 +119,15 @@ export class ApiLoginController {
         return `http://localhost:${controlServerPort}/acLoginCallback?profileId=${profile.id}`;
     }
 
-    protected async authenticate() {
-        if (!this.api.isAuthenticated()) {
+    protected async onTokenUpdated() {
+        // it's called when the api.authAgent.accessToken has changed
+        if (!this.isAuthenticated()) {
+            this.account = null;
             return;
         }
-        try {
-            this.account = await this.fetchAccountInfo();
-            console.info('Signed in', this.account?.email);
-        } catch (error) {
-            console.warn('Sign in failed', { error });
-            await this.logout().catch(() => { });
-        } finally {
+        // authenticate but account detail is not fetched
+        if (!this.account) {
+            this.account = await this.getAccountInfo();
         }
     }
 
@@ -154,11 +136,8 @@ export class ApiLoginController {
         wnd.focus();
     }
 
-    protected onSettingsUpdated() {
-        this.init();
-    }
-
-    protected onAuthInvalidated() {
+    protected onAuthError() {
+        this.api.authAgent.setTokens({});
         this.updateRefreshToken('');
     }
 
@@ -188,31 +167,35 @@ export class ApiLoginController {
         return tokens;
     }
 
-    protected async fetchAccountInfo(): Promise<AccountInfo> {
+    protected async getAccountInfo(): Promise<AccountInfo | null> {
         const accountUrl = this.settings.get(AC_ACCOUNT_INFO_URL);
         const request = new Request({
             baseUrl: accountUrl,
             auth: this.api.authAgent,
             retryAttempts: 1,
         });
-        const body = await request.get('');
-        const valid = accountInfoValidator(body);
-        if (!valid) {
-            const messages = accountInfoValidator.errors?.map(_ => _.message ?? '').join('\n') || '';
-            throw new Exception({
-                name: 'AccountFetchFailed',
-                message: `Account details invalid:\n\n${messages}`,
-            });
+        try {
+            const body = await request.get('');
+            const valid = accountInfoValidator(body);
+            if (!valid) {
+                const messages = accountInfoValidator.errors?.map(_ => _.message ?? '').join('\n') || '';
+                throw new Exception({
+                    name: 'AccountFetchFailed',
+                    message: `Account details invalid:\n\n${messages}`,
+                });
+            }
+            return {
+                email: body.email,
+                emailVerified: body.email_verified ?? false,
+                firstName: body.given_name ?? '',
+                lastName: body.family_name ?? '',
+                username: body.preferred_username ?? '',
+                organisationId: body.organisationId ?? null,
+                userId: body.userId ?? null,
+            };
+        } catch (err) {
+            return null;
         }
-        return {
-            email: body.email,
-            emailVerified: body.email_verified ?? false,
-            firstName: body.given_name ?? '',
-            lastName: body.family_name ?? '',
-            username: body.preferred_username ?? '',
-            organisationId: body.organisationId ?? null,
-            userId: body.userId ?? null,
-        };
     }
 
 }

@@ -18,6 +18,7 @@ import { inject } from 'inversify';
 import { EventsController } from '../controllers/events';
 
 export class AutopilotApiRequest extends ApiRequest {
+    _accessToken: string | null = null;
 
     constructor(
         @inject(Configuration)
@@ -32,14 +33,24 @@ export class AutopilotApiRequest extends ApiRequest {
 
     setup() {
         super.setup();
+        // to listen to accessToken changes
+        Object.defineProperty(this.authAgent.params, 'accessToken', {
+            get: () => {
+                return this._accessToken;
+            },
+            set: newValue => {
+                this._accessToken = newValue;
+                this.events.emit('tokenUpdated');
+            }
+        });
         this.request.onRetry = (error, info) => {
             console.debug('[api-request] onRetry: API request failed, retrying', info, error);
         };
         this.request.onError = (error, info) => {
             console.debug('[api-request] onError: API request failed', { error, info });
             if (info.status === 401) {
-                console.info('API responded with 401, invalidating refresh token', { details: info });
-                this.events.emit('apiAuthInvalidated');
+                console.info('API responded with 401', { details: info });
+                this.events.emit('apiAuthError');
             }
         };
     }

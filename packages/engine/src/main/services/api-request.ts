@@ -48,10 +48,6 @@ export class ApiRequest {
         });
     }
 
-    isAuthenticated() {
-        return !!this.authAgent.params.refreshToken;
-    }
-
     get(url: string, options: RequestOptions = {}) {
         return this.request.get(url, options);
     }
