@@ -54,7 +54,7 @@ export class ApiLoginController {
         @inject(ApiRequest)
         protected api: ApiRequest,
     ) {
-        this.events.on('apiAuthError', () => this.onAuthError());
+        this.events.on('apiAuthError', () => this.invalidateTokens());
         this.events.on('tokenUpdated', () => this.onTokenUpdated());
         ipcRenderer.on('acLoginResult', (_ev, code: string) => this.onAcLoginResult(code));
     }
@@ -70,7 +70,7 @@ export class ApiLoginController {
     }
 
     isAuthenticated(): boolean {
-        return !!this.api.authAgent.params.accessToken;
+        return !!this.api.authAgent.params.refreshToken;
     }
 
     get userInitial() {
@@ -136,7 +136,7 @@ export class ApiLoginController {
         wnd.focus();
     }
 
-    protected onAuthError() {
+    protected invalidateTokens() {
         this.api.authAgent.setTokens({});
         this.updateRefreshToken('');
     }
