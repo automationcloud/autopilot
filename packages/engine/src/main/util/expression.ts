@@ -25,6 +25,9 @@ const globals = ['module', 'exports', 'require', 'global', 'process'];
 export function evalExpression(expression: string, scope: any, additionalArgs: object = {}) {
     switch (expression[0]) {
         case '/':
+            if (expression.startsWith('//')) {
+                return undefined;
+            }
             checkType(scope, ['object', 'array']);
             return jsonPointer.get(scope, expression);
         case '=': {

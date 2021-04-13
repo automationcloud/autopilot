@@ -81,7 +81,9 @@ Specifies how to construct the resulting object:
                     continue;
                 }
                 const val = util.evalExpression(value, el.value);
-                jsonPointer.set(newData, path, val);
+                if (val !== undefined) {
+                    jsonPointer.set(newData, path, val);
+                }
             }
             return el.clone(newData);
         });
