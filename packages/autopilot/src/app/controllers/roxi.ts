@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ApiRequest, Configuration, ProxyService, uniproxy } from '@automationcloud/engine';
+import { Configuration, ProxyService, uniproxy } from '@automationcloud/engine';
 import { MenuItemConstructorOptions } from 'electron';
 import { inject, injectable } from 'inversify';
 
@@ -21,6 +21,7 @@ import { EventsController } from '../controllers/events';
 import { UserData } from '../userdata';
 import { popupMenu } from '../util/menu';
 import { ApiController, ProxyConfig } from './api';
+import { ApiLoginController } from './api-login';
 import { StorageController } from './storage';
 
 export type ProxyConnectionType = 'direct' | 'proxy';
@@ -43,8 +44,8 @@ export class RoxiController {
         protected events: EventsController,
         @inject(ApiController)
         protected api: ApiController,
-        @inject(ApiRequest)
-        protected apiRequest: ApiRequest,
+        @inject(ApiLoginController)
+        protected apiLogin: ApiLoginController,
         @inject(Configuration)
         protected config: Configuration,
         @inject(StorageController)
@@ -115,7 +116,7 @@ export class RoxiController {
     }
 
     isAuthenticated() {
-        return this.apiRequest.isAuthenticated();
+        return this.apiLogin.isAuthenticated();
     }
 
     isActive() {
