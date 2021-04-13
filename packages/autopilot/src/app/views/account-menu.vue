@@ -32,9 +32,10 @@ export default {
     methods: {
 
         popupMenu() {
+            const email = this.apiLogin.account ? this.apiLogin.account.email : 'Offline User';
             const menuItems = [
                 {
-                    label: 'Email: ' + this.apiLogin.account.email,
+                    label: 'Email: ' + email,
                     enabled: false,
                 },
                 {
@@ -49,7 +50,7 @@ export default {
                 {
                     label: 'Sign out',
                     click: () => {
-                        this.apiLogin.logout();
+                        this.apiLogin.invalidateTokens();
                     },
                 }
             ];
