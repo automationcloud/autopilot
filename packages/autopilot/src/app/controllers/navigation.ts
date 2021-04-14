@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from '../app';
-import { Controller } from '../controller';
+import { injectable } from 'inversify';
+
+import { Controller, controller } from '../controller';
 import { dom, keyboard } from '../util';
 
+@injectable()
+@controller({
+    alias: 'navigation'
+})
 export class NavigationController implements Controller {
-    app: App;
 
     focusTimer: any = null;
 
-    constructor(app: App) {
-        this.app = app;
-    }
+    constructor() {}
 
     async init() {}
 

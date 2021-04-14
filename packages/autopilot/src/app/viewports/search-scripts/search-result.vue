@@ -32,6 +32,10 @@ import { helpers } from '../../util';
 
 export default {
 
+    inject: [
+        'editor',
+    ],
+
     props: {
         result: { type: Object },
     },
@@ -50,7 +54,7 @@ export default {
             if (node.$entityType === 'context') {
                 return 'fas fa-map-marker-alt';
             }
-            return this.app.ui.objects.getActionIcon(node.type);
+            return this.editor.getActionIcon(node.type);
         },
 
         async loadNode(nodeId) {

@@ -16,6 +16,7 @@ import { Action, booleanConfig, Context, Element, model, Pipe, Pipeline } from '
 import { MenuItemConstructorOptions } from 'electron';
 
 import { App } from '../../app';
+import { FeedbackController } from '../../controllers/feedback';
 import { HelpController } from '../../controllers/help';
 import { clipboard, helpers } from '../../util';
 import { toCsv } from '../../util/csv';
@@ -40,7 +41,7 @@ export class ScriptEditorViewport extends ScriptViewport<Pipe> {
     }
 
     get feedback() {
-        return this.app.ui.feedbacks;
+        return this.app.get(FeedbackController);
     }
 
     getViewportId(): string {

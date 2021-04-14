@@ -12,16 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from '../app';
-import { Controller } from '../controller';
+import { ResolverService } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 
-export class ObjectsController implements Controller {
-    constructor(public app: App) {}
+import { controller } from '../controller';
+
+/**
+ * A controller with ambitious name but not too much logic currently.
+ *
+ * TODO The bigger idea is to actually transfer the selection and editing functionality
+ * from ScriptFlowViewport and ScriptEditorViewport, so that the whole thing is decoupled.
+ */
+@injectable()
+@controller({
+    alias: 'editor'
+})
+export class EditorController {
+
+    constructor(
+        @inject(ResolverService)
+        protected resolver: ResolverService,
+    ) {
+
+    }
 
     async init() {}
 
     getActionIcon(type: string) {
-        const ActionClass = this.app.resolver.getActionClass(type);
+        const ActionClass = this.resolver.getActionClass(type);
         return ActionClass.$icon || 'far fa-circle';
     }
+
 }

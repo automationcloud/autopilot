@@ -32,6 +32,7 @@ export default {
 
     inject: [
         'modals',
+        'editor',
     ],
 
     computed: {
@@ -49,7 +50,7 @@ export default {
         },
 
         icon() {
-            return this.app.ui.objects.getActionIcon(this.action.type);
+            return this.editor.getActionIcon(this.action.type);
         }
 
     },

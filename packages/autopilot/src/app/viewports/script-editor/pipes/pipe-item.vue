@@ -142,17 +142,19 @@
 
 <script>
 import ms from 'ms';
+
+import EditParam from '../params/edit-param.vue';
 import Elem from './elem.vue';
 import Err from './err.vue';
-import EditParam from '../params/edit-param.vue';
-import Sampler from './sampler.vue';
 import PipeNotes from './pipe-notes.vue';
+import Sampler from './sampler.vue';
 
 export default {
 
     inject: [
         'diff',
         'expandable',
+        'navigation',
     ],
 
     components: {
@@ -324,7 +326,7 @@ export default {
         },
 
         onBarClick(ev) {
-            this.app.ui.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
+            this.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
         },
 
         onUiSelect() {

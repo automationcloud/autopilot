@@ -70,7 +70,8 @@ import { helpers, menu } from '../util';
 export default {
 
     inject: [
-        'layout'
+        'layout',
+        'navigation',
     ],
 
     props: {
@@ -175,7 +176,7 @@ export default {
         },
 
         onKeyDown(ev) {
-            this.app.ui.navigation.handleViewportNavigationKeydown(this.$el, ev);
+            this.navigation.handleViewportNavigationKeydown(this.$el, ev);
         },
 
         popupViewportsMenu() {

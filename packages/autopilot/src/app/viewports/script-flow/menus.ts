@@ -27,8 +27,8 @@ import os from 'os';
 import { ComposerController } from '../../controllers/composer';
 import { FrequentItemController } from '../../controllers/frequent-item';
 import { HelpController } from '../../controllers/help';
+import { ModalMenuController, ModalMenuItem } from '../../controllers/modal-menu';
 import { PlaybackController } from '../../controllers/playback';
-import { ModalMenuItem } from '../../ui/modal-menu';
 import { dom } from '../../util';
 import { ScriptFlowViewport } from '.';
 
@@ -66,10 +66,14 @@ export class ScriptFlowMenusController {
         return this.app.get(ComposerController);
     }
 
+    get modalMenu() {
+        return this.app.get(ModalMenuController);
+    }
+
     showCreateMenu() {
         const items = [...this.menuCreate()];
         if (items.length) {
-            this.app.ui.modalMenu.show(items);
+            this.modalMenu.show(items);
         }
     }
 
@@ -113,7 +117,7 @@ export class ScriptFlowMenusController {
     showContextItemMenu() {
         const items = [...this.menuContextItem()];
         if (items.length) {
-            this.app.ui.modalMenu.show(items);
+            this.modalMenu.show(items);
         }
     }
 
@@ -147,7 +151,7 @@ export class ScriptFlowMenusController {
     showActionItemMenu() {
         const items = [...this.menuActionItem()];
         if (items.length) {
-            this.app.ui.modalMenu.show(items);
+            this.modalMenu.show(items);
         }
     }
 

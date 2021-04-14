@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { App } from '../app';
-import { Controller } from '../controller';
+import { inject, injectable } from 'inversify';
+
+import { Viewports } from '../app';
+import { Controller, controller } from '../controller';
 import { clipboard, helpers } from '../util';
+import { ApiController } from './api';
+import { ToolsController } from './tools';
 
 export type LoaderResourceType = 'none' | 'service' | 'script' | 'job' | 'execution' | 'html-snapshot' | 'uuid';
 
@@ -26,15 +30,24 @@ const urlPrefixes: Array<{ type: LoaderResourceType; prefix: string }> = [
     { type: 'html-snapshot', prefix: 'html-snapshots' },
 ];
 
+@injectable()
+@controller({
+    alias: 'clipboardLoader'
+})
 export class ClipboardLoaderController implements Controller {
-    app: App;
 
     loading: boolean = false;
     resourceType: LoaderResourceType = 'none';
     resourceId: string = '';
 
-    constructor(app: App) {
-        this.app = app;
+    constructor(
+        @inject('viewports')
+        protected viewports: Viewports,
+        @inject(ApiController)
+        protected api: ApiController,
+        @inject(ToolsController)
+        protected tools: ToolsController
+    ) {
     }
 
     async init() {}
@@ -93,35 +106,35 @@ export class ClipboardLoaderController implements Controller {
         try {
             switch (this.resourceType) {
                 case 'script': {
-                    const script = await this.app.api.getScript(this.resourceId);
-                    await this.app.tools.loadScriptService(script.id, script.serviceId);
+                    const script = await this.api.getScript(this.resourceId);
+                    await this.tools.loadScriptService(script.id, script.serviceId);
                     break;
                 }
                 case 'service': {
-                    const service = await this.app.api.getService(this.resourceId);
-                    await this.app.tools.loadScriptService(service.scriptId, service.id);
+                    const service = await this.api.getService(this.resourceId);
+                    await this.tools.loadScriptService(service.scriptId, service.id);
                     break;
                 }
                 case 'job': {
-                    const job = await this.app.api.getJob(this.resourceId);
-                    await this.app.tools.loadScriptService(job.scriptId, job.serviceId);
+                    const job = await this.api.getJob(this.resourceId);
+                    await this.tools.loadScriptService(job.scriptId, job.serviceId);
                     break;
                 }
                 case 'execution': {
-                    const execution = await this.app.api.getExecution(this.resourceId);
-                    await this.app.tools.loadScriptService(execution.scriptId, execution.serviceId);
+                    const execution = await this.api.getExecution(this.resourceId);
+                    await this.tools.loadScriptService(execution.scriptId, execution.serviceId);
                     break;
                 }
                 case 'html-snapshot': {
-                    const htmlSnapshot = await this.app.api.getHtmlSnapshot(this.resourceId);
-                    const script = await this.app.api.getScript(htmlSnapshot.scriptId);
-                    await this.app.tools.loadScriptService(script.id, script.serviceId);
+                    const htmlSnapshot = await this.api.getHtmlSnapshot(this.resourceId);
+                    const script = await this.api.getScript(htmlSnapshot.scriptId);
+                    await this.tools.loadScriptService(script.id, script.serviceId);
                     break;
                 }
                 default:
                     return;
             }
-            this.app.viewports.scriptFlow.activateViewport();
+            this.viewports.scriptFlow.activateViewport();
         } catch (err) {
             alert('Could not load Script. Please see Console for details.');
             console.error(err);
@@ -135,23 +148,23 @@ export class ClipboardLoaderController implements Controller {
         try {
             switch (this.resourceType) {
                 case 'job': {
-                    await this.app.tools.loadJobData(this.resourceId);
+                    await this.tools.loadJobData(this.resourceId);
                     break;
                 }
                 case 'execution': {
-                    const execution = await this.app.api.getExecution(this.resourceId);
-                    await this.app.tools.loadJobData(execution.jobId);
+                    const execution = await this.api.getExecution(this.resourceId);
+                    await this.tools.loadJobData(execution.jobId);
                     break;
                 }
                 case 'html-snapshot': {
-                    const htmlSnapshot = await this.app.api.getHtmlSnapshot(this.resourceId);
-                    await this.app.tools.loadJobData(htmlSnapshot.jobId);
+                    const htmlSnapshot = await this.api.getHtmlSnapshot(this.resourceId);
+                    await this.tools.loadJobData(htmlSnapshot.jobId);
                     break;
                 }
                 default:
                     return;
             }
-            this.app.viewports.bundles.activateViewport();
+            this.viewports.bundles.activateViewport();
         } catch (err) {
             alert('Could not load Job Data. Please see Console for details.');
             console.error(err);
@@ -165,7 +178,7 @@ export class ClipboardLoaderController implements Controller {
         try {
             switch (this.resourceType) {
                 case 'html-snapshot': {
-                    await this.app.tools.loadHtmlSnapshot(this.resourceId);
+                    await this.tools.loadHtmlSnapshot(this.resourceId);
                     break;
                 }
                 default:
@@ -185,15 +198,15 @@ export class ClipboardLoaderController implements Controller {
             switch (this.resourceType) {
                 case 'execution': {
                     const options = { executionId: this.resourceId, limit: 1 };
-                    const [latest] = await this.app.api.getCheckpoints(options);
+                    const [latest] = await this.api.getCheckpoints(options);
                     if (!latest) {
                         throw new Error('Checkpoint not found');
                     }
-                    await this.app.tools.loadCheckpoint(latest.id);
+                    await this.tools.loadCheckpoint(latest.id);
                     break;
                 }
                 case 'uuid': {
-                    await this.app.tools.loadCheckpoint(this.resourceId);
+                    await this.tools.loadCheckpoint(this.resourceId);
                     break;
                 }
                 default:

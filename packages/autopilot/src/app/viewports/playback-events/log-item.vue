@@ -73,6 +73,10 @@ import moment from 'moment';
 
 export default {
 
+    inject: [
+        'editor',
+    ],
+
     props: {
         item: { type: Object, required: true },
         isFirst: { type: Boolean, required: true },
@@ -98,7 +102,7 @@ export default {
                     return 'fas fa-map-marker-alt';
                 case 'action-start':
                 case 'action-end':
-                    return this.app.ui.objects.getActionIcon(this.item.action.type);
+                    return this.editor.getActionIcon(this.item.action.type);
                 case 'fail':
                     return 'fas fa-exclamation-circle';
                 case 'input':
@@ -107,6 +111,7 @@ export default {
                     return 'fas fa-sign-out-alt';
                 case 'success':
                     return 'fas fa-check-circle';
+                default:
                 case 'playback':
                     switch (this.item.playbackEvent) {
                         case 'pause':

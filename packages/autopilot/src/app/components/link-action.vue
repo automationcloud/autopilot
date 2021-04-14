@@ -10,13 +10,17 @@
 <script>
 export default {
 
+    inject: [
+        'editor',
+    ],
+
     props: {
         action: { type: Object, required: true }
     },
 
     computed: {
         icon() {
-            return this.app.ui.objects.getActionIcon(this.action.type);
+            return this.editor.getActionIcon(this.action.type);
         }
     },
 
