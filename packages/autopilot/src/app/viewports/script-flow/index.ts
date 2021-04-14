@@ -22,7 +22,6 @@ import { InsertLocation, ScriptViewport } from '../script-viewport';
 import { ScriptFlowCommandsController } from './commands';
 import { DragAndDropActionsController } from './dnd-actions';
 import { ScriptFlowMenusController } from './menus';
-import { ActionRecorderController } from './recorder';
 import { ScriptSearchController } from './search';
 
 type ScriptFlowItem = Context | Action;
@@ -41,7 +40,6 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
     search: ScriptSearchController;
     commands: ScriptFlowCommandsController;
     menus: ScriptFlowMenusController;
-    recorder: ActionRecorderController;
     dndActions: DragAndDropActionsController;
 
     constructor(app: App) {
@@ -49,7 +47,6 @@ export class ScriptFlowViewport extends ScriptViewport<ScriptFlowItem> {
         this.search = new ScriptSearchController(this);
         this.commands = new ScriptFlowCommandsController(this);
         this.menus = new ScriptFlowMenusController(this);
-        this.recorder = new ActionRecorderController(this);
         this.dndActions = new DragAndDropActionsController(this);
         this.app.events.on('automationLoaded', () => this.commandBuffer.reset());
         this.search.performSearch();

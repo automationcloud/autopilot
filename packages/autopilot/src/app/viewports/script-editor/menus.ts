@@ -16,6 +16,7 @@ import { model, PipeClass } from '@automationcloud/engine';
 import { MenuItemConstructorOptions } from 'electron';
 import os from 'os';
 
+import { FrequentItemController } from '../../controllers/frequent-item';
 import { HelpController } from '../../controllers/help';
 import { ModalsController } from '../../controllers/modals';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
@@ -55,6 +56,10 @@ export class ScriptEditorMenusController {
 
     get pipeRecipes() {
         return this.app.get(PipeRecipesController);
+    }
+
+    get frequentItems() {
+        return this.app.get(FrequentItemController);
     }
 
     showCreatePipeMenu() {
@@ -152,7 +157,7 @@ export class ScriptEditorMenusController {
     }
 
     private *buildPipeCreate(): IterableIterator<ModalMenuItem> {
-        if (this.app.ui.frequentItems.isShown()) {
+        if (this.frequentItems.isShown()) {
             yield* this.buildFrequentPipes();
         }
         yield { type: 'header', label: 'All Pipes' };
@@ -169,7 +174,7 @@ export class ScriptEditorMenusController {
     }
 
     private *buildFrequentPipes(): IterableIterator<ModalMenuItem> {
-        const pipeTypes = this.app.ui.frequentItems.getPipeTypes();
+        const pipeTypes = this.frequentItems.getPipeTypes();
         const frequentPipes = pipeTypes
             .map(type => this.app.resolver.getPipeClass(type))
             .filter(Boolean);

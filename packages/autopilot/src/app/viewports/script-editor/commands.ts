@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { FrequentItemController } from '../../controllers/frequent-item';
 import { helpers } from '../../util';
 import { ScriptEditorViewport } from '.';
 import { ChangePipeTypeCommand } from './cmd-change-pipe-type';
@@ -35,7 +36,7 @@ export class ScriptEditorCommandsController {
     }
 
     private get frequentItems() {
-        return this.viewport.app.ui.frequentItems;
+        return this.viewport.app.get(FrequentItemController);
     }
 
     async editMetadata(key: string, newValue: any) {

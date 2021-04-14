@@ -12,23 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { booleanConfig } from '@automationcloud/engine';
+import { booleanConfig, Configuration, ResolverService } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 
-import { App } from '../app';
+import { controller } from '../controller';
 import { UserData } from '../userdata';
+import { StorageController } from './storage';
 
 const UI_SHOW_FREQUENT_ITEMS = booleanConfig('UI_SHOW_FREQUENT_ITEMS', true);
 
+@injectable()
+@controller({ alias: 'frequentItems' })
 export class FrequentItemController {
-    app: App;
     userData: UserData;
 
     actionsSortedByCount: FrequentItem[] = [];
     pipesSortedByCount: FrequentItem[] = [];
 
-    constructor(app: App) {
-        this.app = app;
-        this.userData = app.storage.createUserData('frequent-items', 500);
+    constructor(
+        @inject(StorageController)
+        protected storage: StorageController,
+        @inject(Configuration)
+        protected config: Configuration,
+        @inject(ResolverService)
+        protected resolver: ResolverService,
+    ) {
+        this.userData = storage.createUserData('frequent-items', 500);
     }
 
     async init() {
@@ -38,7 +47,7 @@ export class FrequentItemController {
     }
 
     isShown() {
-        return this.app.config.get(UI_SHOW_FREQUENT_ITEMS);
+        return this.config.get(UI_SHOW_FREQUENT_ITEMS);
     }
 
     onActionCreate(type: string): void {
@@ -80,7 +89,7 @@ export class FrequentItemController {
     }
 
     getActionTypes(limit: number = 5): string[] {
-        const actionMap = this.app.resolver.getActionIndex();
+        const actionMap = this.resolver.getActionIndex();
         const validActions = this.actionsSortedByCount
             .filter(record => {
                 const action = actionMap.get(record.type);
@@ -92,7 +101,7 @@ export class FrequentItemController {
     }
 
     getPipeTypes(limit: number = 5): string[] {
-        const pipeMap = this.app.resolver.getPipeIndex();
+        const pipeMap = this.resolver.getPipeIndex();
         const validPipes = this.pipesSortedByCount.filter(record => pipeMap.has(record.type)).slice(0, limit);
 
         return validPipes.sort((a, b) => b.lastUsedAt - a.lastUsedAt).map(record => record.type);

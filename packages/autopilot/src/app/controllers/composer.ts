@@ -12,38 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { RemoteElementInfo, util } from '@automationcloud/engine';
+import { BrowserService, RemoteElementInfo, util } from '@automationcloud/engine';
+import { inject, injectable } from 'inversify';
 
-import { InspectController } from '../../controllers/inspect';
-import { clipboard, helpers } from '../../util';
-import { ScriptFlowViewport } from '.';
+import { Viewports } from '../app';
+import { controller } from '../controller';
+import { clipboard, helpers } from '../util';
+import { FrequentItemController } from './frequent-item';
+import { InspectController } from './inspect';
 
-export class ActionRecorderController {
-    viewport: ScriptFlowViewport;
+@injectable()
+@controller({
+    alias: 'composer'
+})
+export class ComposerController {
 
-    constructor(viewport: ScriptFlowViewport) {
-        this.viewport = viewport;
+    constructor(
+        @inject(InspectController)
+        protected inspect: InspectController,
+        @inject(BrowserService)
+        protected browser: BrowserService,
+        @inject(FrequentItemController)
+        protected frequentItems: FrequentItemController,
+        @inject('viewports')
+        protected viewports: Viewports,
+    ) {
     }
 
-    get app() {
-        return this.viewport.app;
-    }
+    async init() {}
 
-    get inspect() {
-        return this.app.get(InspectController);
+    get viewport() {
+        return this.viewports.scriptFlow;
     }
 
     async recordAction(type: string): Promise<void> {
-        this.app.ui.frequentItems.onActionCreate(type);
+        this.frequentItems.onActionCreate(type);
         switch (type) {
-            // case 'matcher':
-            // case 'Flow.expect':
-            //     return await this.recordMatcher(type);
-            // case 'Page.click':
-            // case 'Page.hover':
-            // case 'Page.input':
-            // case 'Flow.find':
-            //     return await this.recordSingleElAction(type);
+            case 'matcher':
+            case 'Flow.expect':
+                return await this.recordMatcher(type);
+            case 'Page.click':
+            case 'Page.hover':
+            case 'Page.input':
+            case 'Flow.find':
+                return await this.recordSingleElAction(type);
             case 'Page.fetch':
                 return await this.recordFetch(type);
             default:
@@ -53,7 +65,7 @@ export class ActionRecorderController {
 
     // Note: not used, kept for reference
     protected async recordMatcher(type: string) {
-        const document = await this.app.browser.page.document();
+        const document = await this.browser.page.document();
         const res = await this.inspect.recordElement(document);
         const spec: any = {
             label: '',
@@ -80,7 +92,7 @@ export class ActionRecorderController {
 
     // Note: unused, kept for reference
     protected async recordSingleElAction(type: string) {
-        const document = await this.app.browser.page.document();
+        const document = await this.browser.page.document();
         const res = await this.inspect.recordElement(document);
         const spec: any = {
             type,
@@ -102,7 +114,7 @@ export class ActionRecorderController {
             url = clipboard.readText().trim();
         }
         if (!url) {
-            url = this.app.browser.page.mainFrame().url;
+            url = this.browser.page.mainFrame().url;
         }
         if (url) {
             const mappings = helpers.createComposeMappings({
@@ -119,7 +131,7 @@ export class ActionRecorderController {
     // Composed actions
 
     async recordComposedAction(inputKey: string, path: string = '') {
-        const document = await this.app.browser.page.document();
+        const document = await this.browser.page.document();
         const res = await this.inspect.recordElement(document);
         const spec: any = {
             type: 'placeholder',
