@@ -24,6 +24,8 @@ import { Domain, InputDef } from '@ubio/protocol';
 import { MenuItemConstructorOptions } from 'electron';
 import os from 'os';
 
+import { ComposerController } from '../../controllers/composer';
+import { FrequentItemController } from '../../controllers/frequent-item';
 import { HelpController } from '../../controllers/help';
 import { PlaybackController } from '../../controllers/playback';
 import { ModalMenuItem } from '../../ui/modal-menu';
@@ -54,6 +56,14 @@ export class ScriptFlowMenusController {
 
     get help() {
         return this.app.get(HelpController);
+    }
+
+    get frequentItems() {
+        return this.app.get(FrequentItemController);
+    }
+
+    get composer() {
+        return this.app.get(ComposerController);
     }
 
     showCreateMenu() {
@@ -251,7 +261,7 @@ export class ScriptFlowMenusController {
             yield { type: 'separator' };
             yield {
                 label: 'Create Matcher',
-                click: () => this.viewport.recorder.recordAction('matcher'),
+                click: () => this.composer.recordAction('matcher'),
             };
             return;
         }
@@ -259,20 +269,20 @@ export class ScriptFlowMenusController {
             yield { type: 'separator' };
             yield {
                 label: 'Create Definition',
-                click: () => this.viewport.recorder.recordAction('definition'),
+                click: () => this.composer.recordAction('definition'),
             };
             return;
         }
         yield {
             label: 'Placeholder',
-            click: () => this.viewport.recorder.recordAction('placeholder'),
+            click: () => this.composer.recordAction('placeholder'),
             help: this.help.getActionHelp('placeholder'),
         };
         yield {
             label: 'Precomposed action',
             submenu: [...this.buildCreateComposedAction()],
         };
-        if (this.app.ui.frequentItems.isShown()) {
+        if (this.frequentItems.isShown()) {
             yield* this.buildFrequentActions();
         }
         yield { type: 'header', label: 'All Actions' };
@@ -280,7 +290,7 @@ export class ScriptFlowMenusController {
             return {
                 label: ActionClass.$type,
                 htmlLabel: this.createLabel(ActionClass),
-                click: () => this.viewport.recorder.recordAction(ActionClass.$type),
+                click: () => this.composer.recordAction(ActionClass.$type),
                 help: this.help.getActionHelp(ActionClass.$type),
                 deprecated: ActionClass.$deprecated,
             };
@@ -288,7 +298,7 @@ export class ScriptFlowMenusController {
     }
 
     private *buildFrequentActions(): IterableIterator<ModalMenuItem> {
-        const frequentActionTypes = this.app.ui.frequentItems.getActionTypes();
+        const frequentActionTypes = this.frequentItems.getActionTypes();
         const frequentActions = frequentActionTypes
             .map(type => this.app.resolver.getActionClass(type))
             .filter(Boolean);
@@ -301,7 +311,7 @@ export class ScriptFlowMenusController {
                 yield {
                     label: ActionClass.$type,
                     htmlLabel: this.createLabel(ActionClass),
-                    click: () => this.viewport.recorder.recordAction(ActionClass.$type),
+                    click: () => this.composer.recordAction(ActionClass.$type),
                     help: this.help.getActionHelp(ActionClass.$type),
                     deprecated: ActionClass.$deprecated,
                     searchable: false,
@@ -334,7 +344,7 @@ export class ScriptFlowMenusController {
             if (spec.type === 'string') {
                 yield {
                     label: input.key,
-                    click: () => this.viewport.recorder.recordComposedAction(input.key, ''),
+                    click: () => this.composer.recordComposedAction(input.key, ''),
                 };
             } else if (spec.type === 'object') {
                 yield {
@@ -359,7 +369,7 @@ export class ScriptFlowMenusController {
             if (spec.type === 'string') {
                 yield {
                     label: key,
-                    click: () => this.viewport.recorder.recordComposedAction(input.key, path),
+                    click: () => this.composer.recordComposedAction(input.key, path),
                 };
             } else if (spec.type === 'object') {
                 yield {

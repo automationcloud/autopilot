@@ -84,7 +84,7 @@ export class SettingsController {
 
     protected async setEnv(env: SettingsEnv) {
         if (env !== this.env) {
-            console.info(`👾 Switching to ${env}...`);
+            console.info(`Switching to ${env}`);
             this.env = env;
             this.update();
         }

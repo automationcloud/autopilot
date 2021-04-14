@@ -15,7 +15,6 @@
 import { App } from '../app';
 import { ClipboardLoaderController } from './clipboard-loader';
 import { FeedbackController } from './feedback';
-import { FrequentItemController } from './frequent-item';
 import { ModalMenuController } from './modal-menu';
 import { NavigationController } from './navigation';
 import { ObjectsController } from './objects';
@@ -27,7 +26,6 @@ export interface AppUiControllers {
     modalMenu: ModalMenuController;
     navigation: NavigationController;
     objects: ObjectsController;
-    frequentItems: FrequentItemController;
     feedbacks: FeedbackController;
 }
 
@@ -37,7 +35,6 @@ export function createUiControllers(app: App): AppUiControllers {
         modalMenu: new ModalMenuController(app),
         navigation: new NavigationController(app),
         objects: new ObjectsController(app),
-        frequentItems: new FrequentItemController(app),
         feedbacks: new FeedbackController(app),
     };
 }
