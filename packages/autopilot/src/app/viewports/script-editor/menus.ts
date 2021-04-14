@@ -18,9 +18,9 @@ import os from 'os';
 
 import { FrequentItemController } from '../../controllers/frequent-item';
 import { HelpController } from '../../controllers/help';
+import { ModalMenuController, ModalMenuItem } from '../../controllers/modal-menu';
 import { ModalsController } from '../../controllers/modals';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
-import { ModalMenuItem } from '../../ui/modal-menu';
 import { dom } from '../../util';
 import { ScriptEditorViewport } from '.';
 
@@ -62,8 +62,12 @@ export class ScriptEditorMenusController {
         return this.app.get(FrequentItemController);
     }
 
+    get modalMenu() {
+        return this.app.get(ModalMenuController);
+    }
+
     showCreatePipeMenu() {
-        this.app.ui.modalMenu.showItems(this.menuCreatePipe());
+        this.modalMenu.showItems(this.menuCreatePipe());
     }
 
     *menuCreatePipe(): IterableIterator<ModalMenuItem> {
@@ -76,7 +80,7 @@ export class ScriptEditorMenusController {
     }
 
     showPipeItemMenu() {
-        this.app.ui.modalMenu.showItems(this.menuPipeItem());
+        this.modalMenu.showItems(this.menuPipeItem());
     }
 
     *menuPipeItem() {

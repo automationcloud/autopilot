@@ -30,19 +30,21 @@
 
 <script>
 import { remote } from 'electron';
-import Workspaces from './workspaces.vue';
+import os from 'os';
+
+import { popupMenu } from '../util/menu';
+import AccountMenu from './account-menu.vue';
 import ProfileIcon from './profile-icon.vue';
 import ProxySelect from './proxy-select.vue';
-import AccountMenu from './account-menu.vue';
 import TitlebarControls from './titlebar-controls.vue';
-import { popupMenu } from '../util/menu';
-import os from 'os';
+import Workspaces from './workspaces.vue';
 
 export default {
 
     inject: [
         'tools',
         'appMenu',
+        'clipboardLoader',
     ],
 
     data() {
@@ -65,9 +67,6 @@ export default {
             return os.platform();
         },
 
-        clipboardLoader() {
-            return this.app.ui.clipboardLoader;
-        },
     },
 
     mounted() {
@@ -88,7 +87,7 @@ export default {
                 { type: 'separator' },
                 {
                     label: 'Clipboard',
-                    submenu:  [...this.clipboardLoader.buildMenu()]
+                    submenu: [...this.clipboardLoader.buildMenu()]
                 },
                 {
                     label: 'Recipes',

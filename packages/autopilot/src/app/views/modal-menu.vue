@@ -133,6 +133,10 @@
 <script>
 export default {
 
+    inject: [
+        'modalMenu',
+    ],
+
     data() {
         return {
             search: '',
@@ -142,10 +146,6 @@ export default {
     },
 
     computed: {
-
-        modalMenu() {
-            return this.app.ui.modalMenu;
-        },
 
         isShown() {
             return this.modalMenu.shown;

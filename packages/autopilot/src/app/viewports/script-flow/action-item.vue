@@ -121,6 +121,8 @@ export default {
         'playback',
         'expandable',
         'diff',
+        'editor',
+        'navigation',
     ],
 
     props: {
@@ -163,11 +165,11 @@ export default {
         },
 
         icon() {
-            return this.app.ui.objects.getActionIcon(this.action.type);
+            return this.editor.getActionIcon(this.action.type);
         },
 
         iconIsUrl() {
-            return this.app.ui.objects.getActionIcon(this.action.type).match(/^https?:/);
+            return this.editor.getActionIcon(this.action.type).match(/^https?:/);
         },
 
         isFinished() {
@@ -239,7 +241,7 @@ export default {
         },
 
         onBarClick(ev) {
-            this.app.ui.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
+            this.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
         },
 
         onUiSelect() {

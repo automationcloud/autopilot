@@ -46,12 +46,10 @@ import { AutopilotConfiguration } from './overrides/config';
 import { AutopilotFlowService } from './overrides/flow';
 import { AutopilotHttpCallbackService } from './overrides/http-callback';
 import { AutopilotReporterService } from './overrides/reporter';
-import { AppUiControllers, createUiControllers } from './ui';
 import * as v from './viewports';
 
 export class App extends Engine {
     viewports: Viewports;
-    ui: AppUiControllers;
 
     initialized: boolean = false;
     profileCount: number = 0;
@@ -93,8 +91,6 @@ export class App extends Engine {
             helpResources: new v.HelpResourcesViewport(this),
         };
         this.container.bind('viewports').toConstantValue(this.viewports);
-
-        this.ui = createUiControllers(this);
 
         // TODO Move those somewhere else
         ipcRenderer.on('focus', () => this.events.emit('windowFocused'));
@@ -143,7 +139,6 @@ export class App extends Engine {
             }
         }
 
-        await this.initUiControllers();
         await this.initViewports();
         await this.startSession();
         this.initialized = true;
@@ -162,19 +157,6 @@ export class App extends Engine {
                 instance,
             };
         });
-    }
-
-    /**
-     * @deprecated use controllers instead, port these whenever time allows
-     */
-    protected async initUiControllers() {
-        for (const ctl of Object.values(this.ui)) {
-            try {
-                await ctl.init();
-            } catch (err) {
-                console.warn(`Failed to initialize application, some functionality may be unavailable`, err);
-            }
-        }
     }
 
     /**

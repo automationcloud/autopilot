@@ -141,6 +141,7 @@ export default {
     inject: [
         'expandable',
         'diff',
+        'navigation',
     ],
 
     components: {
@@ -248,7 +249,7 @@ export default {
         },
 
         onBarClick(ev) {
-            this.app.ui.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
+            this.navigation.handleViewportNavigationClick(this.$refs.bar, ev);
         },
 
         onUiSelect() {

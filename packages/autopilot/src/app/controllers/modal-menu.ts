@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import { fuzzySearch } from '@automationcloud/fuzzy-search';
+import { injectable } from 'inversify';
 
-import { App } from '../app';
-import { Controller } from '../controller';
+import { Controller, controller } from '../controller';
 
 export interface ModalMenuItem {
     label?: string;
@@ -35,8 +35,11 @@ export interface ModalMenuSearchResult extends ModalMenuItem {
     highlight: string;
 }
 
+@injectable()
+@controller({
+    alias: 'modalMenu'
+})
 export class ModalMenuController implements Controller {
-    app: App;
 
     shown: boolean = false;
     items: ModalMenuItem[] = [];
@@ -44,9 +47,7 @@ export class ModalMenuController implements Controller {
     search: string = '';
     searchResults: ModalMenuSearchResult[] = [];
 
-    constructor(app: App) {
-        this.app = app;
-    }
+    constructor() {}
 
     async init() {}
 
