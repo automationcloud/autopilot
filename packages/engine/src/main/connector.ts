@@ -16,7 +16,7 @@
 Just interface, aligned with @params.Credentials and existing JSON specs
 (clean up, use only what’s necessary to send the request).
 */
-import { CredentialsData, CredentialsType } from './services/credentials';
+import { CredentialsConfig } from './services/credentials';
 
 export interface ConnectorSpec {
     // metadata for ConnectorAction
@@ -25,8 +25,7 @@ export interface ConnectorSpec {
     description: string; // Action.$help
 
     // requests
-    authScheme: CredentialsType;
-    auth: CredentialsData;
+    auth: CredentialsConfig[];
     baseUrl: string;
     path: string;
     method: string;
