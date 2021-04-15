@@ -127,7 +127,6 @@ export class ComposerController {
         }
         return await this.viewport.commands.createAction(actionSpec);
     }
-
     // Composed actions
 
     async recordComposedAction(inputKey: string, path: string = '') {

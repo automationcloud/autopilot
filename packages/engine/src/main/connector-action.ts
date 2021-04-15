@@ -19,15 +19,11 @@ import { ConnectorSpec } from './connector';
 import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
 
-export class ConnectorAction extends Action {
+export abstract class ConnectorAction extends Action {
     $spec!: ConnectorSpec;
 
-    @params.Credentials({
-        label: 'Auth',
-        providerName: '',
-        configs: []
-    })
-    auth!: CredentialsConfig;
+    // TODO: to be decorated with @params.Credentials() when the Action is generated
+    abstract auth: CredentialsConfig;
 
     @params.Pipeline({
         label: 'Parameters',
@@ -40,7 +36,26 @@ export class ConnectorAction extends Action {
     })
     $outcome: any = undefined;
 
-    $params: any = {}; // default parameter value
+    init(spec: any) {
+        super.init(spec);
+        const { auth } = spec;
+        this.auth = auth ?? null;
+        if (this.pipeline.length === 0) {
+            const mappings = this.$spec.parameters.map(param => {
+                return {
+                    path: '/' + param.key,
+                    value: `// ${param.description} (required: ${param.required ?? false})`
+                };
+            });
+            this.pipeline = new Pipeline(this, 'pipeline', [
+                {
+                    type: 'Object.compose',
+                    mappings,
+                }
+            ]);
+        }
+
+    }
 
     get $credentials() {
         return this.$engine.get(CredentialsService);
@@ -55,11 +70,6 @@ export class ConnectorAction extends Action {
             return el.value;
         });
         util.checkType(data, 'object', 'Parameters');
-        // merge the evaluated parameters with parameter definitions from the spec
-        const parameters = {
-            ...this.$params,
-            ...data,
-        };
         // compose request body by reading location and type of the resulting parameters
         let path = this.$spec.path;
         let isFormData = false;
@@ -68,13 +78,21 @@ export class ConnectorAction extends Action {
                 'content-type': 'application/json'
             }
         };
+        // merge the evaluated parameters with parameter definitions from the spec
         // also checks required.
         for (const param of this.$spec.parameters) {
             const { key } = param;
-            const val = parameters[key];
+            const val = data[key] ?? param.default;
             if (!val) {
                 if (param.required) {
-                    throw util.scriptError(`Parameter ${key} is required`, { detail: parameters });
+                    throw util.createError({
+                        code: 'ParameterValidationError',
+                        message: `Parameter \`${key}\` is required`,
+                        details: {
+                            parameters: data
+                        },
+                        retry: false,
+                    });
                 }
                 continue;
             }
@@ -105,14 +123,14 @@ export class ConnectorAction extends Action {
             options.body = options.body != null ? JSON.stringify(options.body) : null;
         }
 
-        // send the resulting request
         const request = new r.Request({
             baseUrl: this.$spec.baseUrl,
             auth,
         });
 
-        this.$outcome = await request.sendRaw(this.$spec.method, path, options);
+        // send the resulting request
         // store the response in Result outcome parameter
+        this.$outcome = await request.sendRaw(this.$spec.method, path, options);
     }
 
 }
