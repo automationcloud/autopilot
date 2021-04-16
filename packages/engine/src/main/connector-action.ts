@@ -19,11 +19,10 @@ import { ConnectorSpec } from './connector';
 import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
 
-export abstract class ConnectorAction extends Action {
-    $spec!: ConnectorSpec;
-
+export class ConnectorAction extends Action {
     // TODO: to be decorated with @params.Credentials() when the Action is generated
-    abstract auth: CredentialsConfig;
+    $spec!: ConnectorSpec;
+    auth!: CredentialsConfig | null;
 
     @params.Pipeline({
         label: 'Parameters',
@@ -62,42 +61,47 @@ export abstract class ConnectorAction extends Action {
     }
 
     async exec() {
-        // evaluate auth parameter, create auth agent from it using CredentialsService
-        const auth = await this.$credentials.getAuthAgent(this.auth);
         // evaluate the parameters pipeline
         const data = await this.retry(async () => {
             const el = await this.selectOne(this.pipeline);
             return el.value;
         });
         util.checkType(data, 'object', 'Parameters');
-        // compose request body by reading location and type of the resulting parameters
-        let path = this.$spec.path;
+        const { options, path } = this.getRequestSpec(data);
+        const { method } = this.$spec;
+        const auth = await this.$credentials.getAuthAgent(this.auth);
+        const request = new r.Request({
+            baseUrl: this.$spec.baseUrl,
+            auth,
+        });
+        this.$outcome = await request.sendRaw(method, path, options);
+    }
+
+    // compose request options and path by reading location and type of the parameters
+    getRequestSpec(evaluatedParams: any) {
         let isFormData = false;
+        let path = this.$spec.path;
         const options: r.RequestOptions = {
             headers: {
                 'content-type': 'application/json'
             }
         };
         // merge the evaluated parameters with parameter definitions from the spec
-        // also checks required.
         for (const param of this.$spec.parameters) {
             const { key } = param;
-            const val = data[key] ?? param.default;
+            const val = evaluatedParams[key] ?? param.default;
             if (!val) {
                 if (param.required) {
                     throw util.createError({
                         code: 'ParameterValidationError',
                         message: `Parameter \`${key}\` is required`,
                         details: {
-                            parameters: data
+                            parameters: evaluatedParams
                         },
                         retry: false,
                     });
                 }
                 continue;
-            }
-            if (param.location === 'formData') {
-                isFormData = true;
             }
             switch (param.location) {
                 case 'header':
@@ -110,7 +114,10 @@ export abstract class ConnectorAction extends Action {
                     path = path.replace(`{${key}}`, val); // spec must specify the path param with curly bracket e.g. /foo/{key}/bar
                     break;
                 case 'body':
+                    options.body = { ...options.body, [key]: val };
+                    break;
                 case 'formData':
+                    isFormData = true;
                     options.body = { ...options.body, [key]: val };
                     break;
             }
@@ -119,18 +126,9 @@ export abstract class ConnectorAction extends Action {
         if (isFormData) {
             options.headers!['content-type'] = 'application/x-www-form-urlencoded';
             options.body = new URLSearchParams(options.body ?? {});
-        } else {
-            options.body = options.body != null ? JSON.stringify(options.body) : null;
         }
-
-        const request = new r.Request({
-            baseUrl: this.$spec.baseUrl,
-            auth,
-        });
-
-        // send the resulting request
-        // store the response in Result outcome parameter
-        this.$outcome = await request.sendRaw(this.$spec.method, path, options);
+        options.body = options.body != null ? JSON.stringify(options.body) : null;
+        return { options, path };
     }
 
 }
