@@ -28,6 +28,8 @@ import {
 } from './types';
 import { convertHeadersToEntries, convertHeadersToObject } from './util';
 
+const IGNORE_REQUEST_LOG_TYPES = ['Image', 'Font', 'Stylesheet', 'Media'];
+
 /**
  * Manages Page networking layer.
  *
@@ -172,6 +174,9 @@ export class NetworkManager {
         if (rs) {
             rs.response = ev.response;
             rs.status = 'responseReceived';
+            if (ev.response.status >= 400) {
+                this.logHttpError(rs);
+            }
         }
     }
 
@@ -191,6 +196,7 @@ export class NetworkManager {
         if (rs) {
             rs.status = 'loadingFailed';
             rs.errorText = ev.errorText;
+            this.logFailedRequest(rs);
         }
     }
 
@@ -209,6 +215,29 @@ export class NetworkManager {
         }
         const continuePayload = ireq.continue();
         this.page.sendAndForget(continuePayload.method, continuePayload.params);
+    }
+
+    private logFailedRequest(rs: NetworkResource) {
+        // Do not log ERR_ABORTED
+        const looksLikeAborted = !rs.errorText || rs.errorText === 'net::ERR_ABORTED';
+        if (looksLikeAborted && rs.type !== 'Document') {
+            return;
+        }
+        if (IGNORE_REQUEST_LOG_TYPES.includes(rs.type)) {
+            return;
+        }
+        this.logger.debug('Request failed to load', {
+            details: rs,
+        });
+    }
+
+    private logHttpError(rs: NetworkResource) {
+        if (IGNORE_REQUEST_LOG_TYPES.includes(rs.type)) {
+            return;
+        }
+        this.logger.debug('Request failed with HTTP error', {
+            details: rs,
+        });
     }
 
     /**

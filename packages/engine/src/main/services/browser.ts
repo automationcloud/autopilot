@@ -14,9 +14,6 @@
 
 import {
     Browser,
-    CdpLoadingFailed,
-    CdpRequestWillBeSent,
-    CdpResponseReceived,
     Configuration,
     Logger,
     numberConfig,
@@ -47,7 +44,6 @@ export class BrowserService extends Browser {
     ) {
         super({ logger });
         this.syncConfig();
-        this.on('pageCreated', this.onPageCreated.bind(this));
         this.on('targetAttached', this.onTargetAttached.bind(this));
         this.on('targetDetached', this.onTargetDetached.bind(this));
     }
@@ -121,42 +117,6 @@ export class BrowserService extends Browser {
             if (page.target.targetId !== currentTarget.targetId && page.target.type === 'page') {
                 page.close();
             }
-        }
-    }
-
-    protected onPageCreated(page: Page) {
-        page.target.on('Network.requestWillBeSent', ev => this.onRequestWillBeSent(page, ev));
-        page.target.on('Network.loadingFailed', ev => this.onLoadingFailed(page, ev));
-        page.target.on('Network.responseReceived', ev => this.onResponseReceived(page, ev));
-    }
-
-    protected onRequestWillBeSent(_page: Page, _ev: CdpRequestWillBeSent) {
-    }
-
-    protected onLoadingFailed(page: Page, ev: CdpLoadingFailed) {
-        const rs = page.networkManager.getResourceById(ev.requestId);
-        if (!rs) {
-            return;
-        }
-        // Do not log ERR_ABORTED for specific types of requests
-        const looksLikeAborted = !rs.errorText || rs.errorText === 'net::ERR_ABORTED';
-        if (looksLikeAborted && ['Image', 'Font'].includes(rs.type)) {
-            return;
-        }
-        this.logger.warn('Request failed to load', {
-            details: rs,
-        });
-    }
-
-    protected onResponseReceived(page: Page, ev: CdpResponseReceived) {
-        const rs = page.networkManager.getResourceById(ev.requestId);
-        if (!rs) {
-            return;
-        }
-        if (ev.response.status >= 400) {
-            this.logger.warn('Request failed with HTTP error', {
-                details: rs,
-            });
         }
     }
 
