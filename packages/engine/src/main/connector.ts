@@ -37,6 +37,7 @@ export interface ConnectorParameter {
     location: ConnectorParameterLocation;
     description?: string;
     required?: boolean; // default to false
+    default?: any;
 }
 
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
