@@ -27,7 +27,10 @@ const { BrowserWindow } = remote;
 export class InspectController {
 
     scopeEl: RemoteElement | null = null;
-    prompt: string = '';
+    options: InspectOptions = {
+        prompt: '',
+        unique: false,
+    };
 
     protected emitter: EventEmitter = new EventEmitter();
 
@@ -35,7 +38,6 @@ export class InspectController {
         @inject(BrowserService)
         protected browser: BrowserService,
     ) {
-        // TODO stop inspect on Escape
         this.browser.on('global:Overlay.inspectNodeRequested', ev => this.onInspectNodeRequested(ev));
         this.browser.on('global:Page.frameStartedLoading', ev => this.onFrameStartedLoading(ev));
         this.emitter.on('stop', () => this.onStop());
@@ -48,15 +50,19 @@ export class InspectController {
      */
     async recordElement(
         scopeEl: RemoteElement,
-        options: RecordElementOptions = {},
+        options: Partial<InspectOptions> = {},
     ): Promise<RecordElementResult | null> {
-        const { prompt = '', unique = false } = options;
         try {
             await this.highlightScope(scopeEl);
-            const el = await this.grabElement(scopeEl, prompt);
+            this.options = {
+                prompt: '',
+                unique: false,
+                ...options,
+            };
+            const el = await this.grabElement(scopeEl);
             return el ? {
                 element: el,
-                selector: await el.createSelector(scopeEl, unique),
+                selector: await el.createSelector(scopeEl, options.unique),
             } : null;
         } finally {
             this.hideHighlight(scopeEl);
@@ -84,12 +90,11 @@ export class InspectController {
         this.emitter.emit('stop');
     }
 
-    async grabElement(scopeEl: RemoteElement, prompt: string = ''): Promise<RemoteElement | null> {
+    protected async grabElement(scopeEl: RemoteElement): Promise<RemoteElement | null> {
         if (this.isInspecting()) {
             return null;
         }
         const wnd = BrowserWindow.getFocusedWindow();
-        this.prompt = prompt;
         await this.startInspect(scopeEl);
         const result = await new Promise<RemoteElement | null>(resolve => {
             const onElement = (result: RemoteElement) => {
@@ -202,9 +207,9 @@ export class InspectController {
 
 }
 
-export interface RecordElementOptions {
-    prompt?: string;
-    unique?: boolean;
+export interface InspectOptions {
+    prompt: string;
+    unique: boolean;
 }
 
 export interface RecordElementResult {

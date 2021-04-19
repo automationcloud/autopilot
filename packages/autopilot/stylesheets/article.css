@@ -8,10 +8,8 @@ article h1, article h2, article h3 {
 
 article h3 {
     margin-top: var(--gap--large);
-    color: var(--color-blue--600);
     font-weight: 400;
-    font-size: var(--font-size);
-    text-transform: uppercase;
+    font-size: var(--font-size--large);
 }
 
 article h4 {

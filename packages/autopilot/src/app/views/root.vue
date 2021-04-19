@@ -17,6 +17,7 @@
             <modal-menu/>
             <notifications/>
             <bubbles/>
+            <inspect/>
         </div>
     </div>
 </template>
@@ -27,6 +28,7 @@ import '../../../stylesheets/index.css';
 import { dom } from '../util';
 import Bubbles from './bubbles.vue';
 import FirstRun from './first-run.vue';
+import Inspect from './inspect.vue';
 import Layout from './layout.vue';
 import ModalMenu from './modal-menu.vue';
 import Modals from './modals.vue';
@@ -47,6 +49,7 @@ export default {
         ModalMenu,
         Notifications,
         Bubbles,
+        Inspect,
     },
 
     inject: [
