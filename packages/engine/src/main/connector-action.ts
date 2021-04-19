@@ -13,11 +13,12 @@
 // limitations under the License.
 import * as r from '@automationcloud/request';
 
-import { params, util } from '.';
 import { Action } from './action';
 import { ConnectorSpec } from './connector';
+import { params } from './model';
 import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
+import * as util from './util';
 
 export class ConnectorAction extends Action {
     // TODO: to be decorated with @params.Credentials() when the Action is generated
