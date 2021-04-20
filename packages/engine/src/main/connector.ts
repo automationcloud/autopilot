@@ -12,11 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-Just interface, aligned with @params.Credentials and existing JSON specs
-(clean up, use only what’s necessary to send the request).
-*/
-
 import Ajv from 'ajv';
 
 import { util } from '.';
@@ -54,15 +49,10 @@ export interface ConnectorParameter {
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
 
 export function buildConnectors(namespace: string, specs: ConnectorSpec[]) {
-    // is it called when extension.load is called?
-    // when extension() is called, generate the modules
-    // return specs.map(spec => {
     const actions = {} as any;
     for (const spec of specs) {
-        const { valid, details } = validateConnectorSpec(spec);
+        const { valid } = validateConnectorSpec(spec);
         if (!valid) {
-            console.debug('[connector] spec ' + spec.name + ' invalid: ', { details });
-            console.info(`[connector] spec ${namespace}.${spec.name} is skipped`);
             continue;
         }
         const name = `${namespace}.${spec.name}.${spec.method}`;
@@ -102,7 +92,7 @@ const connectorSpecSchema: JsonSchema = {
                 required: ['type'],
                 properties: {
                     type: { type: 'string', enum: ['basic', 'bearer', 'oauth1', 'oauth2'] },
-                    // type specific properties...
+                    // auth agent specific properties...
                 }
             }
         },
