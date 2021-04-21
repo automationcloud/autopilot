@@ -25,14 +25,15 @@ const ajv = new Ajv({
 });
 
 export interface ConnectorSpec {
-    // metadata for ConnectorAction
-    name: string; // Action.$type
     icon: string; // Action.$icon
-    description: string; // Action.$help
-
-    // requests
     auth: CredentialsConfig[];
     baseUrl: string;
+    endpoints: ConnectorEndpoint[];
+}
+
+export interface ConnectorEndpoint {
+    name: string;
+    description: string;
     path: string;
     method: string;
     parameters: ConnectorParameter[]
@@ -48,19 +49,27 @@ export interface ConnectorParameter {
 
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
 
-export function buildConnectors(namespace: string, specs: ConnectorSpec[]) {
+export function buildConnectors(namespace: string, spec: ConnectorSpec) {
     const actions = {} as any;
-    for (const spec of specs) {
-        const { valid } = validateConnectorSpec(spec);
+    // validate meta only. which we throws when invalid
+    validate(connectorSpecSchema, {
+        icon: spec.icon,
+        baseUrl: spec.baseUrl,
+        auth: spec.auth,
+        endpoints: []
+    }, true);
+    for (const endpoint of spec.endpoints) {
+        const { valid } = validate(endpointSchema, endpoint);
         if (!valid) {
             continue;
         }
-        const name = `${namespace}.${spec.name}.${spec.method}`;
+        const name = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
         class ChildConnectorAction extends ConnectorAction {
             static $type = name;
-            static $help = spec.description;
+            static $help = endpoint.description;
             static $icon = `${!spec.icon.match(/http/) ? 'fab ' : 'fas '}${spec.icon}`;
-            $spec = spec;
+            $baseUrl = spec.baseUrl;
+            $endpoint = endpoint;
 
             @params.Credentials({
                 providerName: namespace,
@@ -74,29 +83,15 @@ export function buildConnectors(namespace: string, specs: ConnectorSpec[]) {
     return actions;
 }
 
-const connectorSpecSchema: JsonSchema = {
+const endpointSchema: JsonSchema = {
     type: 'object',
     required: [
-        'name', 'icon', 'description',
-        'auth', 'baseUrl', 'path',
+        'name', 'description', 'path',
         'method', 'parameters'
     ],
     properties: {
         name: { type: 'string' },
-        icon: { type: 'string' },
         description: { type: 'string' },
-        auth: {
-            type: 'array',
-            items: {
-                type: 'object',
-                required: ['type'],
-                properties: {
-                    type: { type: 'string', enum: ['basic', 'bearer', 'oauth1', 'oauth2'] },
-                    // auth agent specific properties...
-                }
-            }
-        },
-        baseUrl: { type: 'string' },
         path: { type: 'string' },
         method: { type: 'string' },
         parameters: {
@@ -116,12 +111,36 @@ const connectorSpecSchema: JsonSchema = {
     },
 };
 
-export function validateConnectorSpec(value: any, throwInvalid?: boolean) {
-    const validator = ajv.compile(connectorSpecSchema);
+const connectorSpecSchema: JsonSchema = {
+    type: 'object',
+    required: ['auth', 'baseUrl', 'icon', 'endpoints'],
+    properties: {
+        icon: { type: 'string' },
+        baseUrl: { type: 'string' },
+        auth: {
+            type: 'array',
+            items: {
+                type: 'object',
+                required: ['type'],
+                properties: {
+                    type: { type: 'string', enum: ['basic', 'bearer', 'oauth1', 'oauth2'] },
+                    // auth agent specific properties...
+                }
+            }
+        },
+        endpoints: {
+            type: 'array',
+            items: endpointSchema
+        }
+    }
+};
+
+function validate(schema: JsonSchema, value: any, throwInvalid: boolean = false) {
+    const validator = ajv.compile(schema);
     const valid = validator(value);
     if (!valid && throwInvalid) {
         throw util.createError({
-            code: 'ConnectorSpecValidationError',
+            code: 'ValidationError',
             message: 'Spec does not conform to schema',
             details: {
                 messages: validator.errors?.map(_ => _.schemaPath + ': ' + _.message),
@@ -133,4 +152,8 @@ export function validateConnectorSpec(value: any, throwInvalid?: boolean) {
         valid,
         details: validator.errors,
     };
+}
+
+export function validateConnectorSpec(value: any) {
+    return validate(connectorSpecSchema, value);
 }
