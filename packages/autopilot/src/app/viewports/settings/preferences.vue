@@ -113,7 +113,7 @@
         </div>
 
         <div class="section__title">
-            Appearance
+            UI
         </div>
         <div class="pane">
             <div class="pane__item">
@@ -143,6 +143,15 @@
                         @input="setValue('UI_SHOW_FREQUENT_ITEMS', $event)"/>
                 </div>
             </div>
+            <div class="pane__item">
+                <div class="pane__main">
+                    Pre-compose common actions
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('COMPOSITION_ENABLED')"
+                        @input="setValue('COMPOSITION_ENABLED', $event)"/>
+                </div>
+            </div>
         </div>
 
         <template v-if="devMode.isEnabled()">
@@ -156,10 +165,11 @@
 </template>
 
 <script>
-import UpdateChecker from './update-checker.vue';
 import { remote } from 'electron';
+
 import { vfx } from '../../util';
 import Configuration from './configuration.vue';
+import UpdateChecker from './update-checker.vue';
 
 const { dialog } = remote;
 

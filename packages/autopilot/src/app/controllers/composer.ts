@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { BrowserService, RemoteElementInfo, util } from '@automationcloud/engine';
+import { booleanConfig, BrowserService, Configuration, RemoteElementInfo, util } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 
 import { Viewports } from '../app';
@@ -20,6 +20,8 @@ import { controller } from '../controller';
 import { clipboard, helpers } from '../util';
 import { FrequentItemController } from './frequent-item';
 import { InspectController } from './inspect';
+
+export const COMPOSITION_ENABLED = booleanConfig('COMPOSITION_ENABLED', true);
 
 @injectable()
 @controller({
@@ -34,6 +36,8 @@ export class ComposerController {
         protected browser: BrowserService,
         @inject(FrequentItemController)
         protected frequentItems: FrequentItemController,
+        @inject(Configuration)
+        protected config: Configuration,
         @inject('viewports')
         protected viewports: Viewports,
     ) {
@@ -45,8 +49,15 @@ export class ComposerController {
         return this.viewports.scriptFlow;
     }
 
+    isEnabled() {
+        return this.config.get(COMPOSITION_ENABLED);
+    }
+
     async recordAction(type: string): Promise<void> {
         this.frequentItems.onActionCreate(type);
+        if (!this.isEnabled()) {
+            return await this.viewport.commands.createAction({ type });
+        }
         switch (type) {
             case 'matcher':
             case 'Flow.expect':
@@ -63,7 +74,6 @@ export class ComposerController {
         }
     }
 
-    // Note: not used, kept for reference
     protected async recordMatcher(type: string) {
         const document = await this.browser.page.document();
         const res = await this.inspect.recordElement(document);
@@ -90,7 +100,6 @@ export class ComposerController {
         return await this.viewport.commands.createAction(spec);
     }
 
-    // Note: unused, kept for reference
     protected async recordSingleElAction(type: string) {
         const document = await this.browser.page.document();
         const res = await this.inspect.recordElement(document);
@@ -127,6 +136,7 @@ export class ComposerController {
         }
         return await this.viewport.commands.createAction(actionSpec);
     }
+
     // Composed actions
 
     async recordComposedAction(inputKey: string, path: string = '') {
