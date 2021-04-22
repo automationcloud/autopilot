@@ -13,15 +13,17 @@
 // limitations under the License.
 import * as r from '@automationcloud/request';
 
-import { params, util } from '.';
 import { Action } from './action';
-import { ConnectorSpec } from './connector';
+import { ConnectorEndpoint } from './connector';
+import { params } from './model';
 import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
+import * as util from './util';
 
-export class ConnectorAction extends Action {
-    // TODO: to be decorated with @params.Credentials() when the Action is generated
-    $spec!: ConnectorSpec;
+export abstract class ConnectorAction extends Action {
+    abstract getBaseUrl(): string;
+    abstract getEndpoint(): ConnectorEndpoint;
+
     auth!: CredentialsConfig | null;
 
     @params.Pipeline({
@@ -40,10 +42,10 @@ export class ConnectorAction extends Action {
         const { auth } = spec;
         this.auth = auth ?? null;
         if (this.pipeline.length === 0) {
-            const mappings = this.$spec.parameters.map(param => {
+            const mappings = this.$endpoint.parameters.map(param => {
                 return {
                     path: '/' + param.key,
-                    value: `// ${param.description} (required: ${param.required ?? false})`
+                    value: `// ${param.required ? '(Required) ' : '' }${param.description}`
                 };
             });
             this.pipeline = new Pipeline(this, 'pipeline', [
@@ -56,9 +58,11 @@ export class ConnectorAction extends Action {
 
     }
 
-    get $credentials() {
-        return this.$engine.get(CredentialsService);
-    }
+    get $credentials() { return this.$engine.get(CredentialsService); }
+
+    get $baseUrl() { return this.getBaseUrl(); }
+
+    get $endpoint() { return this.getEndpoint(); }
 
     async exec() {
         // evaluate the parameters pipeline
@@ -68,10 +72,10 @@ export class ConnectorAction extends Action {
         });
         util.checkType(data, 'object', 'Parameters');
         const { options, path } = this.getRequestSpec(data);
-        const { method } = this.$spec;
+        const { method } = this.$endpoint;
         const auth = await this.$credentials.getAuthAgent(this.auth);
         const request = new r.Request({
-            baseUrl: this.$spec.baseUrl,
+            baseUrl: this.$baseUrl,
             auth,
         });
         this.$outcome = await request.sendRaw(method, path, options);
@@ -80,14 +84,14 @@ export class ConnectorAction extends Action {
     // compose request options and path by reading location and type of the parameters
     getRequestSpec(evaluatedParams: any) {
         let isFormData = false;
-        let path = this.$spec.path;
+        let path = this.$endpoint.path;
         const options: r.RequestOptions = {
             headers: {
                 'content-type': 'application/json'
             }
         };
         // merge the evaluated parameters with parameter definitions from the spec
-        for (const param of this.$spec.parameters) {
+        for (const param of this.$endpoint.parameters) {
             const { key } = param;
             const val = evaluatedParams[key] ?? param.default;
             if (!val) {

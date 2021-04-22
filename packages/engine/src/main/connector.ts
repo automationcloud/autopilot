@@ -12,21 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-Just interface, aligned with @params.Credentials and existing JSON specs
-(clean up, use only what’s necessary to send the request).
-*/
+import Ajv from 'ajv';
+
+import { util } from '.';
+import { ConnectorAction } from './connector-action';
+import * as params from './model/params';
+import { JsonSchema } from './schema';
 import { CredentialsConfig } from './services/credentials';
 
-export interface ConnectorSpec {
-    // metadata for ConnectorAction
-    name: string; // Action.$type
-    icon: string; // Action.$icon
-    description: string; // Action.$help
+const ajv = new Ajv({
+    messages: true,
+});
 
-    // requests
+export interface ConnectorSpec {
+    icon: string; // Action.$icon
     auth: CredentialsConfig[];
     baseUrl: string;
+    endpoints: ConnectorEndpoint[];
+}
+
+export interface ConnectorEndpoint {
+    name: string;
+    description: string;
     path: string;
     method: string;
     parameters: ConnectorParameter[]
@@ -41,3 +48,119 @@ export interface ConnectorParameter {
 }
 
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
+
+export function buildConnectors(namespace: string, spec: ConnectorSpec) {
+    // validate meta only. which we throws when invalid
+    const { icon, baseUrl, auth } = spec;
+    validate(connectorSpecSchema, {
+        icon,
+        baseUrl,
+        auth,
+        endpoints: []
+    }, true);
+
+    const actions = {} as any;
+    for (const endpoint of spec.endpoints) {
+        const { valid } = validate(endpointSchema, endpoint);
+        if (!valid) {
+            continue;
+        }
+        const name = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
+        class ChildConnectorAction extends ConnectorAction {
+            static $type = name;
+            static $help = endpoint.description;
+            static $icon = `${!icon.match(/http/) ? 'fab ' : 'fas '}${icon}`;
+
+            @params.Credentials({
+                providerName: namespace,
+                configs: spec.auth
+            })
+            auth!: CredentialsConfig;
+
+            getBaseUrl() { return baseUrl; }
+
+            getEndpoint() { return endpoint; }
+        }
+
+        actions[name] = ChildConnectorAction;
+    }
+    return actions;
+}
+
+const endpointSchema: JsonSchema = {
+    type: 'object',
+    required: [
+        'name', 'description', 'path',
+        'method', 'parameters'
+    ],
+    properties: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+        path: { type: 'string' },
+        method: { type: 'string' },
+        parameters: {
+            type: 'array',
+            items: {
+                type: 'object',
+                required: ['key', 'location'],
+                properties: {
+                    key: { type: 'string' },
+                    location: {
+                        type: 'string',
+                        enum: ['path', 'query', 'body', 'formData', 'header']
+                    },
+                    description: { type: 'string' },
+                    required: { type: 'boolean', default: false },
+                    default: {} // any
+                },
+            }
+        },
+    },
+};
+
+const connectorSpecSchema: JsonSchema = {
+    type: 'object',
+    required: ['auth', 'baseUrl', 'icon', 'endpoints'],
+    properties: {
+        icon: { type: 'string' },
+        baseUrl: { type: 'string' },
+        auth: {
+            type: 'array',
+            items: {
+                type: 'object',
+                required: ['type'],
+                properties: {
+                    type: { type: 'string', enum: ['basic', 'bearer', 'oauth1', 'oauth2'] },
+                    // auth agent specific properties...
+                }
+            }
+        },
+        endpoints: {
+            type: 'array',
+            items: endpointSchema
+        }
+    }
+};
+
+function validate(schema: JsonSchema, value: any, throwInvalid: boolean = false) {
+    const validator = ajv.compile(schema);
+    const valid = validator(value);
+    if (!valid && throwInvalid) {
+        throw util.createError({
+            code: 'ValidationError',
+            message: 'Spec does not conform to schema',
+            details: {
+                messages: validator.errors?.map(_ => _.schemaPath + ': ' + _.message),
+            },
+            retry: false,
+        });
+    }
+    return {
+        valid,
+        details: validator.errors,
+    };
+}
+
+export function validateConnectorSpec(value: any) {
+    return validate(connectorSpecSchema, value);
+}
