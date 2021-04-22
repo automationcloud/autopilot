@@ -50,14 +50,16 @@ export interface ConnectorParameter {
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
 
 export function buildConnectors(namespace: string, spec: ConnectorSpec) {
-    const actions = {} as any;
     // validate meta only. which we throws when invalid
+    const { icon, baseUrl, auth } = spec;
     validate(connectorSpecSchema, {
-        icon: spec.icon,
-        baseUrl: spec.baseUrl,
-        auth: spec.auth,
+        icon,
+        baseUrl,
+        auth,
         endpoints: []
     }, true);
+
+    const actions = {} as any;
     for (const endpoint of spec.endpoints) {
         const { valid } = validate(endpointSchema, endpoint);
         if (!valid) {
@@ -67,15 +69,17 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
         class ChildConnectorAction extends ConnectorAction {
             static $type = name;
             static $help = endpoint.description;
-            static $icon = `${!spec.icon.match(/http/) ? 'fab ' : 'fas '}${spec.icon}`;
-            $baseUrl = spec.baseUrl;
-            $endpoint = endpoint;
+            static $icon = `${!icon.match(/http/) ? 'fab ' : 'fas '}${icon}`;
 
             @params.Credentials({
                 providerName: namespace,
                 configs: spec.auth
             })
             auth!: CredentialsConfig;
+
+            getBaseUrl() { return baseUrl; }
+
+            getEndpoint() { return endpoint; }
         }
 
         actions[name] = ChildConnectorAction;
@@ -101,10 +105,13 @@ const endpointSchema: JsonSchema = {
                 required: ['key', 'location'],
                 properties: {
                     key: { type: 'string' },
-                    location: { type: 'string', enum: ['path', 'query', 'body', 'formData', 'header'] },
+                    location: {
+                        type: 'string',
+                        enum: ['path', 'query', 'body', 'formData', 'header']
+                    },
                     description: { type: 'string' },
                     required: { type: 'boolean', default: false },
-                    default: { } // any
+                    default: {} // any
                 },
             }
         },

@@ -118,7 +118,7 @@ export interface CredentialsOAuth1Config {
     requestTokenUrl: string;
     accessTokenUrl: string;
     userAuthorizationUrl: string;
-    signatureMethod: r.OAuth1SignatureMethod;
+    signatureMethod?: r.OAuth1SignatureMethod;
     customConfig?: boolean;
     help?: string;
 }

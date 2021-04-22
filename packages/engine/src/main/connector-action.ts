@@ -20,9 +20,10 @@ import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
 import * as util from './util';
 
-export class ConnectorAction extends Action {
-    $baseUrl!: string;
-    $endpoint!: ConnectorEndpoint;
+export abstract class ConnectorAction extends Action {
+    abstract getBaseUrl(): string;
+    abstract getEndpoint(): ConnectorEndpoint;
+
     auth!: CredentialsConfig | null;
 
     @params.Pipeline({
@@ -57,9 +58,11 @@ export class ConnectorAction extends Action {
 
     }
 
-    get $credentials() {
-        return this.$engine.get(CredentialsService);
-    }
+    get $credentials() { return this.$engine.get(CredentialsService); }
+
+    get $baseUrl() { return this.getBaseUrl(); }
+
+    get $endpoint() { return this.getEndpoint(); }
 
     async exec() {
         // evaluate the parameters pipeline
