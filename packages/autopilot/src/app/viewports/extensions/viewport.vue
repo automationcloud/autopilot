@@ -35,6 +35,10 @@ export default {
 </script>
 
 <style scoped>
+.viewport--active .extensions {
+    background: var(--color-cool--100);
+}
+
 .ext-warning {
     margin: 0 var(--gap);
 }
