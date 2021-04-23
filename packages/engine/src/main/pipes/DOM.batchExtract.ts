@@ -87,7 +87,7 @@ and is significantly more efficient.
                     for (const el of els) {
                         const res: any = {};
                         for (const prop of properties) {
-                            const subEl = el.querySelector(prop.selector);
+                            const subEl = prop.selector ? el.querySelector(prop.selector) : el;
                             if (subEl) {
                                 const info = toolkit.getElementInfo(subEl);
                                 const data = prop.property ? info[prop.property] : info;
