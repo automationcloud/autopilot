@@ -30,7 +30,6 @@ export class InputManager {
 
     getModifiers(mods: KeyModifiers): number {
         const { altKey, ctrlKey, metaKey, shiftKey } = mods;
-        // tslint:disable no-bitwise
         return 0 | (altKey ? 1 : 0) | (ctrlKey ? 2 : 0) | (metaKey ? 4 : 0) | (shiftKey ? 8 : 0);
     }
 
