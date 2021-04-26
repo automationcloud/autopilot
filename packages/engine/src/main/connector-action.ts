@@ -64,6 +64,11 @@ export abstract class ConnectorAction extends Action {
 
     get $endpoint() { return this.getEndpoint(); }
 
+    reset() {
+        super.reset();
+        this.$outcome = undefined;
+    }
+
     async exec() {
         // evaluate the parameters pipeline
         const data = await this.retry(async () => {
@@ -78,7 +83,15 @@ export abstract class ConnectorAction extends Action {
             baseUrl: this.$baseUrl,
             auth,
         });
-        this.$outcome = await request.sendRaw(method, path, options);
+        const response = await request.sendRaw(method, path, options);
+        const body = await response.text();
+        this.$outcome = {
+            url: response.url,
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+            body,
+        };
     }
 
     // compose request options and path by reading location and type of the parameters

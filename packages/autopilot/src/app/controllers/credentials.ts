@@ -7,6 +7,7 @@ import {
     CredentialsOAuth2Data,
     HttpCallbackService,
     model,
+    OAuth1SignatureMethod,
     Pipe,
     StoredCredentials,
 } from '@automationcloud/engine';
@@ -115,7 +116,7 @@ export class CredentialsController {
                     data.requestTokenUrl = config.requestTokenUrl;
                     data.accessTokenUrl = config.accessTokenUrl;
                     data.userAuthorizationUrl = config.userAuthorizationUrl;
-                    data.signatureMethod = config.signatureMethod;
+                    data.signatureMethod = config.signatureMethod ?? OAuth1SignatureMethod.HMAC_SHA1;
                 }
                 const url = new URL('/v1/oauth', SSO_SERVICE_URL);
                 url.searchParams.set('requestTokenURL', data.requestTokenUrl);
