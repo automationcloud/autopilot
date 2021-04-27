@@ -43,6 +43,7 @@
   - [DOM.queryOne](#DOM.queryOne)
   - [DOM.queryXPathAll](#DOM.queryXPathAll)
   - [DOM.queryXPathOne](#DOM.queryXPathOne)
+  - [DOM.shadowRoot](#DOM.shadowRoot)
 - Data
   - [Data.formatUrl](#Data.formatUrl)
   - [Data.getBlob](#Data.getBlob)
@@ -560,6 +561,13 @@ An error is thrown if multiple elements are found within each element.
 ### See Also
 
 - DOM.queryXpathAll: for the equivalent pipe which allows multiple elements to be found by Xpath expression
+
+
+<h2 id="DOM.shadowRoot">DOM.shadowRoot</h2>
+
+
+Obtains shadow DOM root of the current element.
+An error is thrown if element has no shadow root.
 
 
 # Data
