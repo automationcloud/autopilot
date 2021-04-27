@@ -17,19 +17,15 @@ import { Element } from '../element';
 import { Pipe } from '../pipe';
 
 export class DomIframe extends Pipe {
-    static $type = 'DOM.iframe';
+    static $type = 'DOM.shadowRoot';
     static $help = `
-Returns DOM contentDocument node of the IFRAME element.
-An error is thrown if applied to non-frame elements.
-
-### Use For
-
-- accessing the contents of iframes
+Obtains shadow DOM root of the current element.
+An error is thrown if element has no shadow root.
 `;
 
     async apply(inputSet: Element[], _ctx: RuntimeCtx): Promise<Element[]> {
         return await this.map(inputSet, async el => {
-            return await el.contentDocument();
+            return await el.shadowRoot();
         });
     }
 }

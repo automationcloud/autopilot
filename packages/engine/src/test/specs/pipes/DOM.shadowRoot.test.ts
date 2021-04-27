@@ -16,38 +16,44 @@ import assert from 'assert';
 
 import { runtime } from '../../runtime';
 
-describe('Pipes: dom/iframe', () => {
+describe('DOM.shadowRoot', () => {
 
-    it('returns iframe document', async () => {
-        await runtime.goto('/iframes/top.html');
+    it('allows searching elements inside shadow root', async () => {
+        await runtime.goto('/shadow.html');
         // Note: we run the pipeline without retry, so let's wait for the page to load
         await runtime.page.waitForLoad();
         const results = await runtime.runPipes([
             {
                 type: 'DOM.queryOne',
-                selector: '#frame1',
+                selector: '#shadow',
             },
             {
-                type: 'DOM.iframe',
+                type: 'DOM.shadowRoot',
+            },
+            {
+                type: 'DOM.queryOne',
+                selector: 'h1',
             },
         ]);
         assert.equal(results.length, 1);
-        assert.equal(results[0].description, '#document');
+        assert.equal(results[0].description, 'h1');
     });
 
-    it('throws if element is not iframe', async () => {
-        await runtime.goto('/iframes/top.html');
+    it('throws if element contains no shadow root', async () => {
+        await runtime.goto('/shadow.html');
+        // Note: we run the pipeline without retry, so let's wait for the page to load
         await runtime.page.waitForLoad();
         await runtime.assertError('DomManipulationError', async () => {
             await runtime.runPipes([
                 {
                     type: 'DOM.queryOne',
-                    selector: 'html',
+                    selector: '#other',
                 },
                 {
-                    type: 'DOM.iframe',
-                },
+                    type: 'DOM.shadowRoot',
+                }
             ]);
         });
     });
+
 });

@@ -306,6 +306,14 @@ export class Element {
     }
 
     /**
+     * @beta
+     */
+    async shadowRoot(): Promise<Element> {
+        const newRemote = await this.remote.shadowRoot();
+        return new Element(newRemote, this.value);
+    }
+
+    /**
      * @param message
      * @public
      */
