@@ -98,7 +98,7 @@ export default {
 
         title() {
             return this.manifest.title ||
-                util.humanize(this.manifest.name.replace(/^@.*\/$/, '').replace(/\bextension-/, '').replace(/\bconnector-/, ''));
+                util.humanize(this.manifest.name.replace(/.*\//, '').replace(/\bextension-/, '').replace(/\bconnector-/, ''));
         },
 
         isExpanded() {
@@ -169,7 +169,7 @@ export default {
 
 .ext-name {
     display: inline-block;
-    margin-right: var(--gap);
+    margin: 0 var(--gap) var(--gap--small) 0;
     line-height: 1.2;
     color: var(--color-mono--500);
 }

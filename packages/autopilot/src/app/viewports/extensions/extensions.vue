@@ -39,7 +39,7 @@
                 </div>
                 <div v-if="extReg.installedManifests.length === 0"
                     class="ext-list--empty">
-                    No installed {{ currentCategory.toLowerCase() }} {{ searchEnabled ? ' match your search criteria' : ''}}
+                    No installed {{ currentCategory.toLowerCase() }} {{ searchEnabled ? ' match your search criteria' : '' }}
                 </div>
                 <div v-if="expandable.isExpanded('ext-installed')"
                     class="ext-list">
@@ -59,6 +59,7 @@
                 </div>
                 <!-- <template v-if="expandable.isExpanded('ext-available')"> -->
 
+                <connector-request v-if="connectorRequestShown" />
                 <div v-if="extReg.availableManifests.length === 0"
                     class="ext-list--empty">
                     No {{ currentCategory.toLowerCase() }} {{ searchEnabled ? ' match your search criteria' : ''}}
@@ -77,6 +78,7 @@
 </template>
 
 <script>
+import ConnectorRequest from './connector-request.vue';
 import ExtItem from './ext-item.vue';
 
 export default {
@@ -87,6 +89,7 @@ export default {
     ],
 
     components: {
+        ConnectorRequest,
         ExtItem,
     },
 
@@ -100,7 +103,8 @@ export default {
         script() { return this.project.script; },
         loading() { return this.extReg.loading; },
         searchEnabled() { return !!this.extReg.searchQuery; },
-        currentCategory() { return this.humaniseCategory(this.extReg.filterCategory); }
+        currentCategory() { return this.humaniseCategory(this.extReg.filterCategory); },
+        connectorRequestShown() { return this.extReg.filterCategory === 'connector' && this.searchEnabled; },
     },
 
     methods: {
