@@ -59,6 +59,10 @@
 
         </div>
 
+        <div v-if="errorShown">
+            Failed to send your request, Please try again.
+        </div>
+
         <div class="modal__buttons">
             <button class="button button--alt button--tertiary"
                 @click="$emit('close')">
@@ -79,7 +83,7 @@
 export default {
 
     inject: [
-        // happy-fox
+        'api'
     ],
 
     data() {
@@ -88,18 +92,40 @@ export default {
             email: '',
             details: '',
             link: '',
+
+            errorShown: false,
+            loading: false,
         };
     },
 
     computed: {
         canRequest() {
-            return this.name && this.email && this.details && this.link;
+            return this.name && this.email && this.details && this.link && !this.loading;
         },
 
     },
 
     methods: {
-
+        async request() {
+            this.loading = true;
+            try {
+                await this.api.createHelpTicket({
+                    subject: 'Request for a new API connector',
+                    email: this.email,
+                    name: this.name,
+                    text: [
+                        `${this.details}`,
+                        `OpenAPI/Swagger URL: ${this.link}`,
+                        '** Ticket created from Autopilot **'
+                    ].join('\n\n'),
+                });
+            } catch (error) {
+                console.error('failed to create a help ticket', error);
+                this.errorShown = true;
+            } finally {
+                this.loading = false;
+            }
+        }
     }
 
 };
