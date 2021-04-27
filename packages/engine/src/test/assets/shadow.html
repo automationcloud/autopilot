@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+    <link
+        rel="stylesheet"
+        href="./commons.css"
+    />
+</head>
+
+<body>
+    <main>
+        <div id="other"></div>
+        <div id="shadow"></div>
+    </main>
+</body>
+
+<script>
+    (function() {
+        const el = document.querySelector('#shadow');
+        const root = el.attachShadow({ mode: 'open' });
+        var h1 = document.createElement("h1");
+        h1.textContent = 'Hi from inside shadow';
+        root.appendChild(h1);
+    })();
+</script>
+
+</html>

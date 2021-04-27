@@ -530,6 +530,18 @@ export class RemoteElement extends RemoteObject {
         return doc;
     }
 
+    async shadowRoot(): Promise<RemoteElement> {
+        const el = await this.evaluateElement(el => el.shadowRoot);
+        if (!el) {
+            throw new Exception({
+                name: 'DomManipulationError',
+                message: `Cannot obtain shadow root of ${this.description}`,
+                retry: true,
+            });
+        }
+        return el;
+    }
+
     async createSelector(scopeEl: RemoteElement, unique: boolean = false): Promise<string> {
         return await this.executionContext.evaluateJson(
             (scopeEl, el, unique, toolkitBinding) => {
