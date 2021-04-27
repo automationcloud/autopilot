@@ -498,7 +498,7 @@ export class RemoteElement extends RemoteObject {
         const { nodeName, frameId } = await this.describeNode();
         if (!frameId) {
             throw new Exception({
-                name: 'FrameAccessFailed',
+                name: 'DomManipulationError',
                 message: `Cannot access contentDocument of ${nodeName} (reason: frameId not found on Node)`,
                 retry: true,
             });
@@ -507,10 +507,10 @@ export class RemoteElement extends RemoteObject {
     }
 
     async contentDocument(): Promise<RemoteElement> {
-        const frame = await this.resolveFrame();
+        const frame = this.isFrame() ? await this.resolveFrame() : null;
         if (!frame) {
             throw new Exception({
-                name: 'FrameAccessFailed',
+                name: 'DomManipulationError',
                 message: 'Cannot access iframe document (reason: frame not found by frameId)',
                 retry: true,
             });
