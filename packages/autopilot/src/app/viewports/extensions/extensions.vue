@@ -12,7 +12,7 @@
                         'button--secondary': cat !== extReg.filterCategory,
                     }"
                     @click="extReg.filterCategory = cat">
-                    <span class="stretch">{{ humaniseCategory(cat) }}</span>
+                    <span class="stretch">{{ toHumanLabel(cat) }}</span>
                 </button>
             </div>
             <div class="ext-search">
@@ -39,7 +39,7 @@
                 </div>
                 <div v-if="extReg.installedManifests.length === 0"
                     class="ext-list--empty">
-                    No installed {{ currentCategory.toLowerCase() }} {{ searchEnabled ? ' match your search criteria' : '' }}
+                    No installed {{ currentCategory }} {{ searchEnabled ? ' match your search criteria' : '' }}
                 </div>
                 <div v-if="expandable.isExpanded('ext-installed')"
                     class="ext-list">
@@ -59,10 +59,9 @@
                 </div>
                 <!-- <template v-if="expandable.isExpanded('ext-available')"> -->
 
-                <connector-request v-if="connectorRequestShown" />
                 <div v-if="extReg.availableManifests.length === 0"
                     class="ext-list--empty">
-                    No {{ currentCategory.toLowerCase() }} {{ searchEnabled ? ' match your search criteria' : ''}}
+                    No available {{ currentCategory }} {{ searchEnabled ? ' match your search criteria' : ''}}
                 </div>
                 <div class="ext-list">
                     <ext-item
@@ -72,14 +71,15 @@
                         :installed="false"/>
                 <!-- </template> -->
                 </div>
+                <request-connector v-if="this.extReg.filterCategory === 'connector'" />
             </div>
         </template>
     </div>
 </template>
 
 <script>
-import ConnectorRequest from './connector-request.vue';
 import ExtItem from './ext-item.vue';
+import RequestConnector from './request-connector.vue';
 
 export default {
     inject: [
@@ -89,8 +89,8 @@ export default {
     ],
 
     components: {
-        ConnectorRequest,
         ExtItem,
+        RequestConnector,
     },
 
     data() {
@@ -103,8 +103,7 @@ export default {
         script() { return this.project.script; },
         loading() { return this.extReg.loading; },
         searchEnabled() { return !!this.extReg.searchQuery; },
-        currentCategory() { return this.humaniseCategory(this.extReg.filterCategory); },
-        connectorRequestShown() { return this.extReg.filterCategory === 'connector' && this.searchEnabled; },
+        currentCategory() { return this.toHumanLabel(this.extReg.filterCategory); },
     },
 
     methods: {
@@ -112,7 +111,7 @@ export default {
             this.extReg.refresh();
         },
 
-        humaniseCategory(category) {
+        toHumanLabel(category) {
             return {
                 extension: 'Extensions',
                 connector: 'API Connectors',
@@ -163,7 +162,9 @@ export default {
 .ext-list {
     box-shadow: 0 1px 3px rgba(0,0,0,.2);
     border-radius: var(--border-radius);
+    margin: var(--gap) 0;
 }
+
 .ext-list--empty {
     padding-bottom: var(--gap--large);
     font-size: var(--font-size);

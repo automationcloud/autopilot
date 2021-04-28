@@ -176,17 +176,11 @@ export class ApiController {
         name: string,
         email: string,
         subject: string,
-        details: string,
+        text: string,
+        category?: number,
+        priority?: number,
     }) {
-        const body = {
-            subject: spec.subject,
-            text: spec.details,
-            email: spec.email,
-            name: spec.name,
-            category: 2, // automation cloud support
-        };
-
-        return await this.api.post('/Helpdesk/createTicket', { body });
+        return await this.api.post('/Helpdesk/createTicket', { body: spec });
     }
 }
 

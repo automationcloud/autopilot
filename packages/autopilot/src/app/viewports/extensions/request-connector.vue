@@ -1,14 +1,14 @@
 <template>
-    <div class="connector-request">
-        <i class="req__icon fas fa-exclamation-circle"></i>
-        <div class="req__body">
-            <div class="req__title">
+    <div class="request-connector">
+        <i class="rc__icon fas fa-exclamation-circle"></i>
+        <div class="rc__body">
+            <div class="rc__title">
                 API Connector not listed?
             </div>
-            <div class="req__message">
+            <div class="rc__message">
                 If the service you need offers an OpenAPI/Swagger spec API we can publish one. Gen in touch.
-                <div class="req__actions">
-                    <button class="button button--cta req__action"
+                <div class="rc__actions">
+                    <button class="button button--cta rc__action"
                         @click="modals.show('request-connector')"
                         title="Request API Connector">
                         <span>Request API Connector</span>
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style scoped>
-.connector-request {
+.request-connector {
     display: flex;
     flex-flow: row nowrap;
     margin-bottom: var(--gap);
@@ -39,22 +39,22 @@ export default {
     font-size: var(--font-size--alt);
 }
 
-.req__icon {
+.rc__icon {
     flex: 0 0 auto;
     padding: var(--gap);
-    font-size: 16px;
     line-height: var(--font-size--alt); /* Balances oneliner height */
+    font-size: 16px;
 }
 
-.req__body {
+.rc__body {
     flex: 1;
 }
 
-.req__title {
+.rc__title {
     margin: var(--gap) 0;
 }
 
-.req__message {
+.rc__message {
     display: flex;
     flex-flow: row nowrap;
     margin: var(--gap) 0;
@@ -63,12 +63,12 @@ export default {
     opacity: .8;
 }
 
-.req__actions {
-    margin: var(--gap);
+.rc__actions {
     align-self: flex-end;
+    margin: var(--gap);
 }
 
-button.req__action {
+button.rc__action {
     font-family: var(--font-family--alt);
     color: inherit;
     background: var(--color-cool--800);

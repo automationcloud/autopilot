@@ -21,7 +21,7 @@ export default {
 <style scoped>
 .notifications {
     position: fixed;
-    z-index: 5000;
+    z-index: 10001;
     bottom: var(--playback-panel-size);
     left: 0;
     right: 0;
