@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ApiRequest, Extension } from '@automationcloud/engine';
+import { ApiRequest, Extension, ExtensionSpec } from '@automationcloud/engine';
 import chokidar from 'chokidar';
 import { debounce } from 'debounce';
 import { remote } from 'electron';
@@ -87,6 +87,26 @@ export class ExtensionDevController {
         return ext;
     }
 
+    availableExtensions(category: string, searchQuery: string) {
+        return this.extensions
+            .map(e => e.spec)
+            .filter(spec => (spec.category ?? 'extension') === category)
+            .filter(spec => this.matchesSearchQuery(spec, searchQuery));
+    }
+
+    matchesSearchQuery(spec: ExtensionSpec, searchQuery: string) {
+        const q = searchQuery.trim().toLowerCase();
+        if (!q) {
+            return true;
+        }
+        return [
+            spec.name,
+            spec.title || '',
+            spec.description || '',
+            ...spec.tags
+        ].some(_ => _.toLowerCase().includes(q));
+    }
+
     async showAddExtensionPopup() {
         const { filePaths = [] } = await remote.dialog.showOpenDialog({
             filters: [{ name: 'Directory', extensions: ['*'] }],
@@ -145,7 +165,11 @@ export class ExtensionDevController {
         }
     }
 
-    async removeExtension(ext: Extension) {
+    async removeExtension(name: string) {
+        const ext = this.extensions.find(_ => _.spec.name !== name);
+        if (!ext) {
+            return;
+        }
         this.unwatch(ext, false);
         this.extensions = this.extensions.filter(_ => _.dir !== ext.dir);
         this.update();

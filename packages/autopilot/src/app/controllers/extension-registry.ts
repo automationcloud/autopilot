@@ -149,6 +149,7 @@ export class ExtensionRegistryController {
             manifest.title || '',
             manifest.description || '',
             manifest.latestVersion || '',
+            ...manifest.tags
         ].some(_ => _.toLowerCase().includes(q));
     }
 

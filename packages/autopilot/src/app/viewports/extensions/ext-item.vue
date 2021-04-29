@@ -36,7 +36,7 @@
                 v{{ extReg.getInstalledVersion(manifest) }}
                 </span>
                 <span v-else>
-                v{{ manifest.latestVersion }}
+                v{{ manifest.latestVersion || manifest.version }}
                 </span>
             </div>
 
@@ -51,7 +51,7 @@
 
         <aside>
             <template v-if="installed">
-                <button v-if="extReg.isOutdated(manifest)"
+                <button v-if="!isDev && extReg.isOutdated(manifest)"
                     class="button button--yellow button--icon"
                     @click="extReg.updateExtension(manifest.name, manifest.latestVersion)"
                     title="Update the extension to latest version"
@@ -59,7 +59,7 @@
                     <i class="fas fa-arrow-circle-up"></i>
                 </button>
                 <button class="button button--secondary button--icon"
-                    @click="extReg.uninstallExtension(manifest.name)"
+                    @click="uninstall()"
                     title="Uninstall extension"
                     :disabled="extReg.loading">
                     <i class="fas fa-trash-alt"></i>
@@ -87,11 +87,13 @@ export default {
     inject: [
         'expandable',
         'extReg',
+        'extDev',
     ],
 
     props: {
-        manifest: { type: Object, required: true },
+        manifest: { type: Object, required: true }, // ExtensionManifest or ExtenesionSpec
         installed: { type: Boolean, required: true },
+        isDev: { type: Boolean, default: false }
     },
 
     computed: {
@@ -115,6 +117,12 @@ export default {
 
         toggleExpand() {
             this.expandable.toggleExpand(this.manifest.id);
+        },
+
+        uninstall() {
+            this.isDev ?
+                this.extDev.removeExtension(this.manifest.name) :
+                this.extReg.uninstallExtension(this.manifest.name);
         }
 
     }

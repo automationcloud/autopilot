@@ -30,6 +30,32 @@
                     <i class="fas fa-sync-alt" v-else></i>
                 </button>
             </div>
+            <div class="section" v-if="devMode.isEnabled()">
+                <div class="section__title">
+                    <span @click="expandable.toggleExpand('dev-extensions')">
+                        Local {{ currentCategory }} ({{ devExtensions.length }})
+                    </span>
+                    <expand id="dev-extensions"/>
+                </div>
+                <template v-if="expandable.isExpanded('dev-extensions')">
+                    <button class="button button--alt button--cta button--tertiary ext-dev-install"
+                        @click="addDevExtension()">
+                        New watched folder
+                    </button>
+                    <div v-if="devExtensions.length === 0"
+                        class="ext-list--empty">
+                        No Local {{ currentCategory }} {{ searchEnabled ? ' match your search criteria' : '' }}
+                    </div>
+                    <div class="ext-list">
+                        <ext-item
+                            v-for="manifest in devExtensions"
+                            :key="manifest.name"
+                            :manifest="manifest"
+                            :installed="true"
+                            :isDev="true"/>
+                    </div>
+                </template>
+            </div>
             <div class="section">
                 <div class="section__title">
                     <span @click="expandable.toggleExpand('ext-installed')">
@@ -86,6 +112,8 @@ export default {
         'project',
         'expandable',
         'extReg',
+        'extDev',
+        'devMode',
     ],
 
     components: {
@@ -104,6 +132,9 @@ export default {
         loading() { return this.extReg.loading; },
         searchEnabled() { return !!this.extReg.searchQuery; },
         currentCategory() { return this.toHumanLabel(this.extReg.filterCategory); },
+        devExtensions() {
+            return this.extDev.availableExtensions(this.extReg.filterCategory, this.extReg.searchQuery);
+        },
     },
 
     methods: {
@@ -116,7 +147,17 @@ export default {
                 extension: 'Extensions',
                 connector: 'API Connectors',
             }[category];
-        }
+        },
+
+        async addDevExtension() {
+            await this.extDev.showAddExtensionPopup();
+            this.expandable.expand(this.expandId);
+        },
+
+        async removeDevExtension(ext) {
+            await this.extDev.removeExtension(ext);
+        },
+
     }
 
 };
@@ -168,5 +209,10 @@ export default {
 .ext-list--empty {
     padding-bottom: var(--gap--large);
     font-size: var(--font-size);
+}
+
+.ext-dev-install {
+    padding: 0;
+    margin-top: -10px;
 }
 </style>
