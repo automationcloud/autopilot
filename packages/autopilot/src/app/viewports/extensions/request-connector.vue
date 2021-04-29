@@ -6,7 +6,7 @@
                 API Connector not listed?
             </div>
             <div class="rc__message">
-                If the service you need offers an OpenAPI/Swagger spec API we can publish one. Gen in touch.
+                If there's an API you need that's not listed here we can usually publish one. Gen in touch.
                 <div class="rc__actions">
                     <button class="button button--cta rc__action"
                         @click="modals.show('request-connector')"

@@ -47,27 +47,25 @@ export class HelpdeskController {
                     '** Ticket created from Autopilot **'
                 ].join('\n\n'),
                 category: 2, // automation cloud support
+                priority: 2,
             });
         } catch (error) {
-            this.addErrorNotification('send your request');
+            this.notifications.removeById('helpdesk');
+            this.notifications.add({
+                id: 'helpdesk',
+                level: 'error',
+                title: 'Sending failed',
+                message: 'Sorry, we couldn\'t send your API Connector request. Please try again',
+                primaryAction: {
+                    title: 'Cancel',
+                    action: () => {
+                        this.notifications.removeById('helpdesk');
+                    }
+                }
+            });
             throw error;
         }
     }
 
-    addErrorNotification(action: string) {
-        this.notifications.removeById('helpdesk');
-        this.notifications.add({
-            id: 'helpdesk',
-            level: 'error',
-            title: `Failed to ${action}`,
-            message: 'Something went wrong, Please try again',
-            primaryAction: {
-                title: 'Cancel',
-                action: () => {
-                    this.notifications.removeById('helpdesk');
-                }
-            }
-        });
-    }
 
 }

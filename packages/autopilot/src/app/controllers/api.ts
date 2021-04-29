@@ -177,8 +177,8 @@ export class ApiController {
         email: string,
         subject: string,
         text: string,
-        category?: number,
-        priority?: number,
+        priority: number,
+        category: number,
     }) {
         return await this.api.post('/Helpdesk/createTicket', { body: spec });
     }

@@ -59,7 +59,7 @@
                             v-model.trim="url"/>
                         <span class="url-hint">
                             <i class="fas fa-info-circle" style="margin-top: 2px;"></i>
-                            Please provide a link to the Open API/Swagger spec for the API you're interested in.
+                            Please provide a link to the spec for the API you're interested in.
                         </span>
                     </div>
                 </div>
