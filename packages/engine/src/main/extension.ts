@@ -51,6 +51,7 @@ export interface ExtensionManifest {
     versions: string[];
     tags: string[];
     private: boolean;
+    category?: 'extension' | 'connector'; // default to extension
 }
 
 export interface ExtensionVersion {

@@ -36,6 +36,7 @@ export class ExtensionRegistryController {
     failedExtensionSpecs: ExtensionSpec[] = [];
     allManifests: ExtensionManifest[] = [];
     searchQuery: string = '';
+    filterCategory: 'extension' | 'connector' = 'extension';
     loading: boolean = false;
     error: Error | null = null;
 
@@ -104,12 +105,14 @@ export class ExtensionRegistryController {
 
     get installedManifests() {
         return this.allManifests
+            .filter(manifest => (manifest.category ?? 'extension') === this.filterCategory)
             .filter(manifest => this._extMap.has(manifest.name))
             .filter(manifest => this.matchesSearchQuery(manifest));
     }
 
     get availableManifests() {
         return this.allManifests
+            .filter(manifest => (manifest.category ?? 'extension') === this.filterCategory)
             .filter(manifest => !this._extMap.has(manifest.name))
             .filter(manifest => this.matchesSearchQuery(manifest));
     }
@@ -146,6 +149,7 @@ export class ExtensionRegistryController {
             manifest.title || '',
             manifest.description || '',
             manifest.latestVersion || '',
+            ...manifest.tags
         ].some(_ => _.toLowerCase().includes(q));
     }
 
