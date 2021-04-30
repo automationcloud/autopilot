@@ -1,14 +1,14 @@
 <template>
     <div class="request-connector">
-        <i class="rc__icon fas fa-exclamation-circle"></i>
-        <div class="rc__body">
-            <div class="rc__title">
+        <i class="rc-icon fas fa-exclamation-circle"></i>
+        <div class="rc-body">
+            <div class="rc-title">
                 API Connector not listed?
             </div>
-            <div class="rc__message">
+            <div class="rc-message">
                 If there's an API you need that's not listed here we can usually publish one. Gen in touch.
-                <div class="rc__actions">
-                    <button class="button button--cta rc__action"
+                <div class="rc-actions">
+                    <button class="button button--cta rc-action"
                         @click="modals.show('request-connector')"
                         title="Request API Connector">
                         <span>Request API Connector</span>
@@ -39,22 +39,22 @@ export default {
     font-size: var(--font-size--alt);
 }
 
-.rc__icon {
+.rc-icon {
     flex: 0 0 auto;
     padding: var(--gap);
     line-height: var(--font-size--alt); /* Balances oneliner height */
     font-size: 16px;
 }
 
-.rc__body {
+.rc-body {
     flex: 1;
 }
 
-.rc__title {
+.rc-title {
     margin: var(--gap) 0;
 }
 
-.rc__message {
+.rc-message {
     display: flex;
     flex-flow: row nowrap;
     margin: var(--gap) 0;
@@ -63,12 +63,12 @@ export default {
     opacity: .8;
 }
 
-.rc__actions {
+.rc-actions {
     align-self: flex-end;
     margin: var(--gap);
 }
 
-button.rc__action {
+button.rc-action {
     font-family: var(--font-family--alt);
     color: inherit;
     background: var(--color-cool--800);
