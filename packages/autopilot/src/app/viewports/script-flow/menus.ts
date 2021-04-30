@@ -290,15 +290,7 @@ export class ScriptFlowMenusController {
             yield* this.buildFrequentActions();
         }
         yield { type: 'header', label: 'All Actions' };
-        yield* this.emitCategories(ActionClass => {
-            return {
-                label: ActionClass.$type,
-                htmlLabel: this.createLabel(ActionClass),
-                click: () => this.composer.recordAction(ActionClass.$type),
-                help: this.help.getActionHelp(ActionClass.$type),
-                deprecated: ActionClass.$deprecated,
-            };
-        });
+        yield* this.emitCategories();
     }
 
     private *buildFrequentActions(): IterableIterator<ModalMenuItem> {
@@ -325,16 +317,7 @@ export class ScriptFlowMenusController {
     }
 
     private *buildActionChangeType(): IterableIterator<ModalMenuItem> {
-        yield* this.emitCategories(ActionClass => {
-            return {
-                label: ActionClass.$type,
-                htmlLabel: this.createLabel(ActionClass),
-                click: () => this.viewport.commands.changeActionType({ type: ActionClass.$type }),
-                enabled: this.viewport.commands.canChangeActionType(),
-                help: this.help.getActionHelp(ActionClass.$type),
-                deprecated: ActionClass.$deprecated,
-            };
-        });
+        yield* this.emitCategories();
     }
 
     private *buildCreateComposedAction(): IterableIterator<ModalMenuItem> {
@@ -388,31 +371,28 @@ export class ScriptFlowMenusController {
      * Builds action categories which lists standard ones at the top, then separator,
      * then the rest of them in alphabetical order.
      */
-    private *emitCategories(itemFn: (actionClass: ActionClass) => ModalMenuItem): IterableIterator<ModalMenuItem> {
+    private *emitCategories(): IterableIterator<ModalMenuItem> {
         const categories = this.app.resolver.getActionCategories().slice();
         for (const std of standardActionCategories) {
             const idx = categories.findIndex(cat => cat.name === std);
             if (idx > -1) {
                 const category = categories[idx];
                 categories.splice(idx, 1);
-                yield* this.emitCategory(category, itemFn);
+                yield* this.emitCategory(category);
             }
         }
         if (categories.length) {
             yield { type: 'separator' };
             for (const category of categories) {
-                yield* this.emitCategory(category, itemFn);
+                yield* this.emitCategory(category);
             }
         }
     }
 
     private *emitCategory(
         category: model.Category<ActionClass>,
-        itemFn: (actionClass: ActionClass) => ModalMenuItem,
     ): IterableIterator<ModalMenuItem> {
-        const submenu = category.items
-            .filter(_ => !_.$hidden)
-            .map(ActionClass => itemFn(ActionClass));
+        const submenu = [...this.buildMenuItems(category.name, category.items.filter(_ => !_.$hidden))];
         if (submenu.length) {
             yield {
                 label: category.name,
@@ -426,4 +406,34 @@ export class ScriptFlowMenusController {
         return `<span class="subtle">${ns}.</span>${method}`;
     }
 
+    *buildMenuItems(prefix: string, Actions: ActionClass[]): IterableIterator<ModalMenuItem> {
+        const actionsForSubmenu = [];
+        const subMenuLabels = new Set<string>();
+        for (const action of Actions.filter(_ => _.$type.startsWith(prefix))) {
+            const name = action.$type.replace(prefix + '.', '');
+            if (!name.includes('.')) {
+                // push item
+                yield {
+                    label: name,
+                    htmlLabel: this.createLabel(action),
+                    click: () => this.composer.recordAction(action.$type),
+                    help: this.help.getActionHelp(action.$type),
+                    deprecated: action.$deprecated,
+                };
+            } else {
+                // next chunk of word becomes label
+                // other goes into submenu
+                const label = name.substring(0, name.indexOf('.'));
+                subMenuLabels.add(label);
+                actionsForSubmenu.push(action);
+            }
+        }
+        const labels = [...subMenuLabels].sort((a, b) => { return a > b ? 1 : -1; });
+        for (const label of labels) {
+            yield {
+                label,
+                submenu: [...this.buildMenuItems(prefix + '.' + label, actionsForSubmenu)]
+            };
+        }
+    }
 }
