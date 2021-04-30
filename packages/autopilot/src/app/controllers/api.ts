@@ -172,6 +172,16 @@ export class ApiController {
         return await this.api.get(`/private/checkpoints/${id}`);
     }
 
+    async createHelpTicket(spec: {
+        name: string,
+        email: string,
+        subject: string,
+        text: string,
+        priority: number,
+        category: number,
+    }) {
+        return await this.api.post('/Helpdesk/createTicket', { body: spec });
+    }
 }
 
 export interface ExecutionError {
