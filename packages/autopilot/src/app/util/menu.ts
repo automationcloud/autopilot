@@ -39,7 +39,7 @@ export function *buildMenuItems<T extends Module>(
             // push item
             yield {
                 ...itemFn(item),
-                label: name,
+                label: item.$type,
                 htmlLabel: createLabel(item),
                 deprecated: item.$deprecated,
             };
