@@ -30,6 +30,7 @@ import { HelpController } from '../../controllers/help';
 import { ModalMenuController, ModalMenuItem } from '../../controllers/modal-menu';
 import { PlaybackController } from '../../controllers/playback';
 import { dom } from '../../util';
+import { buildMenuItems, createLabel } from '../../util/menu';
 import { ScriptFlowViewport } from '.';
 
 const standardActionCategories = [
@@ -290,7 +291,12 @@ export class ScriptFlowMenusController {
             yield* this.buildFrequentActions();
         }
         yield { type: 'header', label: 'All Actions' };
-        yield* this.emitCategories();
+        yield* this.emitCategories(ActionClass => {
+            return {
+                click: () => this.composer.recordAction(ActionClass.$type),
+                help: this.help.getActionHelp(ActionClass.$type),
+            };
+        });
     }
 
     private *buildFrequentActions(): IterableIterator<ModalMenuItem> {
@@ -306,7 +312,7 @@ export class ScriptFlowMenusController {
                 }
                 yield {
                     label: ActionClass.$type,
-                    htmlLabel: this.createLabel(ActionClass),
+                    htmlLabel: createLabel(ActionClass),
                     click: () => this.composer.recordAction(ActionClass.$type),
                     help: this.help.getActionHelp(ActionClass.$type),
                     deprecated: ActionClass.$deprecated,
@@ -317,7 +323,13 @@ export class ScriptFlowMenusController {
     }
 
     private *buildActionChangeType(): IterableIterator<ModalMenuItem> {
-        yield* this.emitCategories();
+        yield* this.emitCategories(ActionClass => {
+            return {
+                click: () => this.viewport.commands.changeActionType({ type: ActionClass.$type }),
+                enabled: this.viewport.commands.canChangeActionType(),
+                help: this.help.getActionHelp(ActionClass.$type),
+            };
+        });
     }
 
     private *buildCreateComposedAction(): IterableIterator<ModalMenuItem> {
@@ -371,28 +383,35 @@ export class ScriptFlowMenusController {
      * Builds action categories which lists standard ones at the top, then separator,
      * then the rest of them in alphabetical order.
      */
-    private *emitCategories(): IterableIterator<ModalMenuItem> {
+    private *emitCategories(itemFn: (actionClass: ActionClass) => Partial<ModalMenuItem>): IterableIterator<ModalMenuItem> {
         const categories = this.app.resolver.getActionCategories().slice();
         for (const std of standardActionCategories) {
             const idx = categories.findIndex(cat => cat.name === std);
             if (idx > -1) {
                 const category = categories[idx];
                 categories.splice(idx, 1);
-                yield* this.emitCategory(category);
+                yield* this.emitCategory(category, itemFn);
             }
         }
         if (categories.length) {
             yield { type: 'separator' };
             for (const category of categories) {
-                yield* this.emitCategory(category);
+                yield* this.emitCategory(category, itemFn);
             }
         }
     }
 
     private *emitCategory(
         category: model.Category<ActionClass>,
+        itemFn: (actionClass: ActionClass) => Partial<ModalMenuItem>
     ): IterableIterator<ModalMenuItem> {
-        const submenu = [...this.buildMenuItems(category.name, category.items.filter(_ => !_.$hidden))];
+        const submenu = [
+            ...buildMenuItems(
+                category.name,
+                category.items.filter(_ => !_.$hidden),
+                itemFn,
+            )
+        ];
         if (submenu.length) {
             yield {
                 label: category.name,
@@ -401,39 +420,4 @@ export class ScriptFlowMenusController {
         }
     }
 
-    private createLabel(actionClass: ActionClass) {
-        const { ns, method } = actionClass.$metadata;
-        return `<span class="subtle">${ns}.</span>${method}`;
-    }
-
-    *buildMenuItems(prefix: string, Actions: ActionClass[]): IterableIterator<ModalMenuItem> {
-        const actionsForSubmenu = [];
-        const subMenuLabels = new Set<string>();
-        for (const action of Actions.filter(_ => _.$type.startsWith(prefix))) {
-            const name = action.$type.replace(prefix + '.', '');
-            if (!name.includes('.')) {
-                // push item
-                yield {
-                    label: name,
-                    htmlLabel: this.createLabel(action),
-                    click: () => this.composer.recordAction(action.$type),
-                    help: this.help.getActionHelp(action.$type),
-                    deprecated: action.$deprecated,
-                };
-            } else {
-                // next chunk of word becomes label
-                // other goes into submenu
-                const label = name.substring(0, name.indexOf('.'));
-                subMenuLabels.add(label);
-                actionsForSubmenu.push(action);
-            }
-        }
-        const labels = [...subMenuLabels].sort((a, b) => { return a > b ? 1 : -1; });
-        for (const label of labels) {
-            yield {
-                label,
-                submenu: [...this.buildMenuItems(prefix + '.' + label, actionsForSubmenu)]
-            };
-        }
-    }
 }

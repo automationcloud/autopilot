@@ -22,6 +22,7 @@ import { ModalMenuController, ModalMenuItem } from '../../controllers/modal-menu
 import { ModalsController } from '../../controllers/modals';
 import { PipeRecipesController } from '../../controllers/pipe-recipes';
 import { dom } from '../../util';
+import { buildMenuItems, createLabel } from '../../util/menu';
 import { ScriptEditorViewport } from '.';
 
 const standardPipeCategories = [
@@ -167,11 +168,8 @@ export class ScriptEditorMenusController {
         yield { type: 'header', label: 'All Pipes' };
         yield* this.emitCategories(PipeClass => {
             return {
-                label: PipeClass.$type,
-                htmlLabel: this.createLabel(PipeClass),
                 click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
                 help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
-                deprecated: PipeClass.$deprecated,
             };
         });
         yield* this.buildCreatePipeRecipe();
@@ -187,7 +185,7 @@ export class ScriptEditorMenusController {
             for (const PipeClass of frequentPipes) {
                 yield {
                     label: PipeClass.$type,
-                    htmlLabel: this.createLabel(PipeClass),
+                    htmlLabel: createLabel(PipeClass),
                     click: () => this.viewport.commands.createPipe({ type: PipeClass.$type }),
                     help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
                     deprecated: PipeClass.$deprecated,
@@ -219,15 +217,12 @@ export class ScriptEditorMenusController {
     private *buildChangePipeType(): IterableIterator<ModalMenuItem> {
         yield* this.emitCategories(PipeClass => {
             return {
-                label: PipeClass.$type,
-                htmlLabel: this.createLabel(PipeClass),
                 click: () => {
                     this.viewport.commands.changePipeType({
                         type: PipeClass.$type,
                     });
                 },
                 help: this.app.get(HelpController).getPipeHelp(PipeClass.$type),
-                deprecated: PipeClass.$deprecated,
             };
         });
     }
@@ -256,11 +251,15 @@ export class ScriptEditorMenusController {
 
     private *emitCategory(
         category: model.Category<PipeClass>,
-        itemFn: (pipeClass: PipeClass) => ModalMenuItem,
+        itemFn: (pipeClass: PipeClass) => Partial<ModalMenuItem>,
     ): IterableIterator<ModalMenuItem> {
-        const submenu = category.items
-            .filter(_ => !_.$hidden)
-            .map(PipeClass => itemFn(PipeClass));
+        const submenu = [
+            ...buildMenuItems(
+                category.name,
+                category.items.filter(_ => !_.$hidden),
+                itemFn,
+            )
+        ];
         if (submenu.length) {
             yield {
                 label: category.name,
@@ -268,11 +267,5 @@ export class ScriptEditorMenusController {
             };
         }
     }
-
-    private createLabel(pipeClass: PipeClass) {
-        const { ns, method } = pipeClass.$metadata;
-        return `<span class="subtle">${ns}.</span>${method}`;
-    }
-
 
 }
