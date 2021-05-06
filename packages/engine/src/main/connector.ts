@@ -29,6 +29,7 @@ export interface ConnectorSpec {
     auth: CredentialsConfig[];
     baseUrl: string;
     endpoints: ConnectorEndpoint[];
+    docUrl?: string;
 }
 
 export interface ConnectorEndpoint {
@@ -51,7 +52,7 @@ export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' 
 
 export function buildConnectors(namespace: string, spec: ConnectorSpec) {
     // validate meta only. which we throws when invalid
-    const { icon, baseUrl, auth } = spec;
+    const { icon, baseUrl, auth, docUrl } = spec;
     validate(connectorSpecSchema, {
         icon,
         baseUrl,
@@ -68,7 +69,7 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
         const type = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
         class ConnectorAction extends Action {
             static $type = type;
-            static $help = endpoint.description;
+            static $help = endpoint.description + (docUrl ? `\n\n Check documentation here: ${docUrl}` : '');
             static $icon = `${!icon.match(/http/) ? 'fab ' : 'fas '}${icon}`;
             $baseUrl = baseUrl;
             $endpoint = endpoint;
@@ -93,8 +94,7 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
 
             init(spec: any) {
                 super.init(spec);
-                const { auth } = spec;
-                this.auth = auth ?? null;
+                this.auth = spec.auth ?? null;
                 if (this.pipeline.length === 0) {
                     this.pipeline = new Pipeline(this, 'pipeline', [
                         {
