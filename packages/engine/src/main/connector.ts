@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as r from '@automationcloud/request';
 import Ajv from 'ajv';
 
-import { util } from '.';
-import { ConnectorAction } from './connector-action';
-import * as params from './model/params';
+import { Action, params, util } from '.';
+import { Pipeline } from './pipeline';
 import { JsonSchema } from './schema';
-import { CredentialsConfig } from './services/credentials';
+import { CredentialsConfig, CredentialsService } from './services/credentials';
 
 const ajv = new Ajv({
     messages: true,
@@ -65,25 +65,140 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
         if (!valid) {
             continue;
         }
-        const name = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
-        class ChildConnectorAction extends ConnectorAction {
-            static $type = name;
+        const type = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
+        class ConnectorAction extends Action {
+            static $type = type;
             static $help = endpoint.description;
             static $icon = `${!icon.match(/http/) ? 'fab ' : 'fas '}${icon}`;
+            $baseUrl = baseUrl;
+            $endpoint = endpoint;
 
             @params.Credentials({
+                label: 'Auth',
                 providerName: namespace,
-                configs: spec.auth
+                configs: auth,
             })
-            auth!: CredentialsConfig;
+            auth!: CredentialsConfig | null;
 
-            getBaseUrl() { return baseUrl; }
+            @params.Pipeline({
+                label: 'Parameters',
+            })
+            pipeline!: Pipeline;
 
-            getEndpoint() { return endpoint; }
+            @params.Outcome({
+                label: 'Result',
+                placeholder: 'Run the action to see the outcome value.',
+            })
+            $outcome: any = undefined;
+
+            init(spec: any) {
+                super.init(spec);
+                const { auth } = spec;
+                this.auth = auth ?? null;
+                if (this.pipeline.length === 0) {
+                    this.pipeline = new Pipeline(this, 'pipeline', [
+                        {
+                            type: 'Value.getJson',
+                            value: getParametersJsonString(this.$endpoint.parameters),
+                        }
+                    ]);
+                }
+            }
+
+            get $credentials() { return this.$engine.get(CredentialsService); }
+
+            reset() {
+                super.reset();
+                this.$outcome = undefined;
+            }
+
+            async exec() {
+                // evaluate the parameters pipeline
+                const data = await this.retry(async () => {
+                    const el = await this.selectOne(this.pipeline);
+                    return el.value;
+                });
+                util.checkType(data, 'object', 'Parameters');
+                const { options, path } = this.getRequestSpec(data);
+                const { method } = this.$endpoint;
+                const auth = await this.$credentials.getAuthAgent(this.auth);
+                const request = new r.Request({
+                    baseUrl: this.$baseUrl,
+                    auth,
+                });
+                const response = await request.sendRaw(method, path, options);
+                let body: any = null;
+                try {
+                    body = await response.json();
+                } catch (_err) {
+                    body = await response.text();
+                }
+                this.$outcome = {
+                    url: response.url,
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
+                    body,
+                };
+            }
+
+            // compose request options and path by reading location and type of the parameters
+            getRequestSpec(evaluatedParams: any) {
+                let isFormData = false;
+                let path = this.$endpoint.path;
+                const options: r.RequestOptions = {
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                };
+                // merge the evaluated parameters with parameter definitions from the spec
+                for (const param of this.$endpoint.parameters) {
+                    const { key } = param;
+                    const val = evaluatedParams[key] ?? param.default;
+                    if (!val) {
+                        if (param.required) {
+                            throw util.createError({
+                                code: 'ParameterValidationError',
+                                message: `Parameter \`${key}\` is required`,
+                                details: {
+                                    parameters: evaluatedParams
+                                },
+                                retry: false,
+                            });
+                        }
+                        continue;
+                    }
+                    switch (param.location) {
+                        case 'header':
+                            options.headers = { ...options.headers, [key]: val };
+                            break;
+                        case 'query':
+                            options.query = { ...options.query, [key]: val };
+                            break;
+                        case 'path':
+                            path = path.replace(`{${key}}`, val); // spec must specify the path param with curly bracket e.g. /foo/{key}/bar
+                            break;
+                        case 'body':
+                            options.body = { ...options.body, [key]: val };
+                            break;
+                        case 'formData':
+                            isFormData = true;
+                            options.body = { ...options.body, [key]: val };
+                            break;
+                    }
+                }
+                // convert body
+                if (isFormData) {
+                    options.headers!['content-type'] = 'application/x-www-form-urlencoded';
+                    options.body = new URLSearchParams(options.body ?? {});
+                }
+                options.body = options.body != null ? JSON.stringify(options.body) : null;
+                return { options, path };
+            }
         }
-
-        actions[name] = ChildConnectorAction;
+        actions[type] = ConnectorAction;
     }
+
     return actions;
 }
 
@@ -163,4 +278,18 @@ function validate(schema: JsonSchema, value: any, throwInvalid: boolean = false)
 
 export function validateConnectorSpec(value: any) {
     return validate(connectorSpecSchema, value);
+}
+
+// builds the Value.getJson to document the parameters for an endpoint
+function getParametersJsonString(params: ConnectorParameter[]) {
+    const str = [
+        '// Parameters for this endpoint are shown below. ',
+        '// Use Object.setPath or Object.compose to set values. ',
+        '{',
+    ];
+    params.forEach(param => {
+        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}${param.description}`);
+    });
+    str.push('}');
+    return str.join('\n');
 }

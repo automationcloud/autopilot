@@ -26,7 +26,6 @@ export * from './action';
 export * from './context';
 export * from './ctx';
 export * from './connector';
-export * from './connector-action';
 export * from './element';
 export * from './engine';
 export * from './extension';
