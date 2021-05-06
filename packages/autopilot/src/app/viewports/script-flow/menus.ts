@@ -30,6 +30,7 @@ import { HelpController } from '../../controllers/help';
 import { ModalMenuController, ModalMenuItem } from '../../controllers/modal-menu';
 import { PlaybackController } from '../../controllers/playback';
 import { dom } from '../../util';
+import { buildMenuItems, createLabel } from '../../util/menu';
 import { ScriptFlowViewport } from '.';
 
 const standardActionCategories = [
@@ -292,11 +293,8 @@ export class ScriptFlowMenusController {
         yield { type: 'header', label: 'All Actions' };
         yield* this.emitCategories(ActionClass => {
             return {
-                label: ActionClass.$type,
-                htmlLabel: this.createLabel(ActionClass),
                 click: () => this.composer.recordAction(ActionClass.$type),
                 help: this.help.getActionHelp(ActionClass.$type),
-                deprecated: ActionClass.$deprecated,
             };
         });
     }
@@ -314,7 +312,7 @@ export class ScriptFlowMenusController {
                 }
                 yield {
                     label: ActionClass.$type,
-                    htmlLabel: this.createLabel(ActionClass),
+                    htmlLabel: createLabel(ActionClass),
                     click: () => this.composer.recordAction(ActionClass.$type),
                     help: this.help.getActionHelp(ActionClass.$type),
                     deprecated: ActionClass.$deprecated,
@@ -327,12 +325,9 @@ export class ScriptFlowMenusController {
     private *buildActionChangeType(): IterableIterator<ModalMenuItem> {
         yield* this.emitCategories(ActionClass => {
             return {
-                label: ActionClass.$type,
-                htmlLabel: this.createLabel(ActionClass),
                 click: () => this.viewport.commands.changeActionType({ type: ActionClass.$type }),
                 enabled: this.viewport.commands.canChangeActionType(),
                 help: this.help.getActionHelp(ActionClass.$type),
-                deprecated: ActionClass.$deprecated,
             };
         });
     }
@@ -388,7 +383,7 @@ export class ScriptFlowMenusController {
      * Builds action categories which lists standard ones at the top, then separator,
      * then the rest of them in alphabetical order.
      */
-    private *emitCategories(itemFn: (actionClass: ActionClass) => ModalMenuItem): IterableIterator<ModalMenuItem> {
+    private *emitCategories(itemFn: (actionClass: ActionClass) => Partial<ModalMenuItem>): IterableIterator<ModalMenuItem> {
         const categories = this.app.resolver.getActionCategories().slice();
         for (const std of standardActionCategories) {
             const idx = categories.findIndex(cat => cat.name === std);
@@ -408,22 +403,21 @@ export class ScriptFlowMenusController {
 
     private *emitCategory(
         category: model.Category<ActionClass>,
-        itemFn: (actionClass: ActionClass) => ModalMenuItem,
+        itemFn: (actionClass: ActionClass) => Partial<ModalMenuItem>
     ): IterableIterator<ModalMenuItem> {
-        const submenu = category.items
-            .filter(_ => !_.$hidden)
-            .map(ActionClass => itemFn(ActionClass));
+        const submenu = [
+            ...buildMenuItems(
+                category.name,
+                category.items.filter(_ => !_.$hidden),
+                itemFn,
+            )
+        ];
         if (submenu.length) {
             yield {
                 label: category.name,
                 submenu,
             };
         }
-    }
-
-    private createLabel(actionClass: ActionClass) {
-        const { ns, method } = actionClass.$metadata;
-        return `<span class="subtle">${ns}.</span>${method}`;
     }
 
 }
