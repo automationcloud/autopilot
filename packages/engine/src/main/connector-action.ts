@@ -14,7 +14,7 @@
 import * as r from '@automationcloud/request';
 
 import { Action } from './action';
-import { ConnectorEndpoint } from './connector';
+import { ConnectorEndpoint, ConnectorParameter } from './connector';
 import { params } from './model';
 import { Pipeline } from './pipeline';
 import { CredentialsConfig, CredentialsService } from './services';
@@ -24,6 +24,11 @@ export abstract class ConnectorAction extends Action {
     abstract getBaseUrl(): string;
     abstract getEndpoint(): ConnectorEndpoint;
 
+    @params.Credentials({
+        label: 'Auth',
+        providerName: '',
+        configs: []
+    })
     auth!: CredentialsConfig | null;
 
     @params.Pipeline({
@@ -42,20 +47,13 @@ export abstract class ConnectorAction extends Action {
         const { auth } = spec;
         this.auth = auth ?? null;
         if (this.pipeline.length === 0) {
-            const mappings = this.$endpoint.parameters.map(param => {
-                return {
-                    path: '/' + param.key,
-                    value: `// ${param.required ? '(Required) ' : '' }${param.description}`
-                };
-            });
             this.pipeline = new Pipeline(this, 'pipeline', [
                 {
-                    type: 'Object.compose',
-                    mappings,
+                    type: 'Value.getJson',
+                    value: this.getParametersJsonString(this.$endpoint.parameters),
                 }
             ]);
         }
-
     }
 
     get $credentials() { return this.$engine.get(CredentialsService); }
@@ -84,7 +82,12 @@ export abstract class ConnectorAction extends Action {
             auth,
         });
         const response = await request.sendRaw(method, path, options);
-        const body = await response.text();
+        let body: any = null;
+        try {
+            body = await response.json();
+        } catch (_err) {
+            body = await response.text();
+        }
         this.$outcome = {
             url: response.url,
             status: response.status,
@@ -146,6 +149,20 @@ export abstract class ConnectorAction extends Action {
         }
         options.body = options.body != null ? JSON.stringify(options.body) : null;
         return { options, path };
+    }
+
+    // builds the Value.getJson to document the parameters for an endpoint
+    protected getParametersJsonString(params: ConnectorParameter[]) {
+        const str = [
+            '// Parameters for this endpoint are shown below. ',
+            '// Use Object.setPath or Object.compose to set values. ',
+            '{',
+        ];
+        params.forEach(param => {
+            str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}${param.description}`);
+        });
+        str.push('}');
+        return str.join('\n');
     }
 
 }
