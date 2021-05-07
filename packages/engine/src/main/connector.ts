@@ -72,7 +72,7 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
         class ConnectorAction extends Action {
             static $type = type;
             static $help = endpoint.description + (docUrl ? `\n\n Check documentation here: ${docUrl}` : '');
-            static $icon = `${!icon.match(/http/) ? 'fab ' : 'fas '}${icon}`;
+            static $icon = `${!icon.match(/http/) ? 'fab ' : ''}${icon}`;
             $baseUrl = baseUrl;
             $endpoint = endpoint;
 
