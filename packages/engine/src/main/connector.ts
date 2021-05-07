@@ -18,6 +18,7 @@ import Ajv from 'ajv';
 import { Action, params, util } from '.';
 import { Pipeline } from './pipeline';
 import { JsonSchema } from './schema';
+import { FetchResponseSpec } from './services';
 import { CredentialsConfig, CredentialsService } from './services/credentials';
 
 const ajv = new Ajv({
@@ -67,6 +68,7 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
             continue;
         }
         const type = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
+
         class ConnectorAction extends Action {
             static $type = type;
             static $help = endpoint.description + (docUrl ? `\n\n Check documentation here: ${docUrl}` : '');
@@ -87,10 +89,16 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
             pipeline!: Pipeline;
 
             @params.Outcome({
+                label: 'Response',
+                placeholder: 'Run the action to see the outcome value.',
+            })
+            $response?: FetchResponseSpec = undefined;
+
+            @params.Outcome({
                 label: 'Result',
                 placeholder: 'Run the action to see the outcome value.',
             })
-            $outcome: any = undefined;
+            $result?: any = undefined;
 
             init(spec: any) {
                 super.init(spec);
@@ -109,7 +117,8 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
 
             reset() {
                 super.reset();
-                this.$outcome = undefined;
+                this.$response = undefined;
+                this.$result = undefined;
             }
 
             async exec() {
@@ -126,20 +135,29 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
                     baseUrl: this.$baseUrl,
                     auth,
                 });
-                const response = await request.sendRaw(method, path, options);
-                let body: any = null;
-                try {
-                    body = await response.json();
-                } catch (_err) {
-                    body = await response.text();
-                }
-                this.$outcome = {
-                    url: response.url,
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: response.headers,
-                    body,
+                const res = await request.sendRaw(method, path, options);
+                this.$response = await this.parseResponse(res);
+                this.$result = this.$response.body;
+            }
+
+            async parseResponse(res: Response) {
+                const response: FetchResponseSpec = {
+                    url: res.url,
+                    status: res.status,
+                    statusText: res.statusText,
+                    headers: {},
+                    body: null,
                 };
+                for (const [k, v] of res.headers) {
+                    response.headers[k] = v;
+                }
+                try {
+                    response.body = await res.json();
+                } catch (_err) {
+                    response.body = await res.text();
+                }
+
+                return response;
             }
 
             // compose request options and path by reading location and type of the parameters
