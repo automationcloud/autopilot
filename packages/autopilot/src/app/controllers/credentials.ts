@@ -29,6 +29,7 @@ export class CredentialsController {
     param: model.ParamSpec | null = null;
     // These are available in our lists
     availableCredentials: StoredCredentials[] = [];
+    lastSelected: StoredCredentials | null = null;
 
     constructor(
         @inject(ModalsController)

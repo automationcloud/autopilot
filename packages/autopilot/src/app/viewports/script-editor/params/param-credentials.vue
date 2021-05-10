@@ -55,6 +55,16 @@ export default {
 
     mixins: [ParamMixin],
 
+    mounted() {
+        if (!this.value) {
+            this.setLastSelected();
+        }
+    },
+
+    watch: {
+        value(cred) { this.credentials.lastSelected = cred; }
+    },
+
     computed: {
 
         availableCreds() {
@@ -73,6 +83,13 @@ export default {
         logout() {
             this.credentials.logout(this.itemProxy, this.param);
         },
+
+        setLastSelected() {
+            const { lastSelected } = this.credentials;
+            if (lastSelected && lastSelected.providerName === this.param.providerName) {
+                this.value = lastSelected;
+            }
+        }
 
     }
 

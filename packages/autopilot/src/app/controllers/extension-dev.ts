@@ -166,7 +166,7 @@ export class ExtensionDevController {
     }
 
     async removeExtension(name: string) {
-        const ext = this.extensions.find(_ => _.spec.name !== name);
+        const ext = this.extensions.find(_ => _.spec.name === name);
         if (!ext) {
             return;
         }
