@@ -201,8 +201,8 @@
             </div>
 
             <div class="help box box--blue"
-                v-if="selectedConfig.help">
-                {{ selectedConfig.help }}
+                v-if="selectedConfig.help"
+                v-html="selectedConfig.help">
             </div>
 
             <signin-warning

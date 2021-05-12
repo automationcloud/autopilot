@@ -138,6 +138,7 @@ export class CredentialsController {
                 if (!config.customConfig) {
                     data.authorizationUrl = config.authorizationUrl;
                     data.tokenUrl = config.tokenUrl;
+                    data.scope = config.scope;
                 }
                 const url = new URL('/v1/oauth2', SSO_SERVICE_URL);
                 url.searchParams.set('authorizationURL', data.authorizationUrl);
@@ -145,6 +146,7 @@ export class CredentialsController {
                 url.searchParams.set('clientID', data.clientId);
                 url.searchParams.set('clientSecret', data.clientSecret);
                 url.searchParams.set('redirectURL', this.httpCallback.getCallbackUrl());
+                url.searchParams.set('scope', data.scope);
                 const res = await this.httpCallback.open(url);
                 const {
                     accessToken,

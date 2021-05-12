@@ -148,7 +148,7 @@ export interface CredentialsOAuth2Config {
     // grantTypes: CredentialsOAuth2GrantType[];
     authorizationUrl: string;
     tokenUrl: string;
-    scopes: string;
+    scope: string;
     customConfig?: boolean;
     help?: string;
 }
@@ -158,6 +158,7 @@ export interface CredentialsOAuth2Data {
     tokenUrl: string;
     clientId: string;
     clientSecret: string;
+    scope: string;
     refreshToken?: string;
     accessToken?: string;
     expiresAt?: number;
