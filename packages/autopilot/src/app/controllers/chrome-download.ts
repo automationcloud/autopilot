@@ -129,7 +129,7 @@ export class ChromeDownloadController {
         const length = Number(res.headers['content-length'] || 0);
         let written = 0;
         const dest = createWriteStream(zipFile);
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             res.on('data', chunk => {
                 dest.write(chunk, () => {
                     written += chunk.length;

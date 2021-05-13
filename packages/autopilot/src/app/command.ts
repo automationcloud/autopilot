@@ -44,8 +44,8 @@ export abstract class Command<V extends Viewport<any>> {
 
     abstract isUndoable(): boolean;
     abstract canExecute(): boolean;
-    protected abstract async apply(): Promise<void>;
-    protected abstract async unapply(): Promise<void>;
+    protected abstract apply(): Promise<void>;
+    protected abstract unapply(): Promise<void>;
 
     protected getConnectedViewports(): Array<Viewport<any>> {
         return [this.viewport];

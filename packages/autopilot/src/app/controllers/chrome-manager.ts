@@ -141,7 +141,7 @@ export class ChromeManagerController {
     }
 
     async restartChrome() {
-        await new Promise(resolve => {
+        await new Promise<void>(resolve => {
             if (this.chromeProcess) {
                 this.chromeProcess.on('exit', resolve);
                 this.chromeProcess.kill('SIGTERM');
