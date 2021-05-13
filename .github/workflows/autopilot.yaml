@@ -17,7 +17,8 @@ jobs:
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - run: npm run init
+      - run: npm i -g npm@7
+      - run: npm ci
       - run: npm run ap:release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
