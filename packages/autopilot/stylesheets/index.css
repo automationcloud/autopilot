@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@300;400;500;600&display=swap');
 
-@import '../node_modules/@ubio/css/index.css';
+@import '@ubio/css/index.css';
 @import './variables.css';
 @import './transitions.css';
 @import './article.css';

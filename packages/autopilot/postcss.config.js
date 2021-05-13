@@ -3,8 +3,6 @@
 module.exports = {
     map: false,
     plugins: {
-        'postcss-import': {
-            path: [__dirname],
-        },
+        'postcss-import': {},
     },
 };

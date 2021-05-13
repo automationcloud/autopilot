@@ -12,12 +12,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Extract git tag as ENV var
-        run: |
-          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - run: npm run init
+      - uses: actions/setup-node@v2
+        with:
+            node-version: '16.1.0'
+      - run: npm ci
       - run: npm run ap:release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
