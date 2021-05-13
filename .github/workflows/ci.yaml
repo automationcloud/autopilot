@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: automationcloud/chrome:c86-node14
+      image: automationcloud/chrome:c86-node16
       env:
         CHROME_PATH: /opt/latest/chrome
         CHROME_PORT: "9123"
@@ -25,7 +25,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - run: npm i -g npm@7
       - name: checkout
         uses: actions/checkout@v2
       - name: Exclude Autopilot
