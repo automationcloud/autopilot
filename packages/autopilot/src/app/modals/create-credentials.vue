@@ -1,5 +1,5 @@
 <template>
-    <div class="modal modal--narrow">
+    <div class="modal">
         <div class="modal__header">
             <i v-if="param.icon"
                 :class="param.icon"></i>
@@ -9,7 +9,7 @@
 
             <div class="form-row">
                 <div class="form-row__label">
-                    Auth type
+                    Auth Type
                 </div>
 
                 <div class="form-row__controls">
@@ -30,7 +30,7 @@
 
             <div class="form-row">
                 <div class="form-row__label">
-                    Login name
+                    Login Name
                 </div>
                 <div class="form-row__controls">
                     <input v-focus
@@ -269,7 +269,7 @@ export default {
     mounted() {
         // Infer login name from AC auth
         const { firstName } = this.apiLogin.account || {};
-        this.name = firstName;
+        this.name = firstName + ' - ' + this.providerName;
         // Pre-fill custom URLs for OAuth configs
         const oauth1Config = this.configs.find(_ => _.type === 'oauth1');
         if (oauth1Config) {
@@ -327,7 +327,12 @@ export default {
         },
 
         getConfigLabel(type) {
-            return util.capitalize(type.replace('oauth', 'OAuth'));
+            return {
+                basic: 'Basic',
+                bearer: 'Bearer',
+                oauth1: 'OAuth1',
+                oauth2: 'OAuth2',
+            }[type] || '';
         },
 
         login() {

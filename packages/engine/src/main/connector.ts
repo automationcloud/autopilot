@@ -326,7 +326,7 @@ function getParametersJsonString(params: ConnectorParameter[]) {
         '{',
     ];
     params.forEach(param => {
-        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}location: ${param.location}, ${param.description}`);
+        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}${param.description}`);
     });
     str.push('}');
     return str.join('\n');
