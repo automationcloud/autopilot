@@ -47,12 +47,10 @@
                         No Local {{ currentCategory }} {{ searchEnabled ? ' match your search criteria' : '' }}
                     </div>
                     <div class="ext-list">
-                        <ext-item
-                            v-for="manifest in devExtensions"
-                            :key="manifest.name"
-                            :manifest="manifest"
-                            :installed="true"
-                            :isDev="true"/>
+                        <ext-item-dev
+                            v-for="ext in devExtensions"
+                            :key="ext.name"
+                            :ext="ext"/>
                     </div>
                 </template>
             </div>
@@ -105,6 +103,7 @@
 
 <script>
 import ExtItem from './ext-item.vue';
+import ExtItemDev from './ext-item-dev.vue';
 import RequestConnector from './request-connector.vue';
 
 export default {
@@ -118,6 +117,7 @@ export default {
 
     components: {
         ExtItem,
+        ExtItemDev,
         RequestConnector,
     },
 

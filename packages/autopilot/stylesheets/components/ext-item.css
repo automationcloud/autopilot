@@ -1,0 +1,111 @@
+.ext-item {
+    padding: var(--gap);
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    background: var(--ui-color--white);
+    border-bottom: solid 1px var(--color-cool--100);
+
+    --background-color: var(--color-brand-red--500);
+    --icon-border-radius: var(--border-radius);
+}
+.ext-item--connector {
+    --background-color: var(--color-blue--500);
+    --icon-border-radius: 20px;
+}
+
+.ext-item:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.ext-item:last-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+.ext-item:hover {
+    background: var(--color-mono--100);
+}
+
+.ext-headline {
+    margin: var(--gap--small) 0;
+}
+
+.ext-title {
+    font-weight: bold;
+}
+
+.ext-description {
+    margin: var(--gap) 0;
+    color: var(--color-cool--600);
+}
+
+.ext-name {
+    display: inline-block;
+    margin: 0 var(--gap) var(--gap--small) 0;
+    line-height: 1.2;
+    color: var(--color-mono--500);
+}
+
+.ext-tags {
+    display: inline-flex;
+    flex-flow: row nowrap;
+}
+
+.ext-tag {
+    padding: 0 var(--gap--small);
+    margin-right: var(--gap--small);
+    color: #fff;
+    background: var(--background-color);
+    opacity: .4;
+    border-radius: var(--border-radius);
+    line-height: 1.4;
+}
+
+.ext-icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    margin-right: var(--gap);
+    border-radius: var(--icon-border-radius);
+    text-align: center;
+    background: var(--background-color);
+    opacity: .4;
+    color: #fff;
+}
+
+.ext-private {
+    display: inline-block;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: var(--font-size--small);
+    /* background: var(--color-yellow--500); */
+    /* color: #fff; */
+    color: var(--color-yellow--500);
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 4px;
+    border: 2px solid var(--color-yellow--500);
+}
+
+.ext-item--installed .ext-icon {
+    opacity: 1;
+}
+
+.ext-item .icon-help {
+    margin-left: var(--gap--small);
+    color: var(--color-cool--600);
+}
+
+.ext-item .icon-private {
+    margin-left: var(--gap--small);
+    color: var(--color-yellow--400);
+}
+
+.ext-item .icon-public {
+    margin-left: var(--gap--small);
+    color: var(--color-blue--400);
+}

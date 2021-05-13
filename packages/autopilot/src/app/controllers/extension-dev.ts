@@ -89,9 +89,8 @@ export class ExtensionDevController {
 
     availableExtensions(category: string, searchQuery: string) {
         return this.extensions
-            .map(e => e.spec)
-            .filter(spec => (spec.category ?? 'extension') === category)
-            .filter(spec => this.matchesSearchQuery(spec, searchQuery));
+            .filter(ext => (ext.spec.category ?? 'extension') === category)
+            .filter(ext => this.matchesSearchQuery(ext.spec, searchQuery));
     }
 
     matchesSearchQuery(spec: ExtensionSpec, searchQuery: string) {
@@ -165,11 +164,7 @@ export class ExtensionDevController {
         }
     }
 
-    async removeExtension(name: string) {
-        const ext = this.extensions.find(_ => _.spec.name === name);
-        if (!ext) {
-            return;
-        }
+    async removeExtension(ext: Extension) {
         this.unwatch(ext, false);
         this.extensions = this.extensions.filter(_ => _.dir !== ext.dir);
         this.update();
