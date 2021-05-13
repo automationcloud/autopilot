@@ -1,5 +1,5 @@
 <template>
-    <div class="modal modal--narrow">
+    <div class="modal">
         <div class="modal__header">
             <i v-if="param.icon"
                 :class="param.icon"></i>
@@ -7,28 +7,30 @@
         </div>
         <div class="modal__body">
 
-            <template v-if="configs.length > 1">
-                <div class="nav-panel">
-                    <div class="group group--semi-merged">
-                        <button v-for="(conf, index) of configs"
-                            :key="index"
-                            class="button"
-                            :class="{
-                                'button--accent': index === selectedIndex,
-                            }"
-                            @click="selectedIndex = index">
-                            <span v-if="conf.type === 'basic'">Basic</span>
-                            <span v-if="conf.type === 'bearer'">Bearer</span>
-                            <span v-if="conf.type === 'oauth1'">OAuth1</span>
-                            <span v-if="conf.type === 'oauth2'">OAuth2</span>
-                        </button>
-                    </div>
+            <div class="form-row">
+                <div class="form-row__label">
+                    Auth Type
                 </div>
-            </template>
+
+                <div class="form-row__controls">
+                    <template v-if="configs.length === 1">
+                        <span> {{ getConfigLabel(selectedConfig.type) }} </span>
+                    </template>
+                    <select v-else
+                        class="select" v-model="selectedIndex">
+                        <option v-for="(conf, index) of configs"
+                            :key="index"
+                            :value="index"
+                            @click="selectedIndex = index">
+                            {{ getConfigLabel(conf.type) }}
+                        </option>
+                    </select>
+                </div>
+            </div>
 
             <div class="form-row">
                 <div class="form-row__label">
-                    Login name
+                    Login Name
                 </div>
                 <div class="form-row__controls">
                     <input v-focus
@@ -267,7 +269,7 @@ export default {
     mounted() {
         // Infer login name from AC auth
         const { firstName } = this.apiLogin.account || {};
-        this.name = firstName;
+        this.name = firstName + ' - ' + this.providerName;
         // Pre-fill custom URLs for OAuth configs
         const oauth1Config = this.configs.find(_ => _.type === 'oauth1');
         if (oauth1Config) {
@@ -322,6 +324,15 @@ export default {
 
         toHumanLabel(gt) {
             return util.humanize(gt);
+        },
+
+        getConfigLabel(type) {
+            return {
+                basic: 'Basic',
+                bearer: 'Bearer',
+                oauth1: 'OAuth1',
+                oauth2: 'OAuth2',
+            }[type] || '';
         },
 
         login() {
