@@ -9,19 +9,20 @@
 
             <div class="form-row">
                 <div class="form-row__label">
-                    Auth Type
+                    Auth type
                 </div>
 
                 <div class="form-row__controls">
-                    <select class="select" v-model="selectedIndex">
+                    <template v-if="configs.length === 1">
+                        <span> {{ getConfigLabel(selectedConfig.type) }} </span>
+                    </template>
+                    <select v-else
+                        class="select" v-model="selectedIndex">
                         <option v-for="(conf, index) of configs"
                             :key="index"
                             :value="index"
                             @click="selectedIndex = index">
-                            <span v-if="conf.type === 'basic'">Basic</span>
-                            <span v-if="conf.type === 'bearer'">Bearer</span>
-                            <span v-if="conf.type === 'oauth1'">OAuth1</span>
-                            <span v-if="conf.type === 'oauth2'">OAuth2</span>
+                            {{ getConfigLabel(conf.type) }}
                         </option>
                     </select>
                 </div>
@@ -323,6 +324,10 @@ export default {
 
         toHumanLabel(gt) {
             return util.humanize(gt);
+        },
+
+        getConfigLabel(type) {
+            return util.capitalize(type.replace('oauth', 'OAuth'));
         },
 
         login() {
