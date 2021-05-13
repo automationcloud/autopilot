@@ -30,6 +30,7 @@ jobs:
       - name: Exclude Autopilot
         run: rm -rf packages/autopilot && sed /autopilot/d tsconfig.json > temp && mv temp tsconfig.json
       - run: npm ci
+      - run: chown -R node .
       - run: npm run compile
       - run: npm run lint
       - run: npm test
