@@ -157,13 +157,23 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
             let path = this.$endpoint.path;
             const options: r.RequestOptions = {
                 headers: {
-                    'content-type': 'application/json'
-                }
+                    'content-type': 'application/json',
+                    ...(evaluatedParams.headers ?? {}),
+                },
+                body: evaluatedParams.body ?? null
             };
             // merge the evaluated parameters with parameter definitions from the spec
             for (const param of this.$endpoint.parameters) {
                 const { key } = param;
-                const val = evaluatedParams[key] ?? param.default;
+                let val = evaluatedParams[key] ?? param.default;
+
+                // check params are delivered by headers or body object
+                if (!val && param.location === 'header') {
+                    val = options.headers![key] ?? undefined;
+                }
+                if (!val && param.location === 'body') {
+                    val = options.body && options.body[key] ? options.body[key] : undefined;
+                }
                 if (!val) {
                     if (param.required) {
                         throw util.createError({
@@ -316,7 +326,7 @@ function getParametersJsonString(params: ConnectorParameter[]) {
         '{',
     ];
     params.forEach(param => {
-        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}${param.description}`);
+        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}location: ${param.location}, ${param.description}`);
     });
     str.push('}');
     return str.join('\n');
