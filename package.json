@@ -15,8 +15,7 @@
         "test": "lerna run test --stream --concurrency 1",
         "docs": "lerna run docs && git add docs/",
         "release": "lerna version --force-publish -y && lerna publish from-git -y",
-        "preversion": "npm run clean && npm run compile && npm run docs",
-        "ci:bootstrap": "npm i && lerna bootstrap --ci"
+        "preversion": "npm run clean && npm run compile && npm run docs"
     },
     "workspaces": [
         "packages/*"
