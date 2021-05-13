@@ -25,11 +25,11 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      - run: npm i -g npm@7
       - name: checkout
         uses: actions/checkout@v2
       - name: Exclude Autopilot
         run: rm -rf packages/autopilot && sed /autopilot/d tsconfig.json > temp && mv temp tsconfig.json
-      - run: npm i -g npm@7
       - run: npm ci
       - run: npm run compile
       - run: npm run lint
