@@ -1,19 +1,15 @@
 FROM automationcloud/chrome:c86-node14
 
 ARG VERSION
-ARG NPM_TOKEN
 
 ENV ROOT /home/node/worker-image
 WORKDIR ${ROOT}
 
-RUN npm config set '//registry.npmjs.org/:_authToken' ${NPM_TOKEN}
 RUN npm init -y
 
 RUN npm i @automationcloud/worker@${VERSION#refs/tags/} --no-package-lock
 
 COPY setup/* ./
-
-RUN ls -lia
 
 # Configure VNC
 
