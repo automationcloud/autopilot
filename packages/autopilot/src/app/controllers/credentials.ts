@@ -138,7 +138,6 @@ export class CredentialsController {
                 if (!config.customConfig) {
                     data.authorizationUrl = config.authorizationUrl;
                     data.tokenUrl = config.tokenUrl;
-                    data.scope = config.scope;
                 }
                 const url = new URL('/v1/oauth2', SSO_SERVICE_URL);
                 url.searchParams.set('authorizationURL', data.authorizationUrl);

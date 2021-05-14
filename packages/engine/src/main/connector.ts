@@ -209,9 +209,11 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
             // convert body
             if (isFormData) {
                 options.headers!['content-type'] = 'application/x-www-form-urlencoded';
-                options.body = new URLSearchParams(options.body ?? {});
+                const formData = new URLSearchParams(options.body ?? {});
+                options.body = formData.toString();
+            } else {
+                options.body = options.body != null ? JSON.stringify(options.body) : null;
             }
-            options.body = options.body != null ? JSON.stringify(options.body) : null;
             return { options, path };
         }
     }
