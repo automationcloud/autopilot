@@ -200,6 +200,17 @@
                             v-model.trim="oauth2.clientSecret"/>
                     </div>
                 </div>
+
+                <div class="form-row">
+                    <div class="form-row__label">
+                        Scopes
+                    </div>
+                    <div class="form-row__controls">
+                        <input type="text"
+                            class="input stretch"
+                            v-model.trim="oauth2.scope"/>
+                    </div>
+                </div>
             </div>
 
             <div class="help box box--blue"
@@ -259,6 +270,7 @@ export default {
             oauth2: {
                 clientId: '',
                 clientSecret: '',
+                scope: '',
                 // Those are only modified when `config.customConfig: true`
                 authorizationUrl: '',
                 tokenUrl: '',
@@ -280,6 +292,7 @@ export default {
         }
         const oauth2Config = this.configs.find(_ => _.type === 'oauth2');
         if (oauth2Config) {
+            this.oauth2.scope = oauth2Config.scope;
             this.oauth2.tokenUrl = oauth2Config.tokenUrl;
             this.oauth2.authorizationUrl = oauth2Config.authorizationUrl;
         }
