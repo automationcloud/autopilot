@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const file = path.join(process.cwd(), 'node_modules/app-builder-lib/out/fileMatcher.js');
+const file = path.join(process.cwd(), '../../node_modules/app-builder-lib/out/fileMatcher.js');
 
 const text = fs.readFileSync(file, 'utf-8');
 const badLine = /(const excludedExts = ".*),d.ts(";)/;
