@@ -36,6 +36,7 @@ const providedControllers = createControllerProvider(app);
 const localNodeModules = [
     path.join(getAppPath(), 'node_modules'),
     path.join(getAppPath(), 'node_modules', '@automationcloud', 'engine', 'node_modules'),
+    path.join(getAppPath(), '../../node_modules'),
 ];
 require('module').globalPaths.push(...localNodeModules);
 
