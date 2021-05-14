@@ -139,6 +139,7 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
                 return el.value;
             });
             util.checkType(data, 'object', 'Parameters');
+            const { options, path } = this.getRequestSpec(data);
             const { method } = this.$endpoint;
             const auth = await this.$credentials.getAuthAgent(this.auth);
             const request = new r.Request({
@@ -208,8 +209,8 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
             // convert body
             if (isFormData) {
                 options.headers!['content-type'] = 'application/x-www-form-urlencoded';
-                const url = new URLSearchParams(options.body ?? {});
-                options.body = url.toString();
+                const formData = new URLSearchParams(options.body ?? {});
+                options.body = formData.toString();
             } else {
                 options.body = options.body != null ? JSON.stringify(options.body) : null;
             }
