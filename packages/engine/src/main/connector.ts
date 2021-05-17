@@ -174,7 +174,7 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
                 if (!val && param.location === 'body') {
                     val = options.body && options.body[key] ? options.body[key] : undefined;
                 }
-                if (!val) {
+                if (val === undefined) {
                     if (param.required) {
                         throw util.createError({
                             code: 'ParameterValidationError',

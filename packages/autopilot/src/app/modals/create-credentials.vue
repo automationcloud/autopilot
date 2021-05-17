@@ -323,7 +323,7 @@ export default {
                 case 'bearer':
                     return this.bearer.token;
                 case 'oauth1':
-                    return this.isFilled(this.oauth1, ['privateKey']);
+                    return this.isFilled(this.oauth1, ['privateKey', 'scope']);
                 case 'oauth2':
                     return this.isFilled(this.oauth2);
                 default:
