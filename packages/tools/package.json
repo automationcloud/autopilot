@@ -33,7 +33,7 @@
         "semver": "^7.3.2"
     },
     "devDependencies": {
-        "inversify": "^5.0.1",
+        "inversify": "^5.1.1",
         "moment": "^2.27.0"
     }
 }
