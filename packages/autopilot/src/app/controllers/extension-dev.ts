@@ -227,7 +227,7 @@ export class ExtensionDevController {
     async symlinkDependencies(dir: string) {
         // Engine from extension directory must be symlinked to Autopilot's embedded version
         const packageNames = [`@automationcloud/engine`];
-        const localNodeModules = path.join(getAppPath(), 'node_modules');
+        const localNodeModules = path.join(getAppPath(), '../../node_modules');
         const extNodeModules = path.join(dir, 'node_modules');
         for (const pkgName of packageNames) {
             try {
@@ -238,6 +238,8 @@ export class ExtensionDevController {
                 if (!localStat.isDirectory()) {
                     throw new Error(`Cannot initialize local extension: expected ${localPath} to be a directory`);
                 }
+                // make sure extPath exist
+                await fs.mkdir(extPath, { recursive: true });
                 // Check if it's already a symlink
                 const extStat = await fs.lstat(extPath);
                 if (extStat.isSymbolicLink()) {
