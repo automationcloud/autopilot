@@ -85,7 +85,7 @@
         "chalk": "^4.1.0",
         "css-loader": "^3.5.3",
         "electron": "9.1.2",
-        "electron-builder": "^22.11.4",
+        "electron-builder": "^22.10.5",
         "electron-notarize": "^1.0.0",
         "file-loader": "^4.2.0",
         "form-data": "^3.0.0",
