@@ -41,7 +41,8 @@ export interface ConnectorEndpoint {
     description: string;
     path: string;
     method: string;
-    parameters: ConnectorParameter[]
+    parameters: ConnectorParameter[],
+    body?: any;
 }
 
 export interface ConnectorParameter {
@@ -115,12 +116,7 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
             super.init(spec);
             this.auth = spec.auth ?? null;
             if (this.pipeline.length === 0) {
-                this.pipeline = new Pipeline(this, 'pipeline', [
-                    {
-                        type: 'Value.getJson',
-                        value: getParametersJsonString(this.$endpoint.parameters),
-                    }
-                ]);
+                this.pipeline = new Pipeline(this, 'pipeline', getPipeline(this.$endpoint));
             }
         }
 
@@ -318,6 +314,26 @@ export function validateMetadata(value: any, throwInvalid: boolean = false) {
 
 export function validateEndpoint(value: any, throwInvalid: boolean = false) {
     return validate(endpointSchema, value, throwInvalid);
+}
+
+function getPipeline(endpoint: ConnectorEndpoint) {
+    const pipeline: any = [
+        {
+            type: 'Value.getJson',
+            value: getParametersJsonString(endpoint.parameters),
+        }
+    ];
+    if (endpoint.body) {
+        pipeline.push({
+            type: 'Object.setPath',
+            path: '/body',
+            pipeline: [{
+                type: 'Value.getJson',
+                value: JSON.stringify(endpoint.body, null, 2),
+            }]
+        });
+    }
+    return pipeline;
 }
 
 // builds the Value.getJson to document the parameters for an endpoint
