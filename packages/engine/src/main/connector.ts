@@ -323,13 +323,22 @@ function getPipeline(endpoint: ConnectorEndpoint) {
             value: getParametersJsonString(endpoint.parameters),
         }
     ];
+
+    // Some complicated body parameters can not be described as parameters (e.g. nested object)
+    // In that case add spec can specify arbitrary `body` and when the connector runs, it will use this value
+    // if the key was specified in Parameters, the value provided by parameter precedence over the value in `body`.
     if (endpoint.body) {
+        const body = [
+            '// Body for this endpoint.',
+            '// Please take a look at the documentation for the detailed schema',
+        ];
+        body.push(JSON.stringify(endpoint.body, null, 2));
         pipeline.push({
             type: 'Object.setPath',
             path: '/body',
             pipeline: [{
                 type: 'Value.getJson',
-                value: JSON.stringify(endpoint.body, null, 2),
+                value: body.join('\n'),
             }]
         });
     }
