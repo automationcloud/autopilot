@@ -41,7 +41,8 @@ export interface ConnectorEndpoint {
     description: string;
     path: string;
     method: string;
-    parameters: ConnectorParameter[]
+    parameters: ConnectorParameter[],
+    body?: any;
 }
 
 export interface ConnectorParameter {
@@ -115,12 +116,7 @@ function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoin
             super.init(spec);
             this.auth = spec.auth ?? null;
             if (this.pipeline.length === 0) {
-                this.pipeline = new Pipeline(this, 'pipeline', [
-                    {
-                        type: 'Value.getJson',
-                        value: getParametersJsonString(this.$endpoint.parameters),
-                    }
-                ]);
+                this.pipeline = new Pipeline(this, 'pipeline', getPipeline(this.$endpoint));
             }
         }
 
@@ -318,6 +314,35 @@ export function validateMetadata(value: any, throwInvalid: boolean = false) {
 
 export function validateEndpoint(value: any, throwInvalid: boolean = false) {
     return validate(endpointSchema, value, throwInvalid);
+}
+
+function getPipeline(endpoint: ConnectorEndpoint) {
+    const pipeline: any = [
+        {
+            type: 'Value.getJson',
+            value: getParametersJsonString(endpoint.parameters),
+        }
+    ];
+
+    // Some complicated body parameters can not be described as parameters (e.g. nested object)
+    // In that case add spec can specify arbitrary `body` and when the connector runs, it will use this value
+    // if the key was specified in Parameters, the value provided by parameter precedence over the value in `body`.
+    if (endpoint.body) {
+        const body = [
+            '// Body for this endpoint.',
+            '// Please take a look at the documentation for the detailed schema',
+        ];
+        body.push(JSON.stringify(endpoint.body, null, 2));
+        pipeline.push({
+            type: 'Object.setPath',
+            path: '/body',
+            pipeline: [{
+                type: 'Value.getJson',
+                value: body.join('\n'),
+            }]
+        });
+    }
+    return pipeline;
 }
 
 // builds the Value.getJson to document the parameters for an endpoint
