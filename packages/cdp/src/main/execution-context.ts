@@ -36,6 +36,11 @@ export class ExecutionContext {
      */
     isAlive: boolean = true;
 
+    protected listeners = {
+        onExecutionContextsCleared: this.onExecutionContextsCleared.bind(this),
+        onExecutionContextDestroyed: this.onExecutionContextDestroyed.bind(this),
+    }
+
     /**
      * Creates a new execution context.
      *
@@ -46,12 +51,8 @@ export class ExecutionContext {
         readonly frame: Frame,
         readonly executionContextId: string,
     ) {
-        this.page.target.on('Runtime.executionContextsCleared', () => this.isAlive = false);
-        this.page.target.on('Runtime.executionContextDestroyed', ev => {
-            if (ev.executionContextId === this.executionContextId) {
-                this.isAlive = false;
-            }
-        });
+        this.target.addListener('Runtime.executionContextsCleared', this.listeners.onExecutionContextsCleared);
+        this.target.addListener('Runtime.executionContextDestroyed', this.listeners.onExecutionContextDestroyed);
     }
 
     /**
@@ -59,6 +60,13 @@ export class ExecutionContext {
      */
     get page() {
         return this.frame.page;
+    }
+
+    /**
+     * @returns The target this execution context belongs to.
+     */
+    get target() {
+        return this.page.target;
     }
 
     /**
@@ -223,6 +231,22 @@ export class ExecutionContext {
                 expression: source,
             });
         }
+    }
+
+    protected onExecutionContextsCleared() {
+        this.onDestroyed();
+    }
+
+    protected onExecutionContextDestroyed(ev: { executionContextId: string}) {
+        if (ev.executionContextId === this.executionContextId) {
+            this.onDestroyed();
+        }
+    }
+
+    protected onDestroyed() {
+        this.isAlive = false;
+        this.target.removeListener('Runtime.executionContextsCleared', this.listeners.onExecutionContextsCleared);
+        this.target.removeListener('Runtime.executionContextDestroyed', this.listeners.onExecutionContextDestroyed);
     }
 }
 
