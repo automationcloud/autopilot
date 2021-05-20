@@ -27,20 +27,19 @@ const TARGET_ATTACH_TIMEOUT = 1000;
  * @internal
  */
 export class Connection {
-    browser!: Browser;
-    webSocketDebuggerUrl?: string;
-    ws?: WebSocket;
-    sessions: Map<string, Target> = new Map();
-    private awaitingCommands: Map<number, CommandHandler> = new Map();
-    private nextCommandId: number = 1;
+    protected browser: Browser;
+    protected sessions: Map<string, Target> = new Map();
+    protected ws: WebSocket | null = null;
+    protected awaitingCommands: Map<number, CommandHandler> = new Map();
+    protected nextCommandId: number = 1;
+
+    protected listeners = {
+        onMessage: this.onMessage.bind(this),
+        onClose: this.onClose.bind(this),
+    };
 
     constructor(browser: Browser) {
-        Object.defineProperties(this, {
-            browser: {
-                get: () => browser,
-                enumerable: false,
-            },
-        });
+        this.browser = browser;
         browser.on('global:Target.targetCreated', ev => this.onTargetCreated(ev));
         browser.on('global:Target.targetDestroyed', ev => this.onTargetDestroyed(ev));
         browser.on('global:Target.attachedToTarget', ev => this.onAttachedToTarget(ev));
@@ -57,26 +56,46 @@ export class Connection {
             return;
         }
         return new Promise<void>((resolve, reject) => {
-            this.webSocketDebuggerUrl = webSocketDebuggerUrl;
             const ws = new WebSocket(webSocketDebuggerUrl, {
                 perMessageDeflate: false,
             });
             ws.on('open', () => {
-                this.browser.emit('connect');
+                this.attachWebSocket(ws);
                 resolve();
             });
-            ws.on('message', this.onMessage.bind(this));
-            ws.on('close', this.onClose.bind(this));
             ws.on('error', reject);
-            // Make websocket non-enumerable to avoid Vue observers
-            Object.defineProperties(this, {
-                ws: {
-                    get: () => ws,
-                    enumerable: false,
-                    configurable: true,
-                },
+        });
+    }
+
+    attachWebSocket(ws: WebSocket) {
+        if (this.ws) {
+            return;
+        }
+        ws.addListener('message', this.listeners.onMessage);
+        ws.addListener('close', this.listeners.onClose);
+        this.ws = ws;
+        this.browser.emit('connect');
+    }
+
+    detachWebSocket() {
+        const { ws } = this;
+        if (!ws) {
+            return;
+        }
+        ws.removeListener('message', this.listeners.onMessage);
+        ws.removeListener('close', this.listeners.onClose);
+        this.ws = null;
+        this.browser.emit('disconnect');
+        this.rejectAll(cmd => {
+            return new Exception({
+                name: 'CdpDisconnected',
+                message: 'CDP: connection to browser endpoint lost',
+                retry: true,
+                details: { method: cmd.method, params: cmd.params },
             });
         });
+        this.awaitingCommands.clear();
+        this.sessions.clear();
     }
 
     disconnect() {
@@ -234,31 +253,15 @@ export class Connection {
         });
     }
 
-    private onClose() {
-        Object.defineProperties(this, {
-            ws: {
-                get() {
-                    return null;
-                },
-                enumerable: false,
-                configurable: true,
-            },
-        });
-        this.browser.emit('disconnect');
-        this.rejectAll(cmd => {
-            return new Exception({
-                name: 'CdpDisconnected',
-                message: 'CDP: connection to browser endpoint lost',
-                retry: true,
-                details: { method: cmd.method, params: cmd.params },
-            });
-        });
-        // Cleanup
-        this.awaitingCommands.clear();
-        this.sessions.clear();
+    attachedTargets() {
+        return this.sessions.values();
     }
 
-    private onMessage(data: string) {
+    protected onClose() {
+        this.detachWebSocket();
+    }
+
+    protected onMessage(data: string) {
         const message = JSON.parse(data);
         if (message.id) {
             // Command response
@@ -305,7 +308,7 @@ export class Connection {
         }
     }
 
-    private onTargetCreated(params: { targetInfo: CdpTargetInfo }) {
+    protected onTargetCreated(params: { targetInfo: CdpTargetInfo }) {
         const { targetId } = params.targetInfo;
         this.sendAndForget({
             method: 'Target.attachToTarget',
@@ -316,7 +319,7 @@ export class Connection {
         });
     }
 
-    private onTargetDestroyed(params: { targetId: string }) {
+    protected onTargetDestroyed(params: { targetId: string }) {
         const { targetId } = params;
         const target = this.findTargetById(targetId);
         if (target) {
@@ -324,17 +327,17 @@ export class Connection {
         }
     }
 
-    private onAttachedToTarget(params: { sessionId: string; targetInfo: CdpTargetInfo }) {
+    protected onAttachedToTarget(params: { sessionId: string; targetInfo: CdpTargetInfo }) {
         const { sessionId, targetInfo } = params;
         this.addSession(sessionId, targetInfo);
     }
 
-    private onDetachedFromTarget(params: { sessionId: string }) {
+    protected onDetachedFromTarget(params: { sessionId: string }) {
         const { sessionId } = params;
         this.removeSession(sessionId);
     }
 
-    private onTargetInfoChanged(params: { targetInfo: CdpTargetInfo }) {
+    protected onTargetInfoChanged(params: { targetInfo: CdpTargetInfo }) {
         const { targetId } = params.targetInfo;
         const target = this.findTargetById(targetId);
         if (target) {

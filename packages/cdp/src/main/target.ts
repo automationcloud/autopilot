@@ -45,7 +45,6 @@ export class Target extends EventEmitter {
         this.url = targetInfo.url;
         this.title = targetInfo.title;
         this.browserContextId = targetInfo.browserContextId || null;
-        browser.connection.sessions.set(sessionId, this);
         this.on('Inspector.targetCrashed', () => this.onTargetCrashed());
     }
 

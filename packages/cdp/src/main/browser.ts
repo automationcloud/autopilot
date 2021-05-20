@@ -128,7 +128,7 @@ export class Browser extends EventEmitter {
     }
 
     attachedTargets(): IterableIterator<Target> {
-        return this.connection.sessions.values();
+        return this.connection.attachedTargets();
     }
 
     *attachedPages(): IterableIterator<Page> {

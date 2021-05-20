@@ -53,7 +53,7 @@ matching specified criteria.
         const hostnameRegexp = this.hostnameRegexp;
         const pathnameRegexp = this.pathnameRegexp;
         const pages = [];
-        const targets = [...this.$browser.connection.sessions.values()];
+        const targets = [...this.$browser.attachedTargets()];
         for (const target of targets) {
             const { url, type } = target;
             if (type !== targetType || !target.isValidTarget()) {
