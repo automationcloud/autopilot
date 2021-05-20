@@ -125,6 +125,18 @@
                         @input="setValue('UI_DIFF_ENABLED', $event)"/>
                 </div>
             </div>
+            <div class="pane__item"
+                v-if="devMode.isEnabled()">
+                <div class="pane__main">
+                    Enable Pipeline feedback
+                    <i class="fas fa-question-circle icon-help"
+                        title="This will disable intermediate results in pipelines."></i>
+                </div>
+                <div class="pane__aside">
+                    <toggle :value="getValue('UI_PIPE_FEEDBACK_ENABLED')"
+                        @input="setValue('UI_PIPE_FEEDBACK_ENABLED', $event)"/>
+                </div>
+            </div>
             <div class="pane__item">
                 <div class="pane__main">
                     Show verbose feedback in Pipelines

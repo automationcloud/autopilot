@@ -44,7 +44,6 @@ export class RuntimeCtx {
         pipelinesExecuted: 0,
     };
     $stack: CtxStackFrame[] = [];
-    $stash: any = {};
     $screenshotTaken: boolean = false;
 
     constructor(action: Action) {

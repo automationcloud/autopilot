@@ -11,9 +11,9 @@
 <script>
 import debouncePromise from 'debounce-promise';
 
+import PipeList from './pipe-list.vue';
 import PipelineInput from './pipeline-input.vue';
 import PipelineOutcomes from './pipeline-outcomes.vue';
-import PipeList from './pipe-list.vue';
 
 const DEFAULT_STATE = {
     spotlight: {
@@ -27,6 +27,10 @@ const DEFAULT_STATE = {
 };
 
 export default {
+
+    inject: [
+        'scriptEditor'
+    ],
 
     components: {
         PipelineInput,
@@ -78,7 +82,7 @@ export default {
             this.error = null;
             this.introspectionResults = [];
             const ctx = pipeline.$action.createCtx();
-            ctx.$introspectionEnabled = true;
+            ctx.$introspectionEnabled = this.scriptEditor.isPipeFeedbackEnabled();
             ctx.$introspectionSpotlight = this.spotlight;
             try {
                 this.outcomes = await pipeline.selectAll(inputSet, ctx);

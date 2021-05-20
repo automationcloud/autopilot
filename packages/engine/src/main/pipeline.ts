@@ -155,7 +155,7 @@ export class Pipeline extends model.EntityList<Unit<any>, Pipe> {
      *  and can be passed here.
      */
     async selectAll(list: Element[], ctx: RuntimeCtx): Promise<Element[]> {
-        if (ctx.$introspectionResults) {
+        if (ctx.$introspectionEnabled) {
             ctx.$introspectionResults.push({
                 pipelineId: this.id,
                 inputSet: list,
@@ -193,7 +193,7 @@ export class Pipeline extends model.EntityList<Unit<any>, Pipe> {
                     });
                 }
             } catch (error) {
-                if (ctx.$introspectionResults) {
+                if (ctx.$introspectionEnabled) {
                     ctx.$introspectionResults.push({
                         pipeId: pipe.id,
                         inputSet: nextInputSet,
