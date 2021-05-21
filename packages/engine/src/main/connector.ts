@@ -353,7 +353,8 @@ function getParametersJsonString(params: ConnectorParameter[]) {
         '{',
     ];
     params.forEach(param => {
-        str.push(`  "${param.key}": ${param.default ?? null}, // ${param.required ? '*' : ''}${param.description}`);
+        const defaultValue = typeof param.default === 'string' ? `"${param.default}"` : param.default;
+        str.push(`  "${param.key}": ${defaultValue ?? null}, // ${param.required ? '*' : ''}${param.description}`);
     });
     str.push('}');
     return str.join('\n');
