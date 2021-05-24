@@ -84,7 +84,7 @@ function buildConnectorClass(spec: {
     endpoint: ConnectorEndpoint,
 }) {
     const { namespace, metadata, endpoint } = spec;
-    const type = `${namespace}.${endpoint.name}`;
+    const type = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
     class ConnectorAction extends Action {
         static $type = type;
         static $help = endpoint.description + (metadata.docUrl ? `\n\n Check documentation here: ${metadata.docUrl}` : '');
