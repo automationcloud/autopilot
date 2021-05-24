@@ -55,7 +55,7 @@ export interface ConnectorParameter {
 
 export type ConnectorParameterLocation = 'path' | 'query' | 'body' | 'formData' | 'header';
 
-export function buildConnectors(namespace: string, spec: ConnectorSpec) {
+export function buildConnectors(namespace: string, spec: ConnectorSpec, _options = {}) {
     // validate meta only. which we throws when invalid
     const metadata: ConnectorMetadata = {
         icon: spec.icon,
@@ -71,27 +71,31 @@ export function buildConnectors(namespace: string, spec: ConnectorSpec) {
         if (!valid) {
             continue;
         }
-        const ConnectorActionClass = buildConnectorClass(namespace, metadata, endpoint);
+        const ConnectorActionClass = buildConnectorClass({ namespace, metadata, endpoint });
         actions[ConnectorActionClass.$type] = ConnectorActionClass;
     }
 
     return actions;
 }
 
-function buildConnectorClass(namespace: string, meta: ConnectorMetadata, endpoint: ConnectorEndpoint) {
-    const type = `${namespace}.${endpoint.name}.${endpoint.method.toLocaleLowerCase()}`;
-
+function buildConnectorClass(spec: {
+    namespace: string,
+    metadata: ConnectorMetadata,
+    endpoint: ConnectorEndpoint,
+}) {
+    const { namespace, metadata, endpoint } = spec;
+    const type = `${namespace}.${endpoint.name}`;
     class ConnectorAction extends Action {
         static $type = type;
-        static $help = endpoint.description + (meta.docUrl ? `\n\n Check documentation here: ${meta.docUrl}` : '');
-        static $icon = `${!meta.icon.match(/http/) ? 'fab ' : ''}${meta.icon}`;
-        $baseUrl = meta.baseUrl;
+        static $help = endpoint.description + (metadata.docUrl ? `\n\n Check documentation here: ${metadata.docUrl}` : '');
+        static $icon = `${!metadata.icon.match(/http/) ? 'fab ' : ''}${metadata.icon}`;
+        $baseUrl = metadata.baseUrl;
         $endpoint = endpoint;
 
         @params.Credentials({
             label: 'Auth',
             providerName: namespace,
-            configs: meta.auth,
+            configs: metadata.auth,
         })
         auth!: CredentialsConfig | null;
 
@@ -226,11 +230,11 @@ async function parseResponse(res: Response) {
         body: null,
     };
     for (const [k, v] of res.headers) {
-        response.headers[k] = v;
+        response.headers[k.toLowerCase()] = v;
     }
-    try {
+    if (response.headers['content-type'].includes('application/json')) {
         response.body = await res.json();
-    } catch (_err) {
+    } else {
         response.body = await res.text();
     }
 

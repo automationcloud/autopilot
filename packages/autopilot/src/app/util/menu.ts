@@ -62,8 +62,11 @@ export function *buildMenuItems<T extends Module>(
 
 export function createLabel<T extends Module>(module: T) {
     const { ns, method } = module.$metadata;
-    if (method.indexOf('.') !== method.lastIndexOf('.')) {
-        return method.substring(method.lastIndexOf('.') + 1);
+    if (method.indexOf('.') === -1) {
+        // non nested items will display full name with styling
+        return `<span class="subtle">${ns}.</span>${method}`;
     }
-    return `<span class="subtle">${ns}.</span>${method}`;
+
+    // nested items will display the last chunk of name
+    return method.substring(method.lastIndexOf('.') + 1);
 }
