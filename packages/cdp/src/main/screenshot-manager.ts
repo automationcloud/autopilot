@@ -15,6 +15,8 @@
 import { Page } from './page';
 import { RemoteElement } from './remote-element';
 
+const SCREENSHOT_TIMEOUT = 500;
+
 // TODO move to Engine
 export class ScreenshotManager {
     page: Page;
@@ -26,7 +28,7 @@ export class ScreenshotManager {
     async captureViewport(options: ScreenshotOptions = {}) {
         const { format = 'jpeg', quality = 50 } = options;
         const { visualViewport } = await this.page.getLayoutMetrics();
-        const { data } = await this.page.send('Page.captureScreenshot', { format, quality });
+        const { data } = await this.page.send('Page.captureScreenshot', { format, quality }, SCREENSHOT_TIMEOUT);
         const { clientWidth, clientHeight } = visualViewport;
         return {
             width: clientWidth,
@@ -58,7 +60,7 @@ export class ScreenshotManager {
                 height,
                 scale: 1,
             },
-        });
+        }, SCREENSHOT_TIMEOUT);
         return {
             width,
             height,
@@ -86,7 +88,7 @@ export class ScreenshotManager {
             width,
             height,
         });
-        const { data } = await this.page.send('Page.captureScreenshot', { format, quality });
+        const { data } = await this.page.send('Page.captureScreenshot', { format, quality }, SCREENSHOT_TIMEOUT);
         this.page.browser.emit('emulationInvalid');
         return {
             width,

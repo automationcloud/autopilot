@@ -131,12 +131,10 @@ export class TestRig {
     createPipeline(pipes: any[]): Pipeline {
         const script = this.createScript({});
         const context = script.getMainContext();
-        const def = context.definitions.insert(
-            {
-                type: 'definition',
-                pipeline: pipes,
-            },
-            0);
+        const def = context.definitions.insert({
+            type: 'definition',
+            pipeline: pipes,
+        }, 0);
         return (def as any).pipeline;
     }
 
