@@ -33,10 +33,13 @@ export function *buildMenuItems<T extends Module>(
 ): IterableIterator<ModalMenuItem> {
     const itemsForSubmenu = [];
     const subMenuLabels = new Set<string>();
-    for (const item of items.filter(_ => _.$type.startsWith(prefix))) {
-        const name = item.$type.replace(prefix + '.', '');
+
+    const path = prefix + '.';
+    for (const item of items.filter(_ => _.$type.startsWith(path))) {
+        const name = item.$type.replace(path, '');
+
+        // no more depth, push the actual action, not submenu
         if (!name.includes('.')) {
-            // push item
             yield {
                 ...itemFn(item),
                 label: item.$type,
@@ -44,8 +47,7 @@ export function *buildMenuItems<T extends Module>(
                 deprecated: item.$deprecated,
             };
         } else {
-            // next chunk of word becomes label
-            // other goes into submenu
+            // next chunk of word becomes submenu label (e.g. Fetch.get => label: Fetch)
             const label = name.substring(0, name.indexOf('.'));
             subMenuLabels.add(label);
             itemsForSubmenu.push(item);
