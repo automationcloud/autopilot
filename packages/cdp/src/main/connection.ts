@@ -65,7 +65,6 @@ export class Connection {
             });
             ws.on('error', reject);
         });
-        await this.refreshTargets();
     }
 
     attachWebSocket(ws: WebSocket) {
@@ -139,12 +138,13 @@ export class Connection {
     async refreshTargets() {
         const res = await this.send({ method: 'Target.getTargets', params: {} });
         const targets = res.targetInfos as CdpTargetInfo[];
-        for (const target of targets) {
-            await this.send({
+        const promises = targets.map(target => {
+            return this.send({
                 method: 'Target.attachToTarget',
                 params: { targetId: target.targetId, flatten: true }
             });
-        }
+        });
+        await Promise.all(promises);
     }
 
     async waitForTarget(targetId: string): Promise<Target> {
@@ -175,13 +175,13 @@ export class Connection {
         return null;
     }
 
-    addSession(sessionId: string, targetInfo: CdpTargetInfo) {
+    protected addSession(sessionId: string, targetInfo: CdpTargetInfo) {
         const target = new Target(this.browser, sessionId, targetInfo);
         this.sessions.set(sessionId, target);
         this.browser.emit('targetAttached', target);
     }
 
-    removeSession(sessionId: string): void {
+    protected removeSession(sessionId: string): void {
         this.rejectAllForTarget(sessionId, cmd => {
             const { method, params } = cmd;
             return new Exception({

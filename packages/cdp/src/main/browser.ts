@@ -79,6 +79,7 @@ export class Browser extends EventEmitter {
         const version = await this.getVersion();
         await this.connection.connect(version.webSocketDebuggerUrl);
         await this.send('Target.setDiscoverTargets', { discover: true });
+        await this.connection.refreshTargets();
     }
 
     async close() {
@@ -120,7 +121,7 @@ export class Browser extends EventEmitter {
     }
 
     async getPageForTarget(targetId: string): Promise<Page | null> {
-        const target = this.getTarget(targetId);
+        const target = await this.connection.waitForTarget(targetId);
         if (target && target.isPageTarget()) {
             return await target.getPage();
         }
