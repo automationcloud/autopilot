@@ -55,7 +55,7 @@ export class Connection {
         if (this.ws) {
             return;
         }
-        return new Promise<void>((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             const ws = new WebSocket(webSocketDebuggerUrl, {
                 perMessageDeflate: false,
             });
@@ -65,6 +65,7 @@ export class Connection {
             });
             ws.on('error', reject);
         });
+        await this.refreshTargets();
     }
 
     attachWebSocket(ws: WebSocket) {
@@ -133,6 +134,17 @@ export class Connection {
             });
         }
         return this.sessions.get(sessionId)!;
+    }
+
+    async refreshTargets() {
+        const res = await this.send({ method: 'Target.getTargets', params: {} });
+        const targets = res.targetInfos as CdpTargetInfo[];
+        for (const target of targets) {
+            await this.send({
+                method: 'Target.attachToTarget',
+                params: { targetId: target.targetId, flatten: true }
+            });
+        }
     }
 
     async waitForTarget(targetId: string): Promise<Target> {
