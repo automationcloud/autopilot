@@ -53,7 +53,11 @@ export class ExtensionLoaderController {
         ];
         this.resolver.purgeExtensions();
         for (const ext of extensions) {
-            this.resolver.addExtension(ext);
+            try {
+                this.resolver.addExtension(ext);
+            } catch (err) {
+                console.warn(`Cannot load extension ${ext.spec.name}:${ext.spec.version}`, err);
+            }
         }
         this.events.emit('scriptInvalidated');
     }

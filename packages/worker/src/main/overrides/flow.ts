@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { FlowService, Logger, ReporterService, Script, util } from '@automationcloud/engine';
+import { BrowserService, FlowService, Logger, ReporterService, Script, util } from '@automationcloud/engine';
 import { inject, injectable } from 'inversify';
 
 import { ApiService } from '../services/api';
@@ -32,25 +32,27 @@ export class WorkerFlowService extends FlowService {
         protected reporter: ReporterService,
         @inject(ApiService)
         protected api: ApiService,
+        @inject(BrowserService)
+        protected browser: BrowserService,
     ) {
         super();
     }
 
     async tick(script: Script) {
         await super.tick(script);
-        switch (this.state.state) {
-            case 'terminating-execution':
-                throw util.createError({
-                    code: 'ExecutionTerminated',
-                    message: 'Execution terminated during playback',
-                    retry: false,
-                });
-            case 'disconnected':
-                throw util.createError({
-                    code: 'BrowserCrashed',
-                    message: 'Browser crashed unexpectedly',
-                    retry: false,
-                });
+        if (this.state.state === 'terminating-execution') {
+            throw util.createError({
+                code: 'ExecutionTerminated',
+                message: 'Execution terminated during playback',
+                retry: false,
+            });
+        }
+        if (!this.browser.isConnected()) {
+            throw util.createError({
+                code: 'BrowserDisconnected',
+                message: 'Browser is not connected',
+                retry: false,
+            });
         }
     }
 

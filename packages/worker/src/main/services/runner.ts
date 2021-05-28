@@ -55,11 +55,7 @@ export class Runner {
         protected checkpoints: CheckpointService,
         @inject(Engine)
         protected engine: Engine,
-    ) {
-        browser.on('disconnect', () => {
-            state.state = 'disconnected';
-        });
-    }
+    ) {}
 
     async run(jobId: string, organisationId: string): Promise<void> {
         this.logger.info('Running job', { jobId, organisationId });

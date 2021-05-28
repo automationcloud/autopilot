@@ -27,7 +27,7 @@ export class WorkerState {
     workerVersion: string;
     workerTag: string;
     workerId: string;
-    state: 'idle' | 'initializing' | 'running' | 'consume-failing' | 'terminating-execution' | 'disconnected' = 'idle';
+    state: 'idle' | 'initializing' | 'running' | 'consume-failing' | 'terminating-execution' = 'idle';
     execution: Execution | null = null;
     script: Script | null = null;
     organisationId: string | null = null;
