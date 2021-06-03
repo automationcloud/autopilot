@@ -77,7 +77,7 @@
                             <advanced-select
                                 @change="onScriptSelect"
                                 :options="scriptOptions"
-                                :selected-option="scriptOption"
+                                :selectedOption="selectedScriptOption"
                                 placeholder="Select Version">
                             </advanced-select>
                         </div>
@@ -99,6 +99,7 @@
 
             <button v-if="location === 'file'"
                 class="button button--alt button--primary"
+                :disabled="loading"
                 @click="openFromFile()">
                 Select file
             </button>
@@ -128,6 +129,7 @@ export default {
             openActive: true,
             services: [],
             scripts: [],
+            loading: false,
         };
     },
 
@@ -139,21 +141,15 @@ export default {
             return this.apiLogin.isAuthenticated();
         },
         canOpenFromAc() {
-            return this.scriptId;
+            return this.scriptId && !this.loading;
         },
         modalTitle() {
             return this.saveload.loadAsDiffBase ? 'Load as diff base' : 'Open';
         },
         scriptOptions() {
-            return this.scripts.map(script => {
-                return {
-                    id: script.id,
-                    name: `${script.fullVersion} ${script.note || 'no note'}`,
-                    html: `<b>${script.fullVersion}</b> &nbsp; ${script.note}`
-                };
-            });
+            return this.scripts.map(script => this.getScriptOption(script));
         },
-        scriptOption() {
+        selectedScriptOption() {
             return this.scriptOptions.find(_ => _.id === this.scriptId);
         }
     },
@@ -199,15 +195,19 @@ export default {
             if (!this.service || !this.scriptId) {
                 return;
             }
+            this.loading = true;
             try {
                 await this.saveload.openAutomationFromAc(this.service.id, this.scriptId);
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
         },
 
         async openFromFile() {
+            this.loading = true;
             const { filePaths } = await dialog.showOpenDialog({
                 title: 'Open Service',
                 filters: [
@@ -217,6 +217,7 @@ export default {
             });
             const filepath = filePaths[0] || '';
             if (!filepath) {
+                this.loading = false;
                 return;
             }
             try {
@@ -224,6 +225,8 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -264,6 +267,16 @@ export default {
 
         showError(error) {
             this.saveload.showError('Open', error);
+        },
+
+        getScriptOption(script) {
+            const note = script.note || 'no note';
+            const html = `<b>${script.fullVersion} ${script.id === this.service.scriptId ? '(active)' : ''} </b> &nbsp; ${note}`;
+            return {
+                id: script.id,
+                name: `${script.fullVersion} ${note}`,
+                html
+            };
         }
     },
 };

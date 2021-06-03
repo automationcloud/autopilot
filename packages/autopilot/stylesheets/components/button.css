@@ -24,7 +24,7 @@
     color: var(--color-cool--800);
 }
 
-button.button--cta::before {
+.button.button--cta::before {
     font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f105";
     font-size: 1.1em;
     margin-right: .4em;

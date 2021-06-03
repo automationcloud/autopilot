@@ -203,7 +203,7 @@ export interface ApiScript {
     id: string;
     serviceId: string;
     fullVersion: string;
-    workerVersion: string;
+    workerTag: string;
     note: string;
 }
 
