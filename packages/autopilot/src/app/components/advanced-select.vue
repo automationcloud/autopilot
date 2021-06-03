@@ -1,12 +1,14 @@
 <template>
-    <div class="advanced-select">
-        <div class="input stretch"
-            @focusin.stop="expand"
-            @focusout.stop="onBlur"
-            tabindex=0>
-            <input class="advanced-select__text"
+    <div class="advanced-select"
+        @focusin.stop="expand"
+        @focusout.stop="onBlur"
+        @keydown="onKeyDown"
+        tabindex=0 >
+        <div class="input stretch">
+            <input class="search"
+                ref="search"
                 v-model="search"
-                @input="$emit('search', search)"
+                @input="onSearch"
                 :placeholder="placeholder"
                 :disabled="!searchable">
                 <span
@@ -15,16 +17,19 @@
                 </span>
         </div>
         <div v-show="listShown"
-            class="advanced-select__list"
-            @mouseover.stop="hoverOnList = true;"
-            @mouseout.stop="hoverOnList = false;" >
+            class="list"
+            ref="selectList">
             <span v-if="options.length === 0"
-                class="advanced-select__item"> No Automation found </span>
-            <span  class="advanced-select__item"
-                v-for="option of options"
-                v-html="option.html || option.name "
-                @click="selectOption(option)"
-                :key="option.id" >
+                class="item"> No Automation found </span>
+            <span class="item"
+                :class="{
+                    'item--focused': i === focusIndex,
+                }"
+                v-for="(option, i) of options"
+                v-html="option.html || option.name"
+                :key="option.id"
+                @click="onItemClick(option)"
+                @mouseenter="onItemHover(i)" >
             </span>
         </div>
     </div>
@@ -34,7 +39,7 @@
 export default {
 
     props: {
-        options: { type: Array, default() { return []; } },
+        options: { type: Array, default: [] },
         selectedOption: { type: Object, default: null }, // { id: string, name: string, html?: string }
         searchable: { type: Boolean, default: false },
         placeholder: { type: String, default: 'Search or select' },
@@ -44,7 +49,7 @@ export default {
         return {
             listShown: false,
             search: this.selectedOption ? this.selectedOption.name : '',
-            hoverOnList: false,
+            focusIndex: -1,
         };
     },
 
@@ -66,50 +71,136 @@ export default {
         },
 
         expand() {
+            this.$refs.search.select();
             this.$emit('search', this.search);
             this.listShown = true;
         },
 
         collapse() {
-            this.$emit('search', this.search);
             this.listShown = false;
+            this.focusIndex = -1;
         },
 
         onBlur() {
-            if (this.hoverOnList) { // when losing focus to click the item, ignore
-                return;
-            }
-            // when search is enabled, service is selected but the search is changed
+            // when search is enabled, item is selected but the search is changed
             if (!this.selectedOption || this.selectedOption.name !== this.search) {
                 this.$emit('change', null);
             }
             this.collapse();
         },
 
-        selectOption(option) {
-            this.$emit('change', option);
+        onSearch() {
+            if (!this.listShown) {
+                this.expand();
+            }
+            this.$emit('search', this.search)
+        },
+
+        selectItem(item) {
+            this.$emit('change', item);
             this.collapse();
+        },
+
+        // navigate with keydown
+        onItemHover(index) {
+            this.focusIndex = index;
+        },
+
+        onItemClick(item) {
+            this.selectItem(item);
+            this.focusIndex = -1;
+        },
+
+        getFocusedItem() {
+            return this.options[this.focusIndex];
+        },
+
+        onKeyDown(ev) {
+            if (!this.listShown) {
+                return;
+            }
+            switch (ev.key) {
+                case 'Space':
+                case 'Enter':
+                case 'ArrowRight':
+                    return this.clickFocused();
+                case 'ArrowDown':
+                    this.$refs.selectList.focus();
+                    return this.focusNext();
+                case 'ArrowUp':
+                    this.$refs.selectList.focus();
+                    return this.focusPrevious();
+                case 'ArrowLeft':
+                case 'Tab':
+                case 'Backspace':
+                case 'Control':
+                case 'Meta':
+                    this.$refs.search.focus();
+                default:
+                    return this.focusIndex = -1;
+            }
+        },
+
+        clickFocused() {
+            const item = this.getFocusedItem();
+            if (item) {
+                this.onItemClick(item);
+            }
+        },
+        
+        focusNext() {
+            if (this.focusIndex >= (this.options.length - 1)) {
+                return;
+            }
+            this.focusIndex += 1;
+            const item = this.options[this.focusIndex];
+            if (!item) {
+                return;
+            }
+            this.revealFocused();
+        },
+
+        focusPrevious() {
+            if (this.focusIndex <= -1) {
+                return;
+            }
+            this.focusIndex -= 1;
+            const item = this.options[this.focusIndex];
+            if (!item) {
+                return;
+            }
+            this.revealFocused();
+        },
+
+        revealFocused() {
+            this.$nextTick(() => {
+                console.log('focused:', this.focusIndex);
+                const el = this.$refs.selectList.querySelector('.item--focused');
+                if (el) {
+                    el.scrollIntoViewIfNeeded();
+                }
+            });
         }
     },
 };
 </script>
 
 <style scoped>
-.advanced-select__text {
+.search {
     display: flex;
     justify-content: space-between;
     padding: 0 var(--gap--small);
 }
 
-.advanced-select__text::placeholder {
+.search::placeholder {
     color: var(--color-mono--600);
 }
 
-.advanced-select__text:disabled {
+.search:disabled {
     color: var(--ui-color--black);
 }
 
-.advanced-select__list {
+.list {
     position: absolute;
     z-index: 10;
     border-radius: var(--border-radius);
@@ -121,7 +212,7 @@ export default {
     overflow-y: auto;
 }
 
-.advanced-select__item {
+.item {
     display: block;
     cursor: pointer;
     height: 100%;
@@ -129,7 +220,9 @@ export default {
     padding: var(--gap--small);
 }
 
-.advanced-select__item:hover {
-    background: var(--color-cool--200);
+.item--focused {
+    background: var(--color-blue--500);
+    color: #fff;
 }
+
 </style>
