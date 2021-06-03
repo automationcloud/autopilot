@@ -346,8 +346,9 @@ export default {
             } catch (error) {
                 console.warn(error);
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
         },
 
         async saveToFile() {
@@ -369,8 +370,9 @@ export default {
             } catch (error) {
                 console.warn(error);
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
         },
 
         getVersion(release) {
@@ -402,8 +404,9 @@ export default {
                 } catch (error) {
                     console.warn('failed to load scripts');
                     this.scripts = [];
+                } finally {
+                    this.loading = false;
                 }
-                this.loading = false;
             }
         },
 
@@ -428,8 +431,9 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
         }
     },
 };

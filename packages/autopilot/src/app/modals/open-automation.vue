@@ -201,11 +201,13 @@ export default {
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
         },
 
         async openFromFile() {
+            this.loading = true;
             const { filePaths } = await dialog.showOpenDialog({
                 title: 'Open Service',
                 filters: [
@@ -215,16 +217,17 @@ export default {
             });
             const filepath = filePaths[0] || '';
             if (!filepath) {
+                this.loading = false;
                 return;
             }
-            this.loading = true;
             try {
                 await this.saveload.openAutomationFromFile(filepath);
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
+            } finally {
+                this.loading = false;
             }
-            this.loading = false;
         },
 
         async loadServices(name = '') {
