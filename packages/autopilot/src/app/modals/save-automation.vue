@@ -83,7 +83,7 @@
                             class="box box--primary group group--gap">
                             <i class="fas fa-exclamation-circle"
                                 style="align-self: flex-start; margin-top: var(--gap--small);"></i>
-                            <div> You were working on service <b>{{ metadata.serviceName }}</b> but you are loading to <b>{{ service && service.name }}</b>.
+                            <div> You were working on service <b>{{ metadata.serviceName }}</b> but you are saving to <b>{{ service && service.name }}</b>.
                             Proceed at your own risk.
                             </div>
                         </div>

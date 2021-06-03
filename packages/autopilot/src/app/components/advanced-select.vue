@@ -11,7 +11,7 @@
                 v-model="search"
                 @input="onSearch"
                 :placeholder="placeholder"
-                :disabled="!searchable">
+                :readonly="!searchable">
                 <span
                     class="icon">
                     <i class="fas fa-chevron-down"></i>
@@ -175,7 +175,6 @@ export default {
 
         revealFocused() {
             this.$nextTick(() => {
-                console.log('focused:', this.focusIndex);
                 const el = this.$refs.selectList.querySelector('.item--focused');
                 if (el) {
                     el.scrollIntoViewIfNeeded();
