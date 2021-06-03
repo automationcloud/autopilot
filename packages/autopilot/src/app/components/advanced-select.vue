@@ -4,7 +4,8 @@
         @focusout.stop="onBlur"
         @keydown="onKeyDown"
         tabindex=0 >
-        <div class="input stretch">
+        <div class="input stretch"
+            @mousedown.prevent="toggle">
             <input class="search"
                 ref="search"
                 v-model="search"

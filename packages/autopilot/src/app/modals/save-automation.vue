@@ -83,7 +83,7 @@
                             class="box box--primary group group--gap">
                             <i class="fas fa-exclamation-circle"
                                 style="align-self: flex-start; margin-top: var(--gap--small);"></i>
-                            <div> You were working on service <b>{{ metadata.serviceName }}</b> but you are saving to <b>{{ service && service.name }}</b>.
+                            <div> You were working on service <b>{{ metadata.serviceName }}</b> but you are loading to <b>{{ service && service.name }}</b>.
                             Proceed at your own risk.
                             </div>
                         </div>
@@ -208,6 +208,7 @@
             </button>
             <button v-if="location === 'file'"
                 class="button button--alt button--primary"
+                :disabled="loading"
                 @click="saveToFile()">
                 Save File
             </button>
@@ -244,7 +245,7 @@ export default {
             services: [],
             scripts: [],
             expandAdvanced: false,
-            scriptLoading: false,
+            loading: false,
         };
     },
 
@@ -262,7 +263,7 @@ export default {
             return semver.valid(this.fullVersion);
         },
         canSaveToAc() {
-            return this.isAuthenticated && this.isVersionValid && (this.createNew ? !!this.newServiceName : !!this.service);
+            return !this.loading && this.isVersionValid && (this.createNew ? !!this.newServiceName : !!this.service);
         },
         latestScript() {
             return this.scripts[0] || null;
@@ -271,7 +272,7 @@ export default {
             return this.latestScript ? this.latestScript.fullVersion : '0.0.0';
         },
         versionWarningShown() {
-            return this.service && !this.scriptLoading && this.metadata.version !== this.latestVersion && !this.serviceIdMismatch;
+            return this.service && !this.loading && this.metadata.version !== this.latestVersion && !this.serviceIdMismatch;
         },
         serviceIdMismatch() {
             return this.service && this.metadata.serviceId && this.service.id !== this.metadata.serviceId;
@@ -308,6 +309,10 @@ export default {
             }
         },
 
+        latestScript(val) {
+            this.workerTag = val.workerTag;
+        },
+
         createNew(val) {
             if (val) {
                 this.service = null;
@@ -325,6 +330,7 @@ export default {
 
     methods: {
         async saveToAc() {
+            this.loading = true;
             try {
                 if (this.createNew) {
                     this.service = await this.saveload.createService(this.newServiceName);
@@ -341,9 +347,11 @@ export default {
                 console.warn(error);
                 this.showError(error);
             }
+            this.loading = false;
         },
 
         async saveToFile() {
+            this.loading = true;
             const { filePath } = await dialog.showSaveDialog({
                 title: 'Save Service',
                 filters: [
@@ -352,6 +360,7 @@ export default {
                 defaultPath: this.saveload.filePath || `${this.newServiceName}.automation`,
             });
             if (!filePath) {
+                this.loading = false;
                 return;
             }
             try {
@@ -361,6 +370,7 @@ export default {
                 console.warn(error);
                 this.showError(error);
             }
+            this.loading = false;
         },
 
         getVersion(release) {
@@ -385,16 +395,15 @@ export default {
         },
 
         async loadScripts(serviceId) {
-            this.scriptLoading = true;
             if (serviceId) {
+                this.loading = true;
                 try {
                     this.scripts = await this.saveload.getScripts(serviceId);
                 } catch (error) {
                     console.warn('failed to load scripts');
                     this.scripts = [];
-                } finally {
-                    this.scriptLoading = false;
                 }
+                this.loading = false;
             }
         },
 
@@ -413,12 +422,14 @@ export default {
                 this.showError(new Error('Service or valid version not found'));
                 return;
             }
+            this.loading = true;
             try {
                 await this.saveload.openAutomationFromAc(this.service.id, latestScript.id);
                 this.$emit('hide');
             } catch (error) {
                 this.showError(error);
             }
+            this.loading = false;
         }
     },
 };
