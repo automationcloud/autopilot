@@ -5,22 +5,7 @@ on:
     tags:
       - "*"
 
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2
-      - name: Setup NPM
-        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
-      - run: npm ci
-      - run: chown -R node .
-      - run: npm run compile
-      - name: Publish npm packages
-        run: npm run publish
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        
+jobs:        
   build:
     name: build
     runs-on: ubuntu-latest
@@ -31,6 +16,18 @@ jobs:
       - name: Extract git tag as ENV var
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Setup NPM
+        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
+
+      - run: npm ci
+      - run: chown -R node .
+      - run: npm run compile
+
+      - name: Publish npm packages
+        run: npm run publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build and push development image
         uses: docker/build-push-action@v1
