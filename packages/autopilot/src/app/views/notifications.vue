@@ -25,6 +25,6 @@ export default {
     bottom: var(--playback-panel-size);
     left: 0;
     right: 0;
-    padding: var(--gap);
+    margin: var(--gap);
 }
 </style>
