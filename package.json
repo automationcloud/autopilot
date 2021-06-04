@@ -14,7 +14,8 @@
         "lint": "eslint ./packages --ext=.js,.ts --cache",
         "test": "lerna run test --stream --concurrency 1",
         "docs": "lerna run docs && git add docs/",
-        "release": "lerna version --force-publish -y && lerna publish from-git -y",
+        "release": "lerna version --force-publish -y",
+        "publish": "lerna publish from-git -y --no-verify-access",
         "preversion": "npm run clean && npm run compile && npm run docs"
     },
     "workspaces": [

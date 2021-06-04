@@ -6,6 +6,21 @@ on:
       - "*"
 
 jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Setup NPM
+        run: npm config set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_TOKEN }}'
+      - run: npm ci
+      - run: chown -R node .
+      - run: npm run compile
+      - name: Publish npm packages
+        run: npm run publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
   build:
     name: build
     runs-on: ubuntu-latest
