@@ -187,16 +187,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .script-search {
     position: relative;
     padding: var(--gap--small);
     background: var(--color-cool--500);
 }
 
-.script-search__criteria {
-    margin-bottom: var(--gap--small);
-}
 
 .script-search__suggestions {
     position: absolute;
@@ -221,6 +218,7 @@ export default {
 
 .script-search__criterion {
     white-space: nowrap;
+    margin: 0 var(--gap--small) var(--gap--small) 0;
 }
 
 .script-search__criterion-type {
