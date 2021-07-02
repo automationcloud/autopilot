@@ -1,4 +1,4 @@
-FROM automationcloud/chrome:c86-node16
+FROM automationcloud/chrome:node16-chrome-stable
 
 ARG VERSION
 
