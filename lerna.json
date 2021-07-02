@@ -2,7 +2,7 @@
     "packages": [
         "packages/*"
     ],
-    "version": "34.17.5",
+    "version": "34.17.6-34.17.5-chrome-stable.0.0",
     "command": {
         "version": {
             "tagVersionPrefix": ""
